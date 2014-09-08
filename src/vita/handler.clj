@@ -1,10 +1,11 @@
 (ns vita.handler
   (:require [compojure.core :refer :all]
             [compojure.handler :as handler]
+            [ring.util.response :as resp]
             [compojure.route :as route]))
 
 (defroutes app-routes
-  (GET "/" [] "Hello World")
+  (GET "/" [] (resp/file-response "resources/public/index.html"))
   (route/resources "/")
   (route/not-found "Not Found"))
 
