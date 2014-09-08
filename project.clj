@@ -6,26 +6,29 @@
                  [com.taoensso/timbre "3.2.1"]
 
                  [org.clojure/clojurescript "0.0-2322"]
+                 [figwheel "0.1.4-SNAPSHOT"]
                  [reagent "0.4.2"]
                  ]
   :plugins [[lein-ring "0.8.11"]
-            [lein-cljsbuild "1.0.3"]]
+            [lein-cljsbuild "1.0.3"]
+            [lein-figwheel "0.1.4-SNAPSHOT"]]
   :ring {
          :handler vita.handler/app
-         :port 8080
-         }
+         :port 8080}
   :cljsbuild {
               :builds [{
+                        :id "dev"
                         :source-paths ["src-cljs"]
                         :compiler {
                                    :output-to "resources/public/app.js"
-                                   :optimizations :whitespace
+                                   :output-dir "resources/public/out"
+                                   :optimizations :none
                                    :pretty-print true
-                                   }
-                        }]}
+                                   :source-map true}}]}
+  :figwheel {
+             :port 8080}
   :profiles {
              :dev {
                    :dependencies [[javax.servlet/servlet-api "2.5"]
-                                  [ring-mock "0.1.5"]]
-                   }}
+                                  [ring-mock "0.1.5"]]}}
   )
