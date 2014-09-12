@@ -26,7 +26,7 @@
                                    :pretty-print true
                                    :source-map true}}]}
   :figwheel {
-             :port 8080}
+             :server-port 8080}
   :profiles {
              :dev {
                    :dependencies [[javax.servlet/servlet-api "2.5"]

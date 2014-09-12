@@ -4,7 +4,10 @@
 (enable-console-print!)
 
 (defn format [msg args]
-  (apply goog.string/format msg args))
+  (if (empty? args)
+    msg
+    (apply goog.string/format msg args)
+    ))
 
 (defn debug [msg & args]
   (js/console.debug (format msg args)))
