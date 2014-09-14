@@ -7,8 +7,7 @@
 
                  [org.clojure/clojurescript "0.0-2322"]
                  [figwheel "0.1.4-SNAPSHOT"]
-                 [reagent "0.4.2"]
-                 ]
+                 [quiescent "0.1.4"]]
   :plugins [[lein-ring "0.8.11"]
             [lein-cljsbuild "1.0.3"]
             [lein-figwheel "0.1.4-SNAPSHOT"]]

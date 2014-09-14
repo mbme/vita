@@ -1,9 +1,30 @@
 (ns vita.app
   (:require [vita.log :as log]
             [vita.generator :as gen]
-            [clojure.string :as str]
-            [reagent.core :as reagent :refer [atom]]))
+            [quiescent :as q :include-macros true]
+            [quiescent.dom :as d]
+            ))
 
-(defonce records (atom (gen/random-records 10)))
+(defonce state (atom {
+                      :records (gen/random-records 10)}
+                     ))
 
-(log/info (str/join "\n\n" (map str @records)))
+
+(q/defcomponent Record [{:keys [name data]}]
+  (d/div {:className "record" :key (hash name)}
+         (d/h2 {} name)
+         (d/div {} data)
+         ))
+
+(q/defcomponent Root [records]
+  (apply d/div {:className "records"}
+         (map #(Record %) records)
+         ))
+
+(defn render [data]
+  (q/render (Root (:records @data)) (.getElementById js/document "main")) )
+
+;; listen for changes in state and call render
+(add-watch state :render
+           (fn [_ _ _ data] (render data)))
+(render state)
