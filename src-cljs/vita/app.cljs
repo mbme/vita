@@ -6,43 +6,48 @@
             ))
 
 (defn- e-val [evt] (.-value (.-target evt)))
-(defn- mark-visible [rec visible] (assoc rec :visible visible))
-(defn- visible? [rec term]
-  (-> (:name rec)
-      (.indexOf term)
-      (> -1)))
+(defn- has-term? [rec term]
+  (if (zero? (.-length term))
+    true
+    (-> (:name rec)
+        (.indexOf term)
+        (> -1))
+    ))
 
-(defonce state (atom {
-                      :records (map #(mark-visible % true) (gen/random-records 10))
+(defonce state (atom {:records (gen/random-records 10)
+                      :search-term ""
                       }))
 
 (defn- search-update [term]
   (log/info "new search term: %s" term)
-  (swap! state (fn [s]
-                 (->> (:records s)
-                      (map #(mark-visible % (visible? % term)))
-                      (assoc s :records)))
-         ))
+  (swap! state #(assoc % :search-term term)))
 
-(q/defcomponent SearchBox []
+(defn- filter-records [records term]
+  (filter #(has-term? % term) records))
+
+;; COMPONENTS PART
+
+(q/defcomponent SearchBox [term]
   (d/div {:className "search-box"}
-         "Search:"
-         (d/input {
-                   :type "text"
-                   :onKeyUp #(search-update (e-val %))
-                   })
-         ))
+         "Search:" (d/input {
+                             :type "text"
+                             :defaultValue term
+                             :onKeyUp #(search-update (e-val %))
+                             })))
 
 (q/defcomponent SearchResult [record]
   (d/div {:className "search-result"} (:name record)))
 
 (q/defcomponent SearchResults [records]
   (apply d/div {:className "search-results"}
-         (map SearchResult (filter #(:visible %) records))
+         (map SearchResult records)
          ))
 
-(q/defcomponent ControlPanel [records]
-  (d/div {:id "control-panel"} (SearchBox) (SearchResults records)))
+(q/defcomponent ControlPanel [{:keys [records search-term]}]
+  (d/div {:id "control-panel"}
+         (SearchBox search-term)
+         (SearchResults (filter-records records search-term))
+         ))
 
 (q/defcomponent Preview [component data]
   (d/div {:id "preview"} (if (nil? data)
@@ -53,17 +58,15 @@
 (q/defcomponent Record[{:keys [name data]}]
   (d/div {:className "record" :key (hash name)}
          (d/h2 {} name)
-         (d/div {} data)
-         ))
+         (d/div {} data)))
 
-(q/defcomponent Root [records]
+(q/defcomponent Root [data]
   (d/div {:id "root"}
-         (ControlPanel records)
-         (Preview Record (first records))
-         ))
+         (ControlPanel data)
+         (Preview Record)))
 
 (defn render [data]
-  (q/render (Root (:records data)) js/document.body))
+  (q/render (Root data) js/document.body))
 
 ;; listen for changes in state and call render
 (add-watch state :render
