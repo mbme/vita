@@ -239,3 +239,5 @@ input[type="submit"] {
 .search-results .search-result:hover {
   background-color: red;
   cursor: pointer; }
+.search-results .search-result.selected {
+  background-color: orange; }

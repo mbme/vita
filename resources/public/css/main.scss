@@ -26,5 +26,8 @@
             background-color: red;
             cursor: pointer;
         }
+        &.selected {
+            background-color: orange;
+        }
     }
 }
