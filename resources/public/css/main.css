@@ -208,5 +208,34 @@ input[type="submit"] {
   -moz-box-sizing: border-box;
   box-sizing: border-box; }
 
-body {
-  color: black; }
+#root {
+  max-width: 68em;
+  margin-left: auto;
+  margin-right: auto;
+  height: 100%; }
+  #root:after {
+    content: "";
+    display: table;
+    clear: both; }
+  #root #control-panel {
+    float: left;
+    display: block;
+    margin-right: 2.35765%;
+    width: 31.76157%;
+    background-color: yellow;
+    height: 100%; }
+    #root #control-panel:last-child {
+      margin-right: 0; }
+  #root #preview {
+    float: left;
+    display: block;
+    margin-right: 2.35765%;
+    width: 65.88078%;
+    background-color: orange;
+    height: 100%; }
+    #root #preview:last-child {
+      margin-right: 0; }
+
+.search-results .search-result:hover {
+  background-color: red;
+  cursor: pointer; }

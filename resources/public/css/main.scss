@@ -3,6 +3,28 @@
 @import "neat/neat";
 
 
-body {
-    color: black;
+#root {
+    @include outer-container;
+    height: 100%;
+
+    #control-panel {
+        @include span-columns(4);
+        background-color: yellow;
+        height: 100%;
+    }
+
+    #preview {
+        @include span-columns(8);
+        background-color: orange;
+        height: 100%;
+    }
+}
+
+.search-results {
+    .search-result {
+        &:hover {
+            background-color: red;
+            cursor: pointer;
+        }
+    }
 }
