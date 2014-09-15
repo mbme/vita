@@ -5,13 +5,32 @@
             [quiescent.dom :as d]
             ))
 
+(defn- e-val [evt] (.-value (.-target evt)))
+(defn- mark-visible [rec visible] (assoc rec :visible visible))
+(defn- visible? [rec term]
+  (-> (:name rec)
+      (.indexOf term)
+      (> -1)))
+
 (defonce state (atom {
-                      :records (gen/random-records 10)}
-                     ))
+                      :records (map #(mark-visible % true) (gen/random-records 10))
+                      }))
+
+(defn- search-update [term]
+  (log/info "new search term: %s" term)
+  (swap! state (fn [s]
+                 (->> (:records s)
+                      (map #(mark-visible % (visible? % term)))
+                      (assoc s :records)))
+         ))
 
 (q/defcomponent SearchBox []
   (d/div {:className "search-box"}
-         "Search:" (d/input {:type "text"})
+         "Search:"
+         (d/input {
+                   :type "text"
+                   :onKeyUp #(search-update (e-val %))
+                   })
          ))
 
 (q/defcomponent SearchResult [record]
@@ -19,7 +38,7 @@
 
 (q/defcomponent SearchResults [records]
   (apply d/div {:className "search-results"}
-         (map SearchResult records)
+         (map SearchResult (filter #(:visible %) records))
          ))
 
 (q/defcomponent ControlPanel [records]
@@ -44,9 +63,9 @@
          ))
 
 (defn render [data]
-  (q/render (Root (:records @data)) js/document.body))
+  (q/render (Root (:records data)) js/document.body))
 
 ;; listen for changes in state and call render
 (add-watch state :render
            (fn [_ _ _ data] (render data)))
-(render state)
+(render @state)
