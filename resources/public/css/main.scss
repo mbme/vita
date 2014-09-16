@@ -7,21 +7,35 @@ $header-font-family: "Noto Sans", $base-font-family;
 
 $color1: #3D4349;
 $color2: #EFEFEF;
+$color-font: #666;
 
 body {
     margin: 0px;
-    font-family: $base-font-family;
+
+    * {
+        font-family: $base-font-family;
+    }
+
+    @for $index from 1 through 6 {
+        h#{$index} {
+            color: $color-font;
+        }
+    }
 }
 
 #root {
     @include outer-container;
+
     height: 100%;
+    max-width: 100%;
 
     background-color: $color2;
 
     #control-panel {
         @include span-columns(4);
+
         height: 100%;
+        max-width: 385px;
 
         background-color: $color1;
         color: $color2;
@@ -29,7 +43,9 @@ body {
 
     #preview {
         @include span-columns(8);
+
         height: 100%;
+        max-width: 100%;
 
         padding: 10px;
     }
@@ -57,4 +73,9 @@ body {
         background-color: $color2;
         color: $color1;
     }
+}
+
+.record {
+    margin: 0 auto;
+    max-width: 800px;
 }

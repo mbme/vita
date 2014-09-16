@@ -209,14 +209,28 @@ input[type="submit"] {
   box-sizing: border-box; }
 
 body {
-  margin: 0px;
-  font-family: "Open Sans", "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif; }
+  margin: 0px; }
+  body * {
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif; }
+  body h1 {
+    color: #666666; }
+  body h2 {
+    color: #666666; }
+  body h3 {
+    color: #666666; }
+  body h4 {
+    color: #666666; }
+  body h5 {
+    color: #666666; }
+  body h6 {
+    color: #666666; }
 
 #root {
   max-width: 68em;
   margin-left: auto;
   margin-right: auto;
   height: 100%;
+  max-width: 100%;
   background-color: #efefef; }
   #root:after {
     content: "";
@@ -228,6 +242,7 @@ body {
     margin-right: 2.35765%;
     width: 31.76157%;
     height: 100%;
+    max-width: 385px;
     background-color: #3d4349;
     color: #efefef; }
     #root #control-panel:last-child {
@@ -238,6 +253,7 @@ body {
     margin-right: 2.35765%;
     width: 65.88078%;
     height: 100%;
+    max-width: 100%;
     padding: 10px; }
     #root #preview:last-child {
       margin-right: 0; }
@@ -256,3 +272,7 @@ body {
   .search-box input {
     background-color: #efefef;
     color: #3d4349; }
+
+.record {
+  margin: 0 auto;
+  max-width: 800px; }

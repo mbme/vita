@@ -22,7 +22,7 @@
                                    :output-to "resources/public/app.js"
                                    :output-dir "resources/public/out"
                                    :optimizations :none
-                                   :pretty-print true
+                                   ;; :pretty-print true
                                    :source-map true}}]}
   :figwheel {
              :server-port 8080
