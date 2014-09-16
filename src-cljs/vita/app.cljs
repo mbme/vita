@@ -41,10 +41,9 @@
 
 (q/defcomponent SearchBox [term]
   (d/div {:className "search-box"}
-         "Search:" (d/input {:type "text"
-                             :defaultValue term
-                             :onKeyUp #(state/update-search (e-val %))})
-         ))
+         (d/input {:type "text"
+                   :defaultValue term
+                   :onKeyUp #(state/update-search (e-val %))})))
 
 (q/defcomponent SearchResult [{:keys [name selected]}]
   (d/div {:className (css-class "search-result" (when selected "selected"))

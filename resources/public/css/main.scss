@@ -2,32 +2,59 @@
 @import "base/base";
 @import "neat/neat";
 
+$base-font-family: "Open Sans", $sans-serif;
+$header-font-family: "Noto Sans", $base-font-family;
+
+$color1: #3D4349;
+$color2: #EFEFEF;
+
+body {
+    margin: 0px;
+    font-family: $base-font-family;
+}
 
 #root {
     @include outer-container;
     height: 100%;
 
+    background-color: $color2;
+
     #control-panel {
         @include span-columns(4);
-        background-color: yellow;
         height: 100%;
+
+        background-color: $color1;
+        color: $color2;
     }
 
     #preview {
         @include span-columns(8);
-        background-color: orange;
         height: 100%;
+
+        padding: 10px;
     }
 }
 
 .search-results {
     .search-result {
+        padding: 0 5px;
+
         &:hover {
             background-color: red;
             cursor: pointer;
         }
         &.selected {
             background-color: orange;
+            color: $color1;
         }
+    }
+}
+
+.search-box {
+    margin: 5px;
+
+    input {
+        background-color: $color2;
+        color: $color1;
     }
 }
