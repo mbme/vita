@@ -15,4 +15,5 @@ goog.addDependency("../figwheel/client.js", ['figwheel.client'], ['goog.net.jslo
 goog.addDependency("../vita/figwheel.js", ['vita.figwheel'], ['cljs.core', 'figwheel.client']);
 goog.addDependency("../quiescent.js", ['quiescent'], ['cljs.core']);
 goog.addDependency("../quiescent/dom.js", ['quiescent.dom'], ['cljs.core', 'quiescent']);
-goog.addDependency("../vita/app.js", ['vita.app'], ['vita.log', 'vita.generator', 'cljs.core', 'quiescent.dom', 'quiescent']);
+goog.addDependency("../vita/state.js", ['vita.state'], ['vita.log', 'cljs.core']);
+goog.addDependency("../vita/app.js", ['vita.app'], ['vita.generator', 'cljs.core', 'quiescent.dom', 'quiescent', 'vita.state']);
