@@ -1,81 +1,102 @@
 @import "bourbon/bourbon";
 @import "base/base";
-@import "neat/neat";
 
 $base-font-family: "Open Sans", $sans-serif;
 $header-font-family: "Noto Sans", $base-font-family;
 
-$color1: #3D4349;
-$color2: #EFEFEF;
-$color-font: #666;
+$c-bg: #AC6C82;
+$c-bg-focused: #DA727E;
+$c-bg1: #685C79;
+$c-bg2: #FFBC67;
 
 body {
+    width: 100%;
+    height: 100%;
+
     margin: 0px;
 
     * {
         font-family: $base-font-family;
     }
-
-    @for $index from 1 through 6 {
-        h#{$index} {
-            color: $color-font;
-        }
-    }
 }
 
 #root {
-    @include outer-container;
+    @include clearfix;
 
     height: 100%;
-    max-width: 100%;
+    width: 100%;
 
-    background-color: $color2;
+    background-color: $c-bg;
 
+    $panel-w: 300px;
     #control-panel {
-        @include span-columns(4);
-
-        height: 100%;
-        max-width: 385px;
-
-        background-color: $color1;
-        color: $color2;
+        float: left;
+        width: $panel-w;
     }
 
     #preview {
-        @include span-columns(8);
-
-        height: 100%;
-        max-width: 100%;
-
-        padding: 10px;
+        float: right;
+        @include calc(width, '100% - #{$panel-w}');
     }
-}
 
-.search-results {
-    .search-result {
-        padding: 0 5px;
-
-        &:hover {
-            background-color: red;
-            cursor: pointer;
-        }
-        &.selected {
-            background-color: orange;
-            color: $color1;
-        }
+    #preview, #control-panel {
+        height: 100%;
+        overflow-y: auto;
     }
 }
 
 .search-box {
     margin: 5px;
+    height: 40px;
 
     input {
-        background-color: $color2;
-        color: $color1;
+        background-color: $c-bg1;
+    }
+}
+
+.search-results {
+    overflow-y: auto;
+    @include calc(height, '100% - 50px');
+
+    .search-result {
+        height: 70px;
+        padding: 10px 5px;
+
+        border: 1px solid $c-bg;
+
+        &:hover {
+            cursor: pointer;
+            @include transition (border-color 0.1s ease-in-out);
+            border-color: $c-bg-focused;
+        }
+
+        &.selected {
+            background-color: $c-bg-focused;
+        }
     }
 }
 
 .record {
-    margin: 0 auto;
+    @include box-sizing(border-box);
+
     max-width: 800px;
+    min-height: 100%;
+
+    margin: 0 auto;
+    padding: 2em;
+
+    background: $c-bg2;
+}
+
+.fadein {
+    @include animation(fadein 1s);
+}
+
+@include keyframes(fadein) {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }

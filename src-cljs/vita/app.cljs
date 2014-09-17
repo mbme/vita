@@ -19,8 +19,8 @@
                            (filter #(= (:name %) name))
                            (first))))
 
-(defn- get-selected-record [data]
-  (get-record (:records data) (:selected-rec data)))
+(defn- get-selected-record [{:keys [records selected-rec]}]
+  (get-record records selected-rec))
 
 (defn- has-term? [rec term]
   (if (count term)
@@ -68,7 +68,7 @@
   (d/div {:id "preview"} (if-not (nil? data) (component data))))
 
 (q/defcomponent Record [{:keys [name data]}]
-  (d/div {:className "record"}
+  (d/div {:className "record fadein"}
          (d/h2 {} name)
          (d/div {} data)))
 
