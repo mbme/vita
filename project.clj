@@ -6,11 +6,13 @@
                  [com.taoensso/timbre "3.2.1"]
 
                  [org.clojure/clojurescript "0.0-2322"]
-                 [figwheel "0.1.4-SNAPSHOT"]
-                 [quiescent "0.1.4"]]
+                 [figwheel "0.1.4-SNAPSHOT"]]
   :plugins [[lein-ring "0.8.11"]
             [lein-cljsbuild "1.0.3"]
             [lein-figwheel "0.1.4-SNAPSHOT"]]
+
+  :hooks [leiningen.cljsbuild]
+
   :ring {
          :handler vita.handler/app
          :port 8080}
@@ -22,7 +24,7 @@
                                    :output-to "resources/public/app.js"
                                    :output-dir "resources/public/out"
                                    :optimizations :none
-                                   ;; :pretty-print true
+                                   :pretty-print true
                                    :source-map true}}]}
   :figwheel {
              :server-port 8080

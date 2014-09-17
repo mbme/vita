@@ -13,7 +13,5 @@ goog.addDependency("../cljs/core/async.js", ['cljs.core.async'], ['cljs.core.asy
 goog.addDependency("../cljs/reader.js", ['cljs.reader'], ['goog.string', 'cljs.core', 'goog.string.StringBuffer']);
 goog.addDependency("../figwheel/client.js", ['figwheel.client'], ['goog.net.jsloader', 'cljs.core', 'cljs.core.async', 'clojure.string', 'cljs.reader']);
 goog.addDependency("../vita/figwheel.js", ['vita.figwheel'], ['cljs.core', 'figwheel.client']);
-goog.addDependency("../quiescent.js", ['quiescent'], ['cljs.core']);
-goog.addDependency("../quiescent/dom.js", ['quiescent.dom'], ['cljs.core', 'quiescent']);
 goog.addDependency("../vita/state.js", ['vita.state'], ['vita.log', 'cljs.core']);
-goog.addDependency("../vita/app.js", ['vita.app'], ['vita.generator', 'cljs.core', 'quiescent.dom', 'quiescent', 'vita.state']);
+goog.addDependency("../vita/app.js", ['vita.app'], ['vita.log', 'cljs.core']);
