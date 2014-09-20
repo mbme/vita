@@ -14,6 +14,7 @@
                           (this-as this
                                    (not= (aget (.-props this) "args")
                                          (aget next-props "args"))))
+                        ; wrapper for the plain `render' function
                         :render
                         (fn []
                           (this-as this
