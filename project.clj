@@ -7,9 +7,7 @@
 
                  [org.clojure/clojurescript "0.0-2322"]
                  [figwheel "0.1.4-SNAPSHOT"]]
-  :plugins [[lein-ring "0.8.11"]
-            [lein-cljsbuild "1.0.3"]
-            [lein-figwheel "0.1.4-SNAPSHOT"]]
+  :plugins [[lein-ring "0.8.11"]]
 
   :hooks [leiningen.cljsbuild]
 
@@ -31,6 +29,8 @@
              :css-dirs ["resources/public/css"]}
   :profiles {
              :dev {
+                   :plugins [[lein-cljsbuild "1.0.3"]
+                             [lein-figwheel "0.1.4-SNAPSHOT"]]
                    :dependencies [[javax.servlet/servlet-api "2.5"]
                                   [ring-mock "0.1.5"]]}}
   )
