@@ -14,4 +14,5 @@ goog.addDependency("../cljs/reader.js", ['cljs.reader'], ['goog.string', 'cljs.c
 goog.addDependency("../figwheel/client.js", ['figwheel.client'], ['goog.net.jsloader', 'cljs.core', 'cljs.core.async', 'clojure.string', 'cljs.reader']);
 goog.addDependency("../vita/figwheel.js", ['vita.figwheel'], ['cljs.core', 'figwheel.client']);
 goog.addDependency("../vita/state.js", ['vita.state'], ['vita.log', 'cljs.core']);
-goog.addDependency("../vita/app.js", ['vita.app'], ['vita.log', 'cljs.core']);
+goog.addDependency("../vita/react.js", ['vita.react'], ['cljs.core']);
+goog.addDependency("../vita/app.js", ['vita.app'], ['vita.log', 'cljs.core', 'vita.react']);

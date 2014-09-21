@@ -11,13 +11,16 @@
 
   :hooks [leiningen.cljsbuild]
 
+  :source-paths ["src" "src-cljs"]
+
   :ring {
          :handler vita.handler/app
          :port 8080}
+
   :cljsbuild {
               :builds [{
                         :id "dev"
-                        :source-paths ["src-cljs"]
+                        :source-paths ["src-cljs/"]
                         :compiler {
                                    :output-to "resources/public/app.js"
                                    :output-dir "resources/public/out"
@@ -27,6 +30,7 @@
   :figwheel {
              :server-port 8080
              :css-dirs ["resources/public/css"]}
+
   :profiles {
              :dev {
                    :plugins [[lein-cljsbuild "1.0.3"]
