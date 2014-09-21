@@ -1,10 +1,8 @@
-(ns vita.react (:require-macros [vita.react :refer [fn-this]]))
+(ns vita.react (:require [sablono.core :as s :refer-macros [html]]))
 
 ;; based on quiescent https://github.com/levand/quiescent
 
 (def React js/React)
-(def DOM (.-DOM React))
-(def div (.-div (.-DOM React)))
 
 (defn- react-class [config] (.createClass React (clj->js config)))
 (defn- get-args [obj] (aget obj "args"))
@@ -21,7 +19,7 @@
 
                   ;; wrapper for the plain `render' function
                   :render
-                  (fn [] (this-as this (apply (:render config) (react-args this))))
+                  (fn [] (this-as this (html (apply (:render config) (react-args this)))))
                   })
    ))
 

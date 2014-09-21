@@ -4,7 +4,7 @@
 
 (log/info "hello again :)")
 
-(defc Root [test other] (r/div {} "Hello World! " test other) :componentDidMount #(println "AHAHHA!"))
+(defc Root [test other] [:div "Hello World! " test other] :componentDidMount #(println "AHAHHA!"))
 
 (defn render [val] (.renderComponent r/React (Root val "!!!") js/document.body))
 (def counter (atom 0))
