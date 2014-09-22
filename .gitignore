@@ -12,3 +12,5 @@ pom.xml.asc
 .sass-cache/
 /out
 /.repl
+app.js
+main.css
