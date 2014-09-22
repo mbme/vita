@@ -1,9 +1,6 @@
 @import "bourbon/bourbon";
 @import "base/base";
 
-$base-font-family: "Open Sans", $sans-serif;
-$header-font-family: "Noto Sans", $base-font-family;
-
 $c-bg: #AC6C82;
 $c-bg-focused: #DA727E;
 $c-bg1: #685C79;
@@ -28,75 +25,32 @@ body {
 
     background-color: $c-bg;
 
-    $panel-w: 300px;
-    #control-panel {
+    >* {
         float: left;
-        width: $panel-w;
-    }
-
-    #preview {
-        float: right;
-        @include calc(width, '100% - #{$panel-w}');
-    }
-
-    #preview, #control-panel {
         height: 100%;
         overflow-y: auto;
     }
-}
 
-.search-box {
-    margin: 5px;
-    height: 40px;
+    $w-nav: 100px;
+    $w-filterp: 400px;
 
-    input {
-        background-color: $c-bg1;
+    nav {
+        width: 100px;
+    }
+
+    aside.filter-panel {
+        width: 400px;
+    }
+
+    div.preview-panel {
+        @include calc(width, '100% - #{$w-nav + $w-filterp}');
     }
 }
 
-.search-results {
-    overflow-y: auto;
-    @include calc(height, '100% - 50px');
-
-    .search-result {
-        height: 70px;
-        padding: 10px 5px;
-
-        border: 1px solid $c-bg;
-
-        &:hover {
-            cursor: pointer;
-            @include transition (border-color 0.1s ease-in-out);
-            border-color: $c-bg-focused;
-        }
-
-        &.selected {
-            background-color: $c-bg-focused;
-        }
-    }
+nav {
+    background-color: #001f3f;
 }
 
-.record {
-    @include box-sizing(border-box);
-
-    max-width: 800px;
-    min-height: 100%;
-
-    margin: 0 auto;
-    padding: 2em;
-
-    background: $c-bg2;
-}
-
-.fadein {
-    @include animation(fadein 1s);
-}
-
-@include keyframes(fadein) {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+div.preview-panel {
+    background-color: $c-bg2;
 }

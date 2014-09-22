@@ -1,14 +1,35 @@
 (ns vita.app (:require [vita.log :as log]
+                       [vita.generator :as gen]
                        [vita.react :as r])
     (:require-macros [vita.react :refer [defc]]))
 
-(log/info "hello again :)")
+(defonce state (atom {
+                      :records '()
+                      :search-term ""
+                      }))
 
-(defc Root [test other] [:div "Hello World! " test other] :componentDidMount #(println "AHAHHA!"))
+(defc NavPanel []
+  [:nav [:a "records"]])
 
-(defn render [val] (.renderComponent r/React (Root val "!!!") js/document.body))
-(def counter (atom 0))
-(js/setInterval (fn []
-                  (swap! counter inc)
-                  (render @counter)
-                  ) 1000)
+(defc FilterBox []
+  [:div.filter-box [:input {:type "text" :placeholder "start typing to filter records"}]])
+
+(defc FilterResult [record]
+  [:li (:name record)])
+
+(defc FilterResults [records]
+  [:ul.filter-results (map FilterResult records)])
+
+(defc FilterPanel [records]
+  [:aside.filter-panel (FilterBox) (FilterResults records)])
+
+(defc PreviewPanel [record]
+  [:div.preview-panel [:h3 "no data here:("]])
+
+(defc Root [state]
+  [:div#root (NavPanel) (FilterPanel (:records state)) (PreviewPanel)])
+
+(defn render [state] (.renderComponent r/React (Root state) js/document.body))
+
+(add-watch state :render (fn [_ _ _ data] (render data)))
+(swap! state assoc :records (gen/random-records 10))
