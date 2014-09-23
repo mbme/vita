@@ -6,22 +6,30 @@
 
 (defn- react-class [config] (.createClass React (clj->js config)))
 (defn- get-args [obj] (aget obj "args"))
-(defn- react-args [this] (get-args (.-props this)))
 
 (defn react-component [config]
   (react-class
    (merge config {
                   :shouldComponentUpdate
                   (fn [next-props] (this-as this
-                                            (not= (react-args this)
+                                            (not= (get-args (.-props this))
                                                   (get-args next-props)
                                                   )))
 
                   ;; wrapper for the plain `render' function
                   :render
-                  (fn [] (this-as this (html (apply (:render config) (react-args this)))))
+                  (fn [] (this-as this (let [render (:render config)
+                                             args (get-args (.-props this))]
+                                         (html (apply render args)))
+                                  ))
                   })
    ))
 
-(defn create-component [config]
-  (fn [& args] ((react-component config) #js {:args args})))
+(defn create-component [{:keys [getKey] :as config}]
+  (let [component (react-component config)]
+    (fn [& args] (component #js {:args args :key (when getKey (apply getKey args))}))
+    ))
+
+(defn render
+  ([comp elem] (.renderComponent React comp elem))
+  ([comp] (render comp js/document.body)))

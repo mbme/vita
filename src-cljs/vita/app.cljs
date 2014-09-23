@@ -15,7 +15,8 @@
   [:div.filter-box [:input {:type "text" :placeholder "start typing to filter records"}]])
 
 (defc FilterResult [record]
-  [:li (:name record)])
+  [:li (:name record)]
+  :getKey #(str "key-" (hash (:name %))))
 
 (defc FilterResults [records]
   [:ul.filter-results (map FilterResult records)])
@@ -29,7 +30,5 @@
 (defc Root [state]
   [:div#root (NavPanel) (FilterPanel (:records state)) (PreviewPanel)])
 
-(defn render [state] (.renderComponent r/React (Root state) js/document.body))
-
-(add-watch state :render (fn [_ _ _ data] (render data)))
+(add-watch state :render (fn [_ _ _ data] (r/render (Root data))))
 (swap! state assoc :records (gen/random-records 10))
