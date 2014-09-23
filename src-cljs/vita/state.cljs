@@ -1,17 +1,32 @@
-(ns vita.state (:require [vita.log :as log]))
+(ns vita.state
+  (:require [vita.log :as log]))
 
-(defonce state (atom {:records '()
-                      :search-term ""
-                      :selected-rec nil}))
+(defn- has-term? [rec term]
+  (if (count term)
+    (-> (:name rec)
+        (.indexOf term)
+        (> -1))
+    true))
 
-(defn- update-search
+(defn- mark-visible [records term]
+  (map #(assoc % :visible (has-term? % term)) records))
+
+(defonce ^:private state (atom {:records '()
+                                :search-term ""
+                                }))
+
+;; PUBLIC
+
+(defn update-search!
   "If `term' really changed then update state."
   [term]
   (when-not (= term (:search-term @state))
     (log/info "new search term: %s" term)
     (swap! state assoc :search-term term)))
 
-(defn- update-selected-rec [name]
-  (when-not (= name (:selected-rec @state))
-    (log/info "selected record: %s" name)
-    (swap! state assoc :selected-rec name)))
+(defn load-records! [records]
+  (log/info "adding new %s records" (count records))
+  (swap! state assoc :records records))
+
+(defn watch! [func]
+  (add-watch state :render (fn [_ _ _ data] (func data))))
