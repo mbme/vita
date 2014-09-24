@@ -19,25 +19,29 @@
     ]])
 
 (defc FilterResult [record]
-  [:li {:class [(when-not (:visible record) "hidden")
-                (when (:selected record)    "selected")]
-        :onClick #(state/update-selected! (state/record-id record))}
-   [:h4 (:name record)]]
+  [:li.result {:class [(when-not (:visible record) "hidden")
+                       (when (:selected record)    "selected")]
+               :onClick #(state/update-selected! (state/record-id record))}
+   [:h4 (:name record)]
+   [:span (take 60 (:data record))]]
   :getKey #(str "key-" (state/record-id %)))
 
 (defc FilterResults [records]
   [:ul.filter-results (map FilterResult records)])
 
 (defc FilterPanel [term records]
-  [:aside.filter-panel (FilterBox term) (FilterResults records)])
+  [:aside.filter-panel
+   (FilterBox term)
+   (FilterResults records)])
 
 (defc PreviewPanel [record]
-  [:div.preview-panel (if (nil? record)
-                        [:h3 "no data here:("]
-                        [:div.record
-                         [:h3 (:name record)]
-                         [:article (:data record)]]
-                        )])
+  [:div.preview-panel
+   (if (nil? record)
+     [:h3.title "no data here:("]
+     [:div.record
+      [:h3.title (:name record)]
+      [:article (:data record)]])
+   ])
 
 (defc Root [{:keys [search-term records selected-id]}]
   [:div#root
@@ -49,4 +53,5 @@
    ])
 
 (state/watch! #(r/render (Root %)))
-(state/load-records! (gen/random-records 10))
+;; load test data once
+(defonce _ (state/load-records! (gen/random-records 10)))
