@@ -8,11 +8,21 @@
         (> -1))
     true))
 
+(defn- record-id [record]
+  (hash (:name record)))
+
 (defn- mark-visible [records term]
   (map #(assoc % :visible (has-term? % term)) records))
 
+(defn- mark-selected [records selected-id]
+  (map #(assoc % :selected (= selected-id (record-id %))) records))
+
+(defn- record-by-id [id records]
+  (first (filter #(= id (record-id %)) records)))
+
 (defonce ^:private state (atom {:records '()
                                 :search-term ""
+                                :selected-id nil
                                 }))
 
 ;; PUBLIC
@@ -23,6 +33,11 @@
   (when-not (= term (:search-term @state))
     (log/info "new search term: %s" term)
     (swap! state assoc :search-term term)))
+
+(defn update-selected! [id]
+  (when-not (= id (:selected-id @state))
+    (log/info "new selected record: %s" id)
+    (swap! state assoc :selected-id id)))
 
 (defn load-records! [records]
   (log/info "adding new %s records" (count records))

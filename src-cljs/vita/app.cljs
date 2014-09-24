@@ -19,8 +19,11 @@
     ]])
 
 (defc FilterResult [record]
-  [:li {:class (when-not (:visible record) "hidden")}(:name record)]
-  :getKey #(str "key-" (hash (:name %))))
+  [:li {:class [(when-not (:visible record) "hidden")
+                (when (:selected record)    "selected")]
+        :onClick #(state/update-selected! (state/record-id record))}
+   [:h4 (:name record)]]
+  :getKey #(str "key-" (state/record-id %)))
 
 (defc FilterResults [records]
   [:ul.filter-results (map FilterResult records)])
@@ -29,13 +32,20 @@
   [:aside.filter-panel (FilterBox term) (FilterResults records)])
 
 (defc PreviewPanel [record]
-  [:div.preview-panel [:h3 "no data here:("]])
+  [:div.preview-panel (if (nil? record)
+                        [:h3 "no data here:("]
+                        [:div.record
+                         [:h3 (:name record)]
+                         [:article (:data record)]]
+                        )])
 
-(defc Root [{:keys [search-term records]}]
+(defc Root [{:keys [search-term records selected-id]}]
   [:div#root
    (NavPanel)
-   (FilterPanel search-term (state/mark-visible records search-term))
-   (PreviewPanel)
+   (FilterPanel search-term (-> records
+                                (state/mark-visible search-term)
+                                (state/mark-selected selected-id)))
+   (PreviewPanel (state/record-by-id selected-id records))
    ])
 
 (state/watch! #(r/render (Root %)))

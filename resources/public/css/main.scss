@@ -55,6 +55,16 @@ div.preview-panel {
     background-color: $c-bg2;
 }
 
+aside.filter-panel {
+    ul.filter-results li {
+        cursor: pointer;
+
+        &.selected {
+            background-color: $c-bg2;
+        }
+    }
+}
+
 .hidden {
     display: none;
 }
