@@ -28,25 +28,25 @@ body {
 
     background-color: $c-bg;
 
-    >* {
-        float: left;
-        height: 100%;
-        overflow-y: auto;
-    }
-
-    $w-nav: 100px;
-    $w-filterp: 400px;
+    $w-nav: 170px;
 
     nav {
-        width: 100px;
+        width: $w-nav;
     }
 
-    aside.filter-panel {
-        width: 400px;
+    .content {
+        @include calc(width, '100% - #{$w-nav}');
+        @include clearfix;
+
+        >* {
+            height: 100%;
+        }
     }
 
-    div.preview-panel {
-        @include calc(width, '100% - #{$w-nav + $w-filterp}');
+    nav, .content {
+        float: left;
+        height: 100%;
+        overflow-y: hidden;
     }
 }
 
@@ -58,7 +58,12 @@ div.preview-panel {
     background-color: $c-bg2;
 }
 
+$w-fp: 37%;
 aside.filter-panel {
+    float: left;
+    width: $w-fp;
+    overflow-y: scroll;
+
     li.result {
         @extend .truncate;
 
@@ -72,7 +77,6 @@ aside.filter-panel {
         $bd: 1px solid $c-border;
         border-top: $bd;
         border-right: $bd;
-
         &:last-child {
             border-bottom: $bd;
         }
@@ -88,6 +92,8 @@ aside.filter-panel {
 }
 
 div.preview-panel {
+    float: left;
+    width: 100% - $w-fp;
     padding: 20px;
 
     .record {

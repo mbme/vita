@@ -46,11 +46,12 @@
 (defc Root [{:keys [search-term records selected-id]}]
   [:div#root
    (NavPanel)
-   (FilterPanel search-term (-> records
-                                (state/mark-visible search-term)
-                                (state/mark-selected selected-id)))
-   (PreviewPanel (state/record-by-id selected-id records))
-   ])
+   [:div.content
+    (FilterPanel search-term (-> records
+                                 (state/mark-visible search-term)
+                                 (state/mark-selected selected-id)))
+    (PreviewPanel (state/record-by-id selected-id records))
+    ]])
 
 (state/watch! #(r/render (Root %)))
 ;; load test data once
