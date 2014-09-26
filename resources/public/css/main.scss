@@ -7,22 +7,30 @@ $c-border: #7FDBFF;
 $c-bg1: #685C79;
 $c-bg2: #FFBC67;
 
-body {
+// HELPERS
+
+.hidden {
+    display: none;
+}
+
+.truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+// BASE
+
+html, body {
     width: 100%;
     height: 100%;
 
-    margin: 0px;
-
     *, *:before, *:after {
-        font-family: $base-font-family;
-
         @include box-sizing(border-box);
     }
 }
 
 #root {
-    @include clearfix;
-
     height: 100%;
     width: 100%;
 
@@ -36,11 +44,6 @@ body {
 
     .content {
         @include calc(width, '100% - #{$w-nav}');
-        @include clearfix;
-
-        >* {
-            height: 100%;
-        }
     }
 
     nav, .content {
@@ -50,70 +53,29 @@ body {
     }
 }
 
-nav {
-    background-color: $c-nav;
-}
+// COMPONENTS
 
-div.preview-panel {
-    background-color: $c-bg2;
-}
+$w-fp: 40%;
 
-$w-fp: 37%;
-aside.filter-panel {
-    float: left;
+.filter-panel {
     width: $w-fp;
+    height: 100%;
     overflow-y: scroll;
+    float: left;
 
-    li.result {
+    .result {
         @extend .truncate;
 
+        margin: 20px;
         cursor: pointer;
 
-        width: 100%;
-        height: 75px;
-
-        padding: 5px;
-
-        $bd: 1px solid $c-border;
-        border-top: $bd;
-        border-right: $bd;
-        &:last-child {
-            border-bottom: $bd;
-        }
-
-        h4 {
-            margin-bottom: 8px;
-        }
-
         &.selected {
-            background-color: $c-bg2;
+            color: $c_border;
         }
     }
 }
 
-div.preview-panel {
-    float: left;
+.preview-panel {
     width: 100% - $w-fp;
-    padding: 20px;
-
-    .record {
-        .title {
-            width: 100%;
-            text-align: center;
-        }
-
-        article {
-            padding: 20px;
-        }
-    }
-}
-
-.hidden {
-    display: none;
-}
-
-.truncate {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    float: left;
 }

@@ -22,8 +22,8 @@
   [:li.result {:class [(when-not (:visible record) "hidden")
                        (when (:selected record)    "selected")]
                :onClick #(state/update-selected! (state/record-id record))}
-   [:h4 (:name record)]
-   [:span (take 60 (:data record))]]
+   [:h5 (:name record)]
+   [:span (apply str(take 60 (:data record)))]]
   :getKey #(str "key-" (state/record-id %)))
 
 (defc FilterResults [records]
