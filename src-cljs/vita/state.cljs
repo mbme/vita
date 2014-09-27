@@ -23,6 +23,8 @@
 (defonce ^:private state (atom {:records '()
                                 :search-term ""
                                 :selected-id nil
+                                :path :root
+                                :path-params {}
                                 }))
 
 ;; PUBLIC
@@ -45,3 +47,7 @@
 
 (defn watch! [func]
   (add-watch state :render (fn [_ _ _ data] (func data))))
+
+(defn set-path! [path params]
+  (log/info "changed path to %s [%s]" path params)
+  (swap! state assoc :path path :path-params params))

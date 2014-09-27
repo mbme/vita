@@ -30,7 +30,8 @@
                                    :source-map true}}]}
   :figwheel {
              :server-port 8080
-             :css-dirs ["resources/public/css"]}
+             :css-dirs ["resources/public/css"]
+             :ring-handler vita.handler/app}
 
   :profiles {
              :dev {

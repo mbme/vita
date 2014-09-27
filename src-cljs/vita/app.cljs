@@ -2,6 +2,7 @@
   (:require [vita.log :as log]
             [vita.generator :as gen]
             [vita.state :as state]
+            [vita.routing :as routing]
             [vita.react :as r])
   (:require-macros [vita.react :refer [defc]]))
 
@@ -43,16 +44,32 @@
       [:article (:data record)]])
    ])
 
-(defc Root [{:keys [search-term records selected-id]}]
+(defc RecordsPage [{:keys [search-term records selected-id]}]
+  [:div.records-page
+   (FilterPanel search-term (-> records
+                                (state/mark-visible search-term)
+                                (state/mark-selected selected-id)))
+   (PreviewPanel (state/record-by-id selected-id records))
+   ])
+
+(defc NotFoundPage [path]
+  [:h1 "page not found"])
+
+(defc Root [{:keys [path path-params] :as state}]
   [:div#root
    (NavPanel)
    [:div.content
-    (FilterPanel search-term (-> records
-                                 (state/mark-visible search-term)
-                                 (state/mark-selected selected-id)))
-    (PreviewPanel (state/record-by-id selected-id records))
+    (condp = path
+      :root (RecordsPage state)
+
+      (NotFoundPage))
     ]])
 
-(state/watch! #(r/render (Root %)))
 ;; load test data once
-(defonce _ (state/load-records! (gen/random-records 10)))
+(defonce _ (do
+             (routing/configure! {
+                                  "/" :root
+                                  "*" :none})
+             (state/watch! #(r/render (Root %)))
+             (state/load-records! (gen/random-records 10))
+             ))
