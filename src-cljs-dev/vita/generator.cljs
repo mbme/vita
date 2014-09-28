@@ -1,5 +1,6 @@
 (ns vita.generator
-  (:require [clojure.string :as str]))
+  (:require [clojure.string :as str]
+            [vita.state :as state]))
 
 (def chars-list (map char (range 97 123)))
 (defn random-char []
@@ -39,3 +40,6 @@
    :data (random-data)})
 (defn random-records [count]
   (take count (repeatedly rec-create)))
+
+;; load test data once
+(defonce _ (state/load-records! (random-records 10)))
