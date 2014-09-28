@@ -27,6 +27,13 @@
                                 :path-params {}
                                 }))
 
+;; PRIVATE
+
+(defn- set-path! [path params]
+  (log/info "changed path to %s [%s]" path params)
+  (swap! state assoc :path path :path-params params))
+
+
 ;; PUBLIC
 
 (defn update-search!
@@ -48,6 +55,9 @@
 (defn watch! [func]
   (add-watch state :render (fn [_ _ _ data] (func data))))
 
-(defn set-path! [path params]
-  (log/info "changed path to %s [%s]" path params)
-  (swap! state assoc :path path :path-params params))
+(defn configure-routing! [conf]
+  (log/debug "routing config: %s" conf)
+  (js/page.base "/")
+  (doseq [[route val] conf]
+    (js/page route #(set-path! val (.-params %))))
+  (js/page))

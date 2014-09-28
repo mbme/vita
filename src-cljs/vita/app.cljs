@@ -2,7 +2,6 @@
   (:require [vita.log :as log]
             [vita.generator :as gen]
             [vita.state :as state]
-            [vita.routing :as routing]
             [vita.react :as r])
   (:require-macros [vita.react :refer [defc]]))
 
@@ -65,11 +64,12 @@
       (NotFoundPage))
     ]])
 
-;; load test data once
-(defonce _ (do
-             (routing/configure! {
-                                  "/" :root
-                                  "*" :none})
-             (state/watch! #(r/render (Root %)))
-             (state/load-records! (gen/random-records 10))
-             ))
+(defonce _
+  (do
+    (state/configure-routing! {"/" :root
+                               "*" :none})
+    (state/watch! #(r/render (Root %)))
+
+    ;; load test data once
+    (state/load-records! (gen/random-records 10))
+    ))
