@@ -14,3 +14,4 @@ pom.xml.asc
 /.repl
 app.js
 main.css
+*.map
