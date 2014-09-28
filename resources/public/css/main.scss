@@ -38,6 +38,14 @@ html, body {
 
     $w-nav: 170px;
 
+    $h-search: 40px;
+    #search-box {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        height: $h-search;
+    }
+
     nav {
         width: $w-nav;
     }
@@ -47,8 +55,12 @@ html, body {
     }
 
     nav, .content {
-        float: left;
+        margin-top: $h-search;
+
         height: 100%;
+        @include calc(height, '100% - #{$h-search}');
+
+        float: left;
         overflow-y: hidden;
     }
 }
@@ -60,7 +72,7 @@ $w-fp: 40%;
 .filter-panel {
     width: $w-fp;
     height: 100%;
-    overflow-y: scroll;
+    overflow-y: auto;
     float: left;
 
     .result {

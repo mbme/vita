@@ -10,10 +10,10 @@
 (defc NavPanel []
   [:nav [:a "records"]])
 
-(defc FilterBox [term]
-  [:div.filter-box
+(defc SearchBox [term]
+  [:div#search-box
    [:input {:type "text"
-            :placeholder "start typing to filter records"
+            :placeholder "SEARCH"
             :defaultValue term
             :onKeyUp #(state/update-search! (e-val %))}
     ]])
@@ -29,10 +29,8 @@
 (defc FilterResults [records]
   [:ul.filter-results (map FilterResult records)])
 
-(defc FilterPanel [term records]
-  [:aside.filter-panel
-   (FilterBox term)
-   (FilterResults records)])
+(defc FilterPanel [records]
+  [:aside.filter-panel (FilterResults records)])
 
 (defc PreviewPanel [record]
   [:div.preview-panel
@@ -44,18 +42,19 @@
    ])
 
 (defc RecordsPage [{:keys [search-term records selected-id]}]
-  [:div.records-page
-   (FilterPanel search-term (-> records
-                                (state/mark-visible search-term)
-                                (state/mark-selected selected-id)))
+  [:div.page.page-records
+   (FilterPanel (-> records
+                    (state/mark-visible search-term)
+                    (state/mark-selected selected-id)))
    (PreviewPanel (state/record-by-id selected-id records))
    ])
 
 (defc NotFoundPage [path]
-  [:h1 "page not found"])
+  [:h1.not-found "page not found"])
 
 (defc Root [{:keys [path path-params] :as state}]
   [:div#root
+   (SearchBox (:search-term state))
    (NavPanel)
    [:div.content
     (condp = path
