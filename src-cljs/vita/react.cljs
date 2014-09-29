@@ -33,3 +33,5 @@
 (defn render
   ([comp elem] (.renderComponent React comp elem))
   ([comp] (render comp js/document.body)))
+
+(defn e-val [evt] (.-value (.-target evt)))
