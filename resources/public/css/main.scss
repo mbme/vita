@@ -1,5 +1,6 @@
 @import "bourbon/bourbon";
 @import "base/base";
+@import "font-awesome/font-awesome";
 
 $c-nav: #111111;
 $c-bg: #FFFFFF;
@@ -42,7 +43,7 @@ html, body {
     $w-nav: 170px;
     $h-search: 40px;
 
-    #search-box {
+    #search-panel {
         position: fixed;
         top: 0;
         width: 100%;
@@ -74,7 +75,25 @@ html, body {
 
 // COMPONENTS
 
+.icon {
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+// PAGES
+
 $w-fp: 40%;
+
+#search-panel{
+    .icon {
+        margin: 0 20px;
+    }
+    .search {
+        display: inline-block;
+        width: 400px;
+    }
+}
 
 .filter-panel {
     width: $w-fp;

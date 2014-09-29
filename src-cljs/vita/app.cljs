@@ -1,17 +1,19 @@
 (ns vita.app
   (:require [vita.state :as state]
             [vita.page.records :as records]
+            [vita.components :as c]
             [vita.react :as r :refer-macros [defc]]))
 
 (defc NavPanel []
-  [:nav [:a "records"]])
+  [:nav [:a (c/icon "home") "records"]])
 
 (defc SearchPanel [term]
-  [:div#search-box
-   [:input {:type "text"
-            :placeholder "SEARCH"
-            :defaultValue term
-            :onKeyUp #(state/update-search! (r/e-val %))}
+  [:div#search-panel
+   (c/icon "bars" "2x")
+   [:input.search {:type "text"
+                   :placeholder "SEARCH"
+                   :defaultValue term
+                   :onKeyUp #(state/update-search! (r/e-val %))}
     ]])
 
 (defc NotFoundPage [path]
