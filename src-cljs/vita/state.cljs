@@ -1,5 +1,5 @@
 (ns vita.state
-  (:require [vita.log :as log]))
+  (:require [vita.log :as log :include-macros true]))
 
 (defn- has-term? [rec term]
   (if (count term)
