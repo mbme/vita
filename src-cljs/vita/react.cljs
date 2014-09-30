@@ -1,37 +1,47 @@
-(ns vita.react (:require [sablono.core :as s :refer-macros [html]]))
-
-;; based on quiescent https://github.com/levand/quiescent
+(ns vita.react
+  (:require [sablono.core :as s :refer-macros [html]]))
 
 (def React js/React)
 
-(defn- react-class [config] (.createClass React (clj->js config)))
 (defn- get-args [obj] (aget obj "args"))
+(defn- react-class [config]
+  (->> {:shouldComponentUpdate
+        (fn [next-props] (this-as this
+                                  (not= (get-args (.-props this))
+                                        (get-args next-props)
+                                        )))
 
-(defn react-component [config]
-  (react-class
-   (merge config {
-                  :shouldComponentUpdate
-                  (fn [next-props] (this-as this
-                                            (not= (get-args (.-props this))
-                                                  (get-args next-props)
-                                                  )))
+        ;; wrapper for the plain `render' function
+        :render
+        (fn [] (this-as this (let [render (:render config)
+                                   args (get-args (.-props this))]
+                               (html (apply render args)))
+                        ))}
+       (merge config)
+       (clj->js)
+       (.createClass React)))
 
-                  ;; wrapper for the plain `render' function
-                  :render
-                  (fn [] (this-as this (let [render (:render config)
-                                             args (get-args (.-props this))]
-                                         (html (apply render args)))
-                                  ))
-                  })
-   ))
-
-(defn create-component [{:keys [getKey] :as config}]
-  (let [component (react-component config)]
-    (fn [& args] (component #js {:args args :key (when getKey (apply getKey args))}))
+(defrecord Component [config render]
+  IFn
+  (-invoke [this & args]
+    (let [getKey (:getKey this)]
+      (render #js {:args args
+                   :key (when getKey (apply getKey args))}
+              ))
     ))
+
+(extend-protocol ILookup
+  Component
+  (-lookup [comp k] (get comp/config k))
+  (-lookup [comp k not-found] (get comp/config k not-found)))
+
+(defn create-component [config]
+  (->Component config (react-class config)))
+
+;; UTILS
+
+(defn e-val [evt] (.-value (.-target evt)))
 
 (defn render
   ([comp elem] (.renderComponent React comp elem))
   ([comp] (render comp js/document.body)))
-
-(defn e-val [evt] (.-value (.-target evt)))

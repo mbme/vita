@@ -7,28 +7,28 @@
 (defc NavPanel []
   [:nav [:a (c/icon "home") "records"]])
 
-(defc SearchPanel [term]
+(defc SearchPanel [term menu]
   [:div#search-panel
    (c/icon "bars" "2x")
    [:input.search {:type "text"
                    :placeholder "SEARCH"
                    :defaultValue term
-                   :onKeyUp #(state/update-search! (r/e-val %))}
-    ]])
+                   :onKeyUp #(state/update-search! (r/e-val %))}]
+   menu
+   ])
 
-(defc NotFoundPage [path]
+(defc NotFoundPage []
   [:h1.not-found "page not found"])
 
 (defc Root [{:keys [path path-params] :as state}]
-  [:div#root
-   (SearchPanel (:search-term state))
-   (NavPanel)
-   [:div.content
-    (condp = path
-      :root (records/RecordsPage state)
-
-      (NotFoundPage))
-    ]])
+  (let [page (condp = path
+               :root records/RecordsPage
+               NotFoundPage)]
+    [:div#root
+     (SearchPanel (:search-term state) (:menu page))
+     (NavPanel)
+     [:div.content (page state)]]
+    ))
 
 (defonce _
   (do

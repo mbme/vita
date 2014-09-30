@@ -31,4 +31,5 @@
                     (state/mark-visible search-term)
                     (state/mark-selected selected-id)))
    (PreviewPanel (state/record-by-id selected-id records))
-   ])
+   ]
+  :menu [:span "save"])
