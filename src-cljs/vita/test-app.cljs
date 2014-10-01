@@ -5,9 +5,9 @@
             [vita.react :as r :refer-macros [defc]]))
 
 (defc Root []
-  [:div "test" [:h1 "OK"]
-   '(:h2 {:style {:color "red"}
-          :class "test"}
+  [:div#test "test" [:h1 "OK"]
+   '(:h2.test {:style {:color "red"}
+          :class "test and other"}
          "haha")
    [:h1]])
 
