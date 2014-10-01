@@ -1,5 +1,5 @@
 (ns vita.react
-  (:require [sablono.core :as s :refer-macros [html]]))
+ (:require [vita.viter :as v]))
 
 (def React js/React)
 
@@ -15,7 +15,7 @@
         :render
         (fn [] (this-as this (let [render (:render config)
                                    args (get-args (.-props this))]
-                               (html (apply render args)))
+                               (js/React.DOM.div nil (v/html (apply render args))))
                         ))}
        (merge config)
        (clj->js)
