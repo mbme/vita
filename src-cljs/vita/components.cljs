@@ -1,5 +1,4 @@
-(ns vita.components
-  (:require [vita.react :as r :refer-macros [defc]]))
+(ns vita.components)
 
 (defn- add-prefix [classes]
   (map #(str "fa-" %) classes))

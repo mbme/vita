@@ -1,7 +1,16 @@
-(ns vita.viter
+(ns viter.core
   (:require [clojure.walk :as w]
             [clojure.set :as s]
-            [clojure.string :as str]))
+            [clojure.string :as str])
+  (:require-macros [viter.core :as v]))
+
+(def React js/React)
+(def LIST (v/defc-list))
+
+;; FIXME remove this logging
+(enable-console-print!)
+(println LIST)
+(println (count LIST))
 
 ;; From Weavejester's Hiccup, via pump:
 ;; Regular expression that parses a CSS-style id and class from a tag name.
@@ -12,12 +21,10 @@
        (re-matches re-tag)
        next))
 
-(def attr-aliases {"class" "className"
-                   "for" "htmlFor"
-                   "charset" "charSet"})
-
 (defn replace-attr-aliases [attrs]
-  (s/rename-keys attrs attr-aliases))
+  (s/rename-keys attrs {"class" "className"
+                        "for" "htmlFor"
+                        "charset" "charSet"}))
 
 (defn get-words [s]
   (str/split s #"\s+"))
@@ -78,3 +85,46 @@
 
 (defn html-str [body]
   (str (html body)))
+
+(defn- get-args [obj] (aget obj "args"))
+(defn- react-class [config]
+  (->> {:shouldComponentUpdate
+        (fn [next-props] (this-as this
+                                  (not= (get-args (.-props this))
+                                        (get-args next-props)
+                                        )))
+
+        ;; wrapper for the plain `render' function
+        :render
+        (fn [] (this-as this (let [render (:render config)
+                                   args (get-args (.-props this))]
+                               (html (apply render args)))
+                        ))}
+       (merge config)
+       (clj->js)
+       (.createClass React)))
+
+(defrecord Component [config render]
+  IFn
+  (-invoke [this & args]
+    (let [getKey (:getKey this)]
+      (render #js {:args args
+                   :key (when getKey (apply getKey args))}
+              ))
+    ))
+
+(extend-protocol ILookup
+  Component
+  (-lookup [comp k] (get comp/config k))
+  (-lookup [comp k not-found] (get comp/config k not-found)))
+
+(defn create-component [config]
+  (->Component config (react-class config)))
+
+;; UTILS
+
+(defn e-val [evt] (.-value (.-target evt)))
+
+(defn render
+  ([comp elem] (.renderComponent React comp elem))
+  ([comp] (render comp js/document.body)))

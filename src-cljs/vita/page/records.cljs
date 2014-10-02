@@ -1,6 +1,6 @@
 (ns vita.page.records
   (:require [vita.state :as state]
-            [vita.react :as r :refer-macros [defc]]))
+            [viter.core :refer-macros [defc]]))
 
 (defc FilterResult [record]
   [:li.result {:class [(when-not (:visible record) "hidden")

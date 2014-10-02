@@ -2,7 +2,7 @@
   (:require [vita.state :as state]
             [vita.page.records :as records]
             [vita.components :as c]
-            [vita.react :as r :refer-macros [defc]]))
+            [viter.core :as r :refer-macros [defc]]))
 
 (defc NavPanel []
   [:nav [:a (c/icon "home") "records"]])
