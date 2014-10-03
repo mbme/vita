@@ -4,11 +4,19 @@
             [vita.components :as c]
             [viter.core :as r :refer-macros [defc]]))
 
-(defc Root []
-  [:div#test "test" [:h1 "OK"]
+(defc div1 [{:keys [id prefix children]}]
+  `[:h1 {:id ~id} ~prefix :lol "lol1" ~@children])
+
+(defc Root [{:keys [a]}]
+  [:div1#test {:prefix a} "test" [:h1 "OK"]
+   (println a)
    '(:h2.test {:style {:color "red"}
                :class "test and other"}
               "haha")
    [:h1]])
 
-(r/render (Root))
+(def counter (atom 0))
+
+(js/window.setInterval (fn []
+                         (r/render [:Root {:a (= 0 (mod (swap! counter inc) 8))}])
+                         ) 1000)
