@@ -4,5 +4,7 @@
 (defmacro defc [name args render & rest]
   `(defonce ~name
      (create-component
-      (hash-map :render (fn ~args ~render) :displayName (str '~name) ~@rest)
-      )))
+      (str '~name)
+      (fn ~args ~render)
+      (hash-map ~@rest))
+     ))
