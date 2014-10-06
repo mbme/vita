@@ -1,7 +1,12 @@
-(ns vita.components)
+(ns vita.components
+  (:require [viter.core :as r :refer-macros [defc]]
+            [viter.utils :as utils]))
 
 (defn- add-prefix [classes]
   (map #(str "fa-" %) classes))
 
-(defn icon [& classes]
-  [:i.icon.fa {:class (add-prefix classes)}])
+(defc icon [{:keys [className]}]
+  [:i.icon.fa {:class (->> className
+                           utils/get-words
+                           add-prefix
+                           utils/join)}])

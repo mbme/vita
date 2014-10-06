@@ -8,12 +8,14 @@
   (-lookup [this k not-found] (get config k not-found))
   IFn
   (-invoke [this args & rest]
-    (react-render #js {:args (assoc args :children rest)})))
+    (react-render #js {:args (assoc args :children rest)
+                       :key (:key args)})
+    ))
 
 (defn create-component [name render config]
   "Creates component and registers it."
   (let [render (fn [& all] (p/html (apply render all)))
-        config (assoc config :render render)
+        config (assoc config :render render :displayName name)
         comp (->Component config (r/create-class config))]
     (p/register-component! name comp)
     comp

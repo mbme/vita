@@ -1,5 +1,6 @@
 (ns viter.parser
   (:require [viter.react :as r]
+            [viter.utils :as utils]
             [clojure.string  :as  str]
             [clojure.set     :as  s]))
 
@@ -24,9 +25,11 @@
 (def re-tag #"([^\s\.#]+)(?:#([^\s\.#]+))?(?:\.([^\s#]+))?")
 
 (defn split-tag [symbol]
-  (->> (name symbol)
-       (re-matches re-tag)
-       next))
+  (let [[tag id classes](->> (name symbol)
+                             (re-matches re-tag)
+                             next)]
+    [tag id (str/replace (or classes "") #"\." " ")]
+    ))
 
 (defn to-component [name]
   (get @components name))
@@ -36,15 +39,11 @@
       (when-let [elem (r/get-elem name)] [elem true])
       (throw (str "unknown element: " name))))
 
-
-(defn get-words [s]
-  (str/split s #"\s+"))
-
 (defn cleanup-classes [& classes]
-  (->> (map get-words classes)
+  (->> (map utils/get-words classes)
        (apply concat)
        set
-       (str/join " ")))
+       utils/join))
 
 (defn remove-empty [m]
   (into {} (for [[k v] m :when (not (str/blank? v))] [k v])))

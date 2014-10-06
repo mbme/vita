@@ -14,6 +14,12 @@ To start a web server for the application, run:
 
     lein ring server
 
+## TODO
+
+uniform handling of attributes (i.e. classes lists)
+handle native elements and components separately
+proper toString conversion for attr map values (for native elements)
+
 ## License
 
 Copyright © 2014 FIXME
