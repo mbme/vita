@@ -39,12 +39,6 @@
    (vector? elem)
    (keyword? (first elem))))
 
-(defn to-js [elem]
-  (cond (keyword? elem) (name elem)
-        (symbol? elem) (str elem)
-        (coll? elem) (clj->js elem)
-        :else elem))
-
 (defn normalize-form
   "Add attributes map to form if missing."
   [elem [attrs & more :as all] id class]
@@ -81,4 +75,4 @@
                     process-react-elem
                     process-custom-elem)]
       (handler elem attrs children))
-    (to-js body)))
+    (clj->js body)))
