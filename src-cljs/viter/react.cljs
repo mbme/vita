@@ -6,6 +6,7 @@
   (aget (.-DOM React) name))
 
 (defn- get-args [obj] (aget obj "args"))
+
 (defn create-class [config]
   (->> {:shouldComponentUpdate
         (fn [next-props] (this-as this

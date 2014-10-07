@@ -5,8 +5,8 @@
 (defn- add-prefix [classes]
   (map #(str "fa-" %) classes))
 
-(defc icon [{:keys [className]}]
-  [:i.icon.fa {:class (->> className
+(defc icon [{:keys [class]}]
+  [:i.icon.fa {:class (->> class
                            utils/get-words
                            add-prefix
                            utils/join)}])
