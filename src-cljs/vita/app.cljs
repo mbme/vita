@@ -7,14 +7,14 @@
 (defc NavPanel []
   [:nav [:a [:icon.home] "records"]])
 
-(defc SearchPanel [{:keys [term menu]}]
+(defc SearchPanel [{:keys [term children]}]
   [:div#search-panel
    [:icon.bars.2x]
    [:input.search {:type "text"
                    :placeholder "SEARCH"
                    :defaultValue term
                    :onKeyUp #(state/update-search! (r/e-val %))}]
-   menu
+   `[:span.menu ~@children]
    ])
 
 (defc NotFoundPage []
@@ -25,7 +25,7 @@
                :root records/RecordsPage
                NotFoundPage)]
     [:div#root
-     [:SearchPanel {:term search-term :menu (:menu page) }]
+     [:SearchPanel {:term search-term} (:menu page)]
      [:NavPanel]
      [:div.content (page state)]]
     ))

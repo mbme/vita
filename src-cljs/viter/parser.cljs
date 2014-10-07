@@ -61,7 +61,7 @@
     ))
 
 (defn process-custom-elem [tag attrs children]
-  (apply tag `[~attrs ~@children]))
+  (apply tag [attrs children]))
 
 (defn html
   "Render React dom from viter form."

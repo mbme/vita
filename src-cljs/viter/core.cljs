@@ -7,7 +7,7 @@
   (-lookup [this k] (get config k))
   (-lookup [this k not-found] (get config k not-found))
   IFn
-  (-invoke [this args & rest]
+  (-invoke [this args rest]
     (react-render (js-obj "args" (assoc args :children rest)
                           "key" (:key args) ))
     ))

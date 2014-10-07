@@ -36,6 +36,6 @@
    [:FilterPanel {:records (-> records
                                (state/mark-visible search-term)
                                (state/mark-selected selected-id))} ]
-   [:PreviewPanel {:record (state/record-by-id selected-id records)} ]
-   ]
-  :menu [:span "save"])
+   [:PreviewPanel {:record (state/record-by-id selected-id records)} ]]
+
+  :menu [:button "save"])
