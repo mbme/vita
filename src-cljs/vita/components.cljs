@@ -6,7 +6,7 @@
   (map #(str "fa-" %) classes))
 
 (defc icon [{:keys [class]}]
-  [:i.icon.fa {:class (->> class
-                           utils/get-words
-                           add-prefix
-                           utils/join)}])
+  [:i.fa {:class (->> class
+                      utils/get-words
+                      add-prefix
+                      utils/join)}])

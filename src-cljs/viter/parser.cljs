@@ -36,7 +36,7 @@
 
 (defn viter-form? [elem]
   (and
-   (vector? elem)
+   (or (vector? elem) (list? elem))
    (keyword? (first elem))))
 
 (defn normalize-form

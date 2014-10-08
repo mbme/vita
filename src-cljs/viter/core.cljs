@@ -12,12 +12,16 @@
                           "key" (:key args) ))
     ))
 
-(defn create-component [name render config]
+(defn create-component [comp-name render config]
   "Creates component and registers it."
-  (let [render (fn [& all] (p/html (apply render all)))
-        config (assoc config :render render :displayName name)
+  (let [render (fn [conf] (let [rendered   (render conf)
+                                elem       (name (first rendered))
+                                elem+class (str elem "." comp-name)]
+                            (p/html (cons (keyword elem+class) (rest rendered)))
+                            ))
+        config (assoc config :render render :displayName comp-name)
         comp (->Component config (r/create-class config))]
-    (p/register-component! name comp)
+    (p/register-component! comp-name comp)
     comp
     ))
 
