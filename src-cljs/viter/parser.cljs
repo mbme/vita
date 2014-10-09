@@ -12,17 +12,10 @@
     (throw (str "duplicate component definition: " name)))
   (swap! components assoc name comp))
 
-;; From Weavejester's Hiccup, via pump:
-;; Regular expression that parses a CSS-style id and class from a tag name.
-(def re-tag #"([^\s\.#]+)(?:#([^\s\.#]+))?(?:\.([^\s#]+))?")
-
-;; TODO better tag parsing
 (defn split-tag [symbol]
-  (let [[tag id classes](->> (name symbol)
-                             (re-matches re-tag)
-                             next)]
-    [tag id (str/replace (or classes "") #"\." " ")]
-    ))
+  (let [[elem & classes] (str/split (name symbol) #"\.")
+        class (str/join " " classes)]
+    [elem class]))
 
 (defn to-elem [name]
   (or (when-let [elem (get @components name)] [elem false])
@@ -34,23 +27,25 @@
                         :for      :htmlFor
                         :charset  :charSet}))
 
-(defn viter-form? [elem]
-  (and
-   (or (vector? elem) (list? elem))
-   (keyword? (first elem))))
-
 (defn normalize-form
   "Add attributes map to form if missing."
-  [elem [attrs & more :as all] id class]
+  [[attrs & more :as all]]
   (let [has-attrs (map? attrs)
         attrs (if has-attrs attrs {})
-        final-attrs (assoc attrs
-                      ;; concat classes
-                      :class (str/trim (str class " " (:class attrs)))
-                      ;; if not id in attrs then use passed id
-                      :id (or (:id attrs) id))
         rest (remove nil? (if has-attrs more all))]
-    [elem final-attrs rest]))
+    [attrs rest]))
+
+(defn inject-comp-name [class comp-name]
+  (if (nil? comp-name)
+    class
+    (str/replace class #"@" comp-name)))
+
+(defn normalize-attrs [attrs static-class comp-name]
+  (assoc attrs :class (-> (:class attrs)
+                          (str " " static-class)
+                          str/trim
+                          (inject-comp-name comp-name))
+         ))
 
 (defn process-react-elem [tag attrs children]
   (let [js-attrs (-> attrs
@@ -63,16 +58,22 @@
 (defn process-custom-elem [tag attrs children]
   (apply tag [attrs children]))
 
+(defn viter-form? [elem]
+  (and
+   (or (vector? elem) (list? elem))
+   (keyword? (first elem))))
+
 (defn html
   "Render React dom from viter form."
-  [body]
-  (if (viter-form? body)
-    (let [[elem-name id class] (split-tag (first body))
-          [elem is-native] (to-elem elem-name)
-          [elem attrs rest] (normalize-form elem (rest body) id class)
-          children (map html rest)
-          handler (if is-native
-                    process-react-elem
-                    process-custom-elem)]
-      (handler elem attrs children))
-    (clj->js body)))
+  ([body comp-name]
+     (if (viter-form? body)
+       (let [[elem-name class] (split-tag (first body))
+             [attrs rest] (normalize-form (rest body))
+             attrs (normalize-attrs attrs class comp-name)
+             [elem is-native] (to-elem elem-name)
+             comp-name (if is-native comp-name elem-name)
+             children (map #(html % comp-name) rest)
+             handler (if is-native process-react-elem process-custom-elem)]
+         (handler elem attrs children))
+       (clj->js body)))
+  ([body] (html body nil)))

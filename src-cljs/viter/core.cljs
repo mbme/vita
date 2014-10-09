@@ -17,7 +17,7 @@
   (let [render (fn [conf] (let [rendered   (render conf)
                                 elem       (name (first rendered))
                                 elem+class (str elem "." comp-name)]
-                            (p/html (cons (keyword elem+class) (rest rendered)))
+                            (p/html (cons (keyword elem+class) (rest rendered)) comp-name)
                             ))
         config (assoc config :render render :displayName comp-name)
         comp (->Component config (r/create-class config))]
