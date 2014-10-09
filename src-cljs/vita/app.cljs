@@ -2,31 +2,31 @@
   (:require [vita.state :as state]
             [vita.page.records :as records]
             [vita.components :as c]
-            [vita.react :as r :refer-macros [defc]]))
+            [viter.core :as r :refer-macros [defc]]))
 
 (defc NavPanel []
-  [:nav [:a (c/icon "home") "records"]])
+  [:nav [:a [:icon.home] "records"]])
 
-(defc SearchPanel [term menu]
+(defc SearchPanel [{:keys [term children]}]
   [:div#search-panel
-   (c/icon "bars" "2x")
+   [:icon.bars.2x]
    [:input.search {:type "text"
                    :placeholder "SEARCH"
                    :defaultValue term
                    :onKeyUp #(state/update-search! (r/e-val %))}]
-   menu
+   `[:span.menu ~@children]
    ])
 
 (defc NotFoundPage []
   [:h1.not-found "page not found"])
 
-(defc Root [{:keys [path path-params] :as state}]
+(defc Root [{:keys [path path-params search-term] :as state}]
   (let [page (condp = path
                :root records/RecordsPage
                NotFoundPage)]
     [:div#root
-     (SearchPanel (:search-term state) (:menu page))
-     (NavPanel)
+     [:SearchPanel {:term search-term} (:menu page)]
+     [:NavPanel]
      [:div.content (page state)]]
     ))
 
@@ -34,5 +34,5 @@
   (do
     (state/configure-routing! {"/" :root
                                "*" :none})
-    (state/watch! #(r/render (Root %)))
+    (state/watch! #(r/render [:Root %]))
     ))

@@ -6,7 +6,6 @@
                  [com.taoensso/timbre "3.2.1"]
 
                  [org.clojure/clojurescript "0.0-2322"]
-                 [sablono "0.2.22"]
                  [figwheel "0.1.4-SNAPSHOT"]]
   :plugins [[lein-ring "0.8.11"]]
 
