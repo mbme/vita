@@ -40,8 +40,14 @@
     class
     (str/replace class #"&" comp-name)))
 
+(defn normalize-class [class]
+  (if (map? class)
+    (str/join " " (for [[k v] class :when v] (name k)))
+    class))
+
 (defn normalize-attrs [attrs static-class comp-name]
   (assoc attrs :class (-> (:class attrs)
+                          normalize-class
                           (str " " static-class)
                           str/trim
                           (inject-comp-name comp-name))

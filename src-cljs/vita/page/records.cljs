@@ -4,8 +4,8 @@
             [viter.core :refer-macros [defc]]))
 
 (defc FilterResult [{:keys [record]}]
-  [:li {:class (utils/join (flatten [(when-not (:visible record) "hidden")
-                                     (when (:selected record)    "selected")]))
+  [:li {:class {:hidden (not (:visible record))
+                :selected (:selected record)}
         :onClick #(state/update-selected! (state/record-id record))}
    [:h5 (:name record)]
    [:span (apply str (take 60 (:data record)))]

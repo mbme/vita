@@ -15,7 +15,6 @@ To start a web server for the application, run:
 lein ring server
 
 ## TODO
-prosess hashmap as class value: if value is true then add class else do not add it
 
 ## License
 
