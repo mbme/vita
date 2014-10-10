@@ -14,7 +14,7 @@
                    :placeholder "SEARCH"
                    :defaultValue term
                    :onKeyUp #(state/update-search! (r/e-val %))}]
-   `[:span {:class "@-menu"} ~@children]
+   `[:span.&-menu ~@children]
    ])
 
 (defc NotFoundPage []

@@ -38,7 +38,7 @@
 (defn inject-comp-name [class comp-name]
   (if (nil? comp-name)
     class
-    (str/replace class #"@" comp-name)))
+    (str/replace class #"&" comp-name)))
 
 (defn normalize-attrs [attrs static-class comp-name]
   (assoc attrs :class (-> (:class attrs)

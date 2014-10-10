@@ -23,15 +23,15 @@
   [:aside.filter-panel [:FilterResults attrs ]])
 
 (defc PreviewPanel [{:keys [record]}]
-  [:div.preview-panel
+  [:div
    (if (nil? record)
-     [:h3.title "no data here:("]
+     [:h3.&-title "no data here:("]
      [:div.record
       [:h3.title (:name record)]
       [:article (:data record)]])
    ])
 
-(defc RecordsPage [{:keys [search-term records selected-id] :or {search-term ""}}]
+(defc RecordsPage [{:keys [search-term records selected-id]}]
   [:div.page.page-records
    [:FilterPanel {:records (-> records
                                (state/mark-visible search-term)
