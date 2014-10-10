@@ -2,7 +2,7 @@
   (:require [vita.state :as state]
             [vita.page.records :as records]
             [vita.components :as c]
-            [viter.core :as r :refer-macros [defc]]))
+            [viter.core :as v :refer-macros [defc]]))
 
 (defc NavPanel []
   [:nav [:a [:icon.-home] "records"]])
@@ -13,7 +13,7 @@
    [:input.&-search {:type "text"
                      :placeholder "SEARCH"
                      :defaultValue term
-                     :onKeyUp #(state/update-search! (r/e-val %))}]
+                     :onKeyUp #(state/update-search! (v/e-val %))}]
    `[:div.&-menu ~@children]
    ])
 
@@ -34,5 +34,5 @@
   (do
     (state/configure-routing! {"/" :root
                                "*" :none})
-    (state/watch! #(r/render [:Root %]))
+    (state/watch! #(v/render! js/document.body Root %))
     ))

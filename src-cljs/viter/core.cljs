@@ -1,6 +1,7 @@
 (ns viter.core
   (:require [viter.react  :as r]
-            [viter.parser :as p]))
+            [viter.parser :as p]
+            [viter.utils :as utils]))
 
 (deftype Component [config react-render]
   ILookup
@@ -29,6 +30,16 @@
 
 (defn e-val [evt] (.-value (.-target evt)))
 
-(defn render
-  ([comp elem] (r/render (p/html comp) elem))
-  ([comp] (render comp js/document.body)))
+(def ^:private render-data nil)
+(def ^:private render-scheduled false)
+(defn- actually-render []
+  (utils/request-animation-frame actually-render)
+  (let [[elem comp params] render-data]
+    (r/render (apply comp params) elem)
+    (set! render-scheduled false)))
+
+(defn render! [elem comp & params]
+  (set! render-data [elem comp params])
+  (when-not render-scheduled
+    (set! render-scheduled true)
+    (utils/request-animation-frame actually-render)))

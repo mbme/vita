@@ -14,3 +14,9 @@
 
 (defn remove-empty-vals [m]
   (into {} (remove (comp empty-val? val) m)))
+
+(def request-animation-frame (or (.-requestAnimationFrame js/window)
+                                 (.-mozRequestAnimationFrame js/window)
+                                 (.-webkitRequestAnimationFrame js/window)
+                                 (.-msRequestAnimationFrame js/window)
+                                 (fn [f] (.setTimeout js/window f 16))))
