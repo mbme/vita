@@ -35,7 +35,7 @@ html, body {
     }
 }
 
-#root {
+.Root {
     @extend .wh100;
 
     background-color: $c-bg;
@@ -43,14 +43,14 @@ html, body {
     $w-nav: 170px;
     $h-search: 40px;
 
-    #search-panel {
+    .SearchPanel {
         position: fixed;
         top: 0;
         width: 100%;
         height: $h-search;
     }
 
-    nav {
+    .NavPanel {
         width: $w-nav;
     }
 
@@ -62,7 +62,7 @@ html, body {
         }
     }
 
-    nav, .content {
+    .NavPanel, .content {
         margin-top: $h-search;
 
         height: 100%;
@@ -85,35 +85,59 @@ html, body {
 
 $w-fp: 40%;
 
-#search-panel{
-    .icon {
-        margin: 0 20px;
+.SearchPanel {
+    display: flex;
+    align-items: center;
+
+    background-color: lightgrey;
+
+    &-icon-menu {
+        margin: 0 10px 0 5px;
     }
-    .search {
-        display: inline-block;
-        width: 400px;
+
+    & &-search {
+        width: 600px;
+        align-self: stretch;
+        margin-top: 2px;
+        margin-bottom: 2px;
     }
-}
 
-.filter-panel {
-    width: $w-fp;
-    height: 100%;
-    overflow-y: auto;
-    float: left;
+    &-menu {
+        height: 100%;
 
-    .result {
-        @extend .truncate;
+        min-width: 400px;
+        text-align: right;
 
-        margin: 20px;
-        cursor: pointer;
+        margin-left: auto;
 
-        &.selected {
-            color: $c_border;
+        button {
+            padding: 7px 14px;
+            text-transform: uppercase;
+            margin-top: 3px;
+            margin-right: 5px;
         }
     }
 }
 
-.preview-panel {
+.FilterPanel {
+    width: $w-fp;
+    height: 100%;
+    overflow-y: auto;
+    float: left;
+}
+
+.FilterResult {
+    @extend .truncate;
+
+    margin: 20px;
+    cursor: pointer;
+
+    &.selected {
+        color: $c_border;
+    }
+}
+
+.PreviewPanel {
     width: 100% - $w-fp;
     float: left;
 }

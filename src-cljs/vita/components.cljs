@@ -3,7 +3,7 @@
             [viter.utils :as utils]))
 
 (defn- add-prefix [classes]
-  (map #(str "fa-" %) classes))
+  (map #(if (= \- (first %)) (str "fa" %) %) classes))
 
 (defc icon [{:keys [class]}]
   [:i.fa {:class (->> class

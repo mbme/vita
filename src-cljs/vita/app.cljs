@@ -5,16 +5,16 @@
             [viter.core :as r :refer-macros [defc]]))
 
 (defc NavPanel []
-  [:nav [:a [:icon.home] "records"]])
+  [:nav [:a [:icon.-home] "records"]])
 
 (defc SearchPanel [{:keys [term children]}]
   [:div
-   [:icon.bars.2x]
-   [:input.search {:type "text"
-                   :placeholder "SEARCH"
-                   :defaultValue term
-                   :onKeyUp #(state/update-search! (r/e-val %))}]
-   `[:span.&-menu ~@children]
+   [:icon.-bars.-2x.&-icon-menu]
+   [:input.&-search {:type "text"
+                     :placeholder "SEARCH"
+                     :defaultValue term
+                     :onKeyUp #(state/update-search! (r/e-val %))}]
+   `[:div.&-menu ~@children]
    ])
 
 (defc NotFoundPage []

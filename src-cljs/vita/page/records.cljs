@@ -4,9 +4,9 @@
             [viter.core :refer-macros [defc]]))
 
 (defc FilterResult [{:keys [record]}]
-  [:li.result {:class (utils/join (flatten [(when-not (:visible record) "hidden")
-                                            (when (:selected record)    "selected")]))
-               :onClick #(state/update-selected! (state/record-id record))}
+  [:li {:class (utils/join (flatten [(when-not (:visible record) "hidden")
+                                     (when (:selected record)    "selected")]))
+        :onClick #(state/update-selected! (state/record-id record))}
    [:h5 (:name record)]
    [:span (apply str (take 60 (:data record)))]
    ])
@@ -15,12 +15,12 @@
   (str "key-" (state/record-id record)))
 
 (defc FilterResults [{:keys [records]}]
-  [:ul.filter-results (map #(FilterResult {:record %
-                                           :key (buildKey %)})
-                           records)])
+  [:ul (map #(FilterResult {:record %
+                            :key (buildKey %)})
+            records)])
 
 (defc FilterPanel [attrs]
-  [:aside.filter-panel [:FilterResults attrs ]])
+  [:aside [:FilterResults attrs ]])
 
 (defc PreviewPanel [{:keys [record]}]
   [:div
@@ -32,7 +32,7 @@
    ])
 
 (defc RecordsPage [{:keys [search-term records selected-id]}]
-  [:div.page.page-records
+  [:div.page
    [:FilterPanel {:records (-> records
                                (state/mark-visible search-term)
                                (state/mark-selected selected-id))} ]
