@@ -4,12 +4,14 @@
             [viter.core :refer-macros [defc]]))
 
 (defc FilterResult [{:keys [record]}]
-  [:li {:class {:hidden (not (:visible record))
+  [:li {:class {:visible (:visible record)
                 :selected (:selected record)}
         :onClick #(state/update-selected! (state/record-id record))}
-   [:h5 (:name record)]
+   [:h5 {:ref "h5"}(:name record)]
    [:span (apply str (take 60 (:data record)))]
-   ])
+   ]
+  :nativeEvents {
+                 "click h5" #(println "CLICK")})
 
 (defn buildKey [record]
   (str "key-" (state/record-id record)))
