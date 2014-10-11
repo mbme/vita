@@ -10,10 +10,6 @@ $c-bg2: #FFBC67;
 
 // HELPERS
 
-.hidden {
-    display: none;
-}
-
 .truncate {
     white-space: nowrap;
     overflow: hidden;
@@ -129,8 +125,20 @@ $w-fp: 40%;
     margin: 20px;
     cursor: pointer;
 
+    opacity: 0.01;
+    transition: opacity 0.5s ease-in;
+
     &.selected {
         color: $c_border;
+    }
+
+    &.visible {
+        opacity: 1;
+        display: list-item;
+    }
+
+    &.hidden {
+        display: none;
     }
 }
 
