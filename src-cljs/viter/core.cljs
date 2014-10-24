@@ -21,7 +21,7 @@
                             (p/html (cons (keyword elem+class) (rest rendered)) comp-name)
                             ))
         config (assoc config :render render :displayName comp-name)
-        comp (->Component config (r/create-class config))]
+        comp (fn [args rest] (render (js-obj "args" (assoc config :children rest) "key" (:key args))))]
     (p/register-component! comp-name comp)
     comp
     ))

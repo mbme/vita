@@ -7,7 +7,7 @@
 (defroutes app-routes
   (GET "/" [] (resp/file-response "resources/public/index.html"))
   (route/resources "/")
-  (route/not-found (resp/file-response "resources/public/index.html")))
+  (route/not-found "NOT FOUND"))
 
 (def app
   (handler/site app-routes))

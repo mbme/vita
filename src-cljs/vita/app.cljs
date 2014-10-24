@@ -1,8 +1,8 @@
 (ns vita.app
   (:require [vita.state :as state]
-            [vita.page.records :as records]
             [vita.components :as c]
-            [viter.core :as v :refer-macros [defc]]))
+            [viter.core :as v :refer-macros [defc]]
+            [vita.url :as url]))
 
 (defc NavPanel []
   [:nav [:a [:icon.-home] "records"]])
@@ -20,19 +20,14 @@
 (defc NotFoundPage []
   [:h1.not-found "page not found"])
 
-(defc Root [{:keys [path path-params search-term] :as state}]
-  (let [page (condp = path
-               :root records/RecordsPage
-               NotFoundPage)]
-    [:div
-     [:SearchPanel {:term search-term} (:menu page)]
-     [:NavPanel]
-     [:div.content (page state)]]
-    ))
+(defc Root [{:keys [path search-term] :as state}]
+  [:h1
+   "HELLO WORLD"])
 
+(defonce i (atom 0))
 (defonce _
   (do
-    (state/configure-routing! {"/" :root
-                               "*" :none})
     (state/watch! #(v/render! js/document.body Root %))
+    (url/watch! #(js/console.warn (clj->js %)))
+    (js/window.setInterval #(url/set! (str "?q=" (swap! i inc))) 3000)
     ))
