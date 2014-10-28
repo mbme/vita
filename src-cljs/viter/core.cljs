@@ -33,7 +33,6 @@
 (def ^:private render-data nil)
 (def ^:private render-scheduled false)
 (defn- actually-render []
-  (utils/request-animation-frame actually-render)
   (let [[elem comp params] render-data]
     (r/render (apply comp params) elem)
     (set! render-scheduled false)))
