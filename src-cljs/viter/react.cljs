@@ -1,7 +1,6 @@
 (ns viter.react
-  (:require [viter.utils :refer [get-words]]))
-
-(def React js/React)
+  (:require [viter.utils :refer [get-words React]]
+            [viter.elements :as els]))
 
 (defn- get-args [obj] (aget obj "args"))
 
@@ -20,25 +19,7 @@
                 elem (get-ref-elem ctx ref)]]
     (.removeEventListener elem evt handler)))
 
-;; map of registered Component instances
-(def ^:private components (atom {}))
-
-(defn- register-component! [name comp]
-  (when (get @components name)
-    (throw (str "duplicate component definition: " name)))
-  (swap! components assoc name comp)
-  comp)
-
-(defn- get-native-elem [name]
-  (or (aget (.-DOM React) name)
-      (aget (.-addons React) name)))
-
 ;; PUBLIC
-
-(defn get-elem [name]
-  (or (when-let [elem (get @components name)] [elem false])
-      (when-let [elem (get-native-elem name)] [elem true])
-      (throw (str "unknown element: " name))))
 
 (defn create-elem [{:keys [displayName nativeEvents] :as config}]
   (->> {:shouldComponentUpdate
@@ -61,7 +42,7 @@
        (clj->js)
        (.createClass React)
        (.createFactory React)
-       (register-component! displayName)))
+       (els/register-component! displayName)))
 
 (defn render [comp elem]
   (.render React comp elem))

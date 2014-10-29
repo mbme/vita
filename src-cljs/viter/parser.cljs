@@ -1,5 +1,5 @@
 (ns viter.parser
-  (:require [viter.react :as r]
+  (:require [viter.elements :refer [get-elem]]
             [viter.utils :as utils]
             [clojure.string  :as  str]
             [clojure.set     :as  s]))
@@ -64,7 +64,7 @@
        (let [[elem-name class] (split-tag (first body))
              [attrs rest] (normalize-form (rest body))
              attrs (normalize-attrs attrs class comp-name)
-             [elem is-native] (r/get-elem elem-name)
+             [elem is-native] (get-elem elem-name)
              ;; set comp-name to current component name to reuse in child components
              comp-name (if is-native comp-name elem-name)
              children (map #(html % comp-name) rest)

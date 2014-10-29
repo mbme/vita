@@ -20,3 +20,5 @@
                                  (.-webkitRequestAnimationFrame js/window)
                                  (.-msRequestAnimationFrame js/window)
                                  (fn [f] (.setTimeout js/window f 16))))
+
+(def React js/React)
