@@ -4,23 +4,10 @@
             [clojure.string  :as  str]
             [clojure.set     :as  s]))
 
-;; map of registered Component instances
-(def components (atom {}))
-
-(defn register-component! [name comp]
-  (when (get @components name)
-    (throw (str "duplicate component definition: " name)))
-  (swap! components assoc name comp))
-
 (defn split-tag [symbol]
   (let [[elem & classes] (str/split (name symbol) #"\.")
         class (str/join " " classes)]
     [elem class]))
-
-(defn to-elem [name]
-  (or (when-let [elem (get @components name)] [elem false])
-      (when-let [elem (r/get-elem name)] [elem true])
-      (throw (str "unknown element: " name))))
 
 (defn replace-attr-aliases [attrs]
   (s/rename-keys attrs {:class    :className
@@ -76,7 +63,7 @@
        (let [[elem-name class] (split-tag (first body))
              [attrs rest] (normalize-form (rest body))
              attrs (normalize-attrs attrs class comp-name)
-             [elem is-native] (to-elem elem-name)
+             [elem is-native] (r/get-elem elem-name)
              comp-name (if is-native comp-name elem-name)
              children (map #(html % comp-name) rest)
              handler (if is-native process-react-elem process-custom-elem)]

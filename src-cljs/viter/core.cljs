@@ -4,20 +4,18 @@
             [viter.utils :as utils]))
 
 (defn create-component [comp-name render config]
-  "Creates component and registers it."
+  "Creates viter component."
   (let [render (fn [conf] (let [rendered   (render conf)
                                 elem       (name (first rendered))
                                 elem+class (str elem "." comp-name)]
                             (p/html (cons (keyword elem+class) (rest rendered)) comp-name)))
         config (assoc config :render render :displayName comp-name)
-        react-elem (r/create-elem config)
-        comp (fn [args rest]
-               (let [js-args (js-obj "args" (assoc config :children rest))
-                     key     (:key args)]
-                 (when-not (nil? key) (aset js-args "key" key))
-                 (react-elem js-args)))]
-    (p/register-component! comp-name comp)
-    comp
+        react-elem (r/create-elem config)]
+    (fn [args rest]
+      (let [js-args (js-obj "args" (assoc config :children rest))
+            key     (:key args)]
+        (when-not (nil? key) (aset js-args "key" key))
+        (react-elem js-args)))
     ))
 
 ;; UTILS
