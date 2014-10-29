@@ -32,10 +32,10 @@
     (str/join " " (for [[k v] class :when v] (name k)))
     class))
 
-(defn normalize-attrs [attrs static-class comp-name]
+(defn normalize-attrs [attrs static-class comp-name add-top-class]
   (assoc attrs :class (-> (:class attrs)
                           normalize-class
-                          (str " " static-class)
+                          (str " " static-class (when add-top-class " &"))
                           str/trim
                           (inject-comp-name comp-name))
          ))
@@ -58,17 +58,19 @@
 
 (defn html
   "Render React dom from viter form.
-  `comp-name' is parent viter component name."
-  ([body comp-name]
+  `comp-name' is current viter component name."
+  ([body comp-name is-top]
      (if (viter-form? body)
        (let [[elem-name class] (split-tag (first body))
              [attrs rest] (normalize-form (rest body))
-             attrs (normalize-attrs attrs class comp-name)
+             attrs (normalize-attrs attrs class comp-name is-top)
+
              [elem is-native] (get-elem elem-name)
+
              ;; set comp-name to current component name to reuse in child components
              comp-name (if is-native comp-name elem-name)
-             children (map #(html % comp-name) rest)
+             children (map #(html % comp-name false) rest)
              handler (if is-native process-react-elem process-custom-elem)]
          (handler elem attrs children))
        (clj->js body)))
-  ([body] (html body nil)))
+  ([body] (html body nil false)))

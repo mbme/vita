@@ -1,21 +1,21 @@
 (ns viter.core
   (:require [viter.react  :as r]
-            [viter.parser :as p]
+            [viter.elements :refer [register-component!]]
             [viter.utils :as utils]))
 
 (defn create-component [comp-name render config]
-  "Creates viter component."
-  (let [render (fn [conf] (let [rendered   (render conf)
-                                elem       (name (first rendered))
-                                elem+class (str elem "." comp-name)]
-                            (p/html (cons (keyword elem+class) (rest rendered)) comp-name)))
-        config (assoc config :render render :displayName comp-name)
+  "Creates and registers viter component."
+  (let [config     (assoc config :render render :displayName comp-name)
         react-elem (r/create-elem config)]
-    (fn [args rest]
-      (let [js-args (js-obj "args" (assoc config :children rest))
-            key     (:key args)]
-        (when-not (nil? key) (aset js-args "key" key))
-        (react-elem js-args)))
+    (register-component!
+     comp-name (fn [args rest]
+                 (let [js-args (js-obj "args" (assoc config :children rest))
+                       key     (:key args)]
+
+                   ;; add key attribute to react element properties if passed
+                   (when-not (nil? key) (aset js-args "key" key))
+
+                   (react-elem js-args))))
     ))
 
 ;; UTILS

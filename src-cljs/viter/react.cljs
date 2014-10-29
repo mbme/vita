@@ -1,6 +1,6 @@
 (ns viter.react
   (:require [viter.utils :refer [get-words React]]
-            [viter.elements :as els]))
+            [viter.parser :refer [html]]))
 
 (defn- get-args [obj] (aget obj "args"))
 
@@ -31,9 +31,9 @@
         :render
         (fn []
           (this-as this
-                   (let [render (:render config)
-                         args (get-args (.-props this))]
-                     (render args))))
+                   (let [args (get-args (.-props this))
+                         rendered   ((:render config) args)]
+                     (html rendered displayName true))))
         :componentDidMount
         (fn [] (this-as this (subscribe-events this nativeEvents)))
         :componentWillUnmount
@@ -41,8 +41,7 @@
        (merge config)
        (clj->js)
        (.createClass React)
-       (.createFactory React)
-       (els/register-component! displayName)))
+       (.createFactory React)))
 
 (defn render [comp elem]
   (.render React comp elem))
