@@ -40,7 +40,7 @@
       (when-let [elem (get-native-elem name)] [elem true])
       (throw (str "unknown element: " name))))
 
-(defn create-elem [config]
+(defn create-elem [{:keys [displayName nativeEvents] :as config}]
   (->> {:shouldComponentUpdate
         (fn [next-props]
           (this-as this
@@ -54,19 +54,14 @@
                          args (get-args (.-props this))]
                      (render args))))
         :componentDidMount
-        (fn []
-          (this-as this
-                   (subscribe-events this (:nativeEvents config))))
+        (fn [] (this-as this (subscribe-events this nativeEvents)))
         :componentWillUnmount
-        (fn []
-          (this-as this
-                   (unsubscribe-events this (:nativeEvents config))))
-        }
+        (fn [] (this-as this (unsubscribe-events this nativeEvents)))}
        (merge config)
        (clj->js)
        (.createClass React)
        (.createFactory React)
-       (register-component! (:displayName config))))
+       (register-component! displayName)))
 
 (defn render [comp elem]
   (.render React comp elem))

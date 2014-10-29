@@ -57,13 +57,15 @@
    (keyword? (first elem))))
 
 (defn html
-  "Render React dom from viter form."
+  "Render React dom from viter form.
+  `comp-name' is parent viter component name."
   ([body comp-name]
      (if (viter-form? body)
        (let [[elem-name class] (split-tag (first body))
              [attrs rest] (normalize-form (rest body))
              attrs (normalize-attrs attrs class comp-name)
              [elem is-native] (r/get-elem elem-name)
+             ;; set comp-name to current component name to reuse in child components
              comp-name (if is-native comp-name elem-name)
              children (map #(html % comp-name) rest)
              handler (if is-native process-react-elem process-custom-elem)]
