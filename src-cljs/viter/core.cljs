@@ -3,25 +3,19 @@
             [viter.parser :as p]
             [viter.utils :as utils]))
 
-(deftype Component [config react-render]
-  ILookup
-  (-lookup [this k] (get config k))
-  (-lookup [this k not-found] (get config k not-found))
-  IFn
-  (-invoke [this args rest]
-    (react-render (js-obj "args" (assoc args :children rest)
-                          "key" (:key args) ))
-    ))
-
 (defn create-component [comp-name render config]
   "Creates component and registers it."
   (let [render (fn [conf] (let [rendered   (render conf)
                                 elem       (name (first rendered))
                                 elem+class (str elem "." comp-name)]
-                            (p/html (cons (keyword elem+class) (rest rendered)) comp-name)
-                            ))
+                            (p/html (cons (keyword elem+class) (rest rendered)) comp-name)))
         config (assoc config :render render :displayName comp-name)
-        comp (fn [args rest] (render (js-obj "args" (assoc config :children rest) "key" (:key args))))]
+        react-elem (r/create-elem config)
+        comp (fn [args rest]
+               (let [js-args (js-obj "args" (assoc config :children rest))
+                     key     (:key args)]
+                 (when-not (nil? key) (aset js-args "key" key))
+                 (react-elem js-args)))]
     (p/register-component! comp-name comp)
     comp
     ))

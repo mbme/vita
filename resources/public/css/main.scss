@@ -27,122 +27,32 @@ html, body {
     @extend .wh100;
 
     *, *:before, *:after {
-        @include box-sizing(border-box);
-    }
+                     @include box-sizing(border-box);
+                 }
 }
 
 .Root {
     @extend .wh100;
 
-    background-color: $c-bg;
+    $w-menu: 100px;
+    $w-search: 200px;
 
-    $w-nav: 170px;
-    $h-search: 40px;
+    &>* {
+        display: inline-block;
+        vertical-align: top;
 
-    .SearchPanel {
-        position: fixed;
-        width: 100%;
-        height: $h-search;
+        height: 100%;
     }
 
     .NavPanel {
-        width: $w-nav;
+        width: $w-menu;
     }
 
-    .content {
-        @include calc(width, '100% - #{$w-nav}');
-
-        .page {
-            height: 100%;
-        }
+    .search-panel {
+        width: $w-search;
     }
 
-    .NavPanel, .content {
-        margin-top: $h-search;
-
-        height: 100%;
-        @include calc(height, '100% - #{$h-search}');
-
-        float: left;
-        overflow-y: hidden;
+    .workspace {
+        @include calc(width, '100% - #{$w-menu + $w-search}')
     }
-}
-
-// COMPONENTS
-
-.icon {
-    display: inline-block;
-    vertical-align: middle;
-    cursor: pointer;
-}
-
-// PAGES
-
-$w-fp: 40%;
-
-.SearchPanel {
-    display: flex;
-    align-items: center;
-    padding: 3px;
-
-    background-color: lightgrey;
-
-    &-icon-menu {
-        margin: 0 10px 0 5px;
-    }
-
-    & &-search {
-        height: 100%;
-        width: 600px;
-        margin: 0;
-    }
-
-    &-menu {
-        height: 100%;
-
-        min-width: 400px;
-        text-align: right;
-
-        margin-left: auto;
-
-        button {
-            padding: 7px 14px;
-            text-transform: uppercase;
-        }
-    }
-}
-
-.FilterPanel {
-    width: $w-fp;
-    height: 100%;
-    overflow-y: auto;
-    float: left;
-}
-
-.FilterResult {
-    @extend .truncate;
-
-    margin: 20px;
-    cursor: pointer;
-
-    opacity: 0.01;
-    transition: opacity 0.5s ease-in;
-
-    &.selected {
-        color: $c_border;
-    }
-
-    &.visible {
-        opacity: 1;
-        display: list-item;
-    }
-
-    &.hidden {
-        display: none;
-    }
-}
-
-.PreviewPanel {
-    width: 100% - $w-fp;
-    float: left;
 }

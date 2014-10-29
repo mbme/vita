@@ -24,7 +24,7 @@
                 elem (get-ref-elem ctx ref)]]
     (.removeEventListener elem evt handler)))
 
-(defn create-class [config]
+(defn create-elem [config]
   (->> {:shouldComponentUpdate
         (fn [next-props]
           (this-as this
@@ -36,8 +36,7 @@
           (this-as this
                    (let [render (:render config)
                          args (get-args (.-props this))]
-                     (render args))
-                   ))
+                     (render args))))
         :componentDidMount
         (fn []
           (this-as this
@@ -49,7 +48,8 @@
         }
        (merge config)
        (clj->js)
-       (.createClass React)))
+       (.createClass React)
+       (.createFactory React)))
 
 (defn render [comp elem]
-  (.renderComponent React comp elem))
+  (.render React comp elem))
