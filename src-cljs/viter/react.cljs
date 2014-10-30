@@ -32,7 +32,7 @@
         (fn []
           (this-as this
                    (let [args (get-args (.-props this))
-                         rendered   ((:render config) args)]
+                         rendered   ((:render config) args this)]
                      (html rendered displayName true))))
         :componentDidMount
         (fn [] (this-as this (subscribe-events this nativeEvents)))

@@ -4,22 +4,12 @@
             [viter.core :as v :refer-macros [defc]]
             [vita.url :as url]))
 
-(defc NavLink [{:keys [type icon] :as all} children]
+(defc NavLink [{:keys [type icon children] :as all}]
   [:div [:icon {:class icon}] `[:span ~@children]])
 
 (defc NavPanel []
   [:nav
-   [:NavLink {:type :records :icon "home"} "records"]])
-
-(defc SearchPanel [{:keys [term children]}]
-  [:div
-   [:icon.-bars.-2x.&-icon-menu]
-   [:input.&-search {:type "text"
-                     :placeholder "SEARCH"
-                     :defaultValue term
-                     :onKeyUp #(state/update-search! (v/e-val %))}]
-   `[:div.&-menu ~@children]
-   ])
+   [:NavLink {:type :records :icon "-home"} "records"]])
 
 (defc Root []
   [:div

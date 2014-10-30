@@ -9,7 +9,7 @@
         react-elem (r/create-elem config)]
     (register-component!
      comp-name (fn [args rest]
-                 (let [js-args (js-obj "args" (assoc config :children rest))
+                 (let [js-args (js-obj "args" (assoc args :children rest))
                        key     (:key args)]
 
                    ;; add key attribute to react element properties if passed
