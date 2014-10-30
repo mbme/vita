@@ -1,14 +1,7 @@
 (ns vita.state
   (:require [vita.log :as log :include-macros true]))
 
-(defn- has-term? [rec term]
-  (if (count term)
-    (-> (:name rec)
-        (.indexOf term)
-        (> -1))
-    true))
-
-(defn- record-id [record]
+(defn record-id [record]
   (hash (:name record)))
 
 (defonce ^:private state (atom {:records '()

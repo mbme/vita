@@ -11,10 +11,30 @@
   [:nav
    [:NavLink {:type :records :icon "-home"} "records"]])
 
-(defc Root []
+(defn- has-term? [rec term]
+  (if (count term)
+    (-> (:name rec)
+        (.indexOf term)
+        (> -1))
+    true))
+
+(defc SearchResult [{:keys [record]}]
+  [:li (:name record)])
+
+(defc SearchPanel [{:keys [term records]}]
+  [:div
+   [:input.&-search {:type "text"
+                     :placeholder "SEARCH"
+                     :defaultValue term
+                     :onKeyUp #(state/update-search! (v/e-val %))}]
+   (let [records (filter #(has-term? % term) records)]
+     [:ul (map #(SearchResult {:record % :key (state/record-id %)}) records)])
+   ])
+
+(defc Root [{:keys [search-term records]}]
   [:div
    [:NavPanel]
-   [:div.search-panel [:div "result 1"] [:div "result 2"]]
+   [:SearchPanel {:term search-term :records records}]
    [:div.workspace [:h1 "test"]]
    ])
 

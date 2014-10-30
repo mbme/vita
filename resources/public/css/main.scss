@@ -37,7 +37,7 @@ html, body {
     @extend .wh100;
 
     $w-menu: 100px;
-    $w-search: 200px;
+    $w-search: 400px;
 
     &>* {
         display: inline-block;
@@ -56,7 +56,7 @@ html, body {
         }
     }
 
-    .search-panel {
+    .SearchPanel {
         width: $w-search;
     }
 
