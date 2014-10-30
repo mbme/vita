@@ -2,7 +2,9 @@
 @import "base/base";
 @import "font-awesome/font-awesome";
 
-$c-nav: #111111;
+$c-nav-bg: #111111;
+$c-nav: tint($c-nav-bg, 60%);
+$c-nav-hover: #7FDBFF;
 $c-bg: #FFFFFF;
 $c-border: #7FDBFF;
 $c-bg1: #685C79;
@@ -46,6 +48,12 @@ html, body {
 
     .NavPanel {
         width: $w-menu;
+        background-color: $c-nav-bg;
+        color: $c-nav;
+
+        &:hover {
+            color: $c-nav-hover;
+        }
     }
 
     .search-panel {
@@ -54,5 +62,14 @@ html, body {
 
     .workspace {
         @include calc(width, '100% - #{$w-menu + $w-search}')
+    }
+}
+
+.NavLink {
+    text-align: center;
+    cursor: pointer;
+
+    .icon {
+        display: block;
     }
 }
