@@ -2,13 +2,12 @@
 @import "base/base";
 @import "font-awesome/font-awesome";
 
-$c-nav-bg: #111111;
-$c-nav: tint($c-nav-bg, 60%);
-$c-nav-hover: #7FDBFF;
-$c-bg: #FFFFFF;
-$c-border: #7FDBFF;
-$c-bg1: #685C79;
-$c-bg2: #FFBC67;
+// https://color.adobe.com/zen-and-tea-color-theme-337112/?time=all
+$c-nav-bg: #10222B;
+$c-nav: #E2F0D6;
+$c-nav-hover: #BDD684;
+$c-workspace-panel: #95AB63;
+$c-bg: #F6FFE0;
 
 // HELPERS
 
@@ -36,6 +35,8 @@ html, body {
 .Root {
     @extend .wh100;
 
+    background-color: $c-bg;
+
     $w-menu: 100px;
     $w-search: 400px;
 
@@ -50,18 +51,21 @@ html, body {
         width: $w-menu;
         background-color: $c-nav-bg;
         color: $c-nav;
-
-        &:hover {
-            color: $c-nav-hover;
-        }
     }
 
     .SearchPanel {
         width: $w-search;
     }
 
-    .workspace {
+    .Workspace {
         @include calc(width, '100% - #{$w-menu + $w-search}')
+    }
+}
+
+.Workspace {
+    &-panel {
+        text-align: right;
+        background-color: $c-workspace-panel;
     }
 }
 
@@ -71,5 +75,9 @@ html, body {
 
     .icon {
         display: block;
+    }
+
+    &:hover {
+        color: $c-nav-hover;
     }
 }

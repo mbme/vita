@@ -31,12 +31,16 @@
      [:ul (map #(SearchResult {:record % :key (state/record-id %)}) records)])
    ])
 
+(defc Workspace [{:keys [records]}]
+  [:div
+   [:div.&-panel [:span "close all" [:icon.-close]]]
+   [:h1 "haha"]])
+
 (defc Root [{:keys [search-term records]}]
   [:div
    [:NavPanel]
    [:SearchPanel {:term search-term :records records}]
-   [:div.workspace [:h1 "test"]]
-   ])
+   [:Workspace {:records records}]])
 
 (defonce _
   (do
