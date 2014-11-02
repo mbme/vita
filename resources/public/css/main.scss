@@ -103,6 +103,11 @@ html, body {
 
         text-align: right;
         background-color: $c-workspace-panel;
+
+        span {
+            padding: 0 7px;
+            cursor: pointer;
+        }
     }
 
     &-records {

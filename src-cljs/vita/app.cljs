@@ -41,7 +41,10 @@
 
 (defc Workspace [{:keys [records selected-ids]}]
   [:div
-   [:div.&-panel [:span "close all" [:icon.-close]]]
+   [:div.&-panel
+    [:span "fullscreen " [:icon.-expand]]
+    [:span "close all " [:icon.-close]]
+    ]
    [:div.&-records (map #(Record {:record % :key (state/record-id %)})
                         (filter #(contains? selected-ids (state/record-id %)) records))]
    ])
