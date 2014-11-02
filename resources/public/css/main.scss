@@ -8,6 +8,9 @@ $c-nav: #E2F0D6;
 $c-nav-hover: #BDD684;
 $c-workspace-panel: #95AB63;
 $c-bg: #F6FFE0;
+$c-search-sel: #BDD684;
+
+$c-workspace-record-bg: #DDD;
 
 // HELPERS
 
@@ -45,7 +48,6 @@ html, body {
         vertical-align: top;
 
         height: 100%;
-        overflow: auto;
     }
 
     .NavPanel {
@@ -58,13 +60,6 @@ html, body {
 
     .Workspace {
         @include calc(width, '100% - #{$w-menu + $w-search}')
-    }
-}
-
-.Workspace {
-    &-panel {
-        text-align: right;
-        background-color: $c-workspace-panel;
     }
 }
 
@@ -87,7 +82,46 @@ html, body {
     }
 }
 
+.SearchPanel {
+    overflow-y: auto;
+}
+
 .SearchResult {
     cursor: pointer;
     padding: 10px 5px;
+
+    &-selected {
+        background-color: $c-search-sel;
+    }
+}
+
+.Workspace {
+    $h-panel: 40px;
+
+    &-panel {
+        height: $h-panel;
+
+        text-align: right;
+        background-color: $c-workspace-panel;
+    }
+
+    &-records {
+        @include calc(height, '100% - #{$h-panel}');
+        overflow-y: auto;
+
+        padding-top: 10px;
+
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-content: flex-start;
+        align-items: flex-start;
+    }
+}
+
+.Record {
+    display: inline-block;
+    width: 500px;
+    padding: 10px;
+    background-color: $c-workspace-record-bg;
 }

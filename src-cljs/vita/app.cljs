@@ -18,29 +18,39 @@
         (> -1))
     true))
 
-(defc SearchResult [{:keys [record]}]
-  [:li (:name record)])
+(defc SearchResult [{:keys [record selected]}]
+  [:li {:onClick #(state/update-selected! (state/record-id record))
+        :class (when selected "&-selected")}
+   (:name record)])
 
-(defc SearchPanel [{:keys [term records]}]
+(defc SearchPanel [{:keys [search-term records selected-ids]}]
   [:div
    [:input.&-search {:type "text"
                      :placeholder "SEARCH"
-                     :defaultValue term
+                     :defaultValue search-term
                      :onKeyUp #(state/update-search! (v/e-val %))}]
-   (let [records (filter #(has-term? % term) records)]
-     [:ul (map #(SearchResult {:record % :key (state/record-id %)}) records)])
+   (let [records (filter #(has-term? % search-term) records)]
+     [:ul (map #(SearchResult {:record %
+                               :key (state/record-id %)
+                               :selected (contains? selected-ids (state/record-id %))})
+               records)])
    ])
 
-(defc Workspace [{:keys [records]}]
+(defc Record [{:keys [record]}]
+  [:div [:h1 (:name record)] [:div (:data record)]])
+
+(defc Workspace [{:keys [records selected-ids]}]
   [:div
    [:div.&-panel [:span "close all" [:icon.-close]]]
-   [:h1 "haha"]])
+   [:div.&-records (map #(Record {:record % :key (state/record-id %)})
+                        (filter #(contains? selected-ids (state/record-id %)) records))]
+   ])
 
-(defc Root [{:keys [search-term records]}]
+(defc Root [state]
   [:div
    [:NavPanel]
-   [:SearchPanel {:term search-term :records records}]
-   [:Workspace {:records records}]])
+   [:SearchPanel state]
+   [:Workspace state]])
 
 (defonce _
   (do

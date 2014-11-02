@@ -7,6 +7,7 @@
 (defonce ^:private state (atom {:records '()
                                 :search-term ""
                                 :types #{}
+                                :selected-ids #{}
                                 }))
 
 ;; PUBLIC
@@ -17,6 +18,11 @@
   (when-not (= term (:search-term @state))
     (log/info "new search term: %s" term)
     (swap! state assoc :search-term term)))
+
+(defn update-selected! [id]
+  (when-not (contains? (:selected-ids @state) id)
+    (log/info "select record: %s" id)
+    (swap! state update-in [:selected-ids] conj id)))
 
 (defn load-records! [records]
   (log/info "adding new %s records" (count records))
