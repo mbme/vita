@@ -39,15 +39,18 @@
 (defc Record [{:keys [record key]}]
   [:div
    [:div.&-panel
-    [:icon.-close {:onClick #(state/close-record! key)}]]
+    [:span.left [:icon.-expand]]
+    [:span.right
+     [:icon.-pencil]
+     [:icon.-close {:onClick #(state/close-record! key)}]]]
    [:h3.&-title (:name record)]
    [:div.&-body (:data record)]])
 
 (defc Workspace [{:keys [records selected-ids]}]
   [:div
    [:div.&-panel
-    [:span "fullscreen " [:icon.-expand]]
-    [:span {:onClick #(state/close-records!)} "close all " [:icon.-close]]]
+    [:span.button [:icon.-expand] "fullscreen"]
+    [:span.button {:onClick #(state/close-records!)} [:icon.-close] "close all"]]
    [:div.&-records
     [:CSSTransitionGroup {:class "&-masonry" :transitionName "masonry"}
      (map #(Record {:record (state/rec-by-id %) :key %}) selected-ids)]]

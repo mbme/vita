@@ -12,7 +12,6 @@ $c-search-sel: #BDD684;
 
 $c-record-bg: #FFFFFF;
 $c-record-b: lightgrey;
-$c-record-panel-bg: #BDD684;
 
 // HELPERS
 
@@ -106,9 +105,24 @@ html, body {
         text-align: right;
         background-color: $c-workspace-panel;
 
-        span {
+        span.button {
+            display: inline-block;
+            margin: 5px 5px 0;
+
             padding: 0 7px;
+            border: 2px solid;
+            text-transform: uppercase;
             cursor: pointer;
+
+            @include transition(background-color 0.1s linear);
+
+            &:hover {
+                background-color: tint($c-workspace-panel, 50%);
+            }
+
+            .icon {
+                margin-right: 5px;
+            }
         }
     }
 
@@ -149,26 +163,40 @@ html, body {
     width: 100%;
     margin: 0 0 1em;
 
+    padding-bottom: 10px;
+
     background-color: $c-record-bg;
 
     border: 1px solid $c-record-b;
     border-radius: 2px;
     box-shadow: 0 0 1px $c-record-b, 0 1px 2px $c-record-b;
 
-
-    &-title {
-        text-align: center;
-        margin-top: 10px;
+    // make panel visible on hover
+    & &-panel {
+        opacity: 0;
+        @include transition(opacity .2s linear);
+    }
+    &:hover &-panel {
+        opacity: 1;
     }
 
     &-panel {
-        text-align: right;
-        background-color: $c-record-panel-bg;
+        > * {
+            display: inline-block;
+            width: 50%;
+        }
+        .right {
+            text-align: right;
+        }
 
         .icon {
             cursor: pointer;
             padding: 0 5px;
         }
+    }
+
+    &-title {
+        text-align: center;
     }
 
     &-body {
