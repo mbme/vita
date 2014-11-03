@@ -19,7 +19,7 @@
     true))
 
 (defc SearchResult [{:keys [record selected]}]
-  [:li {:onClick #(state/update-selected! (state/record-id record))
+  [:li {:onClick #(state/open-record! (state/record-id record))
         :class (when selected "&-selected")}
    (:name record)])
 
@@ -36,14 +36,18 @@
                records)])
    ])
 
-(defc Record [{:keys [record]}]
-  [:div [:h3 (:name record)] [:div (:data record)]])
+(defc Record [{:keys [record key]}]
+  [:div
+   [:div.&-panel
+    [:icon.-close {:onClick #(state/close-record! key)}]]
+   [:h3.&-title (:name record)]
+   [:div.&-body (:data record)]])
 
 (defc Workspace [{:keys [records selected-ids]}]
   [:div
    [:div.&-panel
     [:span "fullscreen " [:icon.-expand]]
-    [:span "close all " [:icon.-close]]]
+    [:span {:onClick #(state/close-records!)} "close all " [:icon.-close]]]
    [:div.&-records
     [:CSSTransitionGroup {:class "&-masonry" :transitionName "masonry"}
      (map #(Record {:record (state/rec-by-id %) :key %}) selected-ids)]]

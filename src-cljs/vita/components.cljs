@@ -5,8 +5,9 @@
 (defn- add-prefix [classes]
   (map #(if (= \- (first %)) (str "fa" %) %) classes))
 
-(defc icon [{:keys [class]}]
+(defc icon [{:keys [class onClick]}]
   [:i.fa {:class (->> class
                       utils/get-words
                       add-prefix
-                      utils/join)}])
+                      utils/join)
+          :onClick onClick}])

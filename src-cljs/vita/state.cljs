@@ -22,10 +22,22 @@
     (log/info "new search term: %s" term)
     (swap! state assoc :search-term term)))
 
-(defn update-selected! [id]
+(defn open-record! [id]
   (when-not (contains? (:selected-ids @state) id)
     (log/info "select record: %s" id)
     (swap! state update-in [:selected-ids] conj id)))
+
+(defn close-records! []
+  (when-not (empty? (:selected-ids @state))
+    (log/info "closing all records")
+    (swap! state assoc :selected-ids #{})))
+
+(defn close-record! [id]
+  (if (contains? (:selected-ids @state) id)
+    (do
+      (log/info "closing record %s" id)
+      (swap! state update-in [:selected-ids] disj id))
+    (log/warn "can't close record %s: not open" id)))
 
 (defn load-records! [records]
   (log/info "adding new %s records" (count records))

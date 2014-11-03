@@ -12,6 +12,7 @@ $c-search-sel: #BDD684;
 
 $c-record-bg: #FFFFFF;
 $c-record-b: lightgrey;
+$c-record-panel-bg: #BDD684;
 
 // HELPERS
 
@@ -42,7 +43,7 @@ html, body {
     background-color: $c-bg;
 
     $w-menu: 80px;
-    $w-search: 400px;
+    $w-search: 340px;
 
     &>* {
         display: inline-block;
@@ -125,21 +126,29 @@ html, body {
 
         .masonry-enter {
             opacity: 0.01;
-            transition: opacity .5s ease-in;
+            @include transition (opacity .2s ease-in);
         }
 
         .masonry-enter.masonry-enter-active {
             opacity: 1;
+        }
+
+        .masonry-leave {
+            opacity: 1;
+            @include transition (opacity .2s ease-in);
+        }
+
+        .masonry-leave.masonry-leave-active {
+            opacity: 0.01;
         }
     }
 }
 
 .Record {
     display: inline-block;
-    width: 550px;
+    width: 100%;
     margin: 0 0 1em;
 
-    padding: 10px;
     background-color: $c-record-bg;
 
     border: 1px solid $c-record-b;
@@ -147,7 +156,22 @@ html, body {
     box-shadow: 0 0 1px $c-record-b, 0 1px 2px $c-record-b;
 
 
-    h3 {
+    &-title {
         text-align: center;
+        margin-top: 10px;
+    }
+
+    &-panel {
+        text-align: right;
+        background-color: $c-record-panel-bg;
+
+        .icon {
+            cursor: pointer;
+            padding: 0 5px;
+        }
+    }
+
+    &-body {
+        padding: 10px;
     }
 }
