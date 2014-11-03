@@ -45,7 +45,7 @@
     [:span "fullscreen " [:icon.-expand]]
     [:span "close all " [:icon.-close]]]
    [:div.&-records
-    [:div.&-masonry
+    [:CSSTransitionGroup {:class "&-masonry" :transitionName "masonry"}
      (map #(Record {:record (state/rec-by-id %) :key %}) selected-ids)]]
    ])
 

@@ -121,6 +121,16 @@ html, body {
 
     &-masonry {
         @include columns(2);
+        display: block;
+
+        .masonry-enter {
+            opacity: 0.01;
+            transition: opacity .5s ease-in;
+        }
+
+        .masonry-enter.masonry-enter-active {
+            opacity: 1;
+        }
     }
 }
 
