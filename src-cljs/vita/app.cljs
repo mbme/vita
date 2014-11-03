@@ -37,7 +37,7 @@
    ])
 
 (defc Record [{:keys [record]}]
-  [:div [:h1 (:name record)] [:div (:data record)]])
+  [:div [:h3 (:name record)] [:div (:data record)]])
 
 (defc Workspace [{:keys [records selected-ids]}]
   [:div
@@ -45,8 +45,8 @@
     [:span "fullscreen " [:icon.-expand]]
     [:span "close all " [:icon.-close]]
     ]
-   [:div.&-records (map #(Record {:record % :key (state/record-id %)})
-                        (filter #(contains? selected-ids (state/record-id %)) records))]
+   [:div.&-records [:div.&-masonry (map #(Record {:record % :key (state/record-id %)})
+                                        (filter #(contains? selected-ids (state/record-id %)) records))]]
    ])
 
 (defc Root [state]

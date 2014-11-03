@@ -10,7 +10,8 @@ $c-workspace-panel: #95AB63;
 $c-bg: #F6FFE0;
 $c-search-sel: #BDD684;
 
-$c-workspace-record-bg: #DDD;
+$c-record-bg: #DDD;
+$c-record-b: lightgrey;
 
 // HELPERS
 
@@ -113,20 +114,27 @@ html, body {
     &-records {
         @include calc(height, '100% - #{$h-panel}');
         overflow-y: auto;
+        width: 100%;
 
-        padding-top: 10px;
+        padding: 10px;
 
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
-        align-content: flex-start;
-        align-items: flex-start;
+        font-size: 0.8em;
+    }
+
+    &-masonry {
+        @include columns(2);
     }
 }
 
 .Record {
     display: inline-block;
-    width: 500px;
+    width: 100%; // we need this for columns to work
+    margin: 0 0 1em;
+
     padding: 10px;
-    background-color: $c-workspace-record-bg;
+    background-color: $c-record-bg;
+
+    border: 1px solid $c-record-b;
+    border-radius: 2px;
+    box-shadow: 0 0 1px $c-record-b, 0 1px 2px $c-record-b;
 }
