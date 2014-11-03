@@ -41,7 +41,7 @@ html, body {
 
     background-color: $c-bg;
 
-    $w-menu: 100px;
+    $w-menu: 80px;
     $w-search: 400px;
 
     &>* {
@@ -117,8 +117,6 @@ html, body {
         width: 100%;
 
         padding: 10px;
-
-        font-size: 0.8em;
     }
 
     &-masonry {
