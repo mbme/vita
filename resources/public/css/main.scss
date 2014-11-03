@@ -10,7 +10,7 @@ $c-workspace-panel: #95AB63;
 $c-bg: #F6FFE0;
 $c-search-sel: #BDD684;
 
-$c-record-bg: #DDD;
+$c-record-bg: #FFFFFF;
 $c-record-b: lightgrey;
 
 // HELPERS
@@ -126,7 +126,7 @@ html, body {
 
 .Record {
     display: inline-block;
-    width: 100%; // we need this for columns to work
+    width: 550px;
     margin: 0 0 1em;
 
     padding: 10px;
@@ -135,4 +135,9 @@ html, body {
     border: 1px solid $c-record-b;
     border-radius: 2px;
     box-shadow: 0 0 1px $c-record-b, 0 1px 2px $c-record-b;
+
+
+    h3 {
+        text-align: center;
+    }
 }

@@ -1,9 +1,6 @@
 (ns vita.state
   (:require [vita.log :as log :include-macros true]))
 
-(defn record-id [record]
-  (hash (:name record)))
-
 (defonce ^:private state (atom {:records '()
                                 :search-term ""
                                 :types #{}
@@ -11,6 +8,12 @@
                                 }))
 
 ;; PUBLIC
+
+(defn record-id [record]
+  (hash (:name record)))
+
+(defn rec-by-id [id]
+  (first (filter #(= id (record-id %)) (:records @state))))
 
 (defn update-search!
   "If `term' really changed then update state."

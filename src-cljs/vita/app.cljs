@@ -43,10 +43,10 @@
   [:div
    [:div.&-panel
     [:span "fullscreen " [:icon.-expand]]
-    [:span "close all " [:icon.-close]]
-    ]
-   [:div.&-records [:div.&-masonry (map #(Record {:record % :key (state/record-id %)})
-                                        (filter #(contains? selected-ids (state/record-id %)) records))]]
+    [:span "close all " [:icon.-close]]]
+   [:div.&-records
+    [:div.&-masonry
+     (map #(Record {:record (state/rec-by-id %) :key %}) selected-ids)]]
    ])
 
 (defc Root [state]
