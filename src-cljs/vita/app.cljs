@@ -46,11 +46,13 @@
    [:h3.&-title (:name record)]
    [:div.&-body (:data record)]])
 
-(defc Workspace [{:keys [records selected-ids]}]
+(defc Workspace [{:keys [records selected-ids workspace-menu]}]
   [:div
-   [:div.&-panel
-    [:span.button [:icon.-expand] "fullscreen"]
-    [:span.button {:onClick #(state/close-records!)} [:icon.-close] "close all"]]
+   [:div.&-options
+    [:icon.-cog {:onClick state/toggle-workspace-menu}]
+    [:Dropdown {:visible workspace-menu}
+     [:div [:icon.-expand.-fw] " fullscreen"]
+     [:div {:onClick (fn [] (state/toggle-workspace-menu) (state/close-records))} [:icon.-close.-fw] " close all"]]]
    [:div.&-records
     [:CSSTransitionGroup {:class "&-masonry" :transitionName "masonry"}
      (map #(Record {:record (state/rec-by-id %) :key %}) selected-ids)]]

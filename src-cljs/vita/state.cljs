@@ -5,6 +5,7 @@
                                 :search-term ""
                                 :types #{}
                                 :selected-ids #{}
+                                :workspace-menu false
                                 }))
 
 ;; PUBLIC
@@ -14,6 +15,9 @@
 
 (defn rec-by-id [id]
   (first (filter #(= id (record-id %)) (:records @state))))
+
+(defn toggle-workspace-menu []
+  (swap! state #(assoc % :workspace-menu (not (:workspace-menu %)))))
 
 (defn update-search!
   "If `term' really changed then update state."
@@ -27,7 +31,7 @@
     (log/info "select record: %s" id)
     (swap! state update-in [:selected-ids] conj id)))
 
-(defn close-records! []
+(defn close-records []
   (when-not (empty? (:selected-ids @state))
     (log/info "closing all records")
     (swap! state assoc :selected-ids #{})))

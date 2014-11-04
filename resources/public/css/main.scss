@@ -6,7 +6,6 @@
 $c-nav-bg: #10222B;
 $c-nav: #E2F0D6;
 $c-nav-hover: #BDD684;
-$c-workspace-panel: #95AB63;
 $c-bg: #F6FFE0;
 $c-search-sel: #BDD684;
 
@@ -97,41 +96,26 @@ html, body {
 }
 
 .Workspace {
-    $h-panel: 40px;
-
-    &-panel {
-        height: $h-panel;
+    &-options {
+        right: 5px;
+        position: fixed;
 
         text-align: right;
-        background-color: $c-workspace-panel;
+        cursor: pointer;
+        @include user-select(none);
 
-        span.button {
-            display: inline-block;
-            margin: 5px 5px 0;
-
-            padding: 0 7px;
-            border: 2px solid;
-            text-transform: uppercase;
-            cursor: pointer;
-
-            @include transition(background-color 0.1s linear);
-
-            &:hover {
-                background-color: tint($c-workspace-panel, 50%);
-            }
-
-            .icon {
-                margin-right: 5px;
-            }
+        .Dropdown {
+            right: 20px;
+            top: 6px;
         }
     }
 
     &-records {
-        @include calc(height, '100% - #{$h-panel}');
-        overflow-y: auto;
-        width: 100%;
+        padding: 5px;
+        padding-right: 15px;
+        @extend .wh100;
 
-        padding: 10px;
+        overflow: auto;
     }
 
     &-masonry {
@@ -202,5 +186,34 @@ html, body {
 
     &-body {
         padding: 10px;
+    }
+}
+
+.Dropdown {
+    right: 0;
+    position: absolute;
+
+    white-space: nowrap;
+    @include user-select(none);
+
+    text-align: left;
+
+    background-color: $c-bg;
+
+    &-body {
+        max-height: 500px;
+        overflow: hidden;
+        padding: 5px;
+        opacity: 1;
+        border: 1px solid lightgrey;
+        @include transition(all 0.2s);
+    }
+
+    &.is-hidden &-body{
+        opacity: 0;
+        border: 0;
+        max-height: 0;
+        padding-top: 0;
+        padding-bottom: 0;
     }
 }
