@@ -135,7 +135,7 @@ html, body {
     }
 
     &-masonry {
-        @include columns(2);
+        @include column-width(550px);
         display: block;
 
         .masonry-enter {
@@ -160,7 +160,8 @@ html, body {
 
 .Record {
     display: inline-block;
-    width: 100%;
+    min-width: 550px;
+    max-width: 600px;
     margin: 0 0 1em;
 
     padding-bottom: 10px;
