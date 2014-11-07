@@ -49,3 +49,9 @@
 
 (defn watch! [func]
   (add-watch state :render (fn [_ _ _ data] (func data))))
+
+(defn update-record [id new-record]
+  (swap! state
+         assoc :records (map
+                         #(if (= (record-id %) id) new-record %)
+                         (:records @state))))

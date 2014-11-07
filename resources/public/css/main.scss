@@ -25,6 +25,17 @@ $c-record-b: lightgrey;
     height: 100%;
 }
 
+.nohighlight {
+    &:hover {
+        border-color: inherit;
+    }
+
+    &:focus {
+        border-color: inherit;
+        box-shadow: inherit;
+    }
+}
+
 // BASE
 
 html, body {
@@ -122,6 +133,13 @@ html, body {
         @include column-width(550px);
         display: block;
 
+        &>* {
+            display: inline-block;
+            width: 550px;
+            min-height: 200px;
+            margin: 0 0 1em;
+        }
+
         .masonry-enter {
             opacity: 0.01;
             @include transition (opacity .2s ease-in);
@@ -142,14 +160,23 @@ html, body {
     }
 }
 
-.Record {
-    display: inline-block;
-    min-width: 550px;
-    max-width: 600px;
-    margin: 0 0 1em;
+.panel {
+    & &-right {
+        text-align: right;
+    }
 
-    padding-bottom: 10px;
+    .icon {
+        cursor: pointer;
+        padding: 0 5px;
+    }
 
+    > * {
+        display: inline-block;
+        width: 50%;
+    }
+}
+
+%RecordBase {
     background-color: $c-record-bg;
 
     border: 1px solid $c-record-b;
@@ -157,35 +184,69 @@ html, body {
     box-shadow: 0 0 1px $c-record-b, 0 1px 2px $c-record-b;
 
     // make panel visible on hover
-    & &-panel {
+    .panel {
         opacity: 0;
         @include transition(opacity .2s linear);
     }
-    &:hover &-panel {
+
+    &:hover .panel {
         opacity: 1;
     }
+}
 
-    &-panel {
-        > * {
-            display: inline-block;
-            width: 50%;
-        }
-        .right {
-            text-align: right;
-        }
+.Record {
+    @extend %RecordBase;
 
-        .icon {
-            cursor: pointer;
-            padding: 0 5px;
-        }
-    }
+    padding-bottom: 10px;
 
-    &-title {
+    & &-title {
         text-align: center;
     }
 
-    &-body {
+    & &-body {
         padding: 10px;
+    }
+}
+
+
+
+.RecordEditor {
+    @extend %RecordBase;
+
+    & &-name, & &-data {
+        @extend .nohighlight;
+        border-radius: 0;
+
+        box-shadow: none;
+
+        &:focus {
+            box-shadow: none;
+        }
+    }
+
+    & &-name {
+        margin-bottom: 0;
+        padding-top: 0;
+        border: 0 none;
+
+        text-align: center;
+        font-weight: bold;
+        font-size: large;
+    }
+
+    & &-data {
+        resize: none;
+
+        height: 350px;
+        display: block;
+        margin-bottom: 0;
+
+        // only top border
+        border-width: 1px 0 0;
+    }
+
+    &:focus {
+        background-color: red;
     }
 }
 
