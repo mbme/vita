@@ -133,7 +133,7 @@ html, body {
         @include column-width(550px);
         display: block;
 
-        &>* {
+        .WorkspaceItem {
             display: inline-block;
             width: 550px;
             min-height: 200px;
@@ -195,10 +195,6 @@ html, body {
 }
 
 .Record {
-    @extend %RecordBase;
-
-    padding-bottom: 10px;
-
     & &-title {
         text-align: center;
     }
@@ -208,9 +204,13 @@ html, body {
     }
 }
 
+.RecordView, .PreviewRecordView{
+    @extend %RecordBase;
 
+    padding-bottom: 10px;
+}
 
-.RecordEditor {
+.EditRecordView {
     @extend %RecordBase;
 
     & &-name, & &-data {
@@ -231,7 +231,7 @@ html, body {
 
         text-align: center;
         font-weight: bold;
-        font-size: large;
+        font-size: $h3-font-size;
     }
 
     & &-data {

@@ -18,51 +18,63 @@
         (> -1))
     true))
 
-(defc SearchResult [{:keys [record selected]}]
-  [:li {:onClick #(state/open-record! (state/record-id record))
-        :class (when selected "&-selected")}
+(defc SearchResult [{:keys [record]}]
+  [:li {:onClick #(state/open-record (state/record-id record))
+        :class (when (:state record) "&-selected")}
    (:name record)])
 
-(defc SearchPanel [{:keys [search-term records selected-ids]}]
+(defc SearchPanel [{:keys [search-term records]}]
   [:div
    [:input.&-search {:type "text"
                      :placeholder "SEARCH"
                      :defaultValue search-term
                      :onKeyUp #(state/update-search! (v/e-val %))}]
    (let [records (filter #(has-term? % search-term) records)]
-     [:ul (map #(SearchResult {:record %
-                               :key (state/record-id %)
-                               :selected (contains? selected-ids (state/record-id %))})
-               records)])
+     [:ul (map #(SearchResult {:record % :key (state/record-id %)}) records)])
    ])
 
-(defc Record [{:keys [record key]}]
-  [:div [:div.panel
-         [:span.panel-left [:icon.-expand]]
-         [:span.panel-right
-          [:icon.-pencil {:onClick #(state/update-record key (assoc record :edit true))}]
-          [:icon.-close {:onClick #(state/close-record! key)}]]]
+(defc Record [{:keys [record]}]
+  [:div
    [:h3.&-title (:name record)]
    [:div.&-body (:data record)]])
 
-(defc RecordEditor [{:keys [record key]}]
+(defc RecordView [{:keys [record key]}]
   [:div [:div.panel
-         [:span.panel-left [:icon.-expand]]
+         [:span.panel-left
+          [:icon.-pencil {:onClick #(state/update-record key (assoc record :state :edit))}]]
          [:span.panel-right
-          [:icon.-eye]
-          [:icon.-close]]]
-   [:input.&-name {:value (:name record) :type "text"}]
-   [:textarea.&-data {:value (:data record)}]])
+          [:icon.-close {:onClick #(state/close-record key)}]]]
+   [:Record {:record record}]])
 
-(defn- show-record [id]
-  (let [record (state/rec-by-id id)
-        edit (= (:edit record) true)
-        params {:record record :key id}]
-    (if edit
-      (RecordEditor params)
-      (Record params))))
+(defn e-val [e]
+  (.-value (.-target e)))
 
-(defc Workspace [{:keys [records selected-ids workspace-menu]}]
+(defc EditRecordView [{:keys [record key]}]
+  (let [name (atom (:name record))
+        data (atom (:data record))]
+    [:div [:div.panel
+           [:span.panel-left
+            [:icon.-eye {:onClick #(state/update-record key (assoc record :state :preview))}]]
+           [:span.panel-right
+            [:icon.-save {:onClick #(state/update-record key (assoc record :name @name :data @data :state :show))}]
+            [:icon.-close {:onClick #(state/update-record key (assoc record :state :show))}]]]
+     [:input.&-name {:defaultValue (:name record) :type "text" :onChange #(reset! name (e-val %))}]
+     [:textarea.&-data {:defaultValue (:data record) :onChange #(reset! data (e-val %))}]]))
+
+(defc PreviewRecordView [{:keys [record key]}]
+  [:div [:div.panel
+         [:span.panel-left [:icon.-pencil {:onClick #(state/update-record key (assoc record :state :edit))}]]
+         [:span.panel-right]]
+   [:Record {:record record}]])
+
+(defc WorkspaceItem [{:keys [record] :as args}]
+  [:div (let [view (case (:state record)
+                     :edit    EditRecordView
+                     :preview PreviewRecordView
+                     RecordView)]
+          (view args))])
+
+(defc Workspace [{:keys [records workspace-menu]}]
   [:div
    [:div.&-options
     [:icon.-cog {:onClick state/toggle-workspace-menu}]
@@ -72,7 +84,9 @@
       [:icon.-close.-fw] " close all"]]]
    [:div.&-records
     [:CSSTransitionGroup {:class "&-masonry" :transitionName "masonry"}
-     (map show-record selected-ids)]]
+     (->> records
+          (filter #(:state %))
+          (map #(WorkspaceItem {:record % :key (state/record-id %)})))]]
    ])
 
 (defc Root [state]

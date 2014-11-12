@@ -3,10 +3,11 @@
 
 (defonce ^:private state (atom {:records '()
                                 :search-term ""
-                                :types #{}
-                                :selected-ids #{}
                                 :workspace-menu false
                                 }))
+
+(defn- update-records [fn]
+  (swap! state assoc :records (map fn (:records @state))))
 
 ;; PUBLIC
 
@@ -26,22 +27,23 @@
     (log/info "new search term: %s" term)
     (swap! state assoc :search-term term)))
 
-(defn open-record! [id]
-  (when-not (contains? (:selected-ids @state) id)
-    (log/info "select record: %s" id)
-    (swap! state update-in [:selected-ids] conj id)))
+(defn update-record [id new-record]
+  (update-records #(if (= (record-id %) id) new-record %)))
+
+(defn open-record [id]
+  (if-let [record (rec-by-id id)]
+    (when-not (= (:state record) :show)
+      (log/info "select record: %s" id)
+      (update-record id (assoc record :state :show)))))
 
 (defn close-records []
-  (when-not (empty? (:selected-ids @state))
-    (log/info "closing all records")
-    (swap! state assoc :selected-ids #{})))
+  (log/info "closing all records")
+  (update-records #(assoc % :state nil)))
 
-(defn close-record! [id]
-  (if (contains? (:selected-ids @state) id)
-    (do
-      (log/info "closing record %s" id)
-      (swap! state update-in [:selected-ids] disj id))
-    (log/warn "can't close record %s: not open" id)))
+(defn close-record [id]
+  (when-let [record (rec-by-id id)]
+    (log/info "closing record: %s" id)
+    (update-record id (assoc record :state nil))))
 
 (defn load-records! [records]
   (log/info "adding new %s records" (count records))
@@ -49,9 +51,3 @@
 
 (defn watch! [func]
   (add-watch state :render (fn [_ _ _ data] (func data))))
-
-(defn update-record [id new-record]
-  (swap! state
-         assoc :records (map
-                         #(if (= (record-id %) id) new-record %)
-                         (:records @state))))
