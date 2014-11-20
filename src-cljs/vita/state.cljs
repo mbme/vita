@@ -12,7 +12,7 @@
 ;; PUBLIC
 
 (defn record-id [record]
-  (hash (:name record)))
+  (:key record))
 
 (defn rec-by-id [id]
   (first (filter #(= id (record-id %)) (:records @state))))
@@ -45,9 +45,14 @@
     (log/info "closing record: %s" id)
     (update-record id (assoc record :state nil))))
 
+(def ^:private ids (atom 0))
+(defn- next-id [] (swap! ids inc))
+(defn- add-id [record]
+  (assoc record :key (next-id)))
+
 (defn load-records! [records]
   (log/info "adding new %s records" (count records))
-  (swap! state assoc :records records))
+  (swap! state assoc :records (map add-id records)))
 
 (defn watch! [func]
   (add-watch state :render (fn [_ _ _ data] (func data))))
