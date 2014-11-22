@@ -2,10 +2,19 @@
   (:require [vita.state :as s]
             [viter.core :as v :refer-macros [defc]]))
 
+;; TO MARKDOWN
+(def Remarkable (new js/Remarkable "full" #js {:html true
+                                               :linkify true
+                                               :typographer true}))
+(defn md->html [md]
+  (.render Remarkable md))
+
+;; COMPONENTS
+
 (defc Record [{:keys [value]}]
   [:div
    [:h3.&-title (:name @value)]
-   [:div.&-body (:data @value)]])
+   [:div.&-body {:dangerouslySetInnerHTML {:__html (md->html (:data @value))}}]])
 
 (defc RecordView [{:keys [key] :as record}]
   [:div [:div.panel
