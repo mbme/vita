@@ -24,7 +24,16 @@
           [:icon.-close {:onClick #(s/ws-close-record key)}]]]
    [:Record record]])
 
-(defc EditRecordView [{:keys [key value is-new]}]
+(defn autogrow! [elem]
+  (aset (.-style elem) "height" "auto")
+  (when (< (.-clientHeight elem)
+           (.-scrollHeight elem))
+    (aset (.-style elem) "height" (str (.-scrollHeight elem) "px"))))
+
+(defn autogrow-area [this]
+  (autogrow! (-> this .-refs .-area .getDOMNode)))
+
+(defc EditRecordView [{:keys [key value is-new]} this]
   [:div
    [:div.panel
     [:span.panel-left
@@ -38,18 +47,20 @@
                      (s/ws-view-record key))}]
      [:icon.-close {:onClick #(if is-new
                                 (s/ws-close-record key)
-                                (do
-                                  (s/ws-sync-record key)
-                                  (s/ws-view-record key)))}
+                                (do (s/ws-sync-record key)
+                                    (s/ws-view-record key)))}
       ]]]
 
-   [:input.&-name {:type "text"
+   [:input.&-name {:type         "text"
                    :defaultValue (:name @value)
-                   :onChange #(swap! value assoc :name (v/e-val %))}]
+                   :onChange     #(swap! value assoc :name (v/e-val %))}]
 
    [:textarea.&-data {:defaultValue (:data @value)
-                      :onChange #(swap! value assoc :data (v/e-val %))}]
-   ])
+                      :ref          "area"
+                      :onChange     #(do (autogrow-area this)
+                                         (swap! value assoc :data (v/e-val %)))}]
+   ]
+  :componentDidMount #(autogrow-area %))
 
 (defc PreviewRecordView [{:keys [key] :as record}]
   [:div [:div.panel

@@ -250,7 +250,10 @@ html, body {
     & &-data {
         resize: none;
 
-        height: 350px;
+        min-height: 300px;
+        height: auto;
+        overflow-y: hidden;
+
         display: block;
         margin-bottom: 0;
 
