@@ -30,8 +30,24 @@
            (.-scrollHeight elem))
     (aset (.-style elem) "height" (str (.-scrollHeight elem) "px"))))
 
+(defn get-ref [this ref]
+  (aget (.-refs this) ref))
+
+(defn get-node [el]
+  (.getDOMNode el))
+
+(def ref-area "area")
+
+(def ref-input "input")
+
 (defn autogrow-area [this]
-  (autogrow! (-> this .-refs .-area .getDOMNode)))
+  (autogrow! (get-node (get-ref this ref-area))))
+
+(defn focus [input]
+  (let [len (.-length (.-value input))]
+    (aset input "selectionStart" len)
+    (aset input "selectionEnd" len)
+    (.focus input)))
 
 (defc EditRecordView [{:keys [key value is-new]} this]
   [:div
@@ -52,15 +68,18 @@
       ]]]
 
    [:input.&-name {:type         "text"
+                   :ref          ref-input
                    :defaultValue (:name @value)
                    :onChange     #(swap! value assoc :name (v/e-val %))}]
 
    [:textarea.&-data {:defaultValue (:data @value)
-                      :ref          "area"
+                      :ref          ref-area
                       :onChange     #(do (autogrow-area this)
-                                         (swap! value assoc :data (v/e-val %)))}]
-   ]
-  :componentDidMount #(autogrow-area %))
+                                         (swap! value assoc :data (v/e-val %)))}]]
+
+  :componentDidMount #(do (autogrow-area %)
+                          (focus (get-node (get-ref % ref-input)))))
+
 
 (defc PreviewRecordView [{:keys [key] :as record}]
   [:div [:div.panel
