@@ -9,6 +9,9 @@ $c-nav-hover: #BDD684;
 $c-bg: #F6FFE0;
 $c-search-sel: #BDD684;
 
+$c-search-input-bg: #F6FFE0;
+$c-search-input-f-bg: #FFFFFF;
+
 $c-record-bg: #FFFFFF;
 $c-record-b: lightgrey;
 
@@ -95,6 +98,16 @@ html, body {
 
 .SearchPanel {
     overflow-y: auto;
+
+    & &-search {
+        cursor: pointer;
+        background-color: $c-search-input-bg;
+
+        &:focus {
+            cursor: text;
+            background-color: $c-search-input-f-bg;
+        }
+    }
 }
 
 .SearchResult {
