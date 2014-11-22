@@ -105,7 +105,8 @@
   (ws-update-records #(conj % {:key (next-id)
                                :value (atom {:name ""
                                              :data ""})
-                               :state :edit})))
+                               :state :edit
+                               :is-new true})))
 
 (defn ws-open-record [id]
   (let [state           @state

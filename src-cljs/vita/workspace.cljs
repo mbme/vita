@@ -15,7 +15,7 @@
           [:icon.-close {:onClick #(s/ws-close-record key)}]]]
    [:Record record]])
 
-(defc EditRecordView [{:keys [key value]}]
+(defc EditRecordView [{:keys [key value is-new]}]
   [:div
    [:div.panel
     [:span.panel-left
@@ -27,8 +27,12 @@
                                       :data (:data @value))
                      (s/ws-sync-record key)
                      (s/ws-view-record key))}]
-     [:icon.-close {:onClick #((s/ws-sync-record key)
-                               (s/ws-view-record key))}]]]
+     [:icon.-close {:onClick #(if is-new
+                                (s/ws-close-record key)
+                                (do
+                                  (s/ws-sync-record key)
+                                  (s/ws-view-record key)))}
+      ]]]
 
    [:input.&-name {:type "text"
                    :defaultValue (:name @value)

@@ -7,7 +7,7 @@
 (defc NavPanel []
   [:nav
    [:div.&-link [:icon.-home] "records"]
-   [:div.&-link [:icon.-plus] "add"]])
+   [:div.&-link {:onClick s/ws-new-record}[:icon.-plus] "add"]])
 
 (defn- has-term? [rec term]
   (if (count term)
