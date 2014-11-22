@@ -1,20 +1,13 @@
 (ns vita.workspace
   (:require [vita.state :as s]
-            [viter.core :as v :refer-macros [defc]]))
-
-;; TO MARKDOWN
-(def Remarkable (new js/Remarkable "full" #js {:html true
-                                               :linkify true
-                                               :typographer true}))
-(defn md->html [md]
-  (.render Remarkable md))
-
-;; COMPONENTS
+            [viter.core :as v :refer-macros [defc]]
+            [viter.utils :as utils]
+            [viter.react :refer [get-node get-ref]]))
 
 (defc Record [{:keys [value]}]
   [:div
    [:h3.&-title (:name @value)]
-   [:div.&-body {:dangerouslySetInnerHTML {:__html (md->html (:data @value))}}]])
+   [:div.&-body {:dangerouslySetInnerHTML {:__html (utils/md->html (:data @value))}}]])
 
 (defc RecordView [{:keys [key] :as record}]
   [:div [:div.panel
@@ -24,30 +17,11 @@
           [:icon.-close {:onClick #(s/ws-close-record key)}]]]
    [:Record record]])
 
-(defn autogrow! [elem]
-  (aset (.-style elem) "height" "auto")
-  (when (< (.-clientHeight elem)
-           (.-scrollHeight elem))
-    (aset (.-style elem) "height" (str (.-scrollHeight elem) "px"))))
-
-(defn get-ref [this ref]
-  (aget (.-refs this) ref))
-
-(defn get-node [el]
-  (.getDOMNode el))
-
 (def ref-area "area")
-
 (def ref-input "input")
 
 (defn autogrow-area [this]
-  (autogrow! (get-node (get-ref this ref-area))))
-
-(defn focus [input]
-  (let [len (.-length (.-value input))]
-    (aset input "selectionStart" len)
-    (aset input "selectionEnd" len)
-    (.focus input)))
+  (utils/autosize! (get-node (get-ref this ref-area))))
 
 (defc EditRecordView [{:keys [key value is-new]} this]
   [:div
@@ -78,7 +52,7 @@
                                          (swap! value assoc :data (v/e-val %)))}]]
 
   :componentDidMount #(do (autogrow-area %)
-                          (focus (get-node (get-ref % ref-input)))))
+                          (utils/focus-input! (get-node (get-ref % ref-input)))))
 
 
 (defc PreviewRecordView [{:keys [key] :as record}]

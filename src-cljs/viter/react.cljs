@@ -34,3 +34,9 @@
 
 (defn render [comp elem]
   (.render React comp elem))
+
+(defn get-ref [this ref]
+  (aget (.-refs this) ref))
+
+(defn get-node [el]
+  (.getDOMNode el))

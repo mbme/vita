@@ -22,3 +22,22 @@
                                  (fn [f] (.setTimeout js/window f 16))))
 
 (def React js/React)
+
+(defn autosize! [elem]
+  (aset (.-style elem) "height" "auto")
+  (when (< (.-clientHeight elem)
+           (.-scrollHeight elem))
+    (aset (.-style elem) "height" (str (.-scrollHeight elem) "px"))))
+
+(defn focus-input! [input]
+  (let [len (.-length (.-value input))]
+    (aset input "selectionStart" len)
+    (aset input "selectionEnd" len)
+    (.focus input)))
+
+;; TO MARKDOWN
+(def ^:private Remarkable (new js/Remarkable "full" #js {:html true
+                                                         :linkify true
+                                                         :typographer true}))
+(defn md->html [md]
+  (.render Remarkable md))
