@@ -77,19 +77,19 @@ html, body {
 .NavPanel {
     background-color: $c-nav-bg;
     color: $c-nav;
-}
 
-.NavLink {
-    text-align: center;
-    cursor: pointer;
-    padding: 10px 5px;
+    &-link {
+        text-align: center;
+        cursor: pointer;
+        padding: 10px 5px;
 
-    .icon {
-        display: block;
-    }
+        .icon {
+            display: block;
+        }
 
-    &:hover {
-        color: $c-nav-hover;
+        &:hover {
+            color: $c-nav-hover;
+        }
     }
 }
 
