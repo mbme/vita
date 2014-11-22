@@ -5,8 +5,8 @@
                  [compojure "1.1.8"]
                  [com.taoensso/timbre "3.2.1"]
 
-                 [org.clojure/clojurescript "0.0-2322"]
-                 [figwheel "0.1.4-SNAPSHOT"]]
+                 [org.clojure/clojurescript "0.0-2371"]
+                 [figwheel "0.1.5-SNAPSHOT"]]
   :plugins [[lein-ring "0.8.11"]]
 
   :hooks [leiningen.cljsbuild]
