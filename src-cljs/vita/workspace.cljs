@@ -66,7 +66,8 @@
                      :edit    EditRecordView
                      :preview PreviewRecordView
                      RecordView)]
-          (view record))])
+          (view record))]
+  :componentDidMount #(.scrollIntoView (get-node %)))
 
 (defc Workspace [{:keys [workspace-menu workspace-items]}]
   [:div
@@ -84,5 +85,5 @@
    ;; records masonry
    [:div.&-records
     [:CSSTransitionGroup {:class "&-masonry" :transitionName "masonry"}
-     (map WorkspaceItem workspace-items)]]
+     (map WorkspaceItem (reverse workspace-items))]]
    ])

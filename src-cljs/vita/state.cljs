@@ -101,12 +101,15 @@
   (log/info "close record %s" id)
   (ws-update-records (fn [records] (remove #(= id (:key %)) records))))
 
+(defn- ws-add-record [record]
+  (ws-update-records #(conj % record)))
+
 (defn ws-new-record []
-  (ws-update-records #(conj % {:key (next-id)
-                               :value (atom {:name ""
-                                             :data ""})
-                               :state :edit
-                               :is-new true})))
+  (ws-add-record {:key (next-id)
+                  :value (atom {:name ""
+                                :data ""})
+                  :state :edit
+                  :is-new true}))
 
 (defn ws-open-record [id]
   (let [state           @state
@@ -116,6 +119,6 @@
     (when-not (or (nil? record)
                   (ws-is-open? id workspace-items))
       (log/info "open record %s" id)
-      (ws-update-records #(conj % {:key   id
-                                   :value (atom record)}))
+      (ws-add-record {:key   id
+                      :value (atom record)})
       (ws-view-record id))))
