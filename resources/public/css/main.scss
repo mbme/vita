@@ -120,6 +120,8 @@ html, body {
 }
 
 .Workspace {
+    overflow-y: auto;
+    
     &-options {
         right: 5px;
         position: fixed;
@@ -142,34 +144,10 @@ html, body {
         overflow: auto;
     }
 
-    &-masonry {
-        @include column-width(550px);
-        display: block;
-
-        .WorkspaceItem {
-            display: inline-block;
-            width: 550px;
-            min-height: 200px;
-            margin: 0 0 1em;
-        }
-
-        .masonry-enter {
-            opacity: 0.01;
-            @include transition (opacity .2s ease-in);
-        }
-
-        .masonry-enter.masonry-enter-active {
-            opacity: 1;
-        }
-
-        .masonry-leave {
-            opacity: 1;
-            @include transition (opacity .2s ease-in);
-        }
-
-        .masonry-leave.masonry-leave-active {
-            opacity: 0.01;
-        }
+    .WorkspaceItem {
+        display: inline-block;
+        width: 550px;
+        min-height: 200px;
     }
 }
 

@@ -11,7 +11,8 @@
 
 (defn create-elem [{:keys [displayName
                            componentWillMount
-                           componentDidMount] :as config}]
+                           componentDidMount
+                           componentDidUpdate] :as config}]
   (->> {:shouldComponentUpdate
         (fn [next-props]
           (this-as this
@@ -26,7 +27,9 @@
                      (html rendered displayName true))))
 
         :componentWillMount #(this-as this (try-to-run componentWillMount this))
-        :componentDidMount  #(this-as this (try-to-run componentDidMount this))}
+        :componentDidMount  #(this-as this (try-to-run componentDidMount this))
+        :componentDidUpdate #(this-as this (try-to-run componentDidUpdate this))
+        }
        (merge config)
        (clj->js)
        (.createClass React)

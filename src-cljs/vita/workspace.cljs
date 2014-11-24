@@ -4,6 +4,9 @@
             [viter.utils :as utils]
             [viter.react :refer [get-node get-ref]]))
 
+(defn $node [el]
+  (js/$ (get-node el)))
+
 (defc Record [{:keys [value]}]
   [:div
    [:h3.&-title (:name @value)]
@@ -66,12 +69,11 @@
                      :edit    EditRecordView
                      :preview PreviewRecordView
                      RecordView)]
-          (view record))]
-  :componentDidMount #(.scrollIntoView (get-node %)))
+          (view record))])
+
 
 (defc Workspace [{:keys [workspace-menu workspace-items]}]
   [:div
-
    ;; options dropdown
    [:div.&-options
     [:icon.-cog {:onClick s/ws-toggle-menu}]
@@ -83,7 +85,12 @@
       [:icon.-close.-fw] " close all"]]]
 
    ;; records masonry
-   [:div.&-records
-    [:CSSTransitionGroup {:class "&-masonry" :transitionName "masonry"}
-     (map WorkspaceItem (reverse workspace-items))]]
-   ])
+   [:div.&-records {:ref "masonry"} (map WorkspaceItem (reverse workspace-items))]
+   ]
+  :componentDidMount #(.packery ($node (get-ref % "masonry"))
+                                (clj->js {:gutter 10}))
+  :componentDidUpdate #(let [elem ($node (get-ref % "masonry"))]
+                         (.packery elem "reloadItems")
+                         (.packery elem "layout")
+                         )
+  )

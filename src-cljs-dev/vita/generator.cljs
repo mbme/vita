@@ -52,4 +52,5 @@
 
 ;; load test data once
 ;; (defonce _ (state/load-records! (random-records 10)))
-(defonce _ (state/load-records! data/datas))
+(defonce _ (do (state/load-records! data/datas)
+               (state/ws-open-record 2)))
