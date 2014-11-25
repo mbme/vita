@@ -160,6 +160,8 @@ html, body {
         padding-right: 15px;
         @extend .wh100;
 
+        min-height: 100%;
+
         overflow: auto;
     }
 

@@ -7,6 +7,9 @@
 (defn $node [el]
   (js/$ (get-node el)))
 
+(defn do-draggable [elem ws]
+  (.packery ws "bindDraggabillyEvents" (new js/Draggabilly elem)))
+
 (def ^:dynamic ^:private *ws* nil)
 
 (defc Record [{:keys [value]}]
@@ -73,7 +76,9 @@
                      :preview PreviewRecordView
                      RecordView)]
           (view record))]
-  :componentDidMount #(when *ws* (.packery *ws* "appended" (get-node %)))
+  :componentDidMount #(when *ws* (let [elem (get-node %)]
+                                   (.packery *ws* "appended" elem)
+                                   (do-draggable elem *ws*)))
   :componentDidUpdate #(.packery *ws* "fit" (get-node %))
   :componentWillUnmount #(do (.packery *ws* "remove" (get-node %))
                              (.packery *ws*)))
@@ -94,6 +99,9 @@
    ;; records masonry
    [:div.&-records {:ref "masonry"} (map WorkspaceItem (reverse workspace-items))]
    ]
-  :componentDidMount #(do (set! *ws* ($node (get-ref % "masonry")))
-                          (.packery *ws* (clj->js {:gutter 10})))
+  :componentDidMount (fn [this]
+                       (set! *ws* ($node (get-ref this "masonry")))
+                       (.packery *ws* #js {:gutter 10 :columnWidth 550})
+                       ;; init already added workspace items
+                       (.each (.children *ws*) #(do-draggable %2 *ws*)))
   :componentWillUnmount #(.packery *ws* "destroy"))
