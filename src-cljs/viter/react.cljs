@@ -7,12 +7,16 @@
 (defn- try-to-run [func & rest]
   (when func (apply func rest)))
 
+(defn- run-with-this [method]
+  #(this-as this (try-to-run method this)))
+
 ;; PUBLIC
 
 (defn create-elem [{:keys [displayName
                            componentWillMount
                            componentDidMount
-                           componentDidUpdate] :as config}]
+                           componentDidUpdate
+                           componentWillUnmount] :as config}]
   (->> {:shouldComponentUpdate
         (fn [next-props]
           (this-as this
@@ -26,10 +30,10 @@
                          rendered   ((:render config) args this)]
                      (html rendered displayName true))))
 
-        :componentWillMount #(this-as this (try-to-run componentWillMount this))
-        :componentDidMount  #(this-as this (try-to-run componentDidMount this))
-        :componentDidUpdate #(this-as this (try-to-run componentDidUpdate this))
-        }
+        :componentWillMount    (run-with-this  componentWillMount)
+        :componentDidMount     (run-with-this  componentDidMount)
+        :componentDidUpdate    (run-with-this  componentDidUpdate)
+        :componentWillUnmount  (run-with-this  componentWillUnmount)}
        (merge config)
        (clj->js)
        (.createClass React)

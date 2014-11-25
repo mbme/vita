@@ -7,6 +7,8 @@
 (defn $node [el]
   (js/$ (get-node el)))
 
+(def ^:dynamic ^:private *ws* nil)
+
 (defc Record [{:keys [value]}]
   [:div
    [:h3.&-title (:name @value)]
@@ -33,11 +35,11 @@
      [:icon.-eye {:onClick #(s/ws-preview-record key)}]]
     [:span.panel-right
      [:icon.-save {:onClick
-                   #((s/update-record key
-                                      :name (:name @value)
-                                      :data (:data @value))
-                     (s/ws-sync-record key)
-                     (s/ws-view-record key))}]
+                   #(do (s/update-record key
+                                         :name (:name @value)
+                                         :data (:data @value))
+                        (s/ws-sync-record key)
+                        (s/ws-view-record key))}]
      [:icon.-close {:onClick #(if is-new
                                 (s/ws-close-record key)
                                 (do (s/ws-sync-record key)
@@ -52,6 +54,7 @@
    [:textarea.&-data {:defaultValue (:data @value)
                       :ref          ref-area
                       :onChange     #(do (autogrow-area this)
+                                         (.packery *ws* "fit" (.-parentNode (get-node this)))
                                          (swap! value assoc :data (v/e-val %)))}]]
 
   :componentDidMount #(do (autogrow-area %)
@@ -69,7 +72,11 @@
                      :edit    EditRecordView
                      :preview PreviewRecordView
                      RecordView)]
-          (view record))])
+          (view record))]
+  :componentDidMount #(when *ws* (.packery *ws* "appended" (get-node %)))
+  :componentDidUpdate #(.packery *ws* "fit" (get-node %))
+  :componentWillUnmount #(do (.packery *ws* "remove" (get-node %))
+                             (.packery *ws*)))
 
 
 (defc Workspace [{:keys [workspace-menu workspace-items]}]
@@ -87,10 +94,6 @@
    ;; records masonry
    [:div.&-records {:ref "masonry"} (map WorkspaceItem (reverse workspace-items))]
    ]
-  :componentDidMount #(.packery ($node (get-ref % "masonry"))
-                                (clj->js {:gutter 10}))
-  :componentDidUpdate #(let [elem ($node (get-ref % "masonry"))]
-                         (.packery elem "reloadItems")
-                         (.packery elem "layout")
-                         )
-  )
+  :componentDidMount #(do (set! *ws* ($node (get-ref % "masonry")))
+                          (.packery *ws* (clj->js {:gutter 10})))
+  :componentWillUnmount #(.packery *ws* "destroy"))
