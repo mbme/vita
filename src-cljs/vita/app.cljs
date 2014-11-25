@@ -12,7 +12,8 @@
 (defn- has-term? [rec term]
   (if (count term)
     (-> (:name rec)
-        (.indexOf term)
+        (.toLowerCase)
+        (.indexOf (.toLowerCase term))
         (> -1))
     true))
 
