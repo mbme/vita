@@ -10,7 +10,9 @@ $c-bg: #F6FFE0;
 $c-search-sel: #BDD684;
 
 $c-search-input-bg: #F6FFE0;
+$c-search-input-h-bg: #E2F0D6;
 $c-search-input-f-bg: #FFFFFF;
+$c-search-input-border: lightgrey;
 
 $c-record-bg: #FFFFFF;
 $c-record-b: lightgrey;
@@ -100,12 +102,29 @@ html, body {
     overflow-y: auto;
 
     & &-search {
-        cursor: pointer;
-        background-color: $c-search-input-bg;
+        @extend .nohighlight;
 
-        &:focus {
+        cursor: pointer;
+
+        $border: 1px solid $c-search-input-border;
+        border: $border;
+
+        background-color: $c-search-input-bg;
+        @include transition(background-color 0.4s);
+
+        &:hover {
+            background-color: $c-search-input-h-bg;
+        }
+
+        &:focus,
+        &:focus:hover {
             cursor: text;
             background-color: $c-search-input-f-bg;
+        }
+
+        &:hover,
+        &:focus {
+            border: $border;
         }
     }
 }
@@ -121,7 +140,7 @@ html, body {
 
 .Workspace {
     overflow-y: auto;
-    
+
     &-options {
         right: 5px;
         position: fixed;
@@ -177,7 +196,7 @@ html, body {
     // make panel visible on hover
     .panel {
         opacity: 0;
-        @include transition(opacity .2s linear);
+        @include transition(opacity .4s);
     }
 
     &:hover .panel {
