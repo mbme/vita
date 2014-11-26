@@ -4,8 +4,13 @@
             [viter.utils :as utils]
             [viter.react :refer [get-node get-ref]]))
 
+(defn to-$ [el] (js/$ el))
+
 (defn $node [el]
-  (js/$ (get-node el)))
+  (to-$ (get-node el)))
+
+(defn scrollTo [elem container]
+  (.animate container #js {:scrollTop (.-top (.offset elem))} 300))
 
 (defn do-draggable [elem ws]
   (.packery ws "bindDraggabillyEvents" (new js/Draggabilly elem)))
@@ -78,6 +83,7 @@
           (view record))]
   :componentDidMount #(when *ws* (let [elem (get-node %)]
                                    (.packery *ws* "appended" elem)
+                                   (scrollTo (to-$ elem) (.parent *ws*))
                                    (do-draggable elem *ws*)))
   :componentDidUpdate #(.packery *ws* "fit" (get-node %))
   :componentWillUnmount #(do (.packery *ws* "remove" (get-node %))
