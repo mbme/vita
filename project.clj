@@ -3,7 +3,7 @@
   :url "http://example.com/FIXME"
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [compojure "1.1.8"]
-                 [com.taoensso/timbre "3.2.1"]
+                 [com.taoensso/timbre "3.3.1"]
 
                  [org.clojure/clojurescript "0.0-2371"]
                  [figwheel "0.1.5-SNAPSHOT"]]
