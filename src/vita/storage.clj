@@ -62,25 +62,48 @@
   [id]
   (.isFile (atom-file id)))
 
+(defn file-create
+  "Creates new `file'.
+  Returns true only if created
+  new file, returns false if file already
+  exists or some exception happened."
+  [file]
+  (try
+    (if (.createNewFile file)
+      true
+      (do (errorf "can't create file %s: already exists" file) false))
+    (catch Exception e
+      (error e "can't create file" file) false)))
+
 (defn file-write
   "Write `data' to the `file' handling all exceptions.
   Returns true on success, false otherwise."
   [file data]
   (try
-    (spit file data)
-    true
+    (spit file data) true
     (catch Exception e
-      (errorf e "file %s write failed" file)
-      false)))
+      (error e "file" file "write failed") false)))
 
 (defn file-read
   "Read `file' handling all exceptions.
   Returns string data if success, nil otherwise."
   [file]
+  (try (slurp file)
+       (catch Exception e
+         (error e "file" file "read failed"))))
+
+(defn file-delete
+  "Delete `file'. Returns true only if
+  file existed and successfully
+  deleted, false otherwise."
+  [file]
   (try
-    (slurp file)
+    (if (.delete file)
+      true
+      (do (error "can't delete file" file) false))
     (catch Exception e
-      (errorf e "file %s read failed" file))))
+      (error e "file" file "delete failed") false)))
+
 
 (defn atom-create
   "Creates new `atom'.
@@ -90,9 +113,8 @@
   (let [id   (atom-id atom)
         file (atom-file id)]
     (infof "atom %s: creating" id)
-    (if (.createNewFile file)
-      (file-write file (:data atom))
-      (do (errorf "file %s already exists" file) false))))
+    (when (file-create file)
+      (file-write file (:data atom)))))
 
 (defn atom-read
   "Returns atom with specified `id' or nil."
@@ -100,7 +122,7 @@
   (infof "atom %s: reading" id)
   (if (atom-exists? id)
     (when-let [data (file-read (atom-file id))]
-      (new-atom id (slurp (atom-file id))))
+      (new-atom id data))
     (errorf "atom %s: can't read - not found" id)))
 
 (defn atom-update
@@ -113,3 +135,12 @@
     (if (atom-exists? id)
       (file-write file (:data atom))
       (do (errorf "atom %s: doesn't exists" id) false))))
+
+(defn atom-delete
+  "Removes atom with specified `id'.
+  Returns true if success, false otherwise."
+  [^AtomId id]
+  (infof "atom %s: deleting" id)
+  (if (atom-exists? id)
+    (file-delete (atom-file id))
+    (do (errorf "atom %s: can't delete - not found" id) false)))
