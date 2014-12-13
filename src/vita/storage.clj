@@ -28,14 +28,18 @@
 
 (defrecord AtomId [type name]
   Object
-  (toString [this] (str type "/" name)))
+  (toString [_] (str type "/" name)))
+
+(defrecord Atom [type name data])
+
+(defn new-atom
+  ([id data] (new-atom (:type id) (:name id) data))
+  ([type name data] (Atom. type name data)))
 
 (defn atom-id
   "Creates atom id."
   ([type name] (AtomId. type name))
   ([^Atom atom] (atom-id (:type atom) (:name atom))))
-
-(defrecord Atom [type name data])
 
 (defn atom-file
   "Get atom file by it's id."
@@ -47,6 +51,26 @@
   [id]
   (.isFile (atom-file id)))
 
+(defn file-write
+  "Write `data' to the `file' handling all exceptions.
+  Returns true on success, false otherwise."
+  [file data]
+  (try
+    (spit file data)
+    true
+    (catch Exception e
+      (errorf e "file %s write failed" file)
+      false)))
+
+(defn file-read
+  "Read `file' handling all exceptions.
+  Returns string data if success, nil otherwise."
+  [file]
+  (try
+    (slurp file)
+    (catch Exception e
+      (errorf e "file %s read failed" file))))
+
 (defn atom-create
   "Creates new `atom'.
   Returns true if created new atom, false if
@@ -54,14 +78,16 @@
   [^Atom atom]
   (let [id   (atom-id atom)
         file (atom-file id)]
+    (infof "atom %s: creating" id)
     (if (.createNewFile file)
-      (try
-        (spit file (:data atom))
-        (infof "atom %s: created" id)
-        true
-        (catch Exception e
-          (errorf e "atom %s: can't create" id)
-          false))
-      (do
-        (errorf "atom %s: can't create - already exists" id)
-        false))))
+      (file-write file (:data atom))
+      (do (errorf "file %s already exists" file) false))))
+
+(defn atom-read
+  "Returns atom with specified `id' or nil."
+  [^AtomId id]
+  (infof "atom %s: reading" id)
+  (if (atom-exists? id)
+    (when-let [data (file-read (atom-file id))]
+      (new-atom id (slurp (atom-file id))))
+    (errorf "atom %s: can't read - not found" id)))
