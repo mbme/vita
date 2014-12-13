@@ -1,9 +1,20 @@
 (ns vita.storage
   ( :require [vita.config :as cfg]
              [taoensso.timbre :as timbre]
-             [clojure.java.io :as io :refer [file]] ))
+             [clojure.string :as str]
+             [clojure.java.io :as io :refer [file]]))
 
 ;; logging helpers
+(timbre/set-config! [:timestamp-pattern] "HH:mm:ss")
+(timbre/set-config!
+ [:fmt-output-fn]
+ (fn [{:keys [level throwable message timestamp ns]}
+      ;; Any extra appender-specific opts:
+      & [{:keys [nofonts?] :as appender-fmt-output-opts}]]
+   ;; <timestamp> <LEVEL> [<ns>] <message> <throwable>
+   (format "%s %s [%s] %s%s"
+           timestamp (-> level name str/upper-case) ns (or message "")
+           (or (timbre/stacktrace throwable "\n" (when nofonts? {})) ""))))
 (timbre/refer-timbre)
 
 (defn base-create
@@ -91,3 +102,14 @@
     (when-let [data (file-read (atom-file id))]
       (new-atom id (slurp (atom-file id))))
     (errorf "atom %s: can't read - not found" id)))
+
+(defn atom-update
+  "Updates specified atom. Returns true if updated,
+  false if atom doesn't exists or update failed."
+  [^Atom atom]
+  (let [id   (atom-id atom)
+        file (atom-file id)]
+    (infof "atom %s: updating" id)
+    (if (atom-exists? id)
+      (file-write file (:data atom))
+      (do (errorf "atom %s: doesn't exists" id) false))))
