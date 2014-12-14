@@ -1,41 +1,36 @@
 (defproject vita "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
+  :description "Helper"
   :dependencies [[org.clojure/clojure "1.6.0"]
-                 [compojure "1.1.8"]
+
+                 ;; server, routes
+                 [http-kit "2.1.19"]
+                 [compojure "1.3.1"]
+
+                 ;; logging
                  [com.taoensso/timbre "3.3.1"]
 
-                 [org.clojure/clojurescript "0.0-2371"]
-                 [figwheel "0.1.5-SNAPSHOT"]]
-  :plugins [[lein-ring "0.8.11"]]
+                 ;; frontend
+                 [org.clojure/clojurescript "0.0-2411"  :scope "provided"]
+                 [figwheel "0.1.7-SNAPSHOT"]]
 
+  :profiles {:dev {:plugins [[lein-cljsbuild "1.0.3"]
+                             [lein-figwheel "0.1.7-SNAPSHOT"]]
+                   :dependencies [[javax.servlet/servlet-api "2.5"]]}}
+
+  ;; compile clojurescript while building app
   :hooks [leiningen.cljsbuild]
 
   :source-paths ["src" "src-cljs"]
+  :main vita.handler
 
-  :ring {
-         :handler vita.handler/app
-         :port 8080}
-
-  :cljsbuild {
-              :builds [{
-                        :id "dev"
+  :cljsbuild {:builds [{:id "dev"
                         :source-paths ["src-cljs/" "src-cljs-dev/"]
-                        :compiler {
-                                   :output-to "resources/public/app.js"
+                        :compiler {:output-to "resources/public/app.js"
                                    :output-dir "resources/public/out"
                                    :optimizations :none
                                    :pretty-print true
                                    :source-map true}}]}
-  :figwheel {
-             :server-port 8080
-             :css-dirs ["resources/public/css"]
-             :ring-handler vita.handler/app}
 
-  :profiles {
-             :dev {
-                   :plugins [[lein-cljsbuild "1.0.3"]
-                             [lein-figwheel "0.1.4-SNAPSHOT"]]
-                   :dependencies [[javax.servlet/servlet-api "2.5"]
-                                  [ring-mock "0.1.5"]]}}
-  )
+  :figwheel {:server-port 8080
+             :ring-handler vita.handler/app-routes
+             :css-dirs ["resources/public/css"]})

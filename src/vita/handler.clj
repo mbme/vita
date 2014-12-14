@@ -1,13 +1,21 @@
 (ns vita.handler
-  (:require [compojure.core :refer :all]
-            [compojure.handler :as handler]
-            [ring.util.response :as resp]
-            [compojure.route :as route]))
+  (:require
+   [org.httpkit.server :refer [run-server]]
+   [ring.util.response :refer [file-response]]
+
+   [compojure.core :refer [defroutes GET]]
+   [compojure.handler :refer [site]]
+   [compojure.route :refer [files not-found]]))
+
+;; (defn ws-handler [req]
+;;   (with-channel req channel))
+
 
 (defroutes app-routes
-  (GET "/" [] (resp/file-response "resources/public/index.html"))
-  (route/resources "/")
-  (route/not-found "NOT FOUND"))
+  ;; (GET "/ws" [] ws-handler)
+  (files "" {:root "resources/public"})
+  (not-found "NOT FOUND"))
 
-(def app
-  (handler/site app-routes))
+(defn -main [& args]
+  (run-server (site app-routes) {:port 8080})
+  (println "DONE"))
