@@ -6,6 +6,9 @@
                  [http-kit "2.1.19"]
                  [compojure "1.3.1"]
 
+                 ;; serialization/deserialization
+                 [cheshire "5.4.0"]
+
                  ;; logging
                  [com.taoensso/timbre "3.3.1"]
 
