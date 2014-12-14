@@ -1,20 +1,8 @@
 (ns vita.storage
-  ( :require [vita.config :as cfg]
-             [taoensso.timbre :as timbre]
-             [clojure.string :as str]
-             [clojure.java.io :as io :refer [file]]))
+  (:require [vita.context :as ctx]
+            [taoensso.timbre :as timbre]
+            [clojure.java.io :as io :refer [file]]))
 
-;; logging helpers
-(timbre/set-config! [:timestamp-pattern] "HH:mm:ss")
-(timbre/set-config!
- [:fmt-output-fn]
- (fn [{:keys [level throwable message timestamp ns]}
-      ;; Any extra appender-specific opts:
-      & [{:keys [nofonts?] :as appender-fmt-output-opts}]]
-   ;; <timestamp> <LEVEL> [<ns>] <message> <throwable>
-   (format "%s %s [%s] %s%s"
-           timestamp (-> level name str/upper-case) ns (or message "")
-           (or (timbre/stacktrace throwable "\n" (when nofonts? {})) ""))))
 (timbre/refer-timbre)
 
 (defn base-create
@@ -26,16 +14,13 @@
       (fatal err)
       (throw err))))
 
-(def base (file cfg/base-dir))
+(def base (atom nil))
 
-(defn init!
-  "Initialize storage."
-  []
-  (if-not (.exists base) (base-create base))
-  (infof "base dir: %s" base))
-(init!)
-
-;; TODO CRUD
+(defn init! []
+  (let [base-dir (file (:base-dir ctx/config))]
+    (when-not (.exists base-dir) (base-create base-dir))
+    (reset! base base-dir)
+    (infof "base dir: %s" base-dir)))
 
 (defrecord AtomId [type name]
   Object
@@ -55,7 +40,7 @@
 (defn atom-file
   "Get atom file by it's id."
   [{:keys [type name]}]
-  (file base type (str name ".vita")))
+  (file @base type (str name ".vita")))
 
 (defn atom-exists?
   "Checks if atom with `id' already exists."
