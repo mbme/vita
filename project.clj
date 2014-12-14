@@ -5,6 +5,8 @@
                  ;; server, routes
                  [http-kit "2.1.19"]
                  [compojure "1.3.1"]
+                 [ring/ring-devel "1.3.2"]
+                 [ring/ring-core "1.3.2"]
 
                  ;; serialization/deserialization
                  [cheshire "5.4.0"]
@@ -35,5 +37,5 @@
                                    :source-map true}}]}
 
   :figwheel {:server-port 8080
-             :ring-handler vita.handler/app-routes
+             :ring-handler vita.handler/dev-app-routes
              :css-dirs ["resources/public/css"]})

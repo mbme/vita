@@ -8,6 +8,7 @@
             [org.httpkit.server :refer :all]
             [ring.util.response :refer [file-response]]
 
+            [ring.middleware.reload :refer [wrap-reload]]
             [compojure.core :refer [defroutes GET]]
             [compojure.handler :refer [site]]
             [compojure.route :refer [files not-found]]))
@@ -39,6 +40,9 @@
   (GET "/ws" [] ws-handler)
   (files "" {:root "resources/public"})
   (not-found "NOT FOUND"))
+
+;; live reload wrapper for code
+(def dev-app-routes (wrap-reload (site app-routes)))
 
 (defn -main [& args]
   (run-server (site app-routes) {:port (:port ctx/config)})
