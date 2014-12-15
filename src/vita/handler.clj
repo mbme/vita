@@ -9,6 +9,9 @@
             [ring.util.response :refer [file-response]]
 
             [ring.middleware.reload :refer [wrap-reload]]
+            [cemerick.piggieback :as piggieback]
+            [weasel.repl.websocket :as weasel]
+
             [compojure.core :refer [defroutes GET]]
             [compojure.handler :refer [site]]
             [compojure.route :refer [files not-found]]))
@@ -43,6 +46,11 @@
 
 ;; live reload wrapper for code
 (def dev-app-routes (wrap-reload (site app-routes)))
+
+(defn browser-repl []
+  (let [repl-env (weasel/repl-env :ip "0.0.0.0" :port 9001)]
+    (piggieback/cljs-repl :repl-env repl-env)
+    (piggieback/cljs-eval repl-env '(in-ns vita.state) {})))
 
 (defn -main [& args]
   (run-server (site app-routes) {:port (:port ctx/config)})

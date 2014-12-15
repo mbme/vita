@@ -11,6 +11,8 @@
                  ;; serialization/deserialization
                  [cheshire "5.4.0"]
 
+                 [weasel "0.4.2"]
+
                  ;; logging
                  [com.taoensso/timbre "3.3.1"]
 
@@ -18,12 +20,17 @@
                  [org.clojure/clojurescript "0.0-2411"  :scope "provided"]
                  [figwheel "0.1.7-SNAPSHOT"]]
 
-  :profiles {:dev {:plugins [[lein-cljsbuild "1.0.3"]
+  :profiles {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
+                                  [com.cemerick/piggieback "0.1.3"]]
+
+                   :plugins [[lein-cljsbuild "1.0.3"]
                              [lein-figwheel "0.1.7-SNAPSHOT"]]
-                   :dependencies [[javax.servlet/servlet-api "2.5"]]}}
+
+                   :repl-options {:init-ns vita.handler
+                                  :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}}}
 
   ;; compile clojurescript while building app
-  :hooks [leiningen.cljsbuild]
+  ;; :hooks [leiningen.cljsbuild]
 
   :source-paths ["src" "src-cljs"]
   :main vita.handler
