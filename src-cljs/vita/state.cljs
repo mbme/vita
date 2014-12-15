@@ -14,6 +14,25 @@
                                 :workspace-items '()
                                 ;; item is {:key 123 :state :show}
                                 }))
+;; EVENT BUS (ACTIONS)
+(defonce events (atom {}))
+(defn on
+  "Register `handler' for `action'."
+  [action handler]
+  (swap! events
+         (fn [events]
+           (assoc events action
+                  ;; if this action already has handlers then add
+                  ;; new handler to the set, else create new set
+                  (if-let [handlers (get events action)]
+                    (conj handlers handler)
+                    #{handler})))))
+(defn trigger
+  "Dispatch `action' with `params'."
+  [action & params]
+  ;; run all action handlers with specified params
+  (doseq [handler (get @events action)] (apply handler params)))
+
 
 ;; PUBLIC
 
