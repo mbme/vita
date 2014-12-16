@@ -16,6 +16,7 @@
                                 }))
 ;; EVENT BUS (ACTIONS)
 (defonce events (atom {}))
+
 (defn on
   "Register `handler' for `action'."
   [action handler]
@@ -27,12 +28,34 @@
                   (if-let [handlers (get events action)]
                     (conj handlers handler)
                     #{handler})))))
+
 (defn trigger
   "Dispatch `action' with `params'."
   [action & params]
   ;; run all action handlers with specified params
   (doseq [handler (get @events action)] (apply handler params)))
 
+;; SERVER EVENTS HANDLER
+(defn socket-create
+  "Creates new websocket connection"
+  [addr handler]
+  (let [ws (js/WebSocket. addr)
+        send (.-send ws)]
+    (aset ws "onopen"    #(log/info "websocket: open"))
+    (aset ws "onerror"   #(log/error "websocket: error: %s" %))
+    (aset ws "onclose"   #(log/info "websocket: closed"))
+    ;; handle server messages, parse and convert them to clojure data structures
+    (aset ws "onmessage" (fn [evt]
+                           (let [data (.parse js/JSON (.-data evt))]
+                             (log/debug "websocket: message %s" data)
+                             (handler (js->clj data :keywordize-keys true)))))
+    ;; better .send which converts clojure data structures to JSON and serializes it
+    (aset ws "send" #(.call send ws (.stringify js/JSON (clj->js %))))
+    ws))
+
+(def ws (socket-create
+         "ws://test.dev/ws"
+         #(println %)))
 
 ;; PUBLIC
 
