@@ -5,4 +5,5 @@
 (fw/watch-and-reload
  :jsload-callback (fn [] (println "app reloaded"))) ;; optional callback
 
-(weasel/connect "ws://localhost:9001" :verbose true :print #{:repl :console})
+(when-not (= (.indexOf js/window.location.href "REPL") -1)
+  (weasel/connect "ws://localhost:9001" :verbose true :print #{:repl :console}))
