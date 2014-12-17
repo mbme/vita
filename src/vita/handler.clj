@@ -36,7 +36,7 @@
       (on-close channel (fn [status] (info "client" id "disconnected; status" status)))
       ;; message handler
       (on-receive channel (fn [data]
-                            (if-let [response (action-handler (parse-string data true))]
+                            (when-let [response (action-handler (parse-string data true))]
                               (send! channel (generate-string response))))))))
 
 (defroutes app-routes

@@ -33,29 +33,39 @@
   "Dispatch `action' with `params'."
   [action & params]
   ;; run all action handlers with specified params
+  (log/debug "trigger action %s handlers %s" action (count (get @events action)))
   (doseq [handler (get @events action)] (apply handler params)))
 
 ;; SERVER EVENTS HANDLER
 (defn socket-create
   "Creates new websocket connection"
-  [addr handler]
+  [addr]
   (let [ws (js/WebSocket. addr)
         send (.-send ws)]
-    (aset ws "onopen"    #(log/info "websocket: open"))
+    (aset ws "onopen"    (fn []
+                           (log/info "websocket: open")
+                           (trigger :ws-open)))
     (aset ws "onerror"   #(log/error "websocket: error: %s" %))
-    (aset ws "onclose"   #(log/info "websocket: closed"))
+    (aset ws "onclose"   (fn []
+                           (log/info "websocket: closed")
+                           (trigger :ws-closed)))
     ;; handle server messages, parse and convert them to clojure data structures
     (aset ws "onmessage" (fn [evt]
-                           (let [data (.parse js/JSON (.-data evt))]
-                             (log/debug "websocket: message %s" data)
-                             (handler (js->clj data :keywordize-keys true)))))
+                           (let [data                    (.parse js/JSON (.-data evt))
+                                 {:keys [action params]} (js->clj data :keywordize-keys true)]
+                             (log/debug "websocket: message " data)
+                             ;; trigger server events on local bus
+                             (trigger (keyword action) params))))
     ;; better .send which converts clojure data structures to JSON and serializes it
     (aset ws "send" #(.call send ws (.stringify js/JSON (clj->js %))))
     ws))
 
-(def ws (socket-create
-         "ws://test.dev/ws"
-         #(println %)))
+(defonce ws (socket-create "ws://test.dev/ws"))
+(defn send [action params]
+  (.send ws {:action action :params params}))
+
+(on :test #(println "TEST" %))
+(on :ws-open #(send :test "HAHA"))
 
 ;; PUBLIC
 
