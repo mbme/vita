@@ -2,8 +2,7 @@
 
 (defmacro deflog [level]
   `(defmacro ~level [& args#]
-     `(.apply (aget js/console '~(str '~level)) js/console (into-array (map str [~@args#])))
-     ))
+     `(.apply (aget js/console '~(str '~level)) js/console (into-array (map prepare [~@args#])))))
 
 (deflog debug)
 (deflog info)
