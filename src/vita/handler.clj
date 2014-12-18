@@ -2,6 +2,7 @@
   (:require [vita.context :as ctx]
             [vita.storage :as storage]
             [taoensso.timbre :as timbre]
+            [vita.generator :as gen]
 
             [cheshire.core :refer [generate-string parse-string]]
 
@@ -19,8 +20,10 @@
 (timbre/refer-timbre)
 
 ;; INITIALIZATION
-(ctx/setup-logger!)
-(storage/init!)
+(defonce _ (do
+             (ctx/setup-logger!)
+             (storage/init!)
+             (gen/init-data!)))
 
 (defn action-handler [{:keys [action params] :as data}]
   (info "action" action "params:" params)

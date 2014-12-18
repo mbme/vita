@@ -49,23 +49,28 @@
     (aset ws "onclose"   (fn []
                            (log/info "websocket: closed")
                            (trigger :ws-closed)))
-    ;; handle server messages, parse and convert them to clojure data structures
+    ;; handle server messages, parse and
+    ;; convert them to clojure data structures
     (aset ws "onmessage" (fn [evt]
-                           (let [data                    (.parse js/JSON (.-data evt))
-                                 {:keys [action params]} (js->clj data :keywordize-keys true)]
+                           (let [data (.parse js/JSON (.-data evt))
+                                 {:keys
+                                  [action
+                                   params]} (js->clj
+                                             data
+                                             :keywordize-keys true)]
                              (log/debug "websocket: message " data)
                              ;; trigger server events on local bus
                              (trigger (keyword action) params))))
-    ;; better .send which converts clojure data structures to JSON and serializes it
-    (aset ws "send" #(.call send ws (.stringify js/JSON (clj->js %))))
+    ;; better .send which converts clojure
+    ;; data structures to JSON and serializes it
+    (aset ws "send" #(.call send ws
+                            (.stringify js/JSON (clj->js %))))
     ws))
 
 (defonce ws (socket-create "ws://test.dev/ws"))
 (defn send [action params]
   (.send ws {:action action :params params}))
 
-(on :test #(println "TEST" %))
-(on :ws-open #(send :test "HAHA"))
 
 ;; PUBLIC
 

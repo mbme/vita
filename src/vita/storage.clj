@@ -40,12 +40,19 @@
 (defn atom-file
   "Get atom file by it's id."
   [{:keys [type name]}]
-  (file @base type (str name ".vita")))
+  (file @base (str type) (str name ".vita")))
 
 (defn atom-exists?
   "Checks if atom with `id' already exists."
   [id]
   (.isFile (atom-file id)))
+
+(defn type-create
+  "Create new type."
+  [type]
+  (if (.mkdir (file @base (str type)))
+    (do (info "created type" type) true)
+    false))
 
 (defn file-create
   "Creates new `file'.
