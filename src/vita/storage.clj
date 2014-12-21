@@ -5,6 +5,14 @@
 
 (timbre/refer-timbre)
 
+(def file-ext ".vita")
+
+(defn trim-ext [name]
+  (.substring name 0 (.lastIndexOf name file-ext)))
+
+(defn str->keyword [str]
+  (keyword (.substring str 1)))
+
 (defn base-create
   "Create `base-dir' or throw error."
   [base-dir]
@@ -28,6 +36,14 @@
 
 (defrecord Atom [type name data])
 
+(defn atom-type? [type]
+  (and (not (nil? type))
+       (.startsWith type ":")))
+
+(defn atom-file? [name]
+  (and (not (nil? name))
+       (.endsWith name file-ext)))
+
 (defn new-atom
   ([id data] (new-atom (:type id) (:name id) data))
   ([type name data] (Atom. type name data)))
@@ -40,7 +56,7 @@
 (defn atom-file
   "Get atom file by it's id."
   [{:keys [type name]}]
-  (file @base (str type) (str name ".vita")))
+  (file @base (str type) (str name file-ext)))
 
 (defn atom-exists?
   "Checks if atom with `id' already exists."
@@ -136,3 +152,19 @@
   (if (atom-exists? id)
     (file-delete (atom-file id))
     (do (errorf "atom %s: can't delete - not found" id) false)))
+
+(defn types
+  "Get list of all atom types."
+  [] (->> (.list @base)
+          (filter atom-type?)
+          (map str->keyword)))
+
+(defn atoms
+  "Get list of all atoms ids of `type'.
+  Returns all atoms ids of all types if `type' not specified."
+  ([type] (->> (str type)
+               (file @base)
+               (.list)
+               (filter atom-file?)
+               (map #(atom-id type (trim-ext %)))))
+  ([] (flatten (map atoms (types)))))

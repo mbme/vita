@@ -7,13 +7,29 @@
   ([record]    (add-id record (next-id)))
   ([record id] (assoc record :key id)))
 
-(defonce ^:private state (atom {:records '()
-                                ;; record is {:key 123 :name "test" :data "some value"}
-                                :search-term ""
-                                :workspace-menu false
-                                :workspace-items '()
-                                ;; item is {:key 123 :state :show}
-                                }))
+(defn- prepare-record [{:keys [type] :as record}]
+  (assoc record :type (keyword type)))
+
+
+(defonce ^:private state
+  (atom {:records '()
+         ;; record is {:key 123
+         ;;            :name "test"
+         ;;            :data "some value"}
+         :search-term ""
+         :workspace-menu false
+
+         ;; item is {:key 123 :state :show}
+         :workspace-items '()}))
+
+;; STATE MANAGEMENT
+;; TODO remove this
+(defn- update-records [fn]
+  (swap! state #(assoc % :records (fn (:records %)))))
+
+(defn- atoms-update [fn]
+  (swap! state #(assoc % :records (fn (:records %)))))
+
 ;; EVENT BUS (ACTIONS)
 (defonce events (atom {}))
 
@@ -33,7 +49,8 @@
   "Dispatch `action' with `params'."
   [action & params]
   ;; run all action handlers with specified params
-  (log/debug "trigger action %s handlers %s" action (count (get @events action)))
+  (log/debug "trigger action %s handlers %s"
+             action (count (get @events action)))
   (doseq [handler (get @events action)] (apply handler params)))
 
 ;; SERVER EVENTS HANDLER
@@ -51,16 +68,13 @@
                            (trigger :ws-closed)))
     ;; handle server messages, parse and
     ;; convert them to clojure data structures
-    (aset ws "onmessage" (fn [evt]
-                           (let [data (.parse js/JSON (.-data evt))
-                                 {:keys
-                                  [action
-                                   params]} (js->clj
-                                             data
-                                             :keywordize-keys true)]
-                             (log/debug "websocket: message " data)
-                             ;; trigger server events on local bus
-                             (trigger (keyword action) params))))
+    (aset ws "onmessage"
+          (fn [evt]
+            (let [data (.parse js/JSON (.-data evt))
+                  {:keys [action params]} (js->clj data :keywordize-keys true)]
+              (log/debug "websocket: message " data)
+              ;; trigger server events on local bus
+              (trigger (keyword action) params))))
     ;; better .send which converts clojure
     ;; data structures to JSON and serializes it
     (aset ws "send" #(.call send ws
@@ -68,8 +82,15 @@
     ws))
 
 (defonce ws (socket-create "ws://test.dev/ws"))
-(defn send [action params]
-  (.send ws {:action action :params params}))
+(defn send
+  ([action params] (.send ws {:action action :params params}))
+  ([action] (send action nil)))
+
+(on :atoms-list (fn [records]
+                  (log/info "adding new %s records" (count records))
+                  (atoms-update #(map (comp add-id prepare-record) records))))
+
+(on :ws-open #(send :atoms-list-req))
 
 
 ;; PUBLIC
@@ -86,9 +107,6 @@
 (defn record-exists? [id]
   (not (nil? (get-record id (:records @state)))))
 
-(defn update-records [fn]
-  (swap! state #(assoc % :records (fn (:records %)))))
-
 (defn update-record
   "Update record by `id'.
   If can't find record with this `id' then add new record."
@@ -99,9 +117,6 @@
       (update-records #(conj % (add-id new-vals id)))
       (update-records (fn [records] (map #(if (= id (record-id %)) (merge record new-vals) %) records))))))
 
-(defn load-records! [records]
-  (log/info "adding new %s records" (count records))
-  (update-records #(map add-id records)))
 
 (defn watch! [func]
   (add-watch state :render (fn [_ _ _ data] (func data))))

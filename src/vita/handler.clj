@@ -26,9 +26,11 @@
              (gen/init-data!)))
 
 (defn action-handler [{:keys [action params] :as data}]
-  (info "action" action "params:" params)
   (debug "request payload:" data)
-  data)
+  (case (keyword action)
+    :atoms-list-req {:action :atoms-list
+                     :params (storage/atoms)}
+    (error "unexpected action:" action)))
 
 (def counter (atom 0))
 (defn ws-handler [req]
@@ -36,11 +38,13 @@
     (with-channel req channel
       (info "client" id "connected")
       ;; close handler
-      (on-close channel (fn [status] (info "client" id "disconnected; status" status)))
+      (on-close channel
+                (fn [status] (info "client" id "disconnected; status" status)))
       ;; message handler
-      (on-receive channel (fn [data]
-                            (when-let [response (action-handler (parse-string data true))]
-                              (send! channel (generate-string response))))))))
+      (on-receive channel
+                  (fn [data]
+                    (when-let [response (action-handler (parse-string data true))]
+                      (send! channel (generate-string response))))))))
 
 (defroutes app-routes
   (GET "/ws" [] ws-handler)
