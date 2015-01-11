@@ -10,8 +10,3 @@
                                 utils/get-words
                                 add-prefix
                                 utils/join))])
-
-(defc Dropdown [{:keys [visible children]}]
-  [:div {:class (when-not visible "is-hidden")
-         :ref "menu"}
-   `[:div.&-body ~@children]])

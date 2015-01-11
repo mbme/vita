@@ -47,3 +47,6 @@
 
 (defn get-node [el]
   (.getDOMNode el))
+
+(defn deref-node [this ref]
+  (get-node (get-ref this ref)))

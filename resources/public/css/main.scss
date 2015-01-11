@@ -2,7 +2,7 @@
 @import "base/base";
 @import "font-awesome/font-awesome";
 
-// https://color.adobe.com/zen-and-tea-color-theme-337112/?time=all
+// https://color.adobe.com/zen-and-tea-color-theme-337112
 $c-nav-bg: #10222B;
 $c-nav: #E2F0D6;
 $c-nav-hover: #BDD684;
@@ -141,21 +141,6 @@ html, body {
 .Workspace {
     overflow-y: auto;
 
-    &-options {
-        right: 5px;
-        position: fixed;
-        z-index: 10;
-
-        text-align: right;
-        cursor: pointer;
-        @include user-select(none);
-
-        .Dropdown {
-            right: 20px;
-            top: 6px;
-        }
-    }
-
     &-records {
         padding: 5px;
         padding-right: 15px;
@@ -167,8 +152,7 @@ html, body {
     }
 
     .WorkspaceItem {
-        display: inline-block;
-        width: 550px;
+        margin: 20px;
         min-height: 200px;
     }
 }
@@ -208,7 +192,7 @@ html, body {
 }
 
 .Record {
-    & &-title {
+    & &-name {
         text-align: center;
     }
 
@@ -226,7 +210,11 @@ html, body {
 .EditRecordView {
     @extend %RecordBase;
 
-    & &-name, & &-data {
+    & &-name {
+        text-align: center;
+    }
+
+    & &-data {
         @extend .nohighlight;
         border-radius: 0;
 
@@ -235,16 +223,6 @@ html, body {
         &:focus {
             box-shadow: none;
         }
-    }
-
-    & &-name {
-        margin-bottom: 0;
-        padding-top: 0;
-        border: 0 none;
-
-        text-align: center;
-        font-weight: bold;
-        font-size: $h3-font-size;
     }
 
     & &-data {
@@ -263,34 +241,5 @@ html, body {
 
     &:focus {
         background-color: red;
-    }
-}
-
-.Dropdown {
-    right: 0;
-    position: absolute;
-
-    white-space: nowrap;
-    @include user-select(none);
-
-    text-align: left;
-
-    background-color: $c-bg;
-
-    &-body {
-        max-height: 500px;
-        overflow: hidden;
-        padding: 5px;
-        opacity: 1;
-        border: 1px solid lightgrey;
-        @include transition(all 0.2s);
-    }
-
-    &.is-hidden &-body{
-        opacity: 0;
-        border: 0;
-        max-height: 0;
-        padding-top: 0;
-        padding-bottom: 0;
     }
 }

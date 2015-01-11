@@ -7,33 +7,37 @@
 (defc NavPanel []
   [:nav
    [:div.&-link [:icon.-home] "records"]
-   [:div.&-link {:onClick s/ws-new-record}[:icon.-plus] "add"]])
+   [:div.&-link {:onClick #(s/trigger :new-atom)}[:icon.-plus] "add"]])
 
-(defn- has-term? [rec term]
-  (if (count term)
-    (-> (:name rec)
+(defc SearchResult [{:keys [atom-id key selected]}]
+  [:li {:onClick #(s/trigger :ws-open key)
+        :class (when selected "&-selected")}
+   (:name atom-id)])
+
+(defn- has-term? [atom-id term]
+  (if (pos? term)
+    (-> (:name atom-id)
         (.toLowerCase)
         (.indexOf (.toLowerCase term))
         (> -1))
     true))
 
-(defc SearchResult [{:keys [record key visible]}]
-  [:li {:onClick #(s/ws-open-record key)
-        :class (when visible "&-selected")}
-   (:name record)])
+(defn- visible-atoms [atoms-list term]
+  (filter #(has-term? % term) atoms-list))
 
-(defc SearchPanel [{:keys [search-term records workspace-items]}]
+(defc SearchPanel [{:keys [search-term atoms-list ws-items]}]
   [:div
    [:input.&-search {:type "text"
                      :placeholder "SEARCH"
                      :defaultValue search-term
-                     :onKeyUp #(s/update-search! (v/e-val %))}]
-   (let [records (filter #(has-term? % search-term) records)]
-     [:ul (map #(SearchResult
-                 {:record %
-                  :key (s/record-id %)
-                  :visible (s/ws-is-open? (s/record-id %) workspace-items)}) records)])
-   ])
+                     :onChange #(s/trigger :search-update (v/e-val %))}]
+   [:ul
+    (map (fn [[key atom-id]]
+           (SearchResult
+            {:key key
+             :atom-id atom-id
+             :visible (s/ws-is-open? key ws-items)}))
+         (visible-atoms atoms-list search-term))]])
 
 (defc Root [state]
   [:div
@@ -44,5 +48,4 @@
 (defonce _
   (do
     (s/watch! #(v/render! js/document.body Root %))
-    (url/watch! #(js/console.warn (clj->js %)))
-    ))
+    (url/watch! #(js/console.warn (clj->js %)))))

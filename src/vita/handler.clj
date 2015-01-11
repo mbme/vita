@@ -19,6 +19,12 @@
 
 (timbre/refer-timbre)
 
+(defn new-event [action params]
+  {:action action :params params})
+
+(defn read-id [{:keys [type name]}]
+  (storage/atom-id (keyword type) name))
+
 ;; INITIALIZATION
 (defonce _ (do
              (ctx/setup-logger!)
@@ -28,8 +34,9 @@
 (defn action-handler [{:keys [action params] :as data}]
   (debug "request payload:" data)
   (case (keyword action)
-    :atoms-list-req {:action :atoms-list
-                     :params (storage/atoms)}
+    :req-atoms-list (new-event :atoms-list (storage/atoms))
+    :req-atom (new-event :atom
+                         (storage/atom-read (read-id params)))
     (error "unexpected action:" action)))
 
 (def counter (atom 0))
