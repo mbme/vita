@@ -5,21 +5,18 @@
                        [vita.url :as url]))
 
 (defn- has-term? [atom-id term]
-  (if (pos? term)
+  (if (pos? (count term))
     (-> (:name atom-id)
         (.toLowerCase)
         (.indexOf (.toLowerCase term))
         (> -1))
     true))
 
-(defn- visible-atoms [atoms-list term]
-  (filter #(has-term? % term) atoms-list))
-
 ;; COMPONENTS
 
-(defc SearchResult [{:keys [atom-id key selected]}]
+(defc SearchResult [{:keys [atom-id key visible]}]
   [:li {:onClick #(s/trigger :ws-open key)
-        :class (when selected "&-selected")}
+        :class (when visible "&-visible")}
    (:name atom-id)])
 
 (defc SearchPanel [{:keys [search-term atoms-list ws-items]}]
@@ -33,8 +30,8 @@
            (SearchResult
             {:key key
              :atom-id atom-id
-             :visible (s/ws-is-open? key ws-items)}))
-         (visible-atoms atoms-list search-term))]])
+             :visible (has-term? atom-id search-term)}))
+         atoms-list)]])
 
 (defc Root [state]
   [:div

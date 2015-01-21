@@ -9,7 +9,6 @@ $w-SearchPanel: 400px;
 $w-WorkspaceItem: $w-SearchPanel*$golden-ration;
 
 $c-bg: #F6FFE0;
-$c-search-sel: #BDD684;
 
 $c-search-input-bg: #F6FFE0;
 $c-search-input-h-bg: #E2F0D6;
@@ -58,19 +57,17 @@ html, body {
 .Root {
     min-height: 100%;
     width: 100%;
-    margin: 0 auto;
+
+    display: flex;
+    justify-content: space-between;
 
     // GOLDEN RATIO
     $w-search: 38.2%;
     $w-workspace: 100%-38.2%;
 
-    &>* {
-        display: inline-block;
-        vertical-align: top;
-    }
-
     .left {
         width: $w-search;
+        border-right: 1px solid lightgrey;
     }
 
     .right {
@@ -81,8 +78,6 @@ html, body {
 .SearchPanel {
     margin-left: auto;
     width: $w-SearchPanel;
-
-    border-right: 1px solid lightgrey;
 
     & &-search {
         @extend .nohighlight;
@@ -116,9 +111,10 @@ html, body {
 .SearchResult {
     cursor: pointer;
     padding: 10px 5px;
+    display: none;
 
-    &-selected {
-        background-color: $c-search-sel;
+    &-visible {
+        display: block;
     }
 }
 
