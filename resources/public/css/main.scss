@@ -3,9 +3,11 @@
 @import "font-awesome/font-awesome";
 
 // https://color.adobe.com/zen-and-tea-color-theme-337112
-$c-nav-bg: #10222B;
-$c-nav: #E2F0D6;
-$c-nav-hover: #BDD684;
+$golden-ration: 1.618;
+
+$w-SearchPanel: 400px;
+$w-WorkspaceItem: $w-SearchPanel*$golden-ration;
+
 $c-bg: #F6FFE0;
 $c-search-sel: #BDD684;
 
@@ -49,57 +51,38 @@ html, body {
     *, *:before, *:after {
                      @include box-sizing(border-box);
                  }
+
+    background-color: $c-bg;
 }
 
 .Root {
-    @extend .wh100;
+    min-height: 100%;
+    width: 100%;
+    margin: 0 auto;
 
-    background-color: $c-bg;
-
-    $w-menu: 80px;
-    $w-search: 340px;
+    // GOLDEN RATIO
+    $w-search: 38.2%;
+    $w-workspace: 100%-38.2%;
 
     &>* {
         display: inline-block;
         vertical-align: top;
-
-        height: 100%;
     }
 
-    .NavPanel {
-        width: $w-menu;
-    }
-
-    .SearchPanel {
+    .left {
         width: $w-search;
     }
 
-    .Workspace {
-        @include calc(width, '100% - #{$w-menu + $w-search}')
-    }
-}
-
-.NavPanel {
-    background-color: $c-nav-bg;
-    color: $c-nav;
-
-    &-link {
-        text-align: center;
-        cursor: pointer;
-        padding: 10px 5px;
-
-        .icon {
-            display: block;
-        }
-
-        &:hover {
-            color: $c-nav-hover;
-        }
+    .right {
+        width: $w-workspace;
     }
 }
 
 .SearchPanel {
-    overflow-y: auto;
+    margin-left: auto;
+    width: $w-SearchPanel;
+
+    border-right: 1px solid lightgrey;
 
     & &-search {
         @extend .nohighlight;
@@ -108,6 +91,7 @@ html, body {
 
         $border: 1px solid $c-search-input-border;
         border: $border;
+        border-right: 0 none;
 
         background-color: $c-search-input-bg;
         @include transition(background-color 0.4s);
@@ -152,7 +136,8 @@ html, body {
     }
 
     .WorkspaceItem {
-        margin: 20px;
+        width: $w-WorkspaceItem;
+        margin: 20px auto 20px 20px;
         min-height: 200px;
     }
 }

@@ -1,18 +1,8 @@
 (ns vita.app (:require [vita.state :as s]
-                       [vita.components :as c]
                        [vita.workspace]
+                       [vita.components :as c]
                        [viter.core :as v :refer-macros [defc]]
                        [vita.url :as url]))
-
-(defc NavPanel []
-  [:nav
-   [:div.&-link [:icon.-home] "records"]
-   [:div.&-link {:onClick #(s/trigger :new-atom)}[:icon.-plus] "add"]])
-
-(defc SearchResult [{:keys [atom-id key selected]}]
-  [:li {:onClick #(s/trigger :ws-open key)
-        :class (when selected "&-selected")}
-   (:name atom-id)])
 
 (defn- has-term? [atom-id term]
   (if (pos? term)
@@ -24,6 +14,13 @@
 
 (defn- visible-atoms [atoms-list term]
   (filter #(has-term? % term) atoms-list))
+
+;; COMPONENTS
+
+(defc SearchResult [{:keys [atom-id key selected]}]
+  [:li {:onClick #(s/trigger :ws-open key)
+        :class (when selected "&-selected")}
+   (:name atom-id)])
 
 (defc SearchPanel [{:keys [search-term atoms-list ws-items]}]
   [:div
@@ -41,9 +38,8 @@
 
 (defc Root [state]
   [:div
-   [:NavPanel]
-   [:SearchPanel state]
-   [:Workspace state]])
+   [:div.left  [:SearchPanel state]]
+   [:div.right [:Workspace state]]])
 
 (defonce _
   (do
