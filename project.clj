@@ -1,33 +1,38 @@
 (defproject vita "0.1.0-SNAPSHOT"
-  :description "Helper"
+  :description "Vita UI"
+  :global-vars {*warn-on-reflection* true}
+
   :dependencies [[org.clojure/clojure "1.6.0"]
 
                  ;; server, routes
                  [http-kit "2.1.19"]
-                 [compojure "1.3.1"]
-                 [ring/ring-devel "1.3.2"]
-                 [ring/ring-core "1.3.2"]
+                 [compojure "1.3.1"
+                  :exclusions [commons-codec]]
+                 [ring/ring-core "1.3.2"
+                  :exclusions [org.clojure/tools.reader]]
 
                  ;; serialization/deserialization
                  [cheshire "5.4.0"]
 
-                 [weasel "0.4.2"]
-
                  ;; logging
-                 [com.taoensso/timbre "3.3.1"]
+                 [com.taoensso/timbre "3.3.1"
+                  :exclusions [org.clojure/tools.reader]]
 
                  ;; frontend
-                 [org.clojure/clojurescript "0.0-2411"  :scope "provided"]
-                 [figwheel "0.1.7-SNAPSHOT"]]
+                 [org.clojure/clojurescript "0.0-2665"
+                  :scope "provided"]]
 
-  :profiles {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
-                                  [com.cemerick/piggieback "0.1.3"]]
+  :profiles {:dev
+             {:dependencies [[ring/ring-devel "1.3.2"]
+                             [cider/cider-nrepl "0.8.2" :exclusions [org.clojure/java.classpath]]
+                             [javax.servlet/servlet-api "2.5"]
+                             [figwheel "0.2.2-SNAPSHOT"]]
 
-                   :plugins [[lein-cljsbuild "1.0.3"]
-                             [lein-figwheel "0.1.7-SNAPSHOT"]]
+              :plugins [[lein-cljsbuild "1.0.4"]
+                        [lein-ancient  "0.6.1"          :exclusions [org.clojure/clojure]]
+                        [lein-figwheel "0.2.2-SNAPSHOT" :exclusions [org.clojure/clojure]]]
 
-                   :repl-options {:init-ns vita.handler
-                                  :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}}}
+              :repl-options {:init-ns vita.handler}}}
 
   ;; compile clojurescript while building app
   ;; :hooks [leiningen.cljsbuild]
@@ -45,4 +50,5 @@
 
   :figwheel {:server-port 8080
              :ring-handler vita.handler/dev-app-routes
+             :server-logfile ".lein-figwheel-server.log"
              :css-dirs ["resources/public/css"]})

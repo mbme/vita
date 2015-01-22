@@ -144,7 +144,7 @@
 
 (on :ws-save
     (fn [key]
-      (send )
+      ;; FIXME impelment save
       (ws-get key)))
 
 ;; PUBLIC
