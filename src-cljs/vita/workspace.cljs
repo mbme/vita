@@ -61,6 +61,5 @@
 
 (defc Workspace [{:keys [ws-items]}]
   [:div
-   ;; records masonry
-   [:div.&-records {:ref "masonry"}
+   [:div.&-records
     (map WorkspaceItem (reverse ws-items))]])
