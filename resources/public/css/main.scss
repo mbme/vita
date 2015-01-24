@@ -26,11 +26,6 @@ $c-record-b: lightgrey;
     text-overflow: ellipsis;
 }
 
-.wh100 {
-    width: 100%;
-    height: 100%;
-}
-
 .nohighlight {
     &:hover {
         border-color: inherit;
@@ -44,13 +39,15 @@ $c-record-b: lightgrey;
 
 // BASE
 
-html, body {
-    @extend .wh100;
+html {
+    overflow-y: scroll;
 
     *, *:before, *:after {
                      @include box-sizing(border-box);
                  }
+}
 
+body {
     background-color: $c-bg;
 }
 
@@ -124,7 +121,6 @@ html, body {
     &-records {
         padding: 5px;
         padding-right: 15px;
-        @extend .wh100;
 
         min-height: 100%;
 
