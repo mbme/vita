@@ -2,21 +2,20 @@
 @import "base/base";
 @import "font-awesome/font-awesome";
 
-// https://color.adobe.com/zen-and-tea-color-theme-337112
 $golden-ratio: 1.618;
 
-$w-SearchPanel: 400px;
-$w-WorkspaceItem: $w-SearchPanel*$golden-ratio;
+$width: 1190px;
 
-$c-bg: #F6FFE0;
+$border: 1px solid lightgrey;
 
-$c-search-input-bg: #F6FFE0;
-$c-search-input-h-bg: #E2F0D6;
-$c-search-input-f-bg: #FFFFFF;
+$c-bg: #FFFFFF;
+$c-fg: #000000;
+
+$c-search-input-bg: #FFFFFF;
+$c-search-input-f-bg: #E4E4E1;
 $c-search-input-border: lightgrey;
 
 $c-record-bg: #FFFFFF;
-$c-record-b: lightgrey;
 
 // HELPERS
 
@@ -37,10 +36,23 @@ $c-record-b: lightgrey;
     }
 }
 
+// MATERIAL DESIGN: PAPER TOP
+%material-paper-top {
+    border-radius: 2px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.24);
+}
+
+// MATERIAL DESIGN: PAPER BOTTOM
+%material-paper-bot {
+    border-radius: 2px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12);
+}
+
 // BASE
 
 html {
     overflow-y: scroll;
+    height: 100%;
 
     *, *:before, *:after {
                      @include box-sizing(border-box);
@@ -48,59 +60,58 @@ html {
 }
 
 body {
+    height: 100%;
+    min-height: 100%;
+
+    width: $width;
+
+    margin: 0 auto;
+
     background-color: $c-bg;
 }
 
 .Root {
+    height: 100%;
     min-height: 100%;
-    width: 100%;
-
-    display: flex;
-    justify-content: space-between;
 
     // GOLDEN RATIO
-    $w-search: 38.2%;
-    $w-workspace: 100%-38.2%;
+    $padding: 8px;
+    $w-search: $width * 0.38;
+    $w-workspace: $width - $w-search - $padding;
 
     .left {
+        position: fixed;
         width: $w-search;
-        border-right: 1px solid lightgrey;
+        height: 100%;
+        overflow-y: auto;
     }
 
     .right {
+        margin-left: $w-search + $padding;
         width: $w-workspace;
     }
 }
 
 .SearchPanel {
-    margin-left: auto;
-    width: $w-SearchPanel;
+    margin-left: 10px;
+    margin-right: 10px;
 
     & &-search {
         @extend .nohighlight;
 
         cursor: pointer;
 
-        $border: 1px solid $c-search-input-border;
-        border: $border;
-        border-right: 0 none;
+        border: 0 none;
+        border-radius: 0;
+        border-bottom: 1px solid $c-search-input-border;
+        box-shadow: none;
 
         background-color: $c-search-input-bg;
-        @include transition(background-color 0.4s);
-
-        &:hover {
-            background-color: $c-search-input-h-bg;
-        }
+        @include transition(border-color 0.5s);
 
         &:focus,
-        &:focus:hover {
-            cursor: text;
-            background-color: $c-search-input-f-bg;
-        }
-
-        &:hover,
-        &:focus {
-            border: $border;
+        &:hover {
+            border-color: $c-fg;
         }
     }
 }
@@ -116,21 +127,20 @@ body {
 }
 
 .Workspace {
-    overflow-y: auto;
-
     &-records {
         padding: 5px;
-        padding-right: 15px;
-
-        min-height: 100%;
-
-        overflow: auto;
     }
 
     .WorkspaceItem {
-        width: $w-WorkspaceItem;
-        margin: 20px auto 20px 20px;
         min-height: 200px;
+        margin: 20px 20px 20px 20px;
+
+        @extend %material-paper-top;
+
+        > * {
+            @extend %material-paper-bot;
+            padding: 5px;
+        }
     }
 }
 
@@ -142,6 +152,15 @@ body {
     .icon {
         cursor: pointer;
         padding: 0 5px;
+
+        font-size: 20px;
+
+        color: lighten($c-fg, 60%);
+        @include transition(color .4s);
+
+        &:hover {
+            color: $c-fg;
+        }
     }
 
     > * {
@@ -152,10 +171,6 @@ body {
 
 %RecordBase {
     background-color: $c-record-bg;
-
-    border: 1px solid $c-record-b;
-    border-radius: 2px;
-    box-shadow: 0 0 1px $c-record-b, 0 1px 2px $c-record-b;
 
     // make panel visible on hover
     .Panel {
@@ -171,6 +186,7 @@ body {
 .Record {
     & &-name {
         text-align: center;
+        margin-bottom: 30px;
     }
 
     & &-body {
@@ -180,8 +196,6 @@ body {
 
 .RecordView, .PreviewRecordView{
     @extend %RecordBase;
-
-    padding-bottom: 10px;
 }
 
 .EditRecordView {
@@ -192,31 +206,22 @@ body {
     }
 
     & &-data {
-        @extend .nohighlight;
-        border-radius: 0;
-
-        box-shadow: none;
-
-        &:focus {
-            box-shadow: none;
-        }
-    }
-
-    & &-data {
-        resize: none;
+        display: block;
+        margin-bottom: 0;
 
         min-height: 300px;
         height: auto;
         overflow-y: hidden;
 
-        display: block;
-        margin-bottom: 0;
+        resize: none;
 
-        // only top border
-        border-width: 1px 0 0;
-    }
+        @extend .nohighlight;
+        border: 0 none;
+        border-radius: 0;
+        box-shadow: none;
 
-    &:focus {
-        background-color: red;
+        &:focus {
+            box-shadow: none;
+        }
     }
 }

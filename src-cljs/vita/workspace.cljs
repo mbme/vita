@@ -18,7 +18,7 @@
 
 (defc Record [{:keys [name data]}]
   [:div
-   [:h3.&-name name]
+   [:h1.&-name name]
    [:div.&-body {:dangerouslySetInnerHTML
                  {:__html (utils/md->html @data)}}]])
 
@@ -33,12 +33,13 @@
    [:Panel {:left  {"eye"   #(trigger :ws-preview key)}
             :right {"save"  #(trigger :ws-save key)
                     "close" #(trigger :ws-close key)}}]
-   [:h3.&-name name]
+   [:h1.&-name name]
 
-   [:textarea.&-data {:defaultValue @data
-                      :ref          "area"
-                      :onChange     #(do (reset! data (v/e-val %))
-                                         (utils/autosize! (deref-node this "area")))}]]
+   [:textarea.&-data
+    {:defaultValue @data
+     :ref          "area"
+     :onChange     #(do (reset! data (v/e-val %))
+                        (utils/autosize! (deref-node this "area")))}]]
 
   :componentDidMount #(let [area (deref-node % "area")]
                         (utils/autosize!    area)
