@@ -14,11 +14,12 @@
                  {:__html (utils/md->html @data)}}]])
 
 (defc RecordView [{:keys [key] :as record}]
-  [:div [:div.panel
-         [:span.panel-left
-          [:icon.-pencil {:onClick #(s/trigger :ws-edit key)}]]
-         [:span.panel-right
-          [:icon.-close {:onClick #(s/trigger :ws-close key)}]]]
+  [:div
+   [:div.panel
+    [:span.panel-left
+     [:icon.-pencil {:onClick #(s/trigger :ws-edit key)}]]
+    [:span.panel-right
+     [:icon.-close {:onClick #(s/trigger :ws-close key)}]]]
    [:Record record]])
 
 (defc EditRecordView [{:keys [key name data]} this]
@@ -27,10 +28,7 @@
     [:span.panel-left
      [:icon.-eye {:onClick #(s/trigger :ws-preview key)}]]
     [:span.panel-right
-     [:icon.-save {:onClick
-                   #(do (s/update-record key :data @data)
-                        (s/ws-sync-record key)
-                        (s/ws-view-record key))}]
+     [:icon.-save {:onClick #(s/trigger :ws-save key)}]
      [:icon.-close {:onClick #(s/trigger :ws-close key)}]]]
 
    [:h3.&-name name]
@@ -57,7 +55,8 @@
    ((case state
       :edit    EditRecordView
       :preview PreviewRecordView
-      RecordView) record)])
+      :view    RecordView)
+    record)])
 
 (defc Workspace [{:keys [ws-items]}]
   [:div

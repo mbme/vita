@@ -1,8 +1,9 @@
-(ns vita.app (:require [vita.state :as s]
-                       [vita.workspace]
-                       [vita.components :as c]
-                       [viter.core :as v :refer-macros [defc]]
-                       [vita.url :as url]))
+(ns vita.app
+  (:require [vita.state :as s]
+            [vita.workspace]
+            [vita.components :as c]
+            [viter.core :as v :refer-macros [defc]]
+            [vita.url :as url]))
 
 (defn- has-term? [atom-id term]
   (if (pos? (count term))

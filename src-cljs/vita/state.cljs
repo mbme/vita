@@ -1,6 +1,7 @@
 (ns vita.state
   (:require [vita.log :as log :include-macros true]
-            [vita.atom :as atom :refer [id]]))
+            [vita.atom :as atom :refer [id]]
+            ))
 
 ;; KEYS
 (def ^:private rec-keys (atom 0))
@@ -40,6 +41,9 @@
 
 (defn- ws-get [key]
   (first (filter #(= key (:key %)) (:ws-items @state))))
+
+(defn- ws-is-open? [key ws-items]
+  (some true? (map #(= key (:key %)) ws-items)))
 
 ;; EVENT BUS (ACTIONS)
 (defonce events (atom {}))
@@ -114,7 +118,7 @@
       (let [atom (atom/read item)
             key  (key-by-atom-id (atom/id atom))]
         (log/info "open atom %s" (str atom))
-        (ws-add! (assoc atom :key key)))))
+        (ws-add! (assoc atom :key key :state :view)))))
 
 (on :search-update
     (fn [term]
@@ -145,12 +149,9 @@
 (on :ws-save
     (fn [key]
       ;; FIXME impelment save
-      (ws-get key)))
+      (ws-update! key #(assoc % :state :view))))
 
 ;; PUBLIC
 
 (defn watch! [func]
   (add-watch state :render (fn [_ _ _ data] (func data))))
-
-(defn ws-is-open? [key ws-items]
-  (some true? (map #(= key (:key %)) ws-items)))
