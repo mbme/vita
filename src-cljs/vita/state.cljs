@@ -99,7 +99,7 @@
 
 (defonce socket (socket-create "ws://test.dev/ws"))
 
-(defn send
+(defn- send
   ([action params] (.send socket {:action action :params params}))
   ([action] (send action nil)))
 

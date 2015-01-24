@@ -1,11 +1,8 @@
 (ns vita.workspace
-  (:require [vita.state :as s]
+  (:require [vita.state :refer [trigger]]
             [viter.core :as v :refer-macros [defc]]
             [viter.utils :as utils]
             [viter.react :refer [deref-node]]))
-
-(defn- scrollTo [elem container]
-  (.animate container #js {:scrollTop (.-top (.offset elem))} 300))
 
 (defn- show-icon [types onClick]
   [:icon {:types types :onClick onClick}])
@@ -27,15 +24,15 @@
 
 (defc RecordView [{:keys [key] :as record}]
   [:div
-   [:Panel {:left  {"pencil" #(s/trigger :ws-edit key)}
-            :right {"close"  #(s/trigger :ws-close key)}}]
+   [:Panel {:left  {"pencil" #(trigger :ws-edit key)}
+            :right {"close"  #(trigger :ws-close key)}}]
    [:Record record]])
 
 (defc EditRecordView [{:keys [key name data]} this]
   [:div
-   [:Panel {:left  {"eye"   #(s/trigger :ws-preview key)}
-            :right {"save"  #(s/trigger :ws-save key)
-                    "close" #(s/trigger :ws-close key)}}]
+   [:Panel {:left  {"eye"   #(trigger :ws-preview key)}
+            :right {"save"  #(trigger :ws-save key)
+                    "close" #(trigger :ws-close key)}}]
    [:h3.&-name name]
 
    [:textarea.&-data {:defaultValue @data
@@ -50,7 +47,7 @@
 
 (defc PreviewRecordView [{:keys [key] :as record}]
   [:div
-   [:Panel {:left {"pencil" #(s/trigger :ws-edit key)}}]
+   [:Panel {:left {"pencil" #(trigger :ws-edit key)}}]
    [:Record record]])
 
 (defc WorkspaceItem [{:keys [state] :as record}]
@@ -64,4 +61,4 @@
 (defc Workspace [{:keys [ws-items]}]
   [:div
    [:div.&-records
-    (map WorkspaceItem (reverse ws-items))]])
+    (map WorkspaceItem ws-items)]])
