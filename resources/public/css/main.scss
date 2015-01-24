@@ -3,10 +3,10 @@
 @import "font-awesome/font-awesome";
 
 // https://color.adobe.com/zen-and-tea-color-theme-337112
-$golden-ration: 1.618;
+$golden-ratio: 1.618;
 
 $w-SearchPanel: 400px;
-$w-WorkspaceItem: $w-SearchPanel*$golden-ration;
+$w-WorkspaceItem: $w-SearchPanel*$golden-ratio;
 
 $c-bg: #F6FFE0;
 
