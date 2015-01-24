@@ -2,11 +2,18 @@
   (:require [viter.core :as r :refer-macros [defc]]
             [viter.utils :as utils]))
 
-(defn- add-prefix [classes]
-  (map #(if (= \- (first %)) (str "fa" %) %) classes))
+(defprotocol IconType
+  (stringify [this]))
 
-(defc icon [{:keys [class] :as all}]
-  [:i.fa (assoc all :class (->> class
-                                utils/get-words
-                                add-prefix
-                                utils/join))])
+(extend-type string
+  IconType
+  (stringify [this] (str "fa-" this)))
+
+(extend-type PersistentVector
+  IconType
+  (stringify [this] (utils/join (map stringify this))))
+
+(defc icon [{:keys [class types] :as all}]
+  (let [icon-class (stringify types)
+        total-class (str class icon-class)]
+    [:i.fa (assoc all :class total-class)]))

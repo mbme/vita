@@ -17,19 +17,19 @@
   [:div
    [:div.panel
     [:span.panel-left
-     [:icon.-pencil {:onClick #(s/trigger :ws-edit key)}]]
+     [:icon {:types "pencil" :onClick #(s/trigger :ws-edit key)}]]
     [:span.panel-right
-     [:icon.-close {:onClick #(s/trigger :ws-close key)}]]]
+     [:icon {:types "close"  :onClick #(s/trigger :ws-close key)}]]]
    [:Record record]])
 
 (defc EditRecordView [{:keys [key name data]} this]
   [:div
    [:div.panel
     [:span.panel-left
-     [:icon.-eye {:onClick #(s/trigger :ws-preview key)}]]
+     [:icon {:types "eye" :onClick #(s/trigger :ws-preview key)}]]
     [:span.panel-right
-     [:icon.-save {:onClick #(s/trigger :ws-save key)}]
-     [:icon.-close {:onClick #(s/trigger :ws-close key)}]]]
+     [:icon {:types "save"  :onClick #(s/trigger :ws-save key)}]
+     [:icon {:types "close" :onClick #(s/trigger :ws-close key)}]]]
 
    [:h3.&-name name]
 
@@ -46,7 +46,7 @@
 (defc PreviewRecordView [{:keys [key] :as record}]
   [:div
    [:div.panel
-    [:span.panel-left [:icon.-pencil {:onClick #(s/trigger :ws-edit key)}]]
+    [:span.panel-left [:icon {:types "pencil" :onClick #(s/trigger :ws-edit key)}]]
     [:span.panel-right]]
    [:Record record]])
 
