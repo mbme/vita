@@ -4,8 +4,20 @@
             [viter.utils :as utils]
             [viter.react :refer [deref-node]]))
 
-(defn scrollTo [elem container]
+(defn- scrollTo [elem container]
   (.animate container #js {:scrollTop (.-top (.offset elem))} 300))
+
+(defn- show-icon [types onClick]
+  [:icon {:types types :onClick onClick}])
+
+(defn- show-icons [items]
+  (map (fn [[types onClick]]
+         (show-icon types onClick)) items))
+
+(defc Panel [{:keys [left right]}]
+  [:div
+   `[:span.&-left  ~@(show-icons left)]
+   `[:span.&-right ~@(show-icons right)]])
 
 (defc Record [{:keys [name data]}]
   [:div
@@ -15,22 +27,15 @@
 
 (defc RecordView [{:keys [key] :as record}]
   [:div
-   [:div.panel
-    [:span.panel-left
-     [:icon {:types "pencil" :onClick #(s/trigger :ws-edit key)}]]
-    [:span.panel-right
-     [:icon {:types "close"  :onClick #(s/trigger :ws-close key)}]]]
+   [:Panel {:left  {"pencil" #(s/trigger :ws-edit key)}
+            :right {"close"  #(s/trigger :ws-close key)}}]
    [:Record record]])
 
 (defc EditRecordView [{:keys [key name data]} this]
   [:div
-   [:div.panel
-    [:span.panel-left
-     [:icon {:types "eye" :onClick #(s/trigger :ws-preview key)}]]
-    [:span.panel-right
-     [:icon {:types "save"  :onClick #(s/trigger :ws-save key)}]
-     [:icon {:types "close" :onClick #(s/trigger :ws-close key)}]]]
-
+   [:Panel {:left  {"eye"   #(s/trigger :ws-preview key)}
+            :right {"save"  #(s/trigger :ws-save key)
+                    "close" #(s/trigger :ws-close key)}}]
    [:h3.&-name name]
 
    [:textarea.&-data {:defaultValue @data
@@ -45,9 +50,7 @@
 
 (defc PreviewRecordView [{:keys [key] :as record}]
   [:div
-   [:div.panel
-    [:span.panel-left [:icon {:types "pencil" :onClick #(s/trigger :ws-edit key)}]]
-    [:span.panel-right]]
+   [:Panel {:left {"pencil" #(s/trigger :ws-edit key)}}]
    [:Record record]])
 
 (defc WorkspaceItem [{:keys [state] :as record}]

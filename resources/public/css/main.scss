@@ -134,7 +134,7 @@ body {
     }
 }
 
-.panel {
+.Panel {
     & &-right {
         text-align: right;
     }
@@ -158,12 +158,12 @@ body {
     box-shadow: 0 0 1px $c-record-b, 0 1px 2px $c-record-b;
 
     // make panel visible on hover
-    .panel {
+    .Panel {
         opacity: 0;
         @include transition(opacity .4s);
     }
 
-    &:hover .panel {
+    &:hover .Panel {
         opacity: 1;
     }
 }
