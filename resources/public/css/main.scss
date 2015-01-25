@@ -1,6 +1,8 @@
 @import "bourbon/bourbon";
 @import "base/base";
-@import "font-awesome/font-awesome";
+
+$fa-font-path: "/fontawesome/fonts";
+@import "../fontawesome/scss/font-awesome";
 
 $golden-ratio: 1.618;
 
