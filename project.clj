@@ -19,7 +19,7 @@
                   :exclusions [org.clojure/tools.reader]]
 
                  ;; frontend
-                 [org.clojure/clojurescript "0.0-2665"
+                 [org.clojure/clojurescript "0.0-2727"
                   :scope "provided"]]
 
   :profiles {:dev
@@ -44,6 +44,9 @@
                         :source-paths ["src-cljs/" "src-cljs-dev/"]
                         :compiler {:output-to "resources/public/app.js"
                                    :output-dir "resources/public/out"
+                                   :main "vita.dev"
+                                   :asset-path "/out"
+
                                    :optimizations :none
                                    :pretty-print true
                                    :source-map true}}]}
