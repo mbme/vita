@@ -1,5 +1,7 @@
 (ns viter.utils
-  (:require [clojure.string  :as  str]))
+  (:require [clojure.string  :as  str]
+            [com.facebook.React]
+            [com.remarkable]))
 
 (defn get-words [s]
   (str/split s #"\s+"))

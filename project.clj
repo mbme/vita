@@ -46,6 +46,16 @@
                                    :output-dir "resources/public/out"
                                    :main "vita.dev"
                                    :asset-path "/out"
+                                   :foreign-libs
+                                   [{:file     "resources/public/js/react-with-addons.js"
+                                     :file-min "resources/public/js/react-with-addons.min.js"
+                                     :provides ["com.facebook.React"]}
+
+                                    {:file "resources/public/js/jquery.min.js"
+                                     :provides ["org.Jquery"]}
+
+                                    {:file "resources/public/js/remarkable.min.js"
+                                     :provides ["com.remarkable"]}]
 
                                    :optimizations :none
                                    :pretty-print true
