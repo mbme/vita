@@ -57,10 +57,10 @@
                 :source-paths ["src-cljs/"
                                "src-cljs-dev/"]
                 :compiler
-                {:output-to "resources/public/app.js"
-                 :output-dir "resources/public/out"
+                {:output-to  "resources/public/app.js"
+                 :output-dir "resources/public/app"
                  :main "vita.dev"
-                 :asset-path "/out"
+                 :asset-path "/app"
                  :foreign-libs
                  [{:file     "resources/public/react/react.js"
                    :file-min "resources/public/react/react.min.js"

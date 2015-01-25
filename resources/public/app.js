@@ -1,0 +1,1 @@
+document.write('<script src="/app/goog/base.js"></script>');document.write('<script src="/app/cljs_deps.js"></script>');document.write('<script>goog.require("vita.dev");</script>');

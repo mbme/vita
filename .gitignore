@@ -8,10 +8,7 @@ pom.xml.asc
 *.class
 /.lein-*
 /.nrepl-port
-/resources/public/out
 .sass-cache/
 /out
 /.repl
-app.js
-main.css
 *.map
