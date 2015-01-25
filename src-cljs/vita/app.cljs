@@ -1,9 +1,12 @@
 (ns vita.app
-  (:require [vita.state :as s]
+  (:require [vita.state :as state :refer [trigger]]
             [vita.workspace]
             [vita.components :as c]
-            [viter.core :as v :refer-macros [defc]]
-            [vita.url :as url]))
+            [vita.url :as url]
+
+            [viter.core :refer [render!]
+             :refer-macros [defc]]
+            [viter.react :refer [e-val]]))
 
 (defn- has-term? [atom-id term]
   (if (pos? (count term))
@@ -16,7 +19,7 @@
 ;; COMPONENTS
 
 (defc SearchResult [{:keys [atom-id key visible]}]
-  [:li {:onClick #(s/trigger :ws-open key)
+  [:li {:onClick #(trigger :ws-open key)
         :class (when visible "&-visible")}
    (:name atom-id)])
 
@@ -25,7 +28,7 @@
    [:input.&-search {:type "text"
                      :placeholder "SEARCH"
                      :defaultValue search-term
-                     :onChange #(s/trigger :search-update (v/e-val %))}]
+                     :onChange #(trigger :search-update (e-val %))}]
    [:ul
     (map (fn [[key atom-id]]
            (SearchResult
@@ -41,5 +44,5 @@
 
 (defonce _
   (do
-    (s/watch! #(v/render! js/document.body Root %))
+    (state/watch! #(render! js/document.body Root %))
     (url/watch! #(js/console.warn (clj->js %)))))
