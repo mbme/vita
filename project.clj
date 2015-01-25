@@ -76,6 +76,6 @@
   :figwheel {:server-port 8080
              :ring-handler vita.handler/dev-app-routes
              :server-logfile ".lein-figwheel-server.log"
-             :css-dirs ["resources/public/css"]}
+             :css-dirs ["resources/public/styles"]}
 
   :aliases {"update" ["do" "ancient" ["bower" "update"]]})
