@@ -1,7 +1,6 @@
 (ns viter.utils
   (:require [clojure.string  :as  str]
-            [com.facebook.React]
-            [com.remarkable]))
+            [com.facebook.React]))
 
 (defn get-words [s]
   (str/split s #"\s+"))
@@ -36,10 +35,3 @@
     (aset input "selectionStart" len)
     (aset input "selectionEnd" len)
     (.focus input)))
-
-;; TO MARKDOWN
-(def ^:private Remarkable (new js/Remarkable "full" #js {:html true
-                                                         :linkify true
-                                                         :typographer true}))
-(defn md->html [md]
-  (.render Remarkable md))

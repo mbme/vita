@@ -1,7 +1,6 @@
 (ns vita.state
   (:require [vita.log :as log :include-macros true]
-            [vita.atom :as atom :refer [id]]
-            ))
+            [vita.atom :as atom :refer [id]]))
 
 ;; KEYS
 (def ^:private rec-keys (atom 0))

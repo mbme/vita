@@ -2,6 +2,7 @@
   (:require [vita.state :refer [trigger]]
             [viter.core :as v :refer-macros [defc]]
             [viter.utils :as utils]
+            [vita.utils :refer [md->html]]
             [viter.react :refer [deref-node]]))
 
 (defn- show-icon [types onClick]
@@ -20,7 +21,7 @@
   [:div
    [:h1.&-name name]
    [:div.&-body {:dangerouslySetInnerHTML
-                 {:__html (utils/md->html @data)}}]])
+                 {:__html (md->html @data)}}]])
 
 (defc RecordView [{:keys [key] :as record}]
   [:div
