@@ -1,9 +1,13 @@
 (ns vita.utils
-  (:require [com.remarkable]))
+  (:require [org.markdownIt]))
 
 ;; TO MARKDOWN
-(def ^:private Remarkable (new js/Remarkable "full" #js {:html true
-                                                         :linkify true
-                                                         :typographer true}))
+(def ^:private markdownIt
+  (js/markdownit
+   "default"
+   #js {:html true
+        :linkify true
+        :typographer true}))
+
 (defn md->html [md]
-  (.render Remarkable md))
+  (.render markdownIt md))

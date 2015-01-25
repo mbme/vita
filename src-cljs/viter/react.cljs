@@ -50,3 +50,5 @@
 
 (defn deref-node [this ref]
   (get-node (get-ref this ref)))
+
+(defn e-val [evt] (.-value (.-target evt)))

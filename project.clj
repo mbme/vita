@@ -53,10 +53,11 @@
                              :provides ["com.facebook.React"]}
 
                             {:file "resources/public/js/jquery.min.js"
-                             :provides ["org.Jquery"]}
+                             :provides ["com.jQuery"]}
 
-                            {:file "resources/public/js/remarkable.min.js"
-                             :provides ["com.remarkable"]}]
+                            {:file     "resources/public/js/markdown-it.js"
+                             :file-min "resources/public/js/markdown-it.min.js"
+                             :provides ["org.markdownIt"]}]
 
                            :optimizations :none
                            :pretty-print true

@@ -1,7 +1,7 @@
 (ns viter.core
   (:require [viter.react  :as r]
             [viter.elements :refer [register-component!]]
-            [viter.utils :as utils]))
+            [viter.utils :refer [request-animation-frame]]))
 
 (defn create-component [comp-name render config]
   "Creates and registers viter component."
@@ -18,10 +18,6 @@
                    (react-elem js-args))))
     ))
 
-;; UTILS
-
-(defn e-val [evt] (.-value (.-target evt)))
-
 (def ^:private render-data nil)
 (def ^:private render-scheduled false)
 (defn- actually-render []
@@ -33,4 +29,4 @@
   (set! render-data [elem comp params])
   (when-not render-scheduled
     (set! render-scheduled true)
-    (utils/request-animation-frame actually-render)))
+    (request-animation-frame actually-render)))

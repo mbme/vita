@@ -1,9 +1,10 @@
 (ns vita.workspace
-  (:require [vita.state :refer [trigger]]
-            [viter.core :as v :refer-macros [defc]]
+  (:require [vita.state  :refer [trigger]]
+            [vita.utils  :refer [md->html]]
+
+            [viter.core :refer-macros [defc]]
             [viter.utils :as utils]
-            [vita.utils :refer [md->html]]
-            [viter.react :refer [deref-node]]))
+            [viter.react :refer [deref-node e-val]]))
 
 (defn- show-icon [types onClick]
   [:icon {:types types :onClick onClick}])
@@ -39,7 +40,7 @@
    [:textarea.&-data
     {:defaultValue @data
      :ref          "area"
-     :onChange     #(do (reset! data (v/e-val %))
+     :onChange     #(do (reset! data (e-val %))
                         (utils/autosize! (deref-node this "area")))}]]
 
   :componentDidMount #(let [area (deref-node % "area")]
