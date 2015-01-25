@@ -2036,18 +2036,20 @@ html {
     -moz-box-sizing: border-box;
     box-sizing: border-box; }
 
-body {
-  width: 1190px;
-  margin: 0 auto; }
-
 .Root .left {
   position: fixed;
-  width: 452.2px;
+  overflow-y: auto;
   height: 100%;
-  overflow-y: auto; }
+  width: 38.1953%; }
+  .Root .left > * {
+    float: right;
+    width: 454.5241px; }
 .Root .right {
-  margin-left: 460.2px;
-  width: 729.8px; }
+  width: 61.8047%;
+  margin-left: -webkit-calc(38.1953% + 8px);
+  margin-left: calc(38.1953% + 8px); }
+  .Root .right > * {
+    width: 735.4759px; }
 
 .SearchPanel {
   margin-left: 10px;
@@ -2058,7 +2060,6 @@ body {
     border-radius: 0;
     border-bottom: 1px solid lightgrey;
     box-shadow: none;
-    background-color: #FFFFFF;
     -webkit-transition: border-color 0.5s;
     -moz-transition: border-color 0.5s;
     transition: border-color 0.5s; }
@@ -2099,15 +2100,13 @@ body {
   display: inline-block;
   width: 50%; }
 
-.RecordView, .PreviewRecordView, .EditRecordView {
-  background-color: #FFFFFF; }
-  .RecordView .Panel, .PreviewRecordView .Panel, .EditRecordView .Panel {
-    opacity: 0;
-    -webkit-transition: opacity 0.4s;
-    -moz-transition: opacity 0.4s;
-    transition: opacity 0.4s; }
-  .RecordView:hover .Panel, .PreviewRecordView:hover .Panel, .EditRecordView:hover .Panel {
-    opacity: 1; }
+.RecordView .Panel, .PreviewRecordView .Panel, .EditRecordView .Panel {
+  opacity: 0;
+  -webkit-transition: opacity 0.4s;
+  -moz-transition: opacity 0.4s;
+  transition: opacity 0.4s; }
+.RecordView:hover .Panel, .PreviewRecordView:hover .Panel, .EditRecordView:hover .Panel {
+  opacity: 1; }
 
 .Record .Record-name {
   text-align: center;

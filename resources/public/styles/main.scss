@@ -20,14 +20,8 @@ $fa-font-path: "/fontawesome/fonts";
 @import "lists";
 @import "buttons";
 
-$golden-ratio: 1.618;
 
-$width: 1190px;
-
-$c-search-input-bg: #FFFFFF;
 $c-search-input-border: lightgrey;
-
-$c-record-bg: #FFFFFF;
 
 // HELPERS
 
@@ -72,27 +66,34 @@ html {
     }
 }
 
-body {
-    width: $width;
-    margin: 0 auto;
-}
-
 .Root {
-    // GOLDEN RATIO
-    $padding: 8px;
-    $w-search: $width * 0.38;
-    $w-workspace: $width - $w-search - $padding;
+    $w-workspace-p: 1/$golden-ratio;
+    $w-search-p: 1 - $w-workspace-p;
+
+    $w-total-px: 1190px;
+    $w-search-px: $w-total-px * $w-search-p;
+    $w-workspace-px: $w-total-px - $w-search-px;
 
     .left {
         position: fixed;
-        width: $w-search;
-        height: 100%;
         overflow-y: auto;
+        height: 100%;
+
+        width: $w-search-p * 100%;
+
+        > * {
+            float: right;
+            width: $w-search-px;
+        }
     }
 
     .right {
-        margin-left: $w-search + $padding;
-        width: $w-workspace;
+        width: $w-workspace-p * 100%;
+        @include calc(margin-left, "#{$w-search-p * 100%} + 8px");
+
+        > * {
+            width: $w-workspace-px;
+        }
     }
 }
 
@@ -110,7 +111,6 @@ body {
         border-bottom: 1px solid $c-search-input-border;
         box-shadow: none;
 
-        background-color: $c-search-input-bg;
         @include transition(border-color 0.5s);
 
         &:focus,
@@ -179,8 +179,6 @@ body {
 }
 
 %RecordBase {
-    background-color: $c-record-bg;
-
     // make panel visible on hover
     .Panel {
         opacity: 0;
