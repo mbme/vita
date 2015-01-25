@@ -25,6 +25,15 @@
   :exclusions [org.clojure/clojure
                org.clojure/clojurescript]
 
+  :plugins [[lein-cljsbuild "1.0.4" :exclusions [org.clojure/clojure]]
+            [lein-bower     "0.5.1" :exclusions [org.clojure/clojure]]
+            [lein-ancient   "0.6.1" :exclusions [org.clojure/clojure]]]
+
+  :bower-dependencies  [[react        "*"]
+                        [jquery       "*"]
+                        [markdown-it  "*"]]
+  :bower {:directory    "resources/public"}
+
   :profiles {:dev
              {:dependencies [[ring/ring-devel "1.3.2"]
                              [cider/cider-nrepl "0.8.2"
@@ -32,10 +41,10 @@
                              [javax.servlet/servlet-api "2.5"]
                              [figwheel "0.2.2-SNAPSHOT"]]
 
-              :plugins [[lein-cljsbuild "1.0.4"]
-                        [lein-ancient  "0.6.1"]
-                        [lein-figwheel "0.2.2-SNAPSHOT"
-                         :exclusions [org.apache.httpcomponents/httpcore]]]}}
+              :plugins [[lein-figwheel "0.2.2-SNAPSHOT"
+                         :exclusions [org.apache.httpcomponents/httpcore
+                                      org.codehaus.plexus/plexus-utils
+                                      org.clojure/clojure]]]}}
 
   :source-paths ["src" "src-cljs"]
   :main vita.handler
@@ -43,25 +52,27 @@
   :cljsbuild {:builds
               [{:id "dev"
                 :source-paths ["src-cljs/" "src-cljs-dev/"]
-                :compiler {:output-to "resources/public/app.js"
-                           :output-dir "resources/public/out"
-                           :main "vita.dev"
-                           :asset-path "/out"
-                           :foreign-libs
-                           [{:file     "resources/public/js/react-with-addons.js"
-                             :file-min "resources/public/js/react-with-addons.min.js"
-                             :provides ["com.facebook.React"]}
+                :compiler
+                {:output-to "resources/public/app.js"
+                 :output-dir "resources/public/out"
+                 :main "vita.dev"
+                 :asset-path "/out"
+                 :foreign-libs
+                 [{:file     "resources/public/react/react.js"
+                   :file-min "resources/public/react/react.min.js"
+                   :provides ["com.facebook.React"]}
 
-                            {:file "resources/public/js/jquery.min.js"
-                             :provides ["com.jQuery"]}
+                  {:file     "resources/public/jquery/dist/jquery.js"
+                   :file-min "resources/public/jquery/dist/jquery.min.js"
+                   :provides ["com.jQuery"]}
 
-                            {:file     "resources/public/js/markdown-it.js"
-                             :file-min "resources/public/js/markdown-it.min.js"
-                             :provides ["org.markdownIt"]}]
+                  {:file     "resources/public/markdown-it/dist/markdown-it.js"
+                   :file-min "resources/public/markdown-it/dist/markdown-it.min.js"
+                   :provides ["org.markdownIt"]}]
 
-                           :optimizations :none
-                           :pretty-print true
-                           :source-map true}}]}
+                 :optimizations :none
+                 :pretty-print true
+                 :source-map true}}]}
 
   :figwheel {:server-port 8080
              :ring-handler vita.handler/dev-app-routes
