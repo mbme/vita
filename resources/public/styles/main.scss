@@ -23,19 +23,6 @@ $fa-font-path: "/fontawesome/fonts";
 
 $c-search-input-border: lightgrey;
 
-// HELPERS
-
-%nohighlight {
-    &:hover {
-        border-color: inherit;
-    }
-
-    &:focus {
-        border-color: inherit;
-        box-shadow: inherit;
-    }
-}
-
 // MATERIAL DESIGN: PAPER TOP
 %material-paper-top {
     border-radius: 2px;
@@ -102,8 +89,6 @@ html {
     margin-right: 10px;
 
     & &-search {
-        @extend %nohighlight;
-
         cursor: pointer;
 
         border: 0 none;
@@ -194,10 +179,14 @@ html {
     & &-name {
         text-align: center;
         margin-bottom: 30px;
+
+        cursor: default;
     }
 
     & &-body {
         padding: 10px 30px;
+
+        cursor: default;
     }
 }
 
@@ -209,12 +198,34 @@ html {
     @extend %RecordBase;
 
     & &-name {
+        font-size: $h1-font-size;
+        font-weight: bold;
+
         text-align: center;
+        margin-bottom: 30px;
+
+        padding: 0;
+        border: 0 none;
+        box-shadow: none;
+
+        box-shadow: none;
+
+        border-bottom: 1px solid $base-background-color;
+        @include transition(border-color 0.5s);
+
+        &:hover {
+            border-bottom-color: $c-search-input-border;
+        }
+        &:focus {
+            border-bottom-color: $base-font-color;
+        }
     }
 
     & &-data {
         display: block;
         margin-bottom: 0;
+
+        padding: 10px 30px;
 
         min-height: 300px;
         height: auto;
@@ -222,7 +233,6 @@ html {
 
         resize: none;
 
-        @extend %nohighlight;
         border: 0 none;
         border-radius: 0;
         box-shadow: none;

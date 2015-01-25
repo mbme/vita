@@ -17,7 +17,7 @@
 
 (defrecord VitaAtom [type name data]
   InfoAtom
-  (id [this] (->AtomId type name))
+  (id [this] (->AtomId type @name))
   Object
   (toString [this] (str (id this))))
 
@@ -25,4 +25,4 @@
   (->AtomId type name))
 
 (defn read [{:keys [type name data]}]
-  (->VitaAtom type name (atom data)))
+  (->VitaAtom type (atom name) (atom data)))
