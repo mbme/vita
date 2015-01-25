@@ -33,7 +33,8 @@
                         [jquery        "*"]
                         [markdown-it   "*"]
                         [fontawesome   "*"]
-                        [normalize.css "*"]]
+                        [normalize.css "*"]
+                        [bourbon       "*"]]
   :bower {:directory    "resources/public"}
 
   :profiles {:dev
