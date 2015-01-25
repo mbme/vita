@@ -22,44 +22,45 @@
                  [org.clojure/clojurescript "0.0-2727"
                   :scope "provided"]]
 
+  :exclusions [org.clojure/clojure
+               org.clojure/clojurescript]
+
   :profiles {:dev
              {:dependencies [[ring/ring-devel "1.3.2"]
-                             [cider/cider-nrepl "0.8.2" :exclusions [org.clojure/java.classpath]]
+                             [cider/cider-nrepl "0.8.2"
+                              :exclusions [org.clojure/java.classpath]]
                              [javax.servlet/servlet-api "2.5"]
                              [figwheel "0.2.2-SNAPSHOT"]]
 
               :plugins [[lein-cljsbuild "1.0.4"]
-                        [lein-ancient  "0.6.1"          :exclusions [org.clojure/clojure]]
-                        [lein-figwheel "0.2.2-SNAPSHOT" :exclusions [org.clojure/clojure]]]
-
-              :repl-options {:init-ns vita.handler}}}
-
-  ;; compile clojurescript while building app
-  ;; :hooks [leiningen.cljsbuild]
+                        [lein-ancient  "0.6.1"]
+                        [lein-figwheel "0.2.2-SNAPSHOT"
+                         :exclusions [org.apache.httpcomponents/httpcore]]]}}
 
   :source-paths ["src" "src-cljs"]
   :main vita.handler
 
-  :cljsbuild {:builds [{:id "dev"
-                        :source-paths ["src-cljs/" "src-cljs-dev/"]
-                        :compiler {:output-to "resources/public/app.js"
-                                   :output-dir "resources/public/out"
-                                   :main "vita.dev"
-                                   :asset-path "/out"
-                                   :foreign-libs
-                                   [{:file     "resources/public/js/react-with-addons.js"
-                                     :file-min "resources/public/js/react-with-addons.min.js"
-                                     :provides ["com.facebook.React"]}
+  :cljsbuild {:builds
+              [{:id "dev"
+                :source-paths ["src-cljs/" "src-cljs-dev/"]
+                :compiler {:output-to "resources/public/app.js"
+                           :output-dir "resources/public/out"
+                           :main "vita.dev"
+                           :asset-path "/out"
+                           :foreign-libs
+                           [{:file     "resources/public/js/react-with-addons.js"
+                             :file-min "resources/public/js/react-with-addons.min.js"
+                             :provides ["com.facebook.React"]}
 
-                                    {:file "resources/public/js/jquery.min.js"
-                                     :provides ["org.Jquery"]}
+                            {:file "resources/public/js/jquery.min.js"
+                             :provides ["org.Jquery"]}
 
-                                    {:file "resources/public/js/remarkable.min.js"
-                                     :provides ["com.remarkable"]}]
+                            {:file "resources/public/js/remarkable.min.js"
+                             :provides ["com.remarkable"]}]
 
-                                   :optimizations :none
-                                   :pretty-print true
-                                   :source-map true}}]}
+                           :optimizations :none
+                           :pretty-print true
+                           :source-map true}}]}
 
   :figwheel {:server-port 8080
              :ring-handler vita.handler/dev-app-routes
