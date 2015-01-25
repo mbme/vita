@@ -30,7 +30,6 @@
             [lein-ancient   "0.6.1" :exclusions [org.clojure/clojure]]]
 
   :bower-dependencies  [[react         "*"]
-                        [jquery        "*"]
                         [markdown-it   "*"]
                         [fontawesome   "*"]
                         [normalize.css "*"]
@@ -65,10 +64,6 @@
                  [{:file     "resources/public/react/react.js"
                    :file-min "resources/public/react/react.min.js"
                    :provides ["com.facebook.React"]}
-
-                  {:file     "resources/public/jquery/dist/jquery.js"
-                   :file-min "resources/public/jquery/dist/jquery.min.js"
-                   :provides ["com.jQuery"]}
 
                   {:file     "resources/public/markdown-it/dist/markdown-it.js"
                    :file-min "resources/public/markdown-it/dist/markdown-it.min.js"
