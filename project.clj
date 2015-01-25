@@ -29,11 +29,11 @@
             [lein-bower     "0.5.1" :exclusions [org.clojure/clojure]]
             [lein-ancient   "0.6.1" :exclusions [org.clojure/clojure]]]
 
-  :bower-dependencies  [[react        "*"]
-                        [jquery       "*"]
-                        [markdown-it  "*"]
-                        [fontawesome  "*"]
-                        ]
+  :bower-dependencies  [[react         "*"]
+                        [jquery        "*"]
+                        [markdown-it   "*"]
+                        [fontawesome   "*"]
+                        [normalize.css "*"]]
   :bower {:directory    "resources/public"}
 
   :profiles {:dev
