@@ -2101,6 +2101,7 @@ html {
   margin-bottom: 30px;
   cursor: default; }
 .Record .Record-body {
+  color: #515558;
   padding: 10px 30px;
   cursor: default; }
 
@@ -2112,18 +2113,12 @@ html {
   padding: 0;
   border: 0 none;
   box-shadow: none;
-  box-shadow: none;
-  border-bottom: 1px solid white;
-  -webkit-transition: border-color 0.5s;
-  -moz-transition: border-color 0.5s;
-  transition: border-color 0.5s; }
-  .EditRecordView .EditRecordView-name:hover {
-    border-bottom-color: lightgrey; }
-  .EditRecordView .EditRecordView-name:focus {
-    border-bottom-color: #333; }
+  box-shadow: none; }
 .EditRecordView .EditRecordView-data {
   display: block;
   margin-bottom: 0;
+  line-height: 1.5;
+  color: #515558;
   padding: 10px 30px;
   min-height: 300px;
   height: auto;

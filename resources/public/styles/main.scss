@@ -184,6 +184,7 @@ html {
     }
 
     & &-body {
+        color: #515558;
         padding: 10px 30px;
 
         cursor: default;
@@ -209,21 +210,14 @@ html {
         box-shadow: none;
 
         box-shadow: none;
-
-        border-bottom: 1px solid $base-background-color;
-        @include transition(border-color 0.5s);
-
-        &:hover {
-            border-bottom-color: $c-search-input-border;
-        }
-        &:focus {
-            border-bottom-color: $base-font-color;
-        }
     }
 
     & &-data {
         display: block;
         margin-bottom: 0;
+
+        line-height: 1.5;
+        color: #515558;
 
         padding: 10px 30px;
 
