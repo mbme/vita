@@ -1,81 +1,69 @@
+(def  clojure        "1.6.0")
+(def  clojurescript  "0.0-2727")
+
+(def  figwheel       "0.2.2-SNAPSHOT")
+(def  cljsbuild      "1.0.4")
+(def  bower          "0.5.1")
+(def  ancient        "0.6.1")
+
+(defn res
+  ([]     (res ""))
+  ([path] (str "resources/public" path)))
+
 (defproject vita "0.1.0-SNAPSHOT"
   :description "Vita UI"
+
   :global-vars {*warn-on-reflection* true}
 
-  :dependencies [[org.clojure/clojure "1.6.0"]
-
-                 ;; server, routes
-                 [http-kit "2.1.19"]
-                 [compojure "1.3.1"
-                  :exclusions [commons-codec]]
-                 [ring/ring-core "1.3.2"
-                  :exclusions [org.clojure/tools.reader]]
-
-                 ;; serialization/deserialization
-                 [cheshire "5.4.0"]
-
-                 ;; logging
-                 [com.taoensso/timbre "3.3.1"
-                  :exclusions [org.clojure/tools.reader]]
-
-                 ;; frontend
-                 [org.clojure/clojurescript "0.0-2727"
+  :dependencies [[org.clojure/clojure ~clojure]
+                 [org.clojure/clojurescript ~clojurescript
                   :scope "provided"]]
 
   :exclusions [org.clojure/clojure
                org.clojure/clojurescript]
 
-  :plugins [[lein-cljsbuild "1.0.4" :exclusions [org.clojure/clojure]]
-            [lein-bower     "0.5.1" :exclusions [org.clojure/clojure]]
-            [lein-ancient   "0.6.1" :exclusions [org.clojure/clojure]]]
+  :plugins [[lein-cljsbuild ~cljsbuild :exclusions [org.clojure/clojure]]
+            [lein-bower     ~bower     :exclusions [org.clojure/clojure]]
+            [lein-ancient   ~ancient   :exclusions [org.clojure/clojure]]]
 
   :bower-dependencies  [[react         "*"]
                         [markdown-it   "*"]
                         [fontawesome   "*"]
                         [normalize.css "*"]
                         [bourbon       "*"]]
-  :bower {:directory    "resources/public"}
+  :bower {:directory    ~(res)}
 
   :profiles {:dev
-             {:dependencies [[ring/ring-devel "1.3.2"]
-                             [cider/cider-nrepl "0.8.2"
-                              :exclusions [org.clojure/java.classpath]]
-                             [javax.servlet/servlet-api "2.5"]
-                             [figwheel "0.2.2-SNAPSHOT"]]
-
-              :plugins [[lein-figwheel "0.2.2-SNAPSHOT"
+             {:dependencies [[figwheel ~figwheel]]
+              :plugins [[lein-figwheel ~figwheel
                          :exclusions [org.apache.httpcomponents/httpcore
                                       org.codehaus.plexus/plexus-utils
                                       org.clojure/clojure]]]}}
 
-  :source-paths ["src" "src-cljs"]
-  :main vita.handler
+  :cljsbuild
+  {:builds [{:id "dev"
+             :source-paths ["src/" "src-dev/"]
+             :compiler
+             {:output-to  ~(res "/app.js")
+              :output-dir ~(res "/app")
+              :main "vita.dev"
+              :asset-path "/app"
+              :foreign-libs
+              [{:file     ~(res "/react/react.js")
+                :file-min ~(res "/react/react.min.js")
+                :provides ["com.facebook.React"]}
 
-  :cljsbuild {:builds
-              [{:id "dev"
-                :source-paths ["src-cljs/"
-                               "src-cljs-dev/"]
-                :compiler
-                {:output-to  "resources/public/app.js"
-                 :output-dir "resources/public/app"
-                 :main "vita.dev"
-                 :asset-path "/app"
-                 :foreign-libs
-                 [{:file     "resources/public/react/react.js"
-                   :file-min "resources/public/react/react.min.js"
-                   :provides ["com.facebook.React"]}
+               {:file     ~(res "/markdown-it/dist/markdown-it.js")
+                :file-min ~(res "/markdown-it/dist/markdown-it.min.js")
+                :provides ["org.markdownIt"]}]
 
-                  {:file     "resources/public/markdown-it/dist/markdown-it.js"
-                   :file-min "resources/public/markdown-it/dist/markdown-it.min.js"
-                   :provides ["org.markdownIt"]}]
-
-                 :optimizations :none
-                 :pretty-print true
-                 :source-map true}}]}
+              :optimizations :none
+              :pretty-print true
+              :source-map true}}]}
 
   :figwheel {:server-port 8080
-             :ring-handler vita.handler/dev-app-routes
+             ;; :ring-handler vita.handler/dev-app-routes
              :server-logfile ".lein-figwheel-server.log"
-             :css-dirs ["resources/public/styles"]}
+             :css-dirs [ ~(res "/styles")]}
 
   :aliases {"update" ["do" "ancient" ["bower" "update"]]})

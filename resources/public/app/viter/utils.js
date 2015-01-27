@@ -9,9 +9,9 @@ viter.utils.join = (function join(col){
 return clojure.string.join.call(null," ",col);
 });
 viter.utils.empty_val_QMARK_ = (function empty_val_QMARK_(v){
-var or__17955__auto__ = (v == null);
-if(or__17955__auto__){
-return or__17955__auto__;
+var or__3809__auto__ = (v == null);
+if(or__3809__auto__){
+return or__3809__auto__;
 } else {
 return clojure.string.blank_QMARK_.call(null,v);
 }
@@ -24,27 +24,27 @@ return v;
 viter.utils.remove_empty_vals = (function remove_empty_vals(m){
 return cljs.core.into.call(null,cljs.core.PersistentArrayMap.EMPTY,cljs.core.remove.call(null,cljs.core.comp.call(null,viter.utils.empty_val_QMARK_,cljs.core.val),m));
 });
-viter.utils.request_animation_frame = (function (){var or__17955__auto__ = window.requestAnimationFrame;
-if(cljs.core.truth_(or__17955__auto__)){
-return or__17955__auto__;
+viter.utils.request_animation_frame = (function (){var or__3809__auto__ = window.requestAnimationFrame;
+if(cljs.core.truth_(or__3809__auto__)){
+return or__3809__auto__;
 } else {
-var or__17955__auto____$1 = window.mozRequestAnimationFrame;
-if(cljs.core.truth_(or__17955__auto____$1)){
-return or__17955__auto____$1;
+var or__3809__auto____$1 = window.mozRequestAnimationFrame;
+if(cljs.core.truth_(or__3809__auto____$1)){
+return or__3809__auto____$1;
 } else {
-var or__17955__auto____$2 = window.webkitRequestAnimationFrame;
-if(cljs.core.truth_(or__17955__auto____$2)){
-return or__17955__auto____$2;
+var or__3809__auto____$2 = window.webkitRequestAnimationFrame;
+if(cljs.core.truth_(or__3809__auto____$2)){
+return or__3809__auto____$2;
 } else {
-var or__17955__auto____$3 = window.msRequestAnimationFrame;
-if(cljs.core.truth_(or__17955__auto____$3)){
-return or__17955__auto____$3;
+var or__3809__auto____$3 = window.msRequestAnimationFrame;
+if(cljs.core.truth_(or__3809__auto____$3)){
+return or__3809__auto____$3;
 } else {
-return ((function (or__17955__auto____$3,or__17955__auto____$2,or__17955__auto____$1,or__17955__auto__){
+return ((function (or__3809__auto____$3,or__3809__auto____$2,or__3809__auto____$1,or__3809__auto__){
 return (function (f){
 return window.setTimeout(f,(16));
 });
-;})(or__17955__auto____$3,or__17955__auto____$2,or__17955__auto____$1,or__17955__auto__))
+;})(or__3809__auto____$3,or__3809__auto____$2,or__3809__auto____$1,or__3809__auto__))
 }
 }
 }
