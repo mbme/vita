@@ -45,4 +45,6 @@
 (defonce _
   (do
     (state/watch! #(render! js/document.body Root %))
-    (url/watch! #(js/console.warn (clj->js %)))))
+    (state/trigger-update!) ;; force app to render first time
+    ;; (url/watch! #(js/console.warn (clj->js %)))
+    ))

@@ -96,7 +96,7 @@
           #(.call send s (.stringify js/JSON (clj->js %))))
     s))
 
-(defonce socket (socket-create "ws://test.dev/ws"))
+(defonce socket (socket-create "ws://test.dev:8081/ws"))
 
 (defn- send
   ([action params] (.send socket {:action action :params params}))
@@ -154,3 +154,8 @@
 
 (defn watch! [func]
   (add-watch state :render (fn [_ _ _ data] (func data))))
+
+(defn trigger-update!
+  "Force state update event"
+  []
+  (reset! state @state))
