@@ -1,4 +1,4 @@
-// Compiled by ClojureScript 0.0-2727 {}
+// Compiled by ClojureScript 0.0-2740 {}
 goog.provide('viter.core');
 goog.require('cljs.core');
 goog.require('viter.utils');
@@ -10,8 +10,8 @@ var config__$1 = cljs.core.assoc.call(null,config,new cljs.core.Keyword(null,"re
 var react_elem = viter.react.create_elem.call(null,config__$1);
 return viter.elements.register_component_BANG_.call(null,comp_name,((function (config__$1,react_elem){
 return (function (args,rest){
-var js_args = (function (){var obj5370 = {"args":cljs.core.assoc.call(null,args,new cljs.core.Keyword(null,"children","children",-940561982),rest)};
-return obj5370;
+var js_args = (function (){var obj14186 = {"args":cljs.core.assoc.call(null,args,new cljs.core.Keyword(null,"children","children",-940561982),rest)};
+return obj14186;
 })();
 var key = new cljs.core.Keyword(null,"key","key",-1516042587).cljs$core$IFn$_invoke$arity$1(args);
 if((key == null)){
@@ -26,10 +26,10 @@ return react_elem.call(null,js_args);
 viter.core.render_data = null;
 viter.core.render_scheduled = false;
 viter.core.actually_render = (function actually_render(){
-var vec__5372 = viter.core.render_data;
-var elem = cljs.core.nth.call(null,vec__5372,(0),null);
-var comp = cljs.core.nth.call(null,vec__5372,(1),null);
-var params = cljs.core.nth.call(null,vec__5372,(2),null);
+var vec__14188 = viter.core.render_data;
+var elem = cljs.core.nth.call(null,vec__14188,(0),null);
+var comp = cljs.core.nth.call(null,vec__14188,(1),null);
+var params = cljs.core.nth.call(null,vec__14188,(2),null);
 viter.react.render.call(null,cljs.core.apply.call(null,comp,params),elem);
 
 return viter.core.render_scheduled = false;
@@ -52,17 +52,17 @@ return viter.utils.request_animation_frame.call(null,viter.core.actually_render)
 var render_BANG_ = function (elem,comp,var_args){
 var params = null;
 if (arguments.length > 2) {
-var G__5373__i = 0, G__5373__a = new Array(arguments.length -  2);
-while (G__5373__i < G__5373__a.length) {G__5373__a[G__5373__i] = arguments[G__5373__i + 2]; ++G__5373__i;}
-  params = new cljs.core.IndexedSeq(G__5373__a,0);
+var G__14189__i = 0, G__14189__a = new Array(arguments.length -  2);
+while (G__14189__i < G__14189__a.length) {G__14189__a[G__14189__i] = arguments[G__14189__i + 2]; ++G__14189__i;}
+  params = new cljs.core.IndexedSeq(G__14189__a,0);
 } 
 return render_BANG___delegate.call(this,elem,comp,params);};
 render_BANG_.cljs$lang$maxFixedArity = 2;
-render_BANG_.cljs$lang$applyTo = (function (arglist__5374){
-var elem = cljs.core.first(arglist__5374);
-arglist__5374 = cljs.core.next(arglist__5374);
-var comp = cljs.core.first(arglist__5374);
-var params = cljs.core.rest(arglist__5374);
+render_BANG_.cljs$lang$applyTo = (function (arglist__14190){
+var elem = cljs.core.first(arglist__14190);
+arglist__14190 = cljs.core.next(arglist__14190);
+var comp = cljs.core.first(arglist__14190);
+var params = cljs.core.rest(arglist__14190);
 return render_BANG___delegate(elem,comp,params);
 });
 render_BANG_.cljs$core$IFn$_invoke$arity$variadic = render_BANG___delegate;

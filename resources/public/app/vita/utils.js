@@ -1,4 +1,4 @@
-// Compiled by ClojureScript 0.0-2727 {}
+// Compiled by ClojureScript 0.0-2740 {}
 goog.provide('vita.utils');
 goog.require('cljs.core');
 vita.utils.markdownIt = markdownit("default",{"typographer": true, "linkify": true, "html": true});
