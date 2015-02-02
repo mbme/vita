@@ -124,7 +124,7 @@
       (log/info "new search term: %s" term)
       (swap! state assoc :search-term term)))
 
-;; request records list on init
+;; request atoms list on init
 (on :socket-open #(send :req-atoms-list))
 
 ;; WS events
