@@ -1,4 +1,4 @@
-// Compiled by ClojureScript 0.0-2740 {}
+// Compiled by ClojureScript 0.0-2760 {}
 goog.provide('vita.log');
 goog.require('cljs.core');
 vita.log.prepare = (function prepare(param){

@@ -1,4 +1,4 @@
-// Compiled by ClojureScript 0.0-2740 {}
+// Compiled by ClojureScript 0.0-2760 {}
 goog.provide('vita.dev');
 goog.require('cljs.core');
 goog.require('figwheel.client');

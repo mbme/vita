@@ -1,4 +1,4 @@
-// Compiled by ClojureScript 0.0-2740 {}
+// Compiled by ClojureScript 0.0-2760 {}
 goog.provide('viter.parser');
 goog.require('cljs.core');
 goog.require('clojure.set');
@@ -6,9 +6,9 @@ goog.require('clojure.string');
 goog.require('viter.utils');
 goog.require('viter.elements');
 viter.parser.split_tag = (function split_tag(symbol){
-var vec__14194 = clojure.string.split.call(null,cljs.core.name.call(null,symbol),/\./);
-var elem = cljs.core.nth.call(null,vec__14194,(0),null);
-var classes = cljs.core.nthnext.call(null,vec__14194,(1));
+var vec__14216 = clojure.string.split.call(null,cljs.core.name.call(null,symbol),/\./);
+var elem = cljs.core.nth.call(null,vec__14216,(0),null);
+var classes = cljs.core.nthnext.call(null,vec__14216,(1));
 var class$ = clojure.string.join.call(null," ",classes);
 return new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [elem,class$], null);
 });
@@ -18,11 +18,11 @@ return clojure.set.rename_keys.call(null,attrs,new cljs.core.PersistentArrayMap(
 /**
 * Add attributes map to form if missing.
 */
-viter.parser.normalize_form = (function normalize_form(p__14195){
-var vec__14197 = p__14195;
-var attrs = cljs.core.nth.call(null,vec__14197,(0),null);
-var more = cljs.core.nthnext.call(null,vec__14197,(1));
-var all = vec__14197;
+viter.parser.normalize_form = (function normalize_form(p__14217){
+var vec__14219 = p__14217;
+var attrs = cljs.core.nth.call(null,vec__14219,(0),null);
+var more = cljs.core.nthnext.call(null,vec__14219,(1));
+var all = vec__14219;
 var has_attrs = cljs.core.map_QMARK_.call(null,attrs);
 var attrs__$1 = ((has_attrs)?attrs:cljs.core.PersistentArrayMap.EMPTY);
 var rest = cljs.core.remove.call(null,cljs.core.nil_QMARK_,((has_attrs)?more:all));
@@ -37,32 +37,32 @@ return clojure.string.replace.call(null,class$,/&/,comp_name);
 });
 viter.parser.normalize_class = (function normalize_class(class$){
 if(cljs.core.map_QMARK_.call(null,class$)){
-return clojure.string.join.call(null," ",(function (){var iter__13381__auto__ = (function iter__14206(s__14207){
+return clojure.string.join.call(null," ",(function (){var iter__13403__auto__ = (function iter__14228(s__14229){
 return (new cljs.core.LazySeq(null,(function (){
-var s__14207__$1 = s__14207;
+var s__14229__$1 = s__14229;
 while(true){
-var temp__4126__auto__ = cljs.core.seq.call(null,s__14207__$1);
+var temp__4126__auto__ = cljs.core.seq.call(null,s__14229__$1);
 if(temp__4126__auto__){
-var s__14207__$2 = temp__4126__auto__;
-if(cljs.core.chunked_seq_QMARK_.call(null,s__14207__$2)){
-var c__13379__auto__ = cljs.core.chunk_first.call(null,s__14207__$2);
-var size__13380__auto__ = cljs.core.count.call(null,c__13379__auto__);
-var b__14209 = cljs.core.chunk_buffer.call(null,size__13380__auto__);
-if((function (){var i__14208 = (0);
+var s__14229__$2 = temp__4126__auto__;
+if(cljs.core.chunked_seq_QMARK_.call(null,s__14229__$2)){
+var c__13401__auto__ = cljs.core.chunk_first.call(null,s__14229__$2);
+var size__13402__auto__ = cljs.core.count.call(null,c__13401__auto__);
+var b__14231 = cljs.core.chunk_buffer.call(null,size__13402__auto__);
+if((function (){var i__14230 = (0);
 while(true){
-if((i__14208 < size__13380__auto__)){
-var vec__14212 = cljs.core._nth.call(null,c__13379__auto__,i__14208);
-var k = cljs.core.nth.call(null,vec__14212,(0),null);
-var v = cljs.core.nth.call(null,vec__14212,(1),null);
+if((i__14230 < size__13402__auto__)){
+var vec__14234 = cljs.core._nth.call(null,c__13401__auto__,i__14230);
+var k = cljs.core.nth.call(null,vec__14234,(0),null);
+var v = cljs.core.nth.call(null,vec__14234,(1),null);
 if(cljs.core.truth_(v)){
-cljs.core.chunk_append.call(null,b__14209,cljs.core.name.call(null,k));
+cljs.core.chunk_append.call(null,b__14231,cljs.core.name.call(null,k));
 
-var G__14214 = (i__14208 + (1));
-i__14208 = G__14214;
+var G__14236 = (i__14230 + (1));
+i__14230 = G__14236;
 continue;
 } else {
-var G__14215 = (i__14208 + (1));
-i__14208 = G__14215;
+var G__14237 = (i__14230 + (1));
+i__14230 = G__14237;
 continue;
 }
 } else {
@@ -71,19 +71,19 @@ return true;
 break;
 }
 })()){
-return cljs.core.chunk_cons.call(null,cljs.core.chunk.call(null,b__14209),iter__14206.call(null,cljs.core.chunk_rest.call(null,s__14207__$2)));
+return cljs.core.chunk_cons.call(null,cljs.core.chunk.call(null,b__14231),iter__14228.call(null,cljs.core.chunk_rest.call(null,s__14229__$2)));
 } else {
-return cljs.core.chunk_cons.call(null,cljs.core.chunk.call(null,b__14209),null);
+return cljs.core.chunk_cons.call(null,cljs.core.chunk.call(null,b__14231),null);
 }
 } else {
-var vec__14213 = cljs.core.first.call(null,s__14207__$2);
-var k = cljs.core.nth.call(null,vec__14213,(0),null);
-var v = cljs.core.nth.call(null,vec__14213,(1),null);
+var vec__14235 = cljs.core.first.call(null,s__14229__$2);
+var k = cljs.core.nth.call(null,vec__14235,(0),null);
+var v = cljs.core.nth.call(null,vec__14235,(1),null);
 if(cljs.core.truth_(v)){
-return cljs.core.cons.call(null,cljs.core.name.call(null,k),iter__14206.call(null,cljs.core.rest.call(null,s__14207__$2)));
+return cljs.core.cons.call(null,cljs.core.name.call(null,k),iter__14228.call(null,cljs.core.rest.call(null,s__14229__$2)));
 } else {
-var G__14216 = cljs.core.rest.call(null,s__14207__$2);
-s__14207__$1 = G__14216;
+var G__14238 = cljs.core.rest.call(null,s__14229__$2);
+s__14229__$1 = G__14238;
 continue;
 }
 }
@@ -94,7 +94,7 @@ break;
 }
 }),null,null));
 });
-return iter__13381__auto__.call(null,class$);
+return iter__13403__auto__.call(null,class$);
 })());
 } else {
 return class$;
@@ -124,21 +124,21 @@ return html.call(null,body,null,false);
 });
 var html__3 = (function (body,comp_name,is_top){
 if(viter.parser.viter_form_QMARK_.call(null,body)){
-var vec__14221 = viter.parser.split_tag.call(null,cljs.core.first.call(null,body));
-var elem_name = cljs.core.nth.call(null,vec__14221,(0),null);
-var class$ = cljs.core.nth.call(null,vec__14221,(1),null);
-var vec__14222 = viter.parser.normalize_form.call(null,cljs.core.rest.call(null,body));
-var attrs = cljs.core.nth.call(null,vec__14222,(0),null);
-var rest = cljs.core.nth.call(null,vec__14222,(1),null);
+var vec__14243 = viter.parser.split_tag.call(null,cljs.core.first.call(null,body));
+var elem_name = cljs.core.nth.call(null,vec__14243,(0),null);
+var class$ = cljs.core.nth.call(null,vec__14243,(1),null);
+var vec__14244 = viter.parser.normalize_form.call(null,cljs.core.rest.call(null,body));
+var attrs = cljs.core.nth.call(null,vec__14244,(0),null);
+var rest = cljs.core.nth.call(null,vec__14244,(1),null);
 var attrs__$1 = viter.parser.normalize_attrs.call(null,attrs,class$,comp_name,is_top);
-var vec__14223 = viter.elements.get_elem.call(null,elem_name);
-var elem = cljs.core.nth.call(null,vec__14223,(0),null);
-var is_native = cljs.core.nth.call(null,vec__14223,(1),null);
+var vec__14245 = viter.elements.get_elem.call(null,elem_name);
+var elem = cljs.core.nth.call(null,vec__14245,(0),null);
+var is_native = cljs.core.nth.call(null,vec__14245,(1),null);
 var comp_name__$1 = (cljs.core.truth_(is_native)?comp_name:elem_name);
-var children = cljs.core.map.call(null,((function (vec__14221,elem_name,class$,vec__14222,attrs,rest,attrs__$1,vec__14223,elem,is_native,comp_name__$1){
-return (function (p1__14217_SHARP_){
-return html.call(null,p1__14217_SHARP_,comp_name__$1,false);
-});})(vec__14221,elem_name,class$,vec__14222,attrs,rest,attrs__$1,vec__14223,elem,is_native,comp_name__$1))
+var children = cljs.core.map.call(null,((function (vec__14243,elem_name,class$,vec__14244,attrs,rest,attrs__$1,vec__14245,elem,is_native,comp_name__$1){
+return (function (p1__14239_SHARP_){
+return html.call(null,p1__14239_SHARP_,comp_name__$1,false);
+});})(vec__14243,elem_name,class$,vec__14244,attrs,rest,attrs__$1,vec__14245,elem,is_native,comp_name__$1))
 ,rest);
 var handler = (cljs.core.truth_(is_native)?viter.parser.process_react_elem:viter.parser.process_custom_elem);
 return handler.call(null,elem,attrs__$1,children);
