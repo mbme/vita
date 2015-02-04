@@ -1,4 +1,4 @@
-(ns vita.utils
+(ns vita.utils.utils
   (:require [org.markdownIt]))
 
 ;; TO MARKDOWN

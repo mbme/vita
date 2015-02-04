@@ -20,15 +20,15 @@ return null;
 var try_to_run = function (func,var_args){
 var rest = null;
 if (arguments.length > 1) {
-var G__14250__i = 0, G__14250__a = new Array(arguments.length -  1);
-while (G__14250__i < G__14250__a.length) {G__14250__a[G__14250__i] = arguments[G__14250__i + 1]; ++G__14250__i;}
-  rest = new cljs.core.IndexedSeq(G__14250__a,0);
+var G__16820__i = 0, G__16820__a = new Array(arguments.length -  1);
+while (G__16820__i < G__16820__a.length) {G__16820__a[G__16820__i] = arguments[G__16820__i + 1]; ++G__16820__i;}
+  rest = new cljs.core.IndexedSeq(G__16820__a,0);
 } 
 return try_to_run__delegate.call(this,func,rest);};
 try_to_run.cljs$lang$maxFixedArity = 1;
-try_to_run.cljs$lang$applyTo = (function (arglist__14251){
-var func = cljs.core.first(arglist__14251);
-var rest = cljs.core.rest(arglist__14251);
+try_to_run.cljs$lang$applyTo = (function (arglist__16821){
+var func = cljs.core.first(arglist__16821);
+var rest = cljs.core.rest(arglist__16821);
 return try_to_run__delegate(func,rest);
 });
 try_to_run.cljs$core$IFn$_invoke$arity$variadic = try_to_run__delegate;
@@ -41,27 +41,27 @@ var this$ = this;
 return viter.react.try_to_run.call(null,method,this$);
 });
 });
-viter.react.create_elem = (function create_elem(p__14252){
-var map__14254 = p__14252;
-var map__14254__$1 = ((cljs.core.seq_QMARK_.call(null,map__14254))?cljs.core.apply.call(null,cljs.core.hash_map,map__14254):map__14254);
-var config = map__14254__$1;
-var componentWillUnmount = cljs.core.get.call(null,map__14254__$1,new cljs.core.Keyword(null,"componentWillUnmount","componentWillUnmount",1573788814));
-var componentDidUpdate = cljs.core.get.call(null,map__14254__$1,new cljs.core.Keyword(null,"componentDidUpdate","componentDidUpdate",-1983477981));
-var componentDidMount = cljs.core.get.call(null,map__14254__$1,new cljs.core.Keyword(null,"componentDidMount","componentDidMount",955710936));
-var componentWillMount = cljs.core.get.call(null,map__14254__$1,new cljs.core.Keyword(null,"componentWillMount","componentWillMount",-285327619));
-var displayName = cljs.core.get.call(null,map__14254__$1,new cljs.core.Keyword(null,"displayName","displayName",-809144601));
-return viter.utils.React.createFactory(viter.utils.React.createClass(cljs.core.clj__GT_js.call(null,cljs.core.merge.call(null,config,new cljs.core.PersistentArrayMap(null, 6, [new cljs.core.Keyword(null,"shouldComponentUpdate","shouldComponentUpdate",1795750960),((function (map__14254,map__14254__$1,config,componentWillUnmount,componentDidUpdate,componentDidMount,componentWillMount,displayName){
+viter.react.create_elem = (function create_elem(p__16822){
+var map__16824 = p__16822;
+var map__16824__$1 = ((cljs.core.seq_QMARK_.call(null,map__16824))?cljs.core.apply.call(null,cljs.core.hash_map,map__16824):map__16824);
+var config = map__16824__$1;
+var componentWillUnmount = cljs.core.get.call(null,map__16824__$1,new cljs.core.Keyword(null,"componentWillUnmount","componentWillUnmount",1573788814));
+var componentDidUpdate = cljs.core.get.call(null,map__16824__$1,new cljs.core.Keyword(null,"componentDidUpdate","componentDidUpdate",-1983477981));
+var componentDidMount = cljs.core.get.call(null,map__16824__$1,new cljs.core.Keyword(null,"componentDidMount","componentDidMount",955710936));
+var componentWillMount = cljs.core.get.call(null,map__16824__$1,new cljs.core.Keyword(null,"componentWillMount","componentWillMount",-285327619));
+var displayName = cljs.core.get.call(null,map__16824__$1,new cljs.core.Keyword(null,"displayName","displayName",-809144601));
+return viter.utils.React.createFactory(viter.utils.React.createClass(cljs.core.clj__GT_js.call(null,cljs.core.merge.call(null,config,new cljs.core.PersistentArrayMap(null, 6, [new cljs.core.Keyword(null,"shouldComponentUpdate","shouldComponentUpdate",1795750960),((function (map__16824,map__16824__$1,config,componentWillUnmount,componentDidUpdate,componentDidMount,componentWillMount,displayName){
 return (function (next_props){
 var this$ = this;
 return cljs.core.not_EQ_.call(null,viter.react.get_args.call(null,this$.props),viter.react.get_args.call(null,next_props));
-});})(map__14254,map__14254__$1,config,componentWillUnmount,componentDidUpdate,componentDidMount,componentWillMount,displayName))
-,new cljs.core.Keyword(null,"render","render",-1408033454),((function (map__14254,map__14254__$1,config,componentWillUnmount,componentDidUpdate,componentDidMount,componentWillMount,displayName){
+});})(map__16824,map__16824__$1,config,componentWillUnmount,componentDidUpdate,componentDidMount,componentWillMount,displayName))
+,new cljs.core.Keyword(null,"render","render",-1408033454),((function (map__16824,map__16824__$1,config,componentWillUnmount,componentDidUpdate,componentDidMount,componentWillMount,displayName){
 return (function (){
 var this$ = this;
 var args = viter.react.get_args.call(null,this$.props);
 var rendered = new cljs.core.Keyword(null,"render","render",-1408033454).cljs$core$IFn$_invoke$arity$1(config).call(null,args,this$);
 return viter.parser.html.call(null,rendered,displayName,true);
-});})(map__14254,map__14254__$1,config,componentWillUnmount,componentDidUpdate,componentDidMount,componentWillMount,displayName))
+});})(map__16824,map__16824__$1,config,componentWillUnmount,componentDidUpdate,componentDidMount,componentWillMount,displayName))
 ,new cljs.core.Keyword(null,"componentWillMount","componentWillMount",-285327619),viter.react.run_with_this.call(null,componentWillMount),new cljs.core.Keyword(null,"componentDidMount","componentDidMount",955710936),viter.react.run_with_this.call(null,componentDidMount),new cljs.core.Keyword(null,"componentDidUpdate","componentDidUpdate",-1983477981),viter.react.run_with_this.call(null,componentDidUpdate),new cljs.core.Keyword(null,"componentWillUnmount","componentWillUnmount",1573788814),viter.react.run_with_this.call(null,componentWillUnmount)], null)))));
 });
 viter.react.render = (function render(comp,elem){

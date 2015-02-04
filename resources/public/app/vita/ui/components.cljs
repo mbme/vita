@@ -1,4 +1,4 @@
-(ns vita.components
+(ns vita.ui.components
   (:require [viter.core :as r :refer-macros [defc]]
             [viter.utils :as utils]))
 

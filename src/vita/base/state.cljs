@@ -1,6 +1,6 @@
-(ns vita.state
-  (:require [vita.log :as log :include-macros true]
-            [vita.atom :as atom :refer [id]]))
+(ns vita.base.state
+  (:require [vita.utils.log :as log :include-macros true]
+            [vita.base.atom :as atom :refer [id]]))
 
 ;; KEYS
 (def ^:private rec-keys (atom 0))
@@ -99,8 +99,8 @@
 (defonce socket (socket-create "ws://test.dev:8081/ws"))
 
 (defn- send
-  ([action params] (.send socket {:action action :params params}))
-  ([action] (send action nil)))
+  ([action] (send action nil))
+  ([action params] (.send socket {:action action :params params})))
 
 (defn- req-atom [{:keys [type name]}]
   (send :req-atom {:type type :name name}))

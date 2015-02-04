@@ -1,4 +1,4 @@
-(ns vita.log)
+(ns vita.utils.log)
 
 (defn prepare [param]
   (cond

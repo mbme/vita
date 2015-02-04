@@ -1,8 +1,7 @@
 (ns vita.app
-  (:require [vita.state :as state :refer [trigger]]
-            [vita.workspace]
-            [vita.components :as c]
-            [vita.url :as url]
+  (:require [vita.base.state :as state :refer [trigger]]
+            [vita.ui.workspace]
+            [vita.ui.components :as c]
 
             [viter.core :refer [render!]
              :refer-macros [defc]]
@@ -45,6 +44,5 @@
 (defonce _
   (do
     (state/watch! #(render! js/document.body Root %))
-    (state/trigger-update!) ;; force app to render first time
-    ;; (url/watch! #(js/console.warn (clj->js %)))
-    ))
+    ;; force app to render first time
+    (state/trigger-update!)))

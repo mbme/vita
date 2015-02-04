@@ -1,4 +1,4 @@
-(ns vita.url
+(ns vita.utils.url
   (:require [goog.events :as events]
             [goog.history.EventType :as EventType]
             [clojure.string :as str])

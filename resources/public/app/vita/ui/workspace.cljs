@@ -1,6 +1,6 @@
-(ns vita.workspace
+(ns vita.ui.workspace
   (:require [vita.state  :refer [trigger]]
-            [vita.utils  :refer [md->html]]
+            [vita.utils.utils  :refer [md->html]]
 
             [viter.core :refer-macros [defc]]
             [viter.utils :as utils]

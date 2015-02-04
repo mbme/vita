@@ -1,7 +1,7 @@
 // Compiled by ClojureScript 0.0-2760 {}
-goog.provide('vita.log');
+goog.provide('vita.utils.log');
 goog.require('cljs.core');
-vita.log.prepare = (function prepare(param){
+vita.utils.log.prepare = (function prepare(param){
 if((param instanceof cljs.core.Keyword)){
 return [cljs.core.str(param)].join('');
 } else {
