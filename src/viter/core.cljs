@@ -18,15 +18,26 @@
                    (react-elem js-args))))
     ))
 
-(def ^:private render-data nil)
+(def ^:private render-queue #js [])
 (def ^:private render-scheduled false)
+
+(defn- render-item [[elem comp params]]
+  (r/render (apply comp params) elem))
+
 (defn- actually-render []
-  (let [[elem comp params] render-data]
-    (r/render (apply comp params) elem)
-    (set! render-scheduled false)))
+  ;; render all queued items
+  (.forEach render-queue render-item)
+
+  ;; remove all items from queue
+  (aset render-queue "length" 0)
+
+  (set! render-scheduled false))
 
 (defn render! [elem comp & params]
-  (set! render-data [elem comp params])
+  ;; add new item to the queue
+  (.push render-queue [elem comp params])
+
+  ;; schedule render if required
   (when-not render-scheduled
     (set! render-scheduled true)
     (request-animation-frame actually-render)))

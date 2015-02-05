@@ -65,6 +65,7 @@
 
   :figwheel {:server-port 8080
              ;; :ring-handler vita.handler/dev-app-routes
+             :repl false
              :server-logfile ".lein-figwheel-server.log"
              :css-dirs [ ~(res "/styles")]}
 
