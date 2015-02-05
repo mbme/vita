@@ -1,4 +1,5 @@
-(ns vita.utils.log)
+(ns vita.utils.log
+  (:require-macros vita.utils.log))
 
 (defn prepare [param]
   (cond

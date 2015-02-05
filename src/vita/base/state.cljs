@@ -1,6 +1,8 @@
 (ns vita.base.state
-  (:require [vita.utils.log :as log :include-macros true]
-            [vita.base.atom :as atom :refer [id]]))
+  (:require [vita.utils.log :as log]
+            [vita.base.atom :as atom :refer [id]]
+            [vita.base.socket :as socket]
+            [vita.base.bus :as bus :refer [on]]))
 
 ;; KEYS
 (def ^:private rec-keys (atom 0))
@@ -44,66 +46,11 @@
 (defn- ws-is-open? [key ws-items]
   (some true? (map #(= key (:key %)) ws-items)))
 
-;; EVENT BUS (ACTIONS)
-(defonce events (atom {}))
-
-(defn on
-  "Register `handler' for `action'."
-  [action handler]
-  (swap! events
-         (fn [events]
-           (assoc events action
-                  ;; if this action already has handlers then add
-                  ;; new handler to the set, else create new set
-                  (if-let [handlers (get events action)]
-                    (conj handlers handler)
-                    #{handler})))))
-
-(defn trigger
-  "Dispatch `action' with `params'."
-  [action & params]
-  ;; run all action handlers with specified params
-  (log/debug "trigger action %s handlers %s"
-             action (count (get @events action)))
-  (doseq [handler (get @events action)] (apply handler params)))
-
 
 ;; SERVER EVENTS HANDLER
-(defn socket-create
-  "Creates new websocket connection"
-  [addr]
-  (let [s (js/WebSocket. addr)
-        send (.-send s)]
-    (aset s "onopen"    (fn []
-                          (log/info "websocket: open")
-                          (trigger :socket-open)))
-    (aset s "onerror"   #(log/error "websocket: error: %s" %))
-    (aset s "onclose"   (fn []
-                          (log/info "websocket: closed")
-                          (trigger :socket-closed)))
-    ;; handle server messages, parse and
-    ;; convert them to clojure data structures
-    (aset s "onmessage"
-          (fn [evt]
-            (let [data (.parse js/JSON (.-data evt))
-                  {:keys [action params]} (js->clj data :keywordize-keys true)]
-              (log/debug "websocket: message " data)
-              ;; trigger server events on local bus
-              (trigger (keyword action) params))))
-    ;; better .send which converts clojure
-    ;; data structures to JSON and serializes it
-    (aset s "send"
-          #(.call send s (.stringify js/JSON (clj->js %))))
-    s))
-
-(defonce socket (socket-create "ws://test.dev:8081/ws"))
-
-(defn- send
-  ([action] (send action nil))
-  ([action params] (.send socket {:action action :params params})))
 
 (defn- req-atom [{:keys [type name]}]
-  (send :req-atom {:type type :name name}))
+  (socket/send :req-atom {:type type :name name}))
 
 (on :atoms-list
     (fn [items]
@@ -125,7 +72,7 @@
       (swap! state assoc :search-term term)))
 
 ;; request atoms list on init
-(on :socket-open #(send :req-atoms-list))
+(on :socket-open #(socket/send :req-atoms-list))
 
 ;; WS events
 (on :ws-open

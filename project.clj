@@ -5,6 +5,7 @@
 (def cljsbuild     "1.0.4")
 (def bower         "0.5.1")
 (def ancient       "0.6.1")
+(def cider         "0.9.0-SNAPSHOT")
 
 (defn res
   ([]     (res ""))
@@ -35,7 +36,8 @@
 
   :profiles {:dev
              {:dependencies [[figwheel ~figwheel]]
-              :plugins [[lein-figwheel ~figwheel
+              :plugins [[cider/cider-nrepl ~cider :exclusions [org.clojure/clojure]]
+                        [lein-figwheel ~figwheel
                          :exclusions [org.apache.httpcomponents/httpcore
                                       org.codehaus.plexus/plexus-utils
                                       org.clojure/clojure]]]}}

@@ -1,5 +1,6 @@
 (ns vita.app
-  (:require [vita.base.state :as state :refer [trigger]]
+  (:require [vita.base.state :as state]
+            [vita.base.bus :refer [trigger]]
             [vita.ui.workspace]
             [vita.ui.components :as c]
 
