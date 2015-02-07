@@ -1,1 +1,0 @@
-if(typeof goog == "undefined") document.write('<script src="/app/goog/base.js"></script>');document.write('<script src="/app/cljs_deps.js"></script>');document.write('<script>if (typeof goog != "undefined") { goog.require("vita.dev"); } else { console.warn("ClojureScript could not load :main, did you forget to specify :asset-path?"); };</script>');

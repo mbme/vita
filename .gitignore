@@ -13,3 +13,4 @@ pom.xml.asc
 /.repl
 *.map
 /resources/public/app
+resources/public/app.js
