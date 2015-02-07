@@ -2,7 +2,7 @@
   (:require [vita.utils.log :as log]))
 
 ;; EVENT BUS (ACTIONS)
-(defonce events (atom {}))
+(def events (atom {}))
 
 (defn on
   "Register `handler' for `action'."

@@ -10,20 +10,20 @@
 
 ;; STATE
 (defonce ^:private state
-  (atom {:atoms-list {} ;; 123: AtomId
+  (atom {:atoms {} ;; 123: atom/AtomInfo
          :ws-items '() ; list of InfoAtoms
          :search-term ""}))
 
 (defn- key-by-atom-id [id]
   "Get local atom key by specified atom id."
-  (first (for [[k v] (:atoms-list @state)
+  (first (for [[k v] (:atoms @state)
                :when (.equals id v)]
            k)))
 
 (defn- atom-id-by-key
   "Get atom id by local key."
   [key]
-  (get (:atoms-list @state) key))
+  (get (:atoms @state) key))
 
 (defn- ws-items-update [fn]
   (swap! state #(assoc % :ws-items (fn (:ws-items %)))))
@@ -56,8 +56,10 @@
     (fn [items]
       (log/info "loading list of %s atoms" (count items))
       (swap! state
-             assoc :atoms-list
-             (into {} (map #(vector (next-key) (atom/read-id %)) items)))))
+             assoc :atoms
+             (->> items
+                  (map atom/read-info)
+                  (zipmap (repeatedly next-key))))))
 
 (on :atom
     (fn [item]

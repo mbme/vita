@@ -26,3 +26,8 @@
 
 (defn read [{:keys [type name data]}]
   (->VitaAtom type (atom name) (atom data)))
+
+(defrecord AtomInfo [id type name])
+
+(defn read-info [{:strs [id type name]}]
+  (->AtomInfo id type name))
