@@ -26,10 +26,10 @@
     (aset s "onmessage"
           (fn [evt]
             (log/debug "websocket: message " (.-data evt))
-            (let [{action "action"
-                   params "params"} (->> (.-data evt)
-                                         (.parse js/JSON)
-                                         js->clj)]
+            (let [{:strs [action
+                          params]} (->> (.-data evt)
+                                        (.parse js/JSON)
+                                        js->clj)]
               ;; trigger server events on local bus
               (bus/trigger (keyword action) params))))
 

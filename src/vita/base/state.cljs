@@ -1,6 +1,6 @@
 (ns vita.base.state
   (:require [vita.utils.log :as log]
-            [vita.base.atom :as atom :refer [id]]
+            [vita.base.atom :as atom]
             [vita.base.socket :as socket]
             [vita.base.bus :as bus :refer [on]]))
 
@@ -14,16 +14,18 @@
          :ws-items '() ; list of InfoAtoms
          :search-term ""}))
 
-(defn- key-by-atom-id [id]
+(defn- key-by-id [id]
   "Get local atom key by specified atom id."
   (first (for [[k v] (:atoms @state)
-               :when (.equals id v)]
+               :when (= id (:id v))]
            k)))
 
-(defn- atom-id-by-key
+(defn- id-by-key
   "Get atom id by local key."
   [key]
-  (get (:atoms @state) key))
+  (-> (:atoms @state)
+      (get key)
+      (:id)))
 
 (defn- ws-items-update [fn]
   (swap! state #(assoc % :ws-items (fn (:ws-items %)))))
@@ -49,9 +51,6 @@
 
 ;; SERVER EVENTS HANDLER
 
-(defn- req-atom [{:keys [type name]}]
-  (socket/send :req-atom {:type type :name name}))
-
 (on :atoms-list
     (fn [items]
       (log/info "loading list of %s atoms" (count items))
@@ -63,8 +62,8 @@
 
 (on :atom
     (fn [item]
-      (let [atom (atom/read item)
-            key  (key-by-atom-id (atom/id atom))]
+      (let [atom (atom/read-atom item)
+            key  (key-by-id (:id atom))]
         (log/info "open atom %s" (str atom))
         (ws-add! (assoc atom :key key :state :view)))))
 
@@ -80,7 +79,7 @@
 (on :ws-open
     (fn [key]
       (when-not (ws-is-open? key (:ws-items @state))
-        (req-atom (atom-id-by-key key)))))
+        (socket/send :req-atom (id-by-key key)))))
 
 (on :ws-close
     (fn [key]

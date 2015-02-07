@@ -1,6 +1,7 @@
 (ns vita.ui.workspace
   (:require [vita.base.bus    :refer [trigger]]
             [vita.utils.utils :refer [md->html]]
+            [vita.ui.components]
 
             [viter.core :refer-macros [defc]]
             [viter.utils :as utils]
@@ -58,9 +59,9 @@
    [:Panel {:left {"pencil" #(trigger :ws-edit key)}}]
    [:Record record]])
 
-(defc WorkspaceItem [{:keys [state] :as record}]
+(defc WorkspaceItem [record]
   [:div
-   ((case state
+   ((case (:state record)
       :edit    EditRecordView
       :preview PreviewRecordView
       :view    RecordView)

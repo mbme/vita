@@ -6,8 +6,7 @@
 
 ;; retrieves React wrappers for native DOM elements
 (defn- get-native-elem [name]
-  (or (aget (.-DOM React) name)
-      (aget (.-addons React) name)))
+  (aget (.-DOM React) name))
 
 ;; registers created viter component
 (defn register-component! [name comp]
