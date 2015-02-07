@@ -5,8 +5,8 @@
 (defn- socket-create
   "Creates new websocket connection"
   [addr]
-  (let [s (js/WebSocket. addr)
-        send (.-send s)]
+  (let [s    (js/WebSocket. addr)
+        send (.bind (.-send s) s)]
 
     (aset s "onopen"
           #(do
@@ -14,7 +14,9 @@
              (bus/trigger :socket-open)))
 
     (aset s "onerror"
-          #(log/error "websocket: error: %s" %))
+          #(do
+             (log/error "websocket: error: %s" %)
+             (bus/trigger :socket-error)))
 
     (aset s "onclose"
           #(do
@@ -36,7 +38,9 @@
     ;; better .send which converts clojure
     ;; data structures to JSON and serializes it
     (aset s "send"
-          #(.call send s (.stringify js/JSON (clj->js %))))
+          #(->> (clj->js %)
+                (.stringify js/JSON)
+                send))
     s))
 
 (defonce ^:private socket (socket-create "ws://test.dev:8081/ws"))
