@@ -1,7 +1,7 @@
 (def clojure       "1.6.0")
 (def clojurescript "0.0-2760")
 
-(def figwheel      "0.2.2-SNAPSHOT")
+(def figwheel      "0.2.3-SNAPSHOT")
 (def cljsbuild     "1.0.4")
 (def bower         "0.5.1")
 (def ancient       "0.6.1")
