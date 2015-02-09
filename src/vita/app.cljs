@@ -1,5 +1,6 @@
 (ns vita.app
   (:require [vita.base.state :as state]
+            [vita.base.socket :as socket]
             [vita.utils.utils :as utils]
 
             [vita.ui.workspace :as ws]
@@ -16,5 +17,4 @@
         (render! left  search/SearchPanel %)
         (render! right ws/Workspace       %)))
 
-    ;; force app to render first time
-    (state/trigger-update!)))
+    (socket/connect! "ws://test.dev:8081/ws" 5000)))

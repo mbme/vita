@@ -15,7 +15,7 @@
 
     (aset s "onerror"
           #(do
-             (log/error "websocket: error: %s" %)
+             (log/error "websocket: error: %o" %)
              (bus/trigger :socket-error)))
 
     (aset s "onclose"
@@ -43,9 +43,39 @@
                 send))
     s))
 
-(defonce ^:private socket (socket-create "ws://test.dev:8081/ws"))
+(defonce ^:private socket       (atom nil))
+(defonce ^:private socket-queue #js [])
 
-(defn send
-  ([action] (send action nil))
-  ([action params]
-   (.send socket {:action action :params params})))
+(defn- add-to-queue [req]
+  (.push socket-queue req))
+(defn- send-queue []
+  (let [s @socket]
+    (.forEach socket-queue #(.send s %))
+    (aset socket-queue "length" 0)))
+
+(bus/on :socket-open   send-queue)
+(bus/on :socket-closed #(reset! socket nil))
+
+
+;; PUBLIC
+
+(defn send [action params]
+  (let [s @socket
+        req {:action action
+             :params params}]
+    (if s
+      (.send s req)
+      (add-to-queue req))))
+
+(defn connect-maybe
+  "Connect WebSocket if not connected."
+  [addr]
+  (when-not @socket
+    (log/info "websocket: not open, connecting...")
+    (reset! socket (socket-create addr))))
+
+(defn connect! [addr interval]
+  (log/info "websocket: server %s" addr)
+  (log/info "websocket: auto reconnect every %s ms" interval)
+  (connect-maybe addr)
+  (js/setInterval connect-maybe interval addr))
