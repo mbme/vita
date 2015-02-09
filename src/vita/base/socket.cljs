@@ -6,41 +6,49 @@
   "Creates new websocket connection"
   [addr]
   (let [s    (js/WebSocket. addr)
+        handle (fn [name handler] (aset s name handler))
         send (.bind (.-send s) s)]
 
-    (aset s "onopen"
-          #(do
-             (log/info "websocket: open")
-             (bus/trigger :socket-open)))
+    (handle "onopen"
+            (fn []
+              (log/info "websocket: open")
 
-    (aset s "onerror"
-          #(do
-             (log/error "websocket: error: %o" %)
-             (bus/trigger :socket-error)))
+              ;; install all other handlers after WebSocket is open
 
-    (aset s "onclose"
-          #(do
-             (log/info "websocket: closed")
-             (bus/trigger :socket-closed)))
+              (handle "onerror"
+                      #(do
+                         (log/error "websocket: error: %o" %)
+                         (bus/trigger :socket-error)))
 
-    ;; handle server messages, parse and
-    ;; convert them to clojure data structures
-    (aset s "onmessage"
-          (fn [evt]
-            (log/debug "websocket: message " (.-data evt))
-            (let [{:strs [action
-                          params]} (->> (.-data evt)
-                                        (.parse js/JSON)
-                                        js->clj)]
-              ;; trigger server events on local bus
-              (bus/trigger (keyword action) params))))
+              ;; handle server messages, parse and
+              ;; convert them to clojure data structures
+              (handle "onmessage"
+                      (fn [evt]
+                        (let [{:strs [action
+                                      params]}
+                              (->> (.-data evt)
+                                   (.parse js/JSON)
+                                   js->clj)]
 
-    ;; better .send which converts clojure
-    ;; data structures to JSON and serializes it
-    (aset s "send"
-          #(->> (clj->js %)
-                (.stringify js/JSON)
-                send))
+                          (log/debug "websocket: -> :%s" action)
+                          ;; trigger server events on local bus
+                          (bus/trigger (keyword action) params))))
+
+              ;; better .send which converts clojure
+              ;; data structures to JSON and serializes it
+              (handle "send"
+                      (fn [{:keys [action] :as req}]
+                        (log/debug "websocket: <- %s" action)
+                        (->> (clj->js req)
+                             (.stringify js/JSON)
+                             send)))
+
+              (bus/trigger :socket-open)))
+
+    (handle "onclose"
+            #(do
+               (log/info "websocket: closed")
+               (bus/trigger :socket-closed)))
     s))
 
 (defonce ^:private socket       (atom nil))
