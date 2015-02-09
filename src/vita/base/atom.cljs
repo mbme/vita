@@ -6,7 +6,7 @@
 ;; Atom Info
 (defrecord AtomInfo [id type name])
 
-(defn read-info [{:strs [id type name]}]
+(defn json->info [{:strs [id type name]}]
   (->AtomInfo id (str->keyword type) name))
 
 ;; Atom
@@ -14,5 +14,8 @@
   Object
   (toString [this] (str type "/" id "[" @name "]")))
 
-(defn read-atom [{:strs [id type name data]}]
+(defn json->atom [{:strs [id type name data]}]
   (->VitaAtom id (str->keyword type) (atom name) (atom data)))
+
+(defn atom->json [{:keys [id type name data]}]
+  {"id" id "type" type "name" @name "data" @data})

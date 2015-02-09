@@ -57,12 +57,12 @@
       (swap! state
              assoc :atoms
              (->> items
-                  (map atom/read-info)
+                  (map atom/json->info)
                   (zipmap (repeatedly next-key))))))
 
 (on :atom
     (fn [item]
-      (let [atom (atom/read-atom item)
+      (let [atom (atom/json->atom item)
             key  (key-by-id (:id atom))]
         (log/info "open atom %s" (str atom))
         (ws-add! (assoc atom :key key :state :view)))))
@@ -95,8 +95,10 @@
 
 (on :ws-save
     (fn [key]
-      ;; FIXME impelment save
-      (ws-update! key #(assoc % :state :view))))
+      (ws-update! key
+                  (fn [a]
+                    (socket/send :atom-update (atom/atom->json a))
+                    (assoc a :state :view)))))
 
 ;; PUBLIC
 
