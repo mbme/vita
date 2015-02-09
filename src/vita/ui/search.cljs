@@ -13,6 +13,14 @@
         (> -1))
     true))
 
+(defn- sort-results [results]
+  (sort
+   (fn [res1 res2]
+     (compare
+      (:name (:atom res1))
+      (:name (:atom res2))))
+   results))
+
 (defc SearchResult [{:keys [atom key visible]}]
   [:li {:onClick #(trigger :ws-open key)
         :class (when visible "&-visible")}
@@ -25,9 +33,10 @@
                      :defaultValue search-term
                      :onChange #(trigger :search-update (e-val %))}]
    [:ul
-    (map (fn [[key atom]]
-           (SearchResult
-            {:key key
-             :atom atom
-             :visible (has-term? atom search-term)}))
-         atoms)]])
+    (->> atoms
+         (map (fn [[key atom]]
+                {:key key
+                 :atom atom
+                 :visible (has-term? atom search-term)}))
+         sort-results
+         (map SearchResult))]])
