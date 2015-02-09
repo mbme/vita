@@ -1810,6 +1810,14 @@ input[type="submit"] {
     cursor: not-allowed;
     opacity: 0.5; }
 
+.Workspace .WorkspaceItem {
+  border-radius: 2px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.24); }
+
+.Workspace .WorkspaceItem > * {
+  border-radius: 2px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12); }
+
 body {
   -webkit-font-smoothing: antialiased;
   background-color: white;
@@ -2000,14 +2008,6 @@ input[type="submit"] {
   user-select: none;
   vertical-align: middle;
   white-space: nowrap; }
-
-.Workspace .WorkspaceItem {
-  border-radius: 2px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.24); }
-
-.Workspace .WorkspaceItem > * {
-  border-radius: 2px;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12); }
 
 html,
 body,

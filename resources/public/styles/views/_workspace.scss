@@ -1,0 +1,122 @@
+
+.Workspace {
+    &-records {
+        padding: 5px;
+    }
+
+    .WorkspaceItem {
+        min-height: 200px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+
+        &:first-child {
+            margin-top: 0;
+        }
+
+        @extend %material-paper-top;
+
+        > * {
+            @extend %material-paper-bot;
+            padding: 5px;
+        }
+    }
+}
+
+.Panel {
+    & &-right {
+        text-align: right;
+    }
+
+    .icon {
+        cursor: pointer;
+        padding: 0 5px;
+
+        font-size: 20px;
+
+        color: lighten($base-font-color, 60%);
+        @include transition(color .4s);
+
+        &:hover {
+            color: $base-font-color;
+        }
+    }
+
+    > * {
+        display: inline-block;
+        width: 50%;
+    }
+}
+
+%RecordBase {
+    // make panel visible on hover
+    .Panel {
+        opacity: 0;
+        @include transition(opacity .4s);
+    }
+
+    &:hover .Panel {
+        opacity: 1;
+    }
+}
+
+.Record {
+    & &-name {
+        text-align: center;
+        margin-bottom: 30px;
+
+        cursor: default;
+    }
+
+    & &-body {
+        color: #515558;
+        padding: 10px 30px;
+
+        cursor: default;
+    }
+}
+
+.RecordView, .PreviewRecordView{
+    @extend %RecordBase;
+}
+
+.EditRecordView {
+    @extend %RecordBase;
+
+    & &-name {
+        font-size: $h1-font-size;
+        font-weight: bold;
+
+        text-align: center;
+        margin-bottom: 30px;
+
+        padding: 0;
+        border: 0 none;
+        box-shadow: none;
+
+        box-shadow: none;
+    }
+
+    & &-data {
+        display: block;
+        margin-bottom: 0;
+
+        line-height: 1.5;
+        color: #515558;
+
+        padding: 10px 30px;
+
+        min-height: 300px;
+        height: auto;
+        overflow-y: hidden;
+
+        resize: none;
+
+        border: 0 none;
+        border-radius: 0;
+        box-shadow: none;
+
+        &:focus {
+            box-shadow: none;
+        }
+    }
+}

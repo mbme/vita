@@ -1,0 +1,32 @@
+$c-search-input-border: lightgrey;
+
+.SearchPanel {
+    margin-left: 10px;
+    margin-right: 10px;
+
+    & &-search {
+        cursor: pointer;
+
+        border: 0 none;
+        border-radius: 0;
+        border-bottom: 1px solid $c-search-input-border;
+        box-shadow: none;
+
+        @include transition(border-color 0.5s);
+
+        &:focus,
+        &:hover {
+            border-color: $base-font-color;
+        }
+    }
+}
+
+.SearchResult {
+    cursor: pointer;
+    padding: 10px 5px;
+    display: none;
+
+    &-visible {
+        display: block;
+    }
+}
