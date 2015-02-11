@@ -14,3 +14,4 @@ pom.xml.asc
 *.map
 /resources/public/app
 resources/public/app.js
+resources/public/styles/main.css
