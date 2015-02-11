@@ -3,6 +3,8 @@
    [viter.react :refer [e-val]]
    [viter.core :refer-macros [defc]]
 
+   [vita.ui.workspace]
+
    [vita.base.bus :refer [trigger]]))
 
 (defn- has-term? [atom term]
@@ -28,10 +30,12 @@
 
 (defc SearchPanel [{:keys [search-term atoms ws-items]}]
   [:div
-   [:input.&-search {:type "text"
-                     :placeholder "SEARCH"
-                     :defaultValue search-term
-                     :onChange #(trigger :search-update (e-val %))}]
+   [:div.&-search
+    [:icon  {:types "search"}]
+    [:input {:type "text"
+             :defaultValue search-term
+             :onChange #(trigger :search-update (e-val %))}]]
+
    [:ul
     (->> atoms
          (map (fn [[key atom]]

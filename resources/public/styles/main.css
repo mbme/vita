@@ -2044,13 +2044,23 @@ html {
   margin-right: 10px; }
   .SearchPanel .SearchPanel-search {
     cursor: pointer;
-    border: 0 none;
-    border-radius: 0;
+    position: relative;
     border-bottom: 1px solid lightgrey;
-    box-shadow: none;
     -webkit-transition: border-color 0.5s;
     -moz-transition: border-color 0.5s;
     transition: border-color 0.5s; }
+    .SearchPanel .SearchPanel-search .icon {
+      position: absolute;
+      bottom: 9px;
+      left: 5px; }
+    .SearchPanel .SearchPanel-search input {
+      border: 0 none;
+      border-radius: 0;
+      box-shadow: none;
+      display: inline-block;
+      margin-bottom: 0;
+      padding-bottom: 5px;
+      padding-left: 30px; }
     .SearchPanel .SearchPanel-search:focus, .SearchPanel .SearchPanel-search:hover {
       border-color: #333; }
 
