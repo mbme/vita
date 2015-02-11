@@ -9,7 +9,7 @@
 
 (defn res
   ([]     (res ""))
-  ([path] (str "resources/public" path)))
+  ([path] (str "resources" path)))
 
 (defproject vita "0.1.0-SNAPSHOT"
   :description "Vita UI"
@@ -64,7 +64,7 @@
               :source-map true}}]}
 
   :figwheel {:server-port 8080
-             ;; :ring-handler vita.handler/dev-app-routes
+             :http-server-root ""
              :repl false
              :server-logfile ".lein-figwheel-server.log"
              :css-dirs [ ~(res "/styles")]}

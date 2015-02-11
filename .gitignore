@@ -12,6 +12,6 @@ pom.xml.asc
 /out
 /.repl
 *.map
-/resources/public/app
-resources/public/app.js
-resources/public/styles/main.css
+/resources/app
+resources/app.js
+resources/styles/main.css
