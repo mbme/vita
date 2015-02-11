@@ -15,7 +15,7 @@
 ;; Atom
 (defrecord VitaAtom [id type name data]
   Object
-  (toString [this] (str "[" id "]" type "/" @name)))
+  (toString [this] (str id type "/" @name)))
 
 (defn json->atom [{:strs [id type name data]}]
   (->VitaAtom id (str->keyword type) (atom name) (atom data)))

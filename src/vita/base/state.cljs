@@ -76,7 +76,7 @@
 (on :socket-open
     #(do (swap! state assoc :connected true)
          ;; request atoms list on init
-         (socket/send :req-atoms-list nil)))
+         (socket/send :atoms-list-read nil)))
 
 (on :socket-closed #(swap! state assoc :connected false))
 
@@ -84,7 +84,7 @@
 (on :ws-open
     (fn [key]
       (when-not (ws-is-open? key (:ws-items @state))
-        (socket/send :req-atom (id-by-key key)))))
+        (socket/send :atom-read (id-by-key key)))))
 
 (on :ws-close
     (fn [key]
