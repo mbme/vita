@@ -21,7 +21,7 @@ html {
     $w-workspace-p: 1/$golden-ratio;
     $w-search-p: 1 - $w-workspace-p;
 
-    $w-total-px: 1190px;
+    $w-total-px: 1200px;
     $w-search-px: $w-total-px * $w-search-p;
     $w-workspace-px: $w-total-px - $w-search-px;
 
@@ -40,7 +40,8 @@ html {
 
     .right {
         width: $w-workspace-p * 100%;
-        @include calc(margin-left, "#{$w-search-p * 100%} + 8px");
+        margin-left: $w-search-p * 100%;
+        padding-left: 20px;
 
         > * {
             width: $w-workspace-px;
