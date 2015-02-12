@@ -1,11 +1,13 @@
 // Typography
 $sans-serif: $helvetica;
+$open-sans: "OpenSans";
 $serif: $georgia;
-$base-font-family: $sans-serif;
-$header-font-family: $base-font-family;
+$base-font-family: $open-sans;
+$header-font-family: $open-sans;
 
 // Font Sizes
-$base-font-size: 1em;
+$base-font-size: 21px;
+
 $h1-font-size: $base-font-size * 2.25;
 $h2-font-size: $base-font-size * 2;
 $h3-font-size: $base-font-size * 1.75;
