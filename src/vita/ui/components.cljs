@@ -10,7 +10,7 @@
 
 (extend-type string
   IconType
-  (stringify [this] (str "fa-" this)))
+  (stringify [this] (str "mdi-" this)))
 
 (extend-type PersistentVector
   IconType

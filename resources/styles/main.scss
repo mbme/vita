@@ -1,9 +1,9 @@
 @charset "UTF-8";
 
-@import "../bourbon/app/assets/stylesheets/bourbon";
+// Reset
+@import "../Materialize/sass/components/normalize";
 
-$fa-font-path: "/fontawesome/fonts";
-@import "../fontawesome/scss/font-awesome";
+@import "../bourbon/app/assets/stylesheets/bourbon";
 
 // Variables
 @import "variables";
@@ -25,7 +25,24 @@ $fa-font-path: "/fontawesome/fonts";
 @import "components/modal";
 
 // Materialize
-@import "materialize";
+
+// Mixins
+@import "../Materialize/sass/components/prefixer";
+@import "../Materialize/sass/components/mixins";
+@import "../Materialize/sass/components/color";
+
+// Variables;
+@import "../Materialize/sass/components/variables";
+
+$icons-font-path: "/Materialize/font/material-design-icons/";
+
+// components
+@import "../Materialize/sass/components/global";
+@import "../Materialize/sass/components/icons-material-design";
+@import "../Materialize/sass/components/typography";
+@import "../Materialize/sass/components/modal";
+@import "../Materialize/sass/components/preloader";
+
 
 // App
 @import "layout";

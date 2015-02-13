@@ -27,15 +27,15 @@
 
 (defc RecordView [{:keys [key] :as record}]
   [:div
-   [:Panel {:left  {"pencil" #(trigger :ws-edit key)}
-            :right {"close"  #(trigger :ws-close key)}}]
+   [:Panel {:left  {"content-create" #(trigger :ws-edit key)}
+            :right {"navigation-close"  #(trigger :ws-close key)}}]
    [:Record record]])
 
 (defc EditRecordView [{:keys [key name data]} this]
   [:div
-   [:Panel {:left  {"eye"   #(trigger :ws-preview key)}
-            :right {"save"  #(trigger :ws-save key)
-                    "close" #(trigger :ws-close key)}}]
+   [:Panel {:left  {"image-remove-red-eye"   #(trigger :ws-preview key)}
+            :right {"content-save"  #(trigger :ws-save key)
+                    "navigation-close" #(trigger :ws-close key)}}]
 
    [:input.&-name
     {:type         "text"
@@ -56,7 +56,7 @@
 
 (defc PreviewRecordView [{:keys [key] :as record}]
   [:div
-   [:Panel {:left {"pencil" #(trigger :ws-edit key)}}]
+   [:Panel {:left {"content-create" #(trigger :ws-edit key)}}]
    [:Record record]])
 
 (defc WorkspaceItem [record]
