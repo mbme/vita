@@ -18,7 +18,7 @@
 
 (defc icon [{:keys [class types] :as all}]
   (let [icon-class (stringify types)
-        total-class (str class icon-class)]
+        total-class (str class " " icon-class)]
     [:i.fa (assoc all :class total-class)]))
 
 (defn- spinner-layer [color]

@@ -10,7 +10,6 @@
 
 // Extends
 @import "extends/button";
-@import "extends/clearfix";
 @import "extends/errors";
 @import "extends/flashes";
 @import "extends/hide-text";
@@ -41,6 +40,7 @@ $icons-font-path: "/Materialize/font/material-design-icons/";
 @import "../Materialize/sass/components/icons-material-design";
 @import "../Materialize/sass/components/typography";
 @import "../Materialize/sass/components/modal";
+@import "../Materialize/sass/components/form";
 @import "../Materialize/sass/components/preloader";
 
 

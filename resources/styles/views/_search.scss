@@ -6,33 +6,6 @@ $c-search-input-border: lightgrey;
 
     & &-search {
         cursor: pointer;
-        position: relative;
-
-        .icon {
-            position: absolute;
-            bottom: 9px;
-            left: 5px;
-        }
-
-        input {
-            border: 0 none;
-            border-radius: 0;
-            box-shadow: none;
-
-            display: inline-block;
-            margin-bottom: 0;
-            padding-bottom: 5px;
-            padding-left: 30px;
-        }
-
-        border-bottom: 1px solid $c-search-input-border;
-
-        @include transition(border-color 0.5s);
-
-        &:focus,
-        &:hover {
-            border-color: $base-font-color;
-        }
     }
 }
 
