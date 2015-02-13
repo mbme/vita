@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 @import "../bourbon/app/assets/stylesheets/bourbon";
 
 $fa-font-path: "/fontawesome/fonts";
@@ -20,8 +22,13 @@ $fa-font-path: "/fontawesome/fonts";
 @import "components/tables";
 @import "components/lists";
 @import "components/buttons";
+@import "components/modal";
+
+// Materialize
+@import "materialize";
 
 // App
 @import "layout";
 @import "views/search";
 @import "views/workspace";
+@import "views/no_connection";

@@ -1,0 +1,5 @@
+.NoConnectionWall {
+    .modal h2 {
+        @extend .red-text.text-lighten-2;
+    }
+}

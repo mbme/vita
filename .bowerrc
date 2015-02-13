@@ -1,0 +1,5 @@
+{
+"directory": "resources/",
+"analytics": false,
+"timeout": 120000
+}

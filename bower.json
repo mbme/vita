@@ -1,0 +1,26 @@
+{
+  "name": "vita",
+  "version": "0.0.0",
+  "homepage": "https://github.com/mbme/vita",
+  "authors": [
+    "mbme <stribog.ua@gmail.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "resources/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "Materialize": "Dogfalo/materialize#~0.95.2",
+    "bourbon": "*",
+    "fontawesome": "*",
+    "markdown-it": "*",
+    "normalize.css": "*",
+    "react": "*"
+  }
+}

@@ -3,7 +3,6 @@
 
 (def figwheel      "0.2.3-SNAPSHOT")
 (def cljsbuild     "1.0.4")
-(def bower         "0.5.1")
 (def ancient       "0.6.1")
 (def cider         "0.9.0-SNAPSHOT")
 
@@ -24,15 +23,7 @@
                org.clojure/clojurescript]
 
   :plugins [[lein-cljsbuild ~cljsbuild :exclusions [org.clojure/clojure]]
-            [lein-bower     ~bower     :exclusions [org.clojure/clojure]]
             [lein-ancient   ~ancient   :exclusions [org.clojure/clojure]]]
-
-  :bower-dependencies  [[react         "*"]
-                        [markdown-it   "*"]
-                        [fontawesome   "*"]
-                        [normalize.css "*"]
-                        [bourbon       "*"]]
-  :bower {:directory    ~(res)}
 
   :profiles {:dev
              {:dependencies [[figwheel ~figwheel]]
@@ -55,6 +46,14 @@
                 :file-min ~(res "/react/react.min.js")
                 :provides ["com.facebook.React"]}
 
+               {:file     ~(res "/jquery/dist/jquery.js")
+                :file-min ~(res "/jquery/dist/jquery.min.js")
+                :provides ["com.JQuery"]}
+
+               {:file     ~(res "/Materialize/dist/js/materialize.js")
+                :file-min ~(res "/Materialize/dist/js/materialize.min.js")
+                :provides ["com.materialize"]}
+
                {:file     ~(res "/markdown-it/dist/markdown-it.js")
                 :file-min ~(res "/markdown-it/dist/markdown-it.min.js")
                 :provides ["org.markdownIt"]}]
@@ -67,6 +66,4 @@
              :http-server-root ""
              :repl false
              :server-logfile ".lein-figwheel-server.log"
-             :css-dirs [ ~(res "/styles")]}
-
-  :aliases {"update" ["do" "ancient" ["bower" "update"]]})
+             :css-dirs [ ~(res "/styles")]})
