@@ -1,6 +1,5 @@
 (ns viter.parser
   (:require [viter.elements :refer [get-elem]]
-            [viter.utils :as utils]
             [clojure.string  :as  str]
             [clojure.set     :as  s]))
 
@@ -42,8 +41,14 @@
                     str/trim
                     (inject-comp-name comp-name))))
 
+(defn- empty-val? [v]
+  (or (nil? v) (str/blank? v)))
+
+(defn- remove-empty-vals [m]
+  (into {} (remove (comp empty-val? val) m)))
+
 (defn- process-react-elem [tag attrs children]
-  (let [js-attrs (-> (utils/remove-empty-vals attrs)
+  (let [js-attrs (-> (remove-empty-vals attrs)
                      replace-attr-aliases
                      clj->js)]
     (apply tag `[~js-attrs ~@children])))

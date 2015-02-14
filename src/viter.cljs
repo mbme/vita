@@ -1,8 +1,11 @@
 (ns viter
   (:require-macros viter)
-  (:require [viter.elements :refer [register-component!]]
-            [viter.utils :refer [React request-animation-frame]]
-            [viter.parser :refer [html]]))
+  (:require
+   [clojure.string :as str]
+
+   [viter.elements :refer [register-component!]]
+   [viter.parser :refer [html]]
+   [viter.react :refer [React]]))
 
 (defn- get-args [obj] (aget obj "args"))
 
@@ -82,10 +85,21 @@
 (defn get-node [el]
   (.getDOMNode el))
 
-(defn deref-node [this ref]
+(defn deref-node
+  "Get react node by ref."
+  [this ref]
   (get-node (get-ref this ref)))
 
-(defn e-val [evt] (.-value (.-target evt)))
+(defn e-val
+  "Get value from react event."
+  [evt] (.-value (.-target evt)))
+
+(def request-animation-frame
+  (or (.-requestAnimationFrame js/window)
+      (.-mozRequestAnimationFrame js/window)
+      (.-webkitRequestAnimationFrame js/window)
+      (.-msRequestAnimationFrame js/window)
+      (fn [f] (.setTimeout js/window f 16))))
 
 (defn render! [elem comp & params]
   ;; add new item to the queue
@@ -95,3 +109,13 @@
   (when-not render-scheduled
     (set! render-scheduled true)
     (request-animation-frame actually-render)))
+
+;; UTILS
+
+(defn get-words [s]
+  (str/split s #"\s+"))
+
+(defn join [col]
+  (str/join " " col))
+
+(defn echo [v] (println v) v)

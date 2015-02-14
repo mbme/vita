@@ -1,10 +1,9 @@
 (ns vita.ui.workspace
   (:require [vita.base.bus    :refer [trigger]]
-            [vita.utils.utils :refer [md->html]]
+            [vita.utils.utils :as utils]
             [vita.ui.components]
 
-            [viter :as v]
-            [viter.utils :as utils]))
+            [viter :as v]))
 
 (defn- show-icon [types onClick]
   [:icon {:types types :onClick onClick}])
@@ -22,7 +21,7 @@
   [:div
    [:h1.&-name @name]
    [:div.&-body {:dangerouslySetInnerHTML
-                 {:__html (md->html @data)}}]])
+                 {:__html (utils/md->html @data)}}]])
 
 (v/defc RecordView [{:keys [key] :as record}]
   [:div

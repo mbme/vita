@@ -59,6 +59,7 @@
                 :provides ["org.markdownIt"]}]
 
               :optimizations :none
+              :warnings {:single-segment-namespace false}
               :pretty-print true
               :source-map true}}]}
 

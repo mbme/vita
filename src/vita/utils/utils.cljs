@@ -17,3 +17,15 @@
 
 (defn query-all [css-query]
   (.querySelectorAll js/document css-query))
+
+(defn autosize! [elem]
+  (aset (.-style elem) "height" "auto")
+  (when (< (.-clientHeight elem)
+           (.-scrollHeight elem))
+    (aset (.-style elem) "height" (str (.-scrollHeight elem) "px"))))
+
+(defn focus-input! [input]
+  (let [len (.-length (.-value input))]
+    (aset input "selectionStart" len)
+    (aset input "selectionEnd" len)
+    (.focus input)))

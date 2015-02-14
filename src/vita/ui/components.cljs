@@ -1,8 +1,7 @@
 (ns vita.ui.components
   (:require [com.JQuery]
             [com.materialize]
-            [viter]
-            [viter.utils :as utils]))
+            [viter :as v]))
 
 (defprotocol IconType
   (stringify [this]))
@@ -13,9 +12,9 @@
 
 (extend-type PersistentVector
   IconType
-  (stringify [this] (utils/join (map stringify this))))
+  (stringify [this] (v/join (map stringify this))))
 
-(viter/defc icon [{:keys [class types] :as all}]
+(v/defc icon [{:keys [class types] :as all}]
   (let [icon-class (stringify types)
         total-class (str class " " icon-class)]
     [:i (assoc all :class total-class)]))
@@ -26,7 +25,7 @@
    [:div.gap-patch            [:div.circle]]
    [:div.circle-clipper.right [:div.circle]]])
 
-(viter/defc spinner [{:keys [active size]}]
+(v/defc spinner [{:keys [active size]}]
   [:div.preloader-wrapper
    {:class {:active active
             :big (= size :big)
@@ -36,7 +35,7 @@
    (spinner-layer "yellow")
    (spinner-layer "green")])
 
-(viter/defc modal [{:keys [class children footer]}]
+(v/defc modal [{:keys [class children footer]}]
   [:div {:class class}
    `[:div.&-content ~@children]
    (when-not (nil? footer)
@@ -44,7 +43,7 @@
 
   ;; show modal on render
   :did-mount
-  #(do (-> (viter/get-node %)
+  #(do (-> (v/get-node %)
            (js/$)
            (.openModal #js {:dismissible false}))
        (-> (js/$ "body")
@@ -53,7 +52,7 @@
   ;; hide modal on unmount
   :will-unmount
   #(do
-     (-> (viter/get-node %)
+     (-> (v/get-node %)
          (js/$)
          (.closeModal))
      (-> (js/$ "body")

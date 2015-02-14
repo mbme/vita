@@ -1,5 +1,5 @@
 (ns viter.elements
-  (:require [viter.utils :refer [React]]))
+  (:require [viter.react :refer [React]]))
 
 ;; map of registered Component instances
 (def ^:private components (atom {}))
