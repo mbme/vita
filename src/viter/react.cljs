@@ -40,7 +40,7 @@
    (.createClass React)
    (.createFactory React)))
 
-(defn render [comp elem]
+(defn react-render [comp elem]
   (.render React comp elem))
 
 (defn get-ref [this ref]

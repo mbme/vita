@@ -1,4 +1,4 @@
-(ns viter.core)
+(ns viter)
 
 ;; defines new component
 (defmacro defc [name args render & rest]

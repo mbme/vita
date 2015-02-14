@@ -3,9 +3,8 @@
             [vita.utils.utils :refer [md->html]]
             [vita.ui.components]
 
-            [viter.core :refer-macros [defc]]
-            [viter.utils :as utils]
-            [viter.react :refer [deref-node e-val]]))
+            [viter :as v]
+            [viter.utils :as utils]))
 
 (defn- show-icon [types onClick]
   [:icon {:types types :onClick onClick}])
@@ -14,24 +13,24 @@
   (map (fn [[types onClick]]
          (show-icon types onClick)) items))
 
-(defc Panel [{:keys [left right]}]
+(v/defc Panel [{:keys [left right]}]
   [:div
    `[:span.&-left  ~@(show-icons left)]
    `[:span.&-right ~@(show-icons right)]])
 
-(defc Record [{:keys [name data]}]
+(v/defc Record [{:keys [name data]}]
   [:div
    [:h1.&-name @name]
    [:div.&-body {:dangerouslySetInnerHTML
                  {:__html (md->html @data)}}]])
 
-(defc RecordView [{:keys [key] :as record}]
+(v/defc RecordView [{:keys [key] :as record}]
   [:div
    [:Panel {:left  {"content-create" #(trigger :ws-edit key)}
             :right {"navigation-close"  #(trigger :ws-close key)}}]
    [:Record record]])
 
-(defc EditRecordView [{:keys [key name data]}]
+(v/defc EditRecordView [{:keys [key name data]}]
   [:div
    [:Panel {:left  {"image-remove-red-eye"   #(trigger :ws-preview key)}
             :right {"content-save"  #(trigger :ws-save key)
@@ -41,26 +40,26 @@
     {:type         "text"
      :defaultValue @name
      :ref          "input"
-     :onChange     #(reset! name (e-val %))}]
+     :onChange     #(reset! name (v/e-val %))}]
 
    [:textarea.&-data
     {:defaultValue @data
      :ref          "area"
      :onChange     #(this-as this
-                             (reset! data (e-val %))
-                             (utils/autosize! (deref-node this "area")))}]]
+                             (reset! data (v/e-val %))
+                             (utils/autosize! (v/deref-node this "area")))}]]
 
   :componentDidMount #(do
-                        (utils/autosize!    (deref-node % "area"))
-                        (utils/focus-input! (deref-node % "input"))))
+                        (utils/autosize!    (v/deref-node % "area"))
+                        (utils/focus-input! (v/deref-node % "input"))))
 
 
-(defc PreviewRecordView [{:keys [key] :as record}]
+(v/defc PreviewRecordView [{:keys [key] :as record}]
   [:div
    [:Panel {:left {"content-create" #(trigger :ws-edit key)}}]
    [:Record record]])
 
-(defc WorkspaceItem [record]
+(v/defc WorkspaceItem [record]
   [:div
    ((case (:state record)
       :edit    EditRecordView
@@ -68,7 +67,7 @@
       :view    RecordView)
     record)])
 
-(defc Workspace [{:keys [ws-items]}]
+(v/defc Workspace [{:keys [ws-items]}]
   [:div
    [:div.&-records
     (map WorkspaceItem ws-items)]])

@@ -1,8 +1,6 @@
 (ns vita.ui.search
   (:require
-   [viter.react :refer [e-val]]
-   [viter.core :refer-macros [defc]]
-
+   [viter :as v]
    [vita.base.bus :refer [trigger]]))
 
 (defn- has-term? [atom term]
@@ -21,18 +19,18 @@
       (:name (:atom res2))))
    results))
 
-(defc SearchResult [{:keys [atom key visible]}]
+(v/defc SearchResult [{:keys [atom key visible]}]
   [:li {:onClick #(trigger :ws-open key)
         :class (when visible "&-visible")}
    (:name atom)])
 
-(defc SearchPanel [{:keys [search-term atoms ws-items]}]
+(v/defc SearchPanel [{:keys [search-term atoms ws-items]}]
   [:div
    [:div.&-search.input-field
     [:icon.prefix {:types "action-search"}]
     [:input {:type "text"
              :defaultValue search-term
-             :onChange #(trigger :search-update (e-val %))}]]
+             :onChange #(trigger :search-update (v/e-val %))}]]
 
    [:ul
     (->> atoms
