@@ -1,10 +1,12 @@
 (ns viter.core
+  (:require-macros viter.core)
   (:require [viter.react  :as r]
             [viter.elements :refer [register-component!]]
             [viter.utils :refer [request-animation-frame]]))
 
-(defn create-component [comp-name render config]
+(defn create-component
   "Creates and registers viter component."
+  [comp-name render config]
   (let [config     (assoc config :render render :displayName comp-name)
         react-elem (r/create-elem config)]
     (register-component!
@@ -15,8 +17,7 @@
                    ;; add key attribute to react element properties if passed
                    (when-not (nil? key) (aset js-args "key" key))
 
-                   (react-elem js-args))))
-    ))
+                   (react-elem js-args))))))
 
 (def ^:private render-queue #js [])
 (def ^:private render-scheduled false)

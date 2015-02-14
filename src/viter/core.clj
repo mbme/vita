@@ -6,5 +6,4 @@
      (create-component
       (str '~name)
       (fn ~args ~render)
-      (hash-map ~@rest))
-     ))
+      (hash-map ~@rest))))

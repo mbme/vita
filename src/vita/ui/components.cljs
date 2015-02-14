@@ -19,7 +19,7 @@
 (defc icon [{:keys [class types] :as all}]
   (let [icon-class (stringify types)
         total-class (str class " " icon-class)]
-    [:i.fa (assoc all :class total-class)]))
+    [:i (assoc all :class total-class)]))
 
 (defn- spinner-layer [color]
   [:div.spinner-layer {:class (str "spinner-" color)}
@@ -44,7 +44,7 @@
      `[:div.&-footer  ~@footer])]
 
   ;; show modal on render
-  :componentDidMount
+  :did-mount
   #(do (-> (react/get-node %)
            (js/$)
            (.openModal #js {:dismissible false}))
@@ -52,7 +52,7 @@
            (.addClass "modal-open")))
 
   ;; hide modal on unmount
-  :componentWillUnmount
+  :will-unmount
   #(do
      (-> (react/get-node %)
          (js/$)

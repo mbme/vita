@@ -7,37 +7,38 @@
 (defn- try-to-run [func & rest]
   (when func (apply func rest)))
 
-(defn- run-with-this [method]
+(defn- with-this [method]
   #(this-as this (try-to-run method this)))
 
 ;; PUBLIC
 
 (defn create-elem [{:keys [displayName
-                           componentWillMount
-                           componentDidMount
-                           componentDidUpdate
-                           componentWillUnmount] :as config}]
-  (->> {:shouldComponentUpdate
-        (fn [next-props]
-          (this-as this
-                   (not= (get-args (.-props this))
-                         (get-args next-props))))
+                           render
+                           will-mount
+                           did-mount
+                           did-update
+                           will-unmount]}]
+  (->>
+   {:shouldComponentUpdate
+    (fn [next-props]
+      (this-as this
+               (not= (get-args (.-props this))
+                     (get-args next-props))))
 
-        :render
-        (fn []
-          (this-as this
-                   (let [args (get-args (.-props this))
-                         rendered   ((:render config) args this)]
-                     (html rendered displayName true))))
+    :render
+    (fn []
+      (this-as this
+               (let [args (get-args (.-props this))
+                     rendered   (render args this)]
+                 (html rendered displayName true))))
 
-        :componentWillMount    (run-with-this  componentWillMount)
-        :componentDidMount     (run-with-this  componentDidMount)
-        :componentDidUpdate    (run-with-this  componentDidUpdate)
-        :componentWillUnmount  (run-with-this  componentWillUnmount)}
-       (merge config)
-       (clj->js)
-       (.createClass React)
-       (.createFactory React)))
+    :componentWillMount    (with-this  will-mount)
+    :componentDidMount     (with-this  did-mount)
+    :componentDidUpdate    (with-this  did-update)
+    :componentWillUnmount  (with-this  will-unmount)}
+   (clj->js)
+   (.createClass React)
+   (.createFactory React)))
 
 (defn render [comp elem]
   (.render React comp elem))

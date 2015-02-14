@@ -7,15 +7,15 @@
             [vita.ui.search :as search]
             [vita.ui.components]
 
-            [viter.core :refer [render!] :refer-macros [defc]]))
+            [viter.core :as viter]))
 
-(defc NoConnectionWall []
+(viter/defc NoConnectionWall []
   [:div
    [:modal.center-align
     [:h2 "NO CONNECTION!"]
     [:spinner {:active true :size :big}]]])
 
-(defc Overlays [{:keys [connected]}]
+(viter/defc Overlays [{:keys [connected]}]
   [:div
    (when-not connected [:NoConnectionWall])
    ])
@@ -25,11 +25,10 @@
         right (utils/query ".Root>.right")
         overlay (utils/query ".overlay")]
 
-    ;; (js/setTimeout #(.openModal (js/$ ".modal") #js {:dismissible false}) 1000)
     (state/watch!
      #(do
-        (render! left    search/SearchPanel %)
-        (render! right   ws/Workspace       %)
-        (render! overlay Overlays           %)))
+        (viter/render! left    search/SearchPanel %)
+        (viter/render! right   ws/Workspace       %)
+        (viter/render! overlay Overlays           %)))
 
     (socket/connect! "ws://test.dev:8081/ws" 5000)))

@@ -3,8 +3,6 @@
    [viter.react :refer [e-val]]
    [viter.core :refer-macros [defc]]
 
-   [vita.ui.workspace]
-
    [vita.base.bus :refer [trigger]]))
 
 (defn- has-term? [atom term]

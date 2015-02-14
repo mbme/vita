@@ -31,7 +31,7 @@
             :right {"navigation-close"  #(trigger :ws-close key)}}]
    [:Record record]])
 
-(defc EditRecordView [{:keys [key name data]} this]
+(defc EditRecordView [{:keys [key name data]}]
   [:div
    [:Panel {:left  {"image-remove-red-eye"   #(trigger :ws-preview key)}
             :right {"content-save"  #(trigger :ws-save key)
@@ -46,8 +46,9 @@
    [:textarea.&-data
     {:defaultValue @data
      :ref          "area"
-     :onChange     #(do (reset! data (e-val %))
-                        (utils/autosize! (deref-node this "area")))}]]
+     :onChange     #(this-as this
+                             (reset! data (e-val %))
+                             (utils/autosize! (deref-node this "area")))}]]
 
   :componentDidMount #(do
                         (utils/autosize!    (deref-node % "area"))
