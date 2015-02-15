@@ -10,8 +10,12 @@
    :save     "mdi-content-save"
    :search   "mdi-action-search"})
 
+(defn get-icon [type]
+  (when-not (contains? icons type) (throw (str "bad icon type " type)))
+  (get icons type))
+
 (v/defc icon [{:keys [class type] :as all}]
-  (let [icon-class  (get icons type)
+  (let [icon-class  (get-icon type)
         total-class (str class " " icon-class)]
     [:i (assoc all :class total-class)]))
 
