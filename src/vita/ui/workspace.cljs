@@ -5,12 +5,11 @@
 
             [viter :as v]))
 
-(defn- show-icon [types onClick]
-  [:icon {:types types :onClick onClick}])
-
 (defn- show-icons [items]
-  (map (fn [[types onClick]]
-         (show-icon types onClick)) items))
+  (map
+   (fn [[type onClick]]
+     [:icon {:type type :onClick onClick}])
+   items))
 
 (v/defc Panel [{:keys [left right]}]
   [:div
@@ -25,15 +24,15 @@
 
 (v/defc RecordView [{:keys [key] :as record}]
   [:div
-   [:Panel {:left  {"content-create" #(trigger :ws-edit key)}
-            :right {"navigation-close"  #(trigger :ws-close key)}}]
+   [:Panel {:left  {:edit   #(trigger :ws-edit key)}
+            :right {:close  #(trigger :ws-close key)}}]
    [:Record record]])
 
 (v/defc EditRecordView [{:keys [key name data]}]
   [:div
-   [:Panel {:left  {"image-remove-red-eye"   #(trigger :ws-preview key)}
-            :right {"content-save"  #(trigger :ws-save key)
-                    "navigation-close" #(trigger :ws-close key)}}]
+   [:Panel {:left  {:preview #(trigger :ws-preview key)}
+            :right {:save    #(trigger :ws-save key)
+                    :close   #(trigger :ws-close key)}}]
 
    [:input.&-name
     {:type         "text"
@@ -55,7 +54,7 @@
 
 (v/defc PreviewRecordView [{:keys [key] :as record}]
   [:div
-   [:Panel {:left {"content-create" #(trigger :ws-edit key)}}]
+   [:Panel {:left {:edit #(trigger :ws-edit key)}}]
    [:Record record]])
 
 (v/defc WorkspaceItem [record]

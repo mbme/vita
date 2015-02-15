@@ -27,7 +27,7 @@
 (v/defc SearchPanel [{:keys [search-term atoms ws-items]}]
   [:div
    [:div.&-search.input-field
-    [:icon.prefix {:types "action-search"}]
+    [:icon.prefix {:type :search}]
     [:input {:type "text"
              :defaultValue search-term
              :onChange #(trigger :search-update (v/e-val %))}]]

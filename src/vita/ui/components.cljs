@@ -3,19 +3,15 @@
             [com.materialize]
             [viter :as v]))
 
-(defprotocol IconType
-  (stringify [this]))
+(def ^:private icons
+  {:close    "mdi-navigation-close"
+   :edit     "mdi-content-create"
+   :preview  "mdi-image-remove-red-eye"
+   :save     "mdi-content-save"
+   :search   "mdi-action-search"})
 
-(extend-type string
-  IconType
-  (stringify [this] (str "mdi-" this)))
-
-(extend-type PersistentVector
-  IconType
-  (stringify [this] (v/join (map stringify this))))
-
-(v/defc icon [{:keys [class types] :as all}]
-  (let [icon-class (stringify types)
+(v/defc icon [{:keys [class type] :as all}]
+  (let [icon-class  (get icons type)
         total-class (str class " " icon-class)]
     [:i (assoc all :class total-class)]))
 
