@@ -1,17 +1,20 @@
 (ns viter.parser
-  (:require [viter.elements :refer [get-elem]]
-            [clojure.string  :as  str]
-            [clojure.set     :as  s]))
+  (:require [viter.react    :as react]
 
-(defn- split-tag [symbol]
+            [clojure.string :as str]
+            [clojure.set    :as set]))
+
+(defn- split-tag
+  "Extract tag name and classes from keyword."
+  [symbol]
   (let [[elem & classes] (str/split (name symbol) #"\.")
         class (str/join " " classes)]
     [elem class]))
 
 (defn- replace-attr-aliases [attrs]
-  (s/rename-keys attrs {:class    :className
-                        :for      :htmlFor
-                        :charset  :charSet}))
+  (set/rename-keys attrs {:class    :className
+                          :for      :htmlFor
+                          :charset  :charSet}))
 
 (defn- normalize-form
   "Add attributes map to form if missing."
@@ -47,37 +50,49 @@
 (defn- remove-empty-vals [m]
   (into {} (remove (comp empty-val? val) m)))
 
-(defn- process-react-elem [tag attrs children]
-  (let [js-attrs (-> (remove-empty-vals attrs)
+(defn- viter-comp?
+  "Checks if function is viter component."
+  [func]
+  (= (:type (meta func)) :viter))
+
+(defn- proces-native
+  "Process native element form."
+  [form comp-name is-top]
+  (let [[elem-name class] (split-tag (first form))
+        [attrs rest] (normalize-form (rest form))
+        attrs (normalize-attrs attrs class comp-name is-top)
+
+        elem     (react/get-elem elem-name)
+        children (map #(to-vDOM % comp-name false) rest)
+
+        js-attrs (-> (remove-empty-vals attrs)
                      replace-attr-aliases
                      clj->js)]
-    (apply tag `[~js-attrs ~@children])))
+    (apply elem `[~js-attrs ~@children])))
 
-(defn- process-custom-elem [tag attrs children]
-  (apply tag [attrs children]))
+(defn- process-custom
+  "Process custom viter form."
+  [form comp-name is-top]
+  (let [comp (first form)
+        ;; read component name from metadata
+        comp-name (:name (meta comp))
+        attrs (->
+               ;; if second parameter is map then we can assume
+               ;; that this is attributes map
+               (if (map? (second form))
+                 (second form)
+                 (apply hash-map (rest form)))
 
-(defn- viter-form?
-  "Check if passed data structure is viter form."
-  [elem]
-  (and
-   (or (vector? elem) (list? elem))
-   (keyword? (first elem))))
+               ;; add component name to classes
+               (normalize-attrs "" comp-name is-top))]
+    (comp attrs)))
 
-(defn html
-  "Render React dom from viter form.
-  `comp-name' is current viter component name."
-  ([body comp-name is-top]
-   (if (viter-form? body)
-     (let [[elem-name class] (split-tag (first body))
-           [attrs rest] (normalize-form (rest body))
-           attrs (normalize-attrs attrs class comp-name is-top)
-
-           [elem is-native] (get-elem elem-name)
-
-           ;; set comp-name to current component name to reuse in child components
-           comp-name (if is-native comp-name elem-name)
-           children (map #(html % comp-name false) rest)
-           handler (if is-native process-react-elem process-custom-elem)]
-       (handler elem attrs children))
-     (clj->js body)))
-  ([body] (html body nil false)))
+(defn to-vDOM
+  "Build React Virtual DOM from viter forms."
+  [form comp-name is-top]
+  (if (sequential? form)
+    (cond
+      (viter-comp? (first form)) (process-custom form comp-name is-top)
+      (keyword? (first form))    (proces-native  form comp-name is-top)
+      :else (clj->js form))
+    (clj->js form)))

@@ -52,6 +52,14 @@
 
 ;; SERVER EVENTS HANDLER
 
+(defn- sort-atom-info [list]
+  (sort
+   (fn [atom1 atom2]
+     (compare
+      (:name atom1)
+      (:name atom2)))
+   list))
+
 (on :atoms-list
     (fn [items]
       (log/info "loading list of %s atoms" (count items))
@@ -59,6 +67,7 @@
              assoc :atoms
              (->> items
                   (map atom/json->info)
+                  sort-atom-info
                   (zipmap (repeatedly next-key))))))
 
 (on :atom

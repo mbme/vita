@@ -1,7 +1,9 @@
 (ns vita.ui.search
   (:require
    [viter :as v]
-   [vita.base.bus :refer [trigger]]))
+   [vita.base.bus :refer [trigger]]
+
+   [vita.ui.components :refer [icon]]))
 
 (defn- has-term? [atom term]
   (if (pos? (count term))
@@ -11,14 +13,6 @@
         (> -1))
     true))
 
-(defn- sort-results [results]
-  (sort
-   (fn [res1 res2]
-     (compare
-      (:name (:atom res1))
-      (:name (:atom res2))))
-   results))
-
 (v/defc SearchResult [{:keys [atom key visible]}]
   [:li {:onClick #(trigger :ws-open key)
         :class (when visible "&-visible")}
@@ -27,16 +21,15 @@
 (v/defc SearchPanel [{:keys [search-term atoms ws-items]}]
   [:div
    [:div.&-search.input-field
-    [:icon.prefix {:type :search}]
+    [icon :class "prefix" :type :search]
     [:input {:type "text"
              :defaultValue search-term
              :onChange #(trigger :search-update (v/e-val %))}]]
 
-   [:ul
-    (->> atoms
-         (map (fn [[key atom]]
-                {:key key
-                 :atom atom
-                 :visible (has-term? atom search-term)}))
-         sort-results
-         (map SearchResult))]])
+   `[:ul
+     ~@(map (fn [[key atom]]
+              [SearchResult
+               :key key
+               :atom atom
+               :visible (has-term? atom search-term) ])
+            atoms)]])

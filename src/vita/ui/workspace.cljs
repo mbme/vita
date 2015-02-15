@@ -1,14 +1,14 @@
 (ns vita.ui.workspace
   (:require [vita.base.bus    :refer [trigger]]
             [vita.utils.utils :as utils]
-            [vita.ui.components]
+            [vita.ui.components :refer [icon]]
 
             [viter :as v]))
 
 (defn- show-icons [items]
   (map
    (fn [[type onClick]]
-     [:icon {:type type :onClick onClick}])
+     [icon :type type :onClick onClick])
    items))
 
 (v/defc Panel [{:keys [left right]}]
@@ -24,15 +24,17 @@
 
 (v/defc RecordView [{:keys [key] :as record}]
   [:div
-   [:Panel {:left  {:edit   #(trigger :ws-edit key)}
-            :right {:close  #(trigger :ws-close key)}}]
-   [:Record record]])
+   [Panel
+    :left  {:edit   #(trigger :ws-edit key)}
+    :right {:close  #(trigger :ws-close key)}]
+   [Record record]])
 
 (v/defc EditRecordView [{:keys [key name data]}]
   [:div
-   [:Panel {:left  {:preview #(trigger :ws-preview key)}
-            :right {:save    #(trigger :ws-save key)
-                    :close   #(trigger :ws-close key)}}]
+   [Panel
+    :left  {:preview #(trigger :ws-preview key)}
+    :right {:save    #(trigger :ws-save key)
+            :close   #(trigger :ws-close key)}]
 
    [:input.&-name
     {:type         "text"
@@ -47,15 +49,15 @@
                              (reset! data (v/e-val %))
                              (utils/autosize! (v/deref-node this "area")))}]]
 
-  :componentDidMount #(do
-                        (utils/autosize!    (v/deref-node % "area"))
-                        (utils/focus-input! (v/deref-node % "input"))))
+  :did-mount #(do
+                (utils/autosize!    (v/deref-node % "area"))
+                (utils/focus-input! (v/deref-node % "input"))))
 
 
 (v/defc PreviewRecordView [{:keys [key] :as record}]
   [:div
-   [:Panel {:left {:edit #(trigger :ws-edit key)}}]
-   [:Record record]])
+   [Panel :left {:edit #(trigger :ws-edit key)}]
+   [Record record]])
 
 (v/defc WorkspaceItem [record]
   [:div

@@ -23,7 +23,7 @@
 
 (v/defc spinner [{:keys [active size]}]
   [:div.preloader-wrapper
-   {:class {:active active
+   {:class {:active (not= active false)
             :big (= size :big)
             :small (= size :small)}}
    (spinner-layer "blue")
@@ -31,9 +31,9 @@
    (spinner-layer "yellow")
    (spinner-layer "green")])
 
-(v/defc modal [{:keys [class children footer]}]
+(v/defc modal [{:keys [class body footer]}]
   [:div {:class class}
-   `[:div.&-content ~@children]
+   `[:div.&-content ~@body]
    (when-not (nil? footer)
      `[:div.&-footer  ~@footer])]
 

@@ -5,19 +5,20 @@
 
             [vita.ui.workspace :as ws]
             [vita.ui.search :as search]
-            [vita.ui.components]
+            [vita.ui.components :refer [modal spinner]]
 
             [viter :as v]))
 
 (v/defc NoConnectionWall []
   [:div
-   [:modal.center-align
-    [:h2 "NO CONNECTION!"]
-    [:spinner {:active true :size :big}]]])
+   [modal :class "center-align"
+    :body
+    [[:h2 "NO CONNECTION"]
+     [spinner :size :big]]]])
 
 (v/defc Overlays [{:keys [connected]}]
   [:div
-   (when-not connected [:NoConnectionWall])
+   (when-not connected [NoConnectionWall])
    ])
 
 (defonce _
@@ -27,8 +28,8 @@
 
     (state/watch!
      #(do
-        (v/render! left    search/SearchPanel %)
-        (v/render! right   ws/Workspace       %)
-        (v/render! overlay Overlays           %)))
+        (v/render! [search/SearchPanel %] left)
+        (v/render! [ws/Workspace       %] right)
+        (v/render! [Overlays           %] overlay)))
 
     (socket/connect! "ws://test.dev:8081/ws" 5000)))

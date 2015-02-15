@@ -3,9 +3,8 @@
   (:require
    [clojure.string :as str]
 
-   [viter.elements :refer [register-component!]]
-   [viter.parser :refer [html]]
-   [viter.react :refer [React]]))
+   [viter.react :as react]
+   [viter.parser :refer [to-vDOM]]))
 
 (defn- get-args [obj] (aget obj "args"))
 
@@ -15,44 +14,43 @@
 (defn- with-this [method]
   #(this-as this (try-to-run method this)))
 
-(defn- create-elem [{:keys [displayName
-                            render
-                            will-mount
-                            did-mount
-                            did-update
-                            will-unmount]}]
-  (->>
-   {:shouldComponentUpdate
-    (fn [next-props]
-      (this-as this
-               (not= (get-args (.-props this))
-                     (get-args next-props))))
+(defn- create-react-element
+  "Create new ReactElement."
+  [{:keys [displayName render
+           will-mount
+           did-mount
+           did-update
+           will-unmount]}]
+  (->
+   #js {:shouldComponentUpdate
+        (fn [next-props]
+          (this-as this
+                   (not= (get-args (.-props this))
+                         (get-args next-props))))
 
-    :render
-    (fn []
-      (this-as this
-               (let [args (get-args (.-props this))
-                     rendered   (render args this)]
-                 (html rendered displayName true))))
+        :render
+        (fn []
+          (this-as this
+                   (let [args (get-args (.-props this))
+                         rendered   (render args this)]
+                     (to-vDOM rendered displayName true))))
 
-    :componentWillMount    (with-this  will-mount)
-    :componentDidMount     (with-this  did-mount)
-    :componentDidUpdate    (with-this  did-update)
-    :componentWillUnmount  (with-this  will-unmount)}
-   (clj->js)
-   (.createClass React)
-   (.createFactory React)))
+        :componentWillMount    (with-this  will-mount)
+        :componentDidMount     (with-this  did-mount)
+        :componentDidUpdate    (with-this  did-update)
+        :componentWillUnmount  (with-this  will-unmount)}
+   react/create-class
+   react/create-factory))
 
 
 (def ^:private render-queue #js [])
 (def ^:private render-scheduled false)
 
-(defn- render-item [[elem comp params]]
-  (.render React (apply comp params) elem))
-
 (defn- actually-render []
   ;; render all queued items
-  (.forEach render-queue render-item)
+  (.forEach render-queue
+            (fn [[react-elem elem]]
+              (react/render react-elem elem)))
 
   ;; remove all items from queue
   (aset render-queue "length" 0)
@@ -63,21 +61,44 @@
 ;; PUBLIC
 
 (defn create-component
-  "Creates and registers viter component."
+  "Creates viter component."
   [comp-name render config]
-  (let [config     (assoc config
-                          :render render
-                          :displayName comp-name)
-        react-elem (create-elem config)]
-    (register-component!
-     comp-name (fn [args rest]
-                 (let [js-args (js-obj "args" (assoc args :children rest))
-                       key     (:key args)]
+  (let [comp (create-react-element
+              (assoc config
+                     :render render
+                     :displayName comp-name))]
+    ;; add some metadata to identify viter components
+    (with-meta
+      (fn [args]
+        (let [js-args (js-obj "args" args)
+              key     (:key args)]
 
-                   ;; add key attribute to react element properties if passed
-                   (when-not (nil? key) (aset js-args "key" key))
+          ;; add key attribute to react element properties if passed
+          (when-not (nil? key)
+            (aset js-args "key" key))
 
-                   (react-elem js-args))))))
+          (comp js-args)))
+
+      {:type :viter
+       :name comp-name})))
+
+(def request-animation-frame
+  (or (.-requestAnimationFrame js/window)
+      (.-mozRequestAnimationFrame js/window)
+      (.-webkitRequestAnimationFrame js/window)
+      (.-msRequestAnimationFrame js/window)
+      (fn [f] (.setTimeout js/window f 16))))
+
+(defn render! [form elem]
+  ;; add new item to the queue
+  (.push render-queue [(to-vDOM form nil true) elem])
+
+  ;; schedule render if required
+  (when-not render-scheduled
+    (set! render-scheduled true)
+    (request-animation-frame actually-render)))
+
+;; UTILS
 
 (defn get-ref [this ref]
   (aget (.-refs this) ref))
@@ -93,25 +114,6 @@
 (defn e-val
   "Get value from react event."
   [evt] (.-value (.-target evt)))
-
-(def request-animation-frame
-  (or (.-requestAnimationFrame js/window)
-      (.-mozRequestAnimationFrame js/window)
-      (.-webkitRequestAnimationFrame js/window)
-      (.-msRequestAnimationFrame js/window)
-      (fn [f] (.setTimeout js/window f 16))))
-
-(defn render! [elem comp & params]
-  ;; add new item to the queue
-  (.push render-queue [elem comp params])
-
-  ;; schedule render if required
-  (when-not render-scheduled
-    (set! render-scheduled true)
-    (request-animation-frame actually-render)))
-
-;; UTILS
-
 (defn get-words [s]
   (str/split s #"\s+"))
 
