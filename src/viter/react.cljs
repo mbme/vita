@@ -2,7 +2,7 @@
   (:require [com.facebook.React]))
 
 (def ^:private React js/React)
-;; FIXME assert here
+(when (nil? React) (throw "can't find React library"))
 
 (defn create-class
   "Create React component class."
