@@ -3,11 +3,11 @@
             [viter :as v]))
 
 (def ^:private icons
-  {:close    "mdi-navigation-close"
-   :edit     "mdi-content-create"
-   :preview  "mdi-image-remove-red-eye"
-   :save     "mdi-content-save"
-   :search   "mdi-action-search"})
+  {:close    "ion-close"
+   :edit     "ion-edit"
+   :preview  "ion-eye"
+   :save     "ion-android-upload"
+   :search   "ion-ios-search-strong"})
 
 (defn get-icon [type]
   (when-not (contains? icons type) (throw (str "bad icon type " type)))

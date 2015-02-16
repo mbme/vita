@@ -69,3 +69,18 @@ select {
     max-width: 100%;
     width: auto;
 }
+
+input[type="text"],
+input[type="search"] {
+    border: 0 none;
+
+    border-bottom: $base-border;
+    box-shadow: none;
+    @include transition(.28s ease);
+
+    &:focus,
+    &:hover {
+        border-bottom: 1px solid $base-font-color;
+        box-shadow: 0 1px 0 0 $base-font-color;
+    }
+}

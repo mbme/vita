@@ -3,7 +3,12 @@
 // Reset
 @import "../Materialize/sass/components/normalize";
 
+// Bourbon mixins
 @import "../bourbon/app/assets/stylesheets/bourbon";
+
+// Icons
+$ionicons-font-path: "/ionicons/fonts";
+@import "../ionicons/scss/ionicons";
 
 // Variables
 @import "variables";

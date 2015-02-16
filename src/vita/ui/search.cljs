@@ -1,9 +1,7 @@
 (ns vita.ui.search
   (:require
    [viter :as v]
-   [vita.base.bus :refer [trigger]]
-
-   [vita.ui.components :refer [icon]]))
+   [vita.base.bus :refer [trigger]]))
 
 (defn- has-term? [atom term]
   (if (pos? (count term))
@@ -20,9 +18,8 @@
 
 (v/defc SearchPanel [{:keys [search-term atoms ws-items]}]
   [:div
-   [:div.&-search.input-field
-    [icon :class "prefix" :type :search]
-    [:input {:type "text"
+   [:div.&-search
+    [:input {:type "search"
              :defaultValue search-term
              :onChange #(trigger :search-update (v/e-val %))}]]
 
