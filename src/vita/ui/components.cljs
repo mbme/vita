@@ -1,6 +1,5 @@
 (ns vita.ui.components
   (:require [com.JQuery]
-            [com.materialize]
             [viter :as v]))
 
 (def ^:private icons

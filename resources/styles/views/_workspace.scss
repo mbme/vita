@@ -5,19 +5,15 @@
     }
 
     .WorkspaceItem {
+        @extend %paper-1;
+
         min-height: 200px;
         margin-top: 20px;
         margin-bottom: 20px;
 
+
         &:first-child {
             margin-top: 0;
-        }
-
-        @extend %material-paper-top;
-
-        > * {
-            @extend %material-paper-bot;
-            padding: 5px;
         }
     }
 }

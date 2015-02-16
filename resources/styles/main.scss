@@ -13,7 +13,6 @@
 @import "extends/errors";
 @import "extends/flashes";
 @import "extends/hide-text";
-@import "extends/material";
 
 // Typography and Elements
 @import "components/typography";
@@ -23,26 +22,8 @@
 @import "components/buttons";
 @import "components/modal";
 
-// Materialize
-
-// Mixins
-@import "../Materialize/sass/components/prefixer";
-@import "../Materialize/sass/components/mixins";
-@import "../Materialize/sass/components/color";
-
-// Variables;
-@import "../Materialize/sass/components/variables";
-
-$icons-font-path: "/Materialize/font/material-design-icons/";
-
-// components
-@import "../Materialize/sass/components/global";
-@import "../Materialize/sass/components/icons-material-design";
-@import "../Materialize/sass/components/typography";
-@import "../Materialize/sass/components/modal";
-@import "../Materialize/sass/components/form";
-@import "../Materialize/sass/components/preloader";
-
+@import "components/paper";
+@import "components/preloader";
 
 // App
 @import "layout";

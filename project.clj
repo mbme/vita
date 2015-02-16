@@ -50,10 +50,6 @@
                 :file-min ~(res "/jquery/dist/jquery.min.js")
                 :provides ["com.JQuery"]}
 
-               {:file     ~(res "/Materialize/dist/js/materialize.js")
-                :file-min ~(res "/Materialize/dist/js/materialize.min.js")
-                :provides ["com.materialize"]}
-
                {:file     ~(res "/markdown-it/dist/markdown-it.js")
                 :file-min ~(res "/markdown-it/dist/markdown-it.min.js")
                 :provides ["org.markdownIt"]}]

@@ -1,0 +1,42 @@
+// MATERIAL PAPER
+// https://github.com/callemall/material-ui/blob/master/src/less/components/paper.less
+
+%paper-1 {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.24);
+
+    & > * {
+        box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12);
+    }
+}
+
+%paper-2 {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.23);
+
+    & > * {
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.16);
+    }
+}
+
+%paper-3 {
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.23);
+
+    & > * {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.19);
+    }
+}
+
+%paper-4 {
+    box-shadow: 0 10px 18px rgba(0, 0, 0, 0.22);
+
+    & > * {
+        box-shadow: 0 14px 45px rgba(0, 0, 0, 0.25);
+    }
+}
+
+%paper-5 {
+    box-shadow: 0 15px 20px rgba(0, 0, 0, 0.22);
+
+    & > * {
+        box-shadow: 0 19px 60px rgba(0, 0, 0, 0.30);
+    }
+}
