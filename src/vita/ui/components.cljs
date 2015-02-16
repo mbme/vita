@@ -34,25 +34,19 @@
    (spinner-layer "yellow")
    (spinner-layer "green")])
 
-(v/defc modal [{:keys [class body footer]}]
-  [:div {:class class}
-   `[:div.&-content ~@body]
-   (when-not (nil? footer)
-     `[:div.&-footer  ~@footer])]
+(v/defc modal [{:keys [body footer]}]
+  [:div
+   [:div.&-dialog
+    `[:div.&-content ~@body]
+    (when-not (nil? footer)
+      `[:div.&-footer  ~@footer])]
+   [:div.&-overlay]]
 
-  ;; show modal on render
   :did-mount
-  #(do (-> (v/get-node %)
-           (js/$)
-           (.openModal #js {:dismissible false}))
-       (-> (js/$ "body")
-           (.addClass "modal-open")))
+  #(-> (js/$ "body")
+       (.addClass "modal-open"))
 
-  ;; hide modal on unmount
+  ;; TODO remove only if last modal
   :will-unmount
-  #(do
-     (-> (v/get-node %)
-         (js/$)
-         (.closeModal))
-     (-> (js/$ "body")
-         (.removeClass "modal-open"))))
+  #(-> (js/$ "body")
+       (.removeClass "modal-open")))

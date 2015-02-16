@@ -13,7 +13,7 @@
   [:div
    [modal :class "center-align"
     :body
-    [[:h2 "NO CONNECTION"]
+    [[:h2.message "NO CONNECTION"]
      [spinner :size :big]]]])
 
 (v/defc Overlays [{:keys [connected]}]

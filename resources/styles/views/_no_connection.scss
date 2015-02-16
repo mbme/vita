@@ -1,4 +1,13 @@
 .NoConnectionWall {
-    .modal h2 {
+    .modal {
+        text-align: center;
+
+        & .message {
+            @extend %error;
+        }
+
+        & .spinner {
+            margin-top: 30px;
+        }
     }
 }
