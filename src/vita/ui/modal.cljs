@@ -6,11 +6,6 @@
 
 (def ^:private $body (js/$ "body"))
 
-(defn- validate-overlay []
-  (if (empty? @modals)
-    (.removeClass $body "modal-open")
-    (.addClass    $body "modal-open")))
-
 (v/defc modal [{:keys [body footer dialog-class]}]
   [:div
 
@@ -22,10 +17,10 @@
    [:div.&-overlay]]
 
   :did-mount
-  #(validate-overlay)
+  #(.addClass    $body "modal-open")
 
   :will-unmount
-  #(validate-overlay))
+  #(.removeClass $body "modal-open"))
 
 (defn show!
   "Show new modal dialog."
