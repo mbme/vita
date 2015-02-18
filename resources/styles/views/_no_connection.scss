@@ -1,13 +1,11 @@
-.NoConnectionWall {
-    .modal {
-        text-align: center;
+.modal-dialog.no-connection {
+    text-align: center;
 
-        & .message {
-            @extend %error;
-        }
+    & .message {
+        @extend %error;
+    }
 
-        & .spinner {
-            margin-top: 30px;
-        }
+    & .spinner {
+        margin-top: 30px;
     }
 }

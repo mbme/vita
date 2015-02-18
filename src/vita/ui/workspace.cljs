@@ -1,7 +1,8 @@
 (ns vita.ui.workspace
   (:require [vita.base.bus    :refer [trigger]]
             [vita.utils.utils :as utils]
-            [vita.ui.components :refer [icon]]
+            [vita.ui.components :refer [icon button]]
+            [vita.ui.modal :as modal]
 
             [viter :as v]))
 
@@ -34,6 +35,16 @@
    [Panel
     :left  {:preview #(trigger :ws-preview key)}
     :right {:save    #(trigger :ws-save key)
+            :delete  #(modal/show!
+                       {:body
+                        [:h1 "Do you really wan't to delete record?"]
+
+                        :footer
+                        [:div.buttons
+                         [button :text "OK" :type :warning
+                          :onClick (fn [] (trigger :atom-delete key))]
+                         [button :text "CANCEL"]]})
+
             :close   #(trigger :ws-close key)}]
 
    [:input.&-name

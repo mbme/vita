@@ -1,6 +1,5 @@
 (ns vita.ui.components
-  (:require [com.JQuery]
-            [viter :as v]))
+  (:require [viter :as v]))
 
 (def ^:private icons
   {:close    "ion-close"
@@ -34,19 +33,5 @@
    (spinner-layer "yellow")
    (spinner-layer "green")])
 
-(v/defc modal [{:keys [body footer]}]
-  [:div
-   [:div.&-dialog
-    `[:div.&-content ~@body]
-    (when-not (nil? footer)
-      `[:div.&-footer  ~@footer])]
-   [:div.&-overlay]]
-
-  :did-mount
-  #(-> (js/$ "body")
-       (.addClass "modal-open"))
-
-  ;; TODO remove only if last modal
-  :will-unmount
-  #(-> (js/$ "body")
-       (.removeClass "modal-open")))
+(v/defc button [{:keys [type text onClick]}]
+  [:div text])
