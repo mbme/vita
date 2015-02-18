@@ -1,10 +1,7 @@
 (ns vita.ui.modal
-  (:require [com.JQuery]
-            [viter :as v]))
+  (:require [viter :as v]))
 
 (defonce ^:private modals (atom []))
-
-(def ^:private $body (js/$ "body"))
 
 (v/defc modal [{:keys [body footer dialog-class]}]
   [:div
@@ -17,10 +14,12 @@
    [:div.&-overlay]]
 
   :did-mount
-  #(.addClass    $body "modal-open")
+  #(.add js/document.body.classList "modal-open")
 
   :will-unmount
-  #(.removeClass $body "modal-open"))
+  #(.remove js/document.body.classList "modal-open"))
+
+;; PUBLIC
 
 (defn show!
   "Show new modal dialog."
@@ -34,7 +33,11 @@
   (swap! modals
          (fn [modals] (remove #(= id (:id %)) modals))))
 
-
 (defn init! [elem]
-  (add-watch modals :render
-             (fn [_ _ _ data] (v/render! [modal (last data)] elem))))
+  (add-watch
+   modals :render
+   (fn [_ _ _ modals]
+     (v/render! (if (empty? modals)
+                  [:div]
+                  [modal (last modals)])
+                elem))))
