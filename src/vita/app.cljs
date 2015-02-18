@@ -22,7 +22,8 @@
         (v/render! [search/SearchPanel %] left)
         (v/render! [ws/Workspace       %] right)
 
-        (when-not (:connected %)
+        (if (:connected %)
+          (modal/close :no-connection)
           (modal/show!
            {:id :no-connection
             :dialog-class "no-connection"
