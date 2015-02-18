@@ -87,7 +87,9 @@
          ;; request atoms list on init
          (socket/send :atoms-list-read nil)))
 
-(on :socket-closed #(swap! state assoc :connected false))
+(on :socket-closed
+    #(when (:connected @state)
+       (swap! state assoc :connected false)))
 
 ;; WS events
 (on :ws-open

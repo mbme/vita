@@ -24,9 +24,13 @@
 
         (when-not (:connected %)
           (modal/show!
-           {:dialog-class "no-connection"
+           {:id :no-connection
+            :dialog-class "no-connection"
             :body [[:h2.message "NO CONNECTION"]
                    [spinner :size :big]]}))
         ))
+
+    ;; render app first time
+    (state/trigger-update!)
 
     (socket/connect! "ws://test.dev:8081/ws" 5000)))

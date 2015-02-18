@@ -24,7 +24,8 @@
 
 (defn show!
   "Show new modal dialog."
-  [props]
+  [{:keys [id] :as props}]
+  (when (nil? id) (throw "modal id must be specified"))
   (swap! modals conj props))
 
 (defn init! [elem]
