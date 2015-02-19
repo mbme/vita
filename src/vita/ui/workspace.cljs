@@ -18,7 +18,7 @@
    `[:span.&-right ~@(show-icons right)]])
 
 (v/defc Record [{:keys [name data]}]
-  [:div.&
+  [:article.&
    [:h1.&-name @name]
    [:div.&-body {:dangerouslySetInnerHTML
                  {:__html (utils/md->html @data)}}]])

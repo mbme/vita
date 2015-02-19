@@ -18,7 +18,7 @@
    (:name atom)])
 
 (v/defc SearchPanel [{:keys [search-term atoms ws-items]}]
-  [:div.&
+  [:aside.&
    [:div.&-search
     [:input {:type "search"
              :defaultValue search-term
