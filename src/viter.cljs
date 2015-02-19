@@ -33,7 +33,7 @@
           (this-as this
                    (let [args (get-args (.-props this))
                          rendered   (render args this)]
-                     (to-vDOM rendered displayName true))))
+                     (to-vDOM rendered displayName))))
 
         :componentWillMount    (with-this  will-mount)
         :componentDidMount     (with-this  did-mount)
@@ -91,7 +91,7 @@
 
 (defn render! [form elem]
   ;; add new item to the queue
-  (.push render-queue [(to-vDOM form nil true) elem])
+  (.push render-queue [(to-vDOM form nil) elem])
 
   ;; schedule render if required
   (when-not render-scheduled

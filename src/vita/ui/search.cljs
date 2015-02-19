@@ -12,12 +12,13 @@
     true))
 
 (v/defc SearchResult [{:keys [atom key visible]}]
-  [:li {:onClick #(trigger :ws-open key)
-        :class (when visible "&-visible")}
+  [:li.&
+   {:onClick #(trigger :ws-open key)
+    :class (when visible "&-visible")}
    (:name atom)])
 
 (v/defc SearchPanel [{:keys [search-term atoms ws-items]}]
-  [:div
+  [:div.&
    [:div.&-search
     [:input {:type "search"
              :defaultValue search-term

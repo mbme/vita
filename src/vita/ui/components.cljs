@@ -15,7 +15,7 @@
 (v/defc icon [{:keys [class type] :as all}]
   (let [icon-class  (get-icon type)
         total-class (str class " " icon-class)]
-    [:i (assoc all :class total-class)]))
+    [:i.& (assoc all :class total-class)]))
 
 (defn- spinner-layer [color]
   [:div.spinner-layer {:class (str "spinner-" color)}
@@ -24,7 +24,7 @@
    [:div.circle-clipper.right [:div.circle]]])
 
 (v/defc spinner [{:keys [active size]}]
-  [:div.preloader-wrapper
+  [:div.&.preloader-wrapper
    {:class {:active (not= active false)
             :big (= size :big)
             :small (= size :small)}}

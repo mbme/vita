@@ -26,7 +26,7 @@
           (modal/close :no-connection)
           (modal/show!
            {:id :no-connection
-            :dialog-class "no-connection"
+            :class "no-connection"
             :body [[:h2.message "NO CONNECTION"]
                    [spinner :size :big]]}))
         ))

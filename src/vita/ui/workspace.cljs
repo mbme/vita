@@ -13,25 +13,25 @@
    items))
 
 (v/defc Panel [{:keys [left right]}]
-  [:div
+  [:div.&
    `[:span.&-left  ~@(show-icons left)]
    `[:span.&-right ~@(show-icons right)]])
 
 (v/defc Record [{:keys [name data]}]
-  [:div
+  [:div.&
    [:h1.&-name @name]
    [:div.&-body {:dangerouslySetInnerHTML
                  {:__html (utils/md->html @data)}}]])
 
 (v/defc RecordView [{:keys [key] :as record}]
-  [:div
+  [:div.&
    [Panel
     :left  {:edit   #(trigger :ws-edit key)}
     :right {:close  #(trigger :ws-close key)}]
    [Record record]])
 
 (v/defc EditRecordView [{:keys [key name data]}]
-  [:div
+  [:div.&
    [Panel
     :left  {:preview #(trigger :ws-preview key)}
     :right {:save    #(trigger :ws-save key)
@@ -66,12 +66,12 @@
 
 
 (v/defc PreviewRecordView [{:keys [key] :as record}]
-  [:div
+  [:div.&
    [Panel :left {:edit #(trigger :ws-edit key)}]
    [Record record]])
 
 (v/defc WorkspaceItem [record]
-  [:div
+  [:div.&
    ((case (:state record)
       :edit    EditRecordView
       :preview PreviewRecordView
@@ -79,6 +79,6 @@
     record)])
 
 (v/defc Workspace [{:keys [ws-items]}]
-  [:div
+  [:div.&
    [:div.&-records
     (map WorkspaceItem ws-items)]])

@@ -36,12 +36,11 @@
     (str/join " " (for [[k v] class :when v] (name k)))
     class))
 
-(defn- normalize-attrs [attrs static-class comp-name add-top-class]
+(defn- normalize-attrs [attrs static-class comp-name]
   (assoc attrs
          :class (-> (:class attrs)
                     normalize-class
-                    (str " " static-class (when add-top-class " &"))
-                    str/trim
+                    (str " " static-class)
                     (inject-comp-name comp-name))))
 
 (defn- empty-val? [v]
@@ -57,13 +56,13 @@
 
 (defn- proces-native
   "Process native element form."
-  [form comp-name is-top]
+  [form comp-name]
   (let [[elem-name class] (split-tag (first form))
         [attrs rest] (normalize-form (rest form))
-        attrs (normalize-attrs attrs class comp-name is-top)
+        attrs (normalize-attrs attrs class comp-name)
 
         elem     (react/get-elem elem-name)
-        children (map #(to-vDOM % comp-name false) rest)
+        children (map #(to-vDOM % comp-name) rest)
 
         js-attrs (-> (remove-empty-vals attrs)
                      replace-attr-aliases
@@ -72,7 +71,7 @@
 
 (defn- process-custom
   "Process custom viter form."
-  [form comp-name is-top]
+  [form comp-name]
   (let [comp (first form)
         ;; read component name from metadata
         comp-name (:name (meta comp))
@@ -84,15 +83,15 @@
                  (apply hash-map (rest form)))
 
                ;; add component name to classes
-               (normalize-attrs "" comp-name is-top))]
+               (normalize-attrs "" comp-name))]
     (comp attrs)))
 
 (defn to-vDOM
   "Build React Virtual DOM from viter forms."
-  [form comp-name is-top]
+  [form comp-name]
   (if (sequential? form)
     (cond
-      (viter-comp? (first form)) (process-custom form comp-name is-top)
-      (keyword? (first form))    (proces-native  form comp-name is-top)
+      (viter-comp? (first form)) (process-custom form comp-name)
+      (keyword? (first form))    (proces-native  form comp-name)
       :else (clj->js form))
     (clj->js form)))

@@ -3,10 +3,10 @@
 
 (defonce ^:private modals (atom []))
 
-(v/defc modal [{:keys [body footer dialog-class]}]
-  [:div
+(v/defc modal [{:keys [body footer class]}]
+  [:div.&
 
-   [:div.&-dialog {:class dialog-class}
+   [:div.&-dialog {:class class}
     `[:div.&-content ~@body]
     (when-not (nil? footer)
       `[:div.&-footer  ~@footer])]
