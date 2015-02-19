@@ -26,9 +26,10 @@
           (modal/close :no-connection)
           (modal/show!
            {:id :no-connection
-            :class "no-connection"
-            :body [[:h2.message "NO CONNECTION"]
-                   [spinner :size :big]]}))
+            :body
+            [:div.no-connection
+             [:h2.message "NO CONNECTION"]
+             [spinner :size :big]]}))
         ))
 
     ;; render app first time

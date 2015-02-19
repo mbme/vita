@@ -6,6 +6,7 @@
    :edit     "ion-edit"
    :preview  "ion-eye"
    :save     "ion-android-upload"
+   :delete   "ion-trash-a"
    :search   "ion-ios-search-strong"})
 
 (defn get-icon [type]
@@ -33,5 +34,5 @@
    (spinner-layer "yellow")
    (spinner-layer "green")])
 
-(v/defc button [{:keys [type text onClick]}]
-  [:div text])
+(v/defc button [{:keys [type label onClick]}]
+  [:button label])

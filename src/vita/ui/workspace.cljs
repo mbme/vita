@@ -36,14 +36,14 @@
     :left  {:preview #(trigger :ws-preview key)}
     :right {:save    #(trigger :ws-save key)
             :delete  #(modal/show!
-                       {:body
-                        [:h1 "Do you really wan't to delete record?"]
-
+                       {:id :delete-record
+                        :body
+                        [:h2 "DO YOU REALLY WANT TO DELETE RECORD?"]
                         :footer
                         [:div.buttons
-                         [button :text "OK" :type :warning
+                         [button :label "OK" :type :warning
                           :onClick (fn [] (trigger :atom-delete key))]
-                         [button :text "CANCEL"]]})
+                         [button :label "CANCEL"]]})
 
             :close   #(trigger :ws-close key)}]
 

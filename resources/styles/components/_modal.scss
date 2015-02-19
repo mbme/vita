@@ -34,15 +34,29 @@ body.modal-open {
     justify-content: center;
     align-items: center;
 
+    $dialog-padding: 10px;
     &-dialog {
-        @extend %z-depth-1;
+        @extend %z-depth-2;
+
+        position: relative;
 
         min-width: 40%;
+        max-width: 60%;
+
         min-height: 200px;
 
         z-index: 10;
 
+        padding: $dialog-padding;
+
         background-color: $base-background-color;
+    }
+
+    &-footer {
+        position: absolute;
+        bottom: $dialog-padding;
+
+        @include calc(width, "100% - #{2*$dialog-padding}");
     }
 
     &-overlay {

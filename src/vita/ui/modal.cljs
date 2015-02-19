@@ -3,13 +3,12 @@
 
 (defonce ^:private modals (atom []))
 
-(v/defc modal [{:keys [body footer class]}]
+(v/defc modal [{:keys [body footer]}]
   [:div.&
 
-   [:div.&-dialog {:class class}
-    `[:div.&-content ~@body]
-    (when-not (nil? footer)
-      `[:div.&-footer  ~@footer])]
+   [:div.&-dialog
+    [:div.&-content body]
+    [:div.&-footer  footer]]
 
    [:div.&-overlay]]
 
