@@ -40,3 +40,8 @@
                   [:div]
                   [modal (last modals)])
                 elem))))
+
+(defn trigger-update!
+  "Force modal state update event"
+  []
+  (reset! modals @modals))

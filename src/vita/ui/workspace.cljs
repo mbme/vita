@@ -19,7 +19,7 @@
 
 (v/defc Record [{:keys [name data]}]
   [:article.&
-   [:h1.&-name @name]
+   [:h2.&-name @name]
    [:div.&-body {:dangerouslySetInnerHTML
                  {:__html (utils/md->html @data)}}]])
 

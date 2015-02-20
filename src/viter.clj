@@ -2,7 +2,7 @@
 
 ;; defines new component
 (defmacro defc [name args render & rest]
-  `(defonce ~name
+  `(def ~name
      (create-component
       (str '~name)
       (fn ~args ~render)

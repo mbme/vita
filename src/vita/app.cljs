@@ -10,10 +10,12 @@
 
             [viter :as v]))
 
+(defonce left (utils/query ".Root>.left"))
+(defonce right (utils/query ".Root>.right"))
+(defonce overlay (utils/query "body>.Overlay"))
+
 (defonce _
-  (let [left  (utils/query ".Root>.left")
-        right (utils/query ".Root>.right")
-        overlay (utils/query ".overlay")]
+  (do
 
     (modal/init! overlay)
 

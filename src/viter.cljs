@@ -14,6 +14,8 @@
 (defn- with-this [method]
   #(this-as this (try-to-run method this)))
 
+(def *force-render* false)
+
 (defn- create-react-element
   "Create new ReactElement."
   [{:keys [displayName render
@@ -24,9 +26,11 @@
   (->
    #js {:shouldComponentUpdate
         (fn [next-props]
-          (this-as this
-                   (not= (get-args (.-props this))
-                         (get-args next-props))))
+          (or
+           *force-render*
+           (this-as this
+                    (not= (get-args (.-props this))
+                          (get-args next-props)))))
 
         :render
         (fn []
@@ -67,6 +71,7 @@
               (assoc config
                      :render render
                      :displayName comp-name))]
+
     ;; add some metadata to identify viter components
     (with-meta
       (fn [args]
