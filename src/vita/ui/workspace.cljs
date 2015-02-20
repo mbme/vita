@@ -41,9 +41,9 @@
                         [:h2 "DO YOU REALLY WANT TO DELETE RECORD?"]
                         :footer
                         [:div.buttons
-                         [button :label "OK" :type :warning
-                          :onClick (fn [] (trigger :atom-delete key))]
-                         [button :label "CANCEL"]]})
+                         [button :label "CANCEL" :type :secondary :style :flat]
+                         [button :label "OK" :type :primary
+                          :onClick (fn [] (trigger :atom-delete key))]]})
 
             :close   #(trigger :ws-close key)}]
 

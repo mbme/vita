@@ -34,5 +34,20 @@
    (spinner-layer "yellow")
    (spinner-layer "green")])
 
-(v/defc button [{:keys [type label onClick]}]
-  [:button label])
+
+;; button types: default primary secondary
+;; button styles: flat(default) raised
+(v/defc button [{:keys [type style class label onClick]}]
+  (let [type-class (case type
+                     :primary "btn-primary"
+                     :secondary "btn-secondary"
+                     :nil ""
+                     (throw (str "bad button type " type)))
+
+        style-class (case style
+                      :flat "btn-flat"
+                      :raised "btn"
+                      nil "btn"
+                      (throw (str "bad button style " style)))]
+
+    [:button {:class (str type-class " " style-class " " class)} label]))
