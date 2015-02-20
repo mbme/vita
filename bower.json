@@ -16,9 +16,9 @@
         "tests"
     ],
     "dependencies": {
-        "Materialize": "Dogfalo/materialize#~0.95.2",
         "bourbon": "*",
         "markdown-it": "*",
-        "react": "*"
+        "react": "*",
+        "normalize-scss": "*"
     }
 }
