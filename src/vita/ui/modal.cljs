@@ -7,10 +7,14 @@
 
 (defonce ^:private body js/document.body)
 
-(v/defc modal [{:keys [body footer class]}]
+(declare close)
+
+(v/defc modal [{:keys [id body footer class click-close button-close]
+                :or {click-close true button-close true}}]
   [:div.& {:onClick (utils/ev-handlers
-                     ".modal-overlay" #(println "OVERLAY")
-                     "button"         #(println "BUTTON"))}
+                     ".modal-overlay" #(when click-close (close id))
+                     "button"         #(close id)
+                     ".close"         #(close id))}
 
    [:div.&-dialog {:class class}
     [:div.&-content body]
