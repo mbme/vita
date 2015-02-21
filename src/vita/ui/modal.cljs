@@ -1,7 +1,8 @@
 (ns vita.ui.modal
   (:require
    [viter :as v]
-   [vita.utils.utils :as utils]))
+   [vita.utils.utils :as utils]
+   [vita.utils.log :as log]))
 
 (defonce ^:private modals (atom []))
 
@@ -36,13 +37,14 @@
    (fn [_ _ _ modals]
      (v/render! (if (empty? modals)
                   [:div]
-                  [modal (last modals)])
+                  [modal (first modals)])
                 elem))))
 
 (defn show!
   "Show new modal dialog."
   [{:keys [id] :as props}]
   (when (nil? id) (throw "modal id must be specified"))
+  (log/debug "showing modal %s" id)
   (swap! modals conj props))
 
 (defn close

@@ -28,6 +28,7 @@
           (modal/close :no-connection)
           (modal/show!
            {:id :no-connection
+            :click-close false
             :body
             [:div.no-connection
              [:h2.message "NO CONNECTION"]
