@@ -11,6 +11,8 @@
         margin-top: 20px;
         margin-bottom: 20px;
 
+        // we need this to limit text selection in Chrome
+        position: relative;
 
         &:first-child {
             margin-top: 0;
