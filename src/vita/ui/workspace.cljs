@@ -37,17 +37,13 @@
     :right {:save    #(trigger :ws-save key)
             :delete  #(modal/show!
                        {:id :delete-record
+                        :class "delete-record"
                         :body
-                        [:h2 "DO YOU REALLY WANT TO DELETE RECORD?"]
+                        [:h2 "DELETE RECORD?"]
                         :footer
                         [:div.buttons
                          [button :label "CANCEL"]
-                         [button :label "TEXT" :type :secondary]
-                         [button :label "OK" :type :primary]
-
-                         [button :label "CANCEL" :style :raised]
-                         [button :label "TEXT" :type :secondary :style :raised]
-                         [button :label "OK" :type :primary :style :raised
+                         [button :label "OK" :type :primary
                           :onClick (fn [] (trigger :atom-delete key))]]})
 
             :close   #(trigger :ws-close key)}]

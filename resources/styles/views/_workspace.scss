@@ -121,3 +121,13 @@
         }
     }
 }
+
+.modal-dialog.delete-record {
+    h2 {
+        text-align: center;
+    }
+
+    .buttons button {
+        margin-right: 30px;
+    }
+}
