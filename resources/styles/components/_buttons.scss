@@ -14,17 +14,25 @@ $button-line-height: 36px !default;
 
 // shared styles
 .btn, .btn-flat {
+    @extend %rounded;
+
     display: inline-block;
     height: $button-height;
-    margin-bottom: 15px;
-    padding: 0 2rem;
-    border-radius: 2px 2px;
     line-height: $button-line-height;
-    text-transform: uppercase;
+
+    padding: 0 1.7rem;
+    margin-bottom: 15px;
+
+    cursor: pointer;
+
     border: none;
+
+    text-transform: uppercase;
     outline: 0;
     // Gets rid of tap active state
     -webkit-tap-highlight-color: transparent;
+
+    @include transition(.2s ease-out);
 }
 
 // Disabled shared style
@@ -55,32 +63,80 @@ $button-line-height: 36px !default;
 
 // Raised Button
 .btn {
-    text-decoration:none;
-    color: $button-color-raised;
-    text-align: center;
-    letter-spacing: .5px;
-    @extend %z-depth-1;
-    @include transition(.2s ease-out);
-    cursor: pointer;
+    background-color: $base-background-color;
+    color: $base-text-color;
 
+    text-decoration:none;
+    text-align: center;
+
+    letter-spacing: .5px;
+
+    @extend %z-depth-1;
     &:hover {
         @extend %z-depth-1-half;
     }
-}
 
-.btn-primary {
-    background-color: $button-primary-color;
+    &.btn-primary {
+        color: $button-color-raised;
+        background-color: $button-primary-color;
 
-    &:hover {
-        background-color: lighten($button-primary-color, 5%);
+        &:hover {
+            background-color: lighten($button-primary-color, 5%);
+        }
+    }
+
+    &.btn-secondary {
+        color: $button-color-raised;
+        background-color: $button-secondary-color;
+
+        &:hover {
+            background-color: lighten($button-secondary-color, 5%);
+        }
     }
 }
 
-.btn-secondary {
-    background-color: $button-secondary-color;
+// Flat button
+.btn-flat {
+    box-shadow: none;
+    background-color: transparent;
+    color: $button-color-flat;
 
     &:hover {
-        background-color: lighten($button-secondary-color, 5%);
+        color: lighten($button-color-flat, 10%);
+        background-color: lighten($light-gray, 5%);
+    }
+
+    &.disabled {
+        color: lighten($button-color-disabled, 10%);
+        cursor: default;
+    }
+
+    &.btn-primary {
+        color: darken($button-primary-color, 5%);
+
+        &:hover {
+            background-color: lighten($button-primary-color, 20%);
+        }
+    }
+
+    &.btn-secondary {
+        color: darken($button-secondary-color, 5%);
+
+        &:hover {
+            background-color: lighten($button-secondary-color, 25%);
+        }
+    }
+
+}
+
+// Large button
+.btn-large {
+    @extend .btn;
+    height: $button-height * 1.5;
+    line-height: 56px;
+
+    i {
+        font-size: 1.6rem;
     }
 }
 
@@ -97,7 +153,6 @@ $button-line-height: 36px !default;
     border-radius: 50%;
     @extend %z-depth-1;
     @include transition(.3s);
-    cursor: pointer;
 
     i {
         width: inherit;
@@ -117,31 +172,6 @@ $button-line-height: 36px !default;
         i{
             line-height: $button-floating-size * 1.5;
         }
-    }
-
-}
-
-// Flat button
-.btn-flat {
-    box-shadow: none;
-    background-color: transparent;
-    color: $button-color-flat;
-    cursor: pointer;
-
-    &.disabled {
-        color: lighten(#999, 10%);
-        cursor: default;
-    }
-}
-
-// Large button
-.btn-large {
-    @extend .btn;
-    height: $button-height * 1.5;
-    line-height: 56px;
-
-    i {
-        font-size: 1.6rem;
     }
 }
 

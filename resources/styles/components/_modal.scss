@@ -19,6 +19,7 @@ body.modal-open {
     $dialog-padding: 10px;
     &-dialog {
         @extend %z-depth-2;
+        @extend %rounded;
 
         position: relative;
 

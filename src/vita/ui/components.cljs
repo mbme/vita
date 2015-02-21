@@ -39,15 +39,20 @@
 ;; button styles: flat(default) raised
 (v/defc button [{:keys [type style class label onClick]}]
   (let [type-class (case type
-                     :primary "btn-primary"
-                     :secondary "btn-secondary"
-                     :nil ""
+                     :primary    "btn-primary"
+                     :secondary  "btn-secondary"
+                     nil         ""
                      (throw (str "bad button type " type)))
 
         style-class (case style
-                      :flat "btn-flat"
-                      :raised "btn"
-                      nil "btn"
+                      :flat    "btn-flat"
+                      nil      "btn-flat"
+                      :raised  "btn"
                       (throw (str "bad button style " style)))]
 
-    [:button {:class (str type-class " " style-class " " class)} label]))
+    [:button
+     {:class (str type-class
+                  " " style-class
+                  " " class)
+      :onClick onClick}
+     label]))

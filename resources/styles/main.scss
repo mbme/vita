@@ -16,7 +16,8 @@ $ionicons-font-path: "/ionicons/fonts";
 // Extends
 @import "extends/errors";
 @import "extends/flashes";
-@import "extends/hide-text";
+
+@import "extends/mixins";
 
 // Typography and Elements
 @import "components/typography";
