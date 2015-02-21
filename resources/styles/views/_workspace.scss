@@ -81,7 +81,7 @@
     @extend %RecordBase;
 
     & &-name {
-        @extend h1;
+        @extend h2;
 
         text-align: center;
         margin-bottom: 30px;
