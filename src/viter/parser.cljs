@@ -41,7 +41,8 @@
          :class (-> (:class attrs)
                     normalize-class
                     (str " " static-class)
-                    (inject-comp-name comp-name))))
+                    (inject-comp-name comp-name)
+                    str/trim)))
 
 (defn- empty-val? [v]
   (or (nil? v) (str/blank? v)))
