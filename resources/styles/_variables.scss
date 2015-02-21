@@ -51,10 +51,10 @@ $hover-button-color: $hover-link-color;
 // Main colors
 $primary-color: #EE6E73;
 $secondary-color: #26a69a;
+$error-color: darken($light-red, 25%);
 
 // Flash Colors
 $alert-color: $light-yellow;
-$error-color: $light-red;
 $notice-color: lighten($base-accent-color, 40);
 $success-color: $light-green;
 

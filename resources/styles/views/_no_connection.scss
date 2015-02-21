@@ -2,7 +2,7 @@
     text-align: center;
 
     & .message {
-        @extend %error;
+        color: $error-color;
     }
 
     & .spinner {
