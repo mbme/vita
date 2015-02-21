@@ -11,5 +11,5 @@
 ;; code auto reload
 (fw/watch-and-reload
  :jsload-callback #(do (js/console.warn "APP RELOADED")
-                       (state/trigger-update!)
-                       (modal/trigger-update!)))
+                       (modal/clear!)
+                       (state/trigger-update!)))
