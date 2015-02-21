@@ -52,14 +52,18 @@
     s))
 
 (defonce ^:private socket       (atom nil))
-(defonce ^:private socket-queue #js [])
+(defonce ^:private socket-queue (volatile! []))
 
 (defn- add-to-queue [req]
-  (.push socket-queue req))
+  (vswap! socket-queue conj req))
 (defn- send-queue []
-  (let [s @socket]
-    (.forEach socket-queue #(.send s %))
-    (aset socket-queue "length" 0)))
+  (let [s     @socket
+        queue @socket-queue]
+    (when-not (or (nil? s)
+                  (empty? queue))
+      (log/info "websocket: sending %s queued messages" (count queue))
+      (vreset! socket-queue [])
+      (doseq [req queue] (.send s req)))))
 
 (bus/on :socket-open   send-queue)
 (bus/on :socket-closed #(reset! socket nil))

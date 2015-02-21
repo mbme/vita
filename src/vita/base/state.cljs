@@ -63,7 +63,7 @@
 
 (on :atoms-list
     (fn [items]
-      (log/info "loading list of %s atoms" (count items))
+      (log/info "received list of %s atoms" (count items))
       (swap! state
              assoc :atoms
              (->> items

@@ -10,7 +10,8 @@
    :search   "ion-ios-search-strong"})
 
 (defn get-icon [type]
-  (when-not (contains? icons type) (throw (str "bad icon type " type)))
+  (when-not (contains? icons type)
+    (throw (str "bad icon type " type)))
   (get icons type))
 
 (v/defc icon [{:keys [class type] :as all}]
