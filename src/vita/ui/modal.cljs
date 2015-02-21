@@ -8,9 +8,9 @@
 (defonce ^:private body js/document.body)
 
 (v/defc modal [{:keys [body footer class]}]
-  [:div.& {:onClick (utils/ev-handlers-for
-                     "modal-overlay" #(println "OVERLAY")
-                     "btn-flat"      #(println "BUTTON"))}
+  [:div.& {:onClick (utils/ev-handlers
+                     ".modal-overlay" #(println "OVERLAY")
+                     "button"         #(println "BUTTON"))}
 
    [:div.&-dialog {:class class}
     [:div.&-content body]

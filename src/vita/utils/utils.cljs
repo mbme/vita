@@ -1,5 +1,7 @@
 (ns vita.utils.utils
-  (:require [org.markdownIt]))
+  (:require [org.markdownIt]
+            [viter.parser :refer [parse-tag-line]]
+            [clojure.string :refer [lower-case]]))
 
 ;; TO MARKDOWN
 (def ^:private markdownIt
@@ -47,14 +49,40 @@
 (defn remove-class [elem & classes]
   (classList elem "remove" classes))
 
-(defn ev-handle-from
-  "Simple event delegation by class."
-  [evt class handler]
-  (when (classList (.-target evt) "contains" class)
-    (handler evt)))
+(defn has-class [elem class]
+  (classList elem "contains" class))
 
-(defn ev-handlers-for [& mappings]
-  (let [mapping (apply hash-map mappings)]
-    (fn [evt]
-      (doseq [[class handler] mapping]
-        (ev-handle-from evt class handler)))))
+(defn is-elem
+  "Check if dom element corresponds to tag line."
+  [dom-elem tag-line]
+  (let [{:keys [id elem classes]}
+        (parse-tag-line tag-line)]
+    (and
+     ;; validate id
+     (if id   (= id (.-id dom-elem)) true)
+
+     ;; validate elem name
+     (if elem
+       (= (lower-case elem)
+          (lower-case (.-tagName dom-elem)))
+       true)
+
+     ;; validate classes
+     (every? true?
+             (map #(has-class dom-elem %) classes)))))
+
+(defn ev-handlers
+  "Simple event delegation."
+  [& args]
+  (fn [evt]
+    (->>
+     (partition 2 args)
+     (map (fn [[tag-line handler]]
+            (when (is-elem (.-target evt) tag-line)
+              (handler evt)
+              true)))
+     (some true?))
+
+    ;; need to return nil because returning
+    ;; boolean value is deprecated in react
+    nil))
