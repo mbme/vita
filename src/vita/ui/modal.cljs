@@ -1,10 +1,16 @@
 (ns vita.ui.modal
-  (:require [viter :as v]))
+  (:require
+   [viter :as v]
+   [vita.utils.utils :as utils]))
 
 (defonce ^:private modals (atom []))
 
+(defonce ^:private body js/document.body)
+
 (v/defc modal [{:keys [body footer class]}]
-  [:div.&
+  [:div.& {:onClick (utils/ev-handlers-for
+                     "modal-overlay" #(println "OVERLAY")
+                     "btn-flat"      #(println "BUTTON"))}
 
    [:div.&-dialog {:class class}
     [:div.&-content body]
@@ -13,12 +19,21 @@
    [:div.&-overlay]]
 
   :did-mount
-  #(.add js/document.body.classList "modal-open")
+  #(utils/add-class body "modal-open")
 
   :will-unmount
-  #(.remove js/document.body.classList "modal-open"))
+  #(utils/remove-class body "modal-open"))
 
 ;; PUBLIC
+
+(defn init! [elem]
+  (add-watch
+   modals :render
+   (fn [_ _ _ modals]
+     (v/render! (if (empty? modals)
+                  [:div]
+                  [modal (last modals)])
+                elem))))
 
 (defn show!
   "Show new modal dialog."
@@ -31,15 +46,6 @@
   [id]
   (swap! modals
          (fn [modals] (remove #(= id (:id %)) modals))))
-
-(defn init! [elem]
-  (add-watch
-   modals :render
-   (fn [_ _ _ modals]
-     (v/render! (if (empty? modals)
-                  [:div]
-                  [modal (last modals)])
-                elem))))
 
 (defn clear! []
   (reset! modals []))

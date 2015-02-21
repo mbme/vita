@@ -119,6 +119,7 @@
 (defn e-val
   "Get value from react event."
   [evt] (.-value (.-target evt)))
+
 (defn get-words [s]
   (str/split s #"\s+"))
 
