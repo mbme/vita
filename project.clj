@@ -1,5 +1,5 @@
 (def clojure       "1.6.0")
-(def clojurescript "0.0-2850")
+(def clojurescript "0.0-2913")
 
 (def figwheel      "0.2.3-SNAPSHOT")
 (def cljsbuild     "1.0.4")
