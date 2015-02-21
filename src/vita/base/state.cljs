@@ -5,8 +5,9 @@
             [vita.base.bus :as bus :refer [on]]))
 
 ;; KEYS
-(def ^:private rec-keys (atom 0))
-(defn- next-key [] (swap! rec-keys inc))
+(let [last-key (volatile! 0)]
+  (defn- next-key []
+    (vswap! last-key inc)))
 
 ;; STATE
 (defonce ^:private state
