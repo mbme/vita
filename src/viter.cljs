@@ -47,39 +47,7 @@
    react/create-factory))
 
 
-(def ^:private render-queue #js [])
-(def ^:private render-scheduled false)
-
-(defn- actually-render []
-  ;; render all queued items
-  (.forEach render-queue
-            (fn [[react-elem elem]]
-              (react/render react-elem elem)))
-
-  ;; remove all items from queue
-  (aset render-queue "length" 0)
-
-  (set! render-scheduled false))
-
-
-;; PUBLIC
-
-(defn create-component
-  "Creates viter component."
-  [comp-name render config]
-  (let [comp (-> config
-                 (assoc :render render
-                        :displayName comp-name)
-                 create-react-element)]
-
-    (with-meta ;; add some metadata to identify viter components
-
-      (fn [{:keys [key] :or {key js/undefined} :as args}]
-        ;; add key attribute to react element properties if passed
-        (comp (js-obj "args" args "key" key)))
-
-      {:type :viter
-       :name comp-name})))
+;; UTILS
 
 (def request-animation-frame
   (or (.-requestAnimationFrame js/window)
@@ -87,17 +55,6 @@
       (.-webkitRequestAnimationFrame js/window)
       (.-msRequestAnimationFrame js/window)
       (fn [f] (.setTimeout js/window f 16))))
-
-(defn render! [form elem]
-  ;; add new item to the queue
-  (.push render-queue [(to-vDOM form nil) elem])
-
-  ;; schedule render if required
-  (when-not render-scheduled
-    (set! render-scheduled true)
-    (request-animation-frame actually-render)))
-
-;; UTILS
 
 (defn get-ref [this ref]
   (aget (.-refs this) ref))
@@ -121,3 +78,42 @@
   (str/join " " col))
 
 (defn echo [v] (println v) v)
+
+;; PUBLIC
+
+(defn create-component
+  "Creates viter component."
+  [comp-name render config]
+  (let [comp (-> config
+                 (assoc :render render
+                        :displayName comp-name)
+                 create-react-element)]
+
+    (with-meta ;; add some metadata to identify viter components
+
+      (fn [{:keys [key] :or {key js/undefined} :as args}]
+        ;; add key attribute to react element properties if passed
+        (comp (js-obj "args" args "key" key)))
+
+      {:type :viter
+       :name comp-name})))
+
+(def ^:private render-queue (volatile! []))
+
+(defn- render
+  "Render all queued items."
+  []
+  (let [queue @render-queue]
+    ;; remove all items from queue
+    (vreset! render-queue [])
+    (doseq [[react-elem elem] queue]
+      (react/render react-elem elem))))
+
+(defn render! [form elem]
+  ;; schedule render if required
+  (when (empty? @render-queue)
+    (request-animation-frame render))
+
+  ;; add new item to the queue
+  (vswap! render-queue
+          conj [(to-vDOM form nil) elem]))
