@@ -11,32 +11,37 @@
 
 ;; STATE
 (defonce ^:private state
-  (atom {:atoms {} ;; 123: atom/AtomInfo
-         :ws-items '() ; list of InfoAtoms
+  (atom {:atoms    [] ;; atom/AtomInfo
+         :ws-items [] ; atom/InfoAtoms
          :search-term ""}))
 
-(defn- key-by-id [id]
+(defn- key-by-id
   "Get local atom key by specified atom id."
-  (first (for [[k v] (:atoms @state)
-               :when (= id (:id v))]
-           k)))
+  [id]
+  (->> (:atoms @state)
+       (filter #(= id (:id %)))
+       first
+       (:key)))
 
 (defn- id-by-key
   "Get atom id by local key."
   [key]
-  (-> (:atoms @state)
-      (get key)
-      (:id)))
+  (->> (:atoms @state)
+       (filter #(= key (:key %)))
+       first
+       (:id)))
 
 (defn- ws-items-update [fn]
   (swap! state #(assoc % :ws-items (fn (:ws-items %)))))
 
-(defn- ws-add! [item]
+(defn- ws-add!
   "Add new item to the workspace."
-  (ws-items-update #(conj % item)))
+  [item]
+  (ws-items-update #(cons item %)))
 
-(defn- ws-update! [key updater]
+(defn- ws-update!
   "Update atom with specified key."
+  [key updater]
   (ws-items-update
    #(map (fn [atom]
            (if (= key (:key atom))
@@ -57,23 +62,14 @@
 
 ;; SERVER EVENTS HANDLER
 
-(defn- sort-atom-info [list]
-  (sort
-   (fn [atom1 atom2]
-     (compare
-      (:name atom1)
-      (:name atom2)))
-   list))
-
 (on :atoms-list
     (fn [items]
       (log/info "received list of %s atoms" (count items))
       (swap! state
              assoc :atoms
-             (->> items
-                  (map atom/json->info)
-                  sort-atom-info
-                  (zipmap (repeatedly next-key))))))
+             (->> (map atom/json->info items)
+                  (map #(assoc % :key (next-key)))
+                  (sort-by :name)))))
 
 (on :atom
     (fn [item]
@@ -108,6 +104,7 @@
     (fn [key]
       (ws-update! key
                   (fn [a]
+                    (log/info "saving atom " (:id a))
                     (socket/send :atom-update (atom/atom->json a))
                     (assoc a :state :view)))))
 

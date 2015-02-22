@@ -25,9 +25,9 @@
              :onChange #(trigger :search-update (v/e-val %))}]]
 
    `[:ul
-     ~@(map (fn [[key atom]]
-              [SearchResult
-               :key key
-               :atom atom
-               :visible (has-term? atom search-term) ])
-            atoms)]])
+     ~@(map
+        (fn [atom]
+          [SearchResult
+           :key (:key atom) :atom atom
+           :visible (has-term? atom search-term)])
+        atoms)]])
