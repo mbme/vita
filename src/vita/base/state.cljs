@@ -43,6 +43,11 @@
              (updater atom)
              atom)) %)))
 
+(defn- ws-close! [key]
+  (ws-items-update
+   (fn [items]
+     (remove (fn [atom] (= key (:key atom))) items))))
+
 (defn- ws-get [key]
   (first (filter #(= key (:key %)) (:ws-items @state))))
 
@@ -91,11 +96,7 @@
       (when-not (ws-is-open? key (:ws-items @state))
         (socket/send :atom-read (id-by-key key)))))
 
-(on :ws-close
-    (fn [key]
-      (ws-items-update
-       (fn [items]
-         (remove (fn [atom] (= key (:key atom))) items)))))
+(on :ws-close ws-close!)
 
 (on :ws-edit
     (fn [key] (ws-update! key #(assoc % :state :edit))))
@@ -109,6 +110,13 @@
                   (fn [a]
                     (socket/send :atom-update (atom/atom->json a))
                     (assoc a :state :view)))))
+
+(on :ws-delete
+    (fn [key]
+      (let [id (id-by-key key)]
+        (log/info "deleting atom " id)
+        (socket/send :atom-delete (id-by-key key))
+        (ws-close! key))))
 
 ;; PUBLIC
 

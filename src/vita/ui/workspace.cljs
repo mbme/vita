@@ -44,7 +44,7 @@
                         [:div.buttons
                          [button :label "CANCEL"]
                          [button :label "OK" :type :primary
-                          :onClick (fn [] (trigger :atom-delete key))]]})
+                          :onClick (fn [] (trigger :ws-delete key))]]})
 
             :close   #(trigger :ws-close key)}]
 
