@@ -13,8 +13,7 @@
 (defonce ^:private state
   (atom {:atoms {} ;; 123: atom/AtomInfo
          :ws-items '() ; list of InfoAtoms
-         :search-term ""
-         :connected false}))
+         :search-term ""}))
 
 (defn- key-by-id [id]
   "Get local atom key by specified atom id."
@@ -83,14 +82,8 @@
       (log/info "new search term: %s" term)
       (swap! state assoc :search-term term)))
 
-(on :socket-open
-    #(do (swap! state assoc :connected true)
-         ;; request atoms list on init
-         (socket/send :atoms-list-read nil)))
-
-(on :socket-closed
-    #(when (:connected @state)
-       (swap! state assoc :connected false)))
+(on :socket-open ;; request atoms list after socket connected
+    #(socket/send :atoms-list-read nil))
 
 ;; WS events
 (on :ws-open
