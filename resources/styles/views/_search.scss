@@ -1,11 +1,27 @@
-$c-search-input-border: lightgrey;
-
 .SearchPanel {
+    height: 100%;
+
     margin-left: 10px;
     margin-right: 10px;
 
+    overflow-y: auto;
+
     & &-search {
+        position: fixed;
+        width: $w-search-px;
+
         cursor: pointer;
+        box-shadow: 0px 8px 6px -6px #D3D3D3;
+
+        input {
+            margin: 0;
+            box-shadow: none;
+        }
+    }
+
+    & &-results {
+        padding-top: 60px;
+        margin-left: 5px;
     }
 }
 

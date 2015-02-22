@@ -24,7 +24,7 @@
              :defaultValue search-term
              :onChange #(trigger :search-update (v/e-val %))}]]
 
-   `[:ul
+   `[:ul.&-results
      ~@(map
         (fn [atom]
           [SearchResult

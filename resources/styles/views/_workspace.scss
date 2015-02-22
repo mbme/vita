@@ -27,6 +27,11 @@
         text-align: right;
     }
 
+    &-left, &-right {
+        display: inline-block;
+        width: 50%;
+    }
+
     .icon {
         cursor: pointer;
         padding: 0 5px;
@@ -39,11 +44,6 @@
         &:hover {
             color: $base-font-color;
         }
-    }
-
-    > * {
-        display: inline-block;
-        width: 50%;
     }
 }
 
@@ -89,33 +89,20 @@
         margin-bottom: 30px;
 
         padding: 0;
-        border: 0 none;
         box-shadow: none;
-
-        &:hover,
-        &:focus {
-            border: 0 none;
-            box-shadow: none;
-        }
     }
 
     & &-data {
-        display: block;
+        min-height: 300px;
         margin-bottom: 0;
-
-        line-height: 1.5;
-        color: $base-text-color;
-
         padding: 10px 30px;
 
-        min-height: 300px;
-        height: auto;
-        overflow-y: hidden;
+        color: $base-text-color;
 
+        overflow-y: hidden;
         resize: none;
 
         border: 0 none;
-        border-radius: 0;
         box-shadow: none;
 
         &:focus {

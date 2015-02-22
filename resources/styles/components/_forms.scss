@@ -29,10 +29,7 @@ label {
 textarea,
 #{$all-text-inputs},
 select[multiple=multiple] {
-    @include box-sizing(border-box);
-    @include transition(border-color);
     background-color: white;
-    border: 1px solid $form-border-color;
     box-shadow: $form-box-shadow;
     font-family: $form-font-family;
     font-size: $form-font-size;
@@ -73,14 +70,4 @@ select {
 input[type="text"],
 input[type="search"] {
     border: 0 none;
-
-    border-bottom: $base-border;
-    box-shadow: none;
-    @include transition(.28s ease);
-
-    &:focus,
-    &:hover {
-        border-bottom: 1px solid $base-font-color;
-        box-shadow: 0 1px 0 0 $base-font-color;
-    }
 }

@@ -3,6 +3,8 @@
             [viter.parser :refer [parse-tag-line]]
             [clojure.string :refer [lower-case]]))
 
+(when (nil? js/markdownit) (throw "can't find markdownIt library"))
+
 ;; TO MARKDOWN
 (def ^:private markdownIt
   (js/markdownit
@@ -25,7 +27,6 @@
     (aset input "selectionStart" len)
     (aset input "selectionEnd" len)
     (.focus input)))
-
 
 ;; DOM
 
