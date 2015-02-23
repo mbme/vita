@@ -4,11 +4,14 @@
     margin-left: 10px;
     margin-right: 10px;
 
-    overflow-y: auto;
+    overflow-y: scroll;
 
     & &-search {
         position: fixed;
         width: $w-search-px;
+
+        // otherwise animated search result is higher
+        z-index: 1;
 
         cursor: pointer;
         box-shadow: 0px 8px 6px -6px #D3D3D3;
@@ -49,34 +52,16 @@
     opacity: 0;
 
     &--visible {
-        -webkit-animation: fade-in 2s;
+        @include fadeIn($duration: 0.25s);
         opacity: 1;
     }
 
     &--hidden {
-        -webkit-animation: fade-out 2s;
+        @include fadeOut($duration: 0.25s);
         opacity: 0;
 
         &.done {
             display: none;
         }
-    }
-}
-
-@-webkit-keyframes fade-in {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
-}
-
-@-webkit-keyframes fade-out {
-    0% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
     }
 }

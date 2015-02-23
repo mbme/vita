@@ -6,6 +6,11 @@
 // Bourbon mixins
 @import "../bourbon/app/assets/stylesheets/bourbon";
 
+// Animate.scss mixins
+@import "../animate.css-scss/properties";
+@import "../animate.css-scss/_fading-entrances/fading-entrances";
+@import "../animate.css-scss/_fading-exits/fading-exits";
+
 // Icons
 $ionicons-font-path: "/ionicons/fonts";
 @import "../ionicons/scss/ionicons";

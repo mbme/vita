@@ -1,24 +1,25 @@
 {
-    "name": "vita",
-    "version": "0.0.0",
-    "homepage": "https://github.com/mbme/vita",
-    "authors": [
-        "mbme <stribog.ua@gmail.com>"
-    ],
-    "license": "MIT",
-    "private": true,
-    "ignore": [
-        "**/.*",
-        "node_modules",
-        "bower_components",
-        "resources/",
-        "test",
-        "tests"
-    ],
-    "dependencies": {
-        "bourbon": "*",
-        "markdown-it": "*",
-        "react": "*",
-        "normalize-scss": "*"
-    }
+  "name": "vita",
+  "version": "0.0.0",
+  "homepage": "https://github.com/mbme/vita",
+  "authors": [
+    "mbme <stribog.ua@gmail.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "resources/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bourbon": "*",
+    "markdown-it": "*",
+    "react": "*",
+    "normalize-scss": "*",
+    "animate.css-scss": "geoffgraham/animate.scss"
+  }
 }
