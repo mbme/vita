@@ -20,8 +20,25 @@
     }
 
     & &-results {
-        padding-top: 60px;
+        // for search box
+        padding-top: 70px;
+        // for stats box
+        padding-bottom: 70px;
+
         margin-left: 5px;
+    }
+
+    & &-stats {
+        position: fixed;
+        bottom: 0;
+        width: $w-search-px;
+
+        box-shadow: 0px -8px 6px -6px #D3D3D3;
+
+        text-align: center;
+        color: $light-gray;
+        background-color: $base-background-color;
+        font-size: small;
     }
 }
 

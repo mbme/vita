@@ -59,6 +59,16 @@
 (defn- ws-is-open? [key ws-items]
   (some true? (map #(= key (:key %)) ws-items)))
 
+(defn- atom-has-term? [atom term]
+  (if (pos? (count term))
+    (-> (:name atom)
+        (.toLowerCase)
+        (.indexOf (.toLowerCase term))
+        (> -1))
+    true))
+
+(defn- update-visibility [term atoms]
+  (map #(assoc % :visible (atom-has-term? % term)) atoms))
 
 ;; SERVER EVENTS HANDLER
 
@@ -69,6 +79,7 @@
              assoc :atoms
              (->> (map atom/json->info items)
                   (map #(assoc % :key (next-key)))
+                  (update-visibility (:search-term @state))
                   (sort-by :name)))))
 
 (on :atom
@@ -80,8 +91,14 @@
 
 (on :search-update
     (fn [term]
-      (log/info "new search term: %s" term)
-      (swap! state assoc :search-term term)))
+      (when-not (= term (:search-term @state))
+        (log/info "new search term:" term)
+        (let [atoms (->>
+                     (:atoms @state)
+                     (update-visibility term))]
+          (swap! state assoc
+                 :search-term term
+                 :atoms atoms)))))
 
 (on :socket-open ;; request atoms list after socket connected
     #(socket/send :atoms-list-read nil))

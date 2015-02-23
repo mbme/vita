@@ -3,18 +3,11 @@
    [viter :as v]
    [vita.base.bus :refer [trigger]]))
 
-(defn- has-term? [atom term]
-  (if (pos? (count term))
-    (-> (:name atom)
-        (.toLowerCase)
-        (.indexOf (.toLowerCase term))
-        (> -1))
-    true))
-
 (v/defc SearchResult [{:keys [atom key visible]}]
   [:li.&
    {:onClick #(trigger :ws-open key)
-    :class (when visible "&-visible")}
+    :class (when (:visible atom)
+             "&-visible")}
    (:name atom)])
 
 (v/defc SearchPanel [{:keys [search-term atoms ws-items]}]
@@ -27,7 +20,11 @@
    `[:ul.&-results
      ~@(map
         (fn [atom]
-          [SearchResult
-           :key (:key atom) :atom atom
-           :visible (has-term? atom search-term)])
-        atoms)]])
+          [SearchResult :key (:key atom) :atom atom])
+        atoms)]
+
+   (let [total    (count atoms)
+         visible  (count (filter :visible atoms))
+         selected (count ws-items)]
+     [:div.&-stats
+      (str visible " of " total " atoms, " selected " selected")])])
