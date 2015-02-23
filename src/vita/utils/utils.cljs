@@ -1,9 +1,12 @@
 (ns vita.utils.utils
   (:require [org.markdownIt]
+            [goog.string :as gstr]
             [viter.parser :refer [parse-tag-line]]
-            [clojure.string :refer [lower-case]]))
+            [clojure.string :as str])
+  (:import goog.events.EventType))
 
-(when (nil? js/markdownit) (throw "can't find markdownIt library"))
+(when (nil? js/markdownit)
+  (throw "can't find markdownIt library"))
 
 ;; TO MARKDOWN
 (def ^:private markdownIt
@@ -64,8 +67,8 @@
 
      ;; validate elem name
      (if elem
-       (= (lower-case elem)
-          (lower-case (.-tagName dom-elem)))
+       (= (str/lower-case elem)
+          (str/lower-case (.-tagName dom-elem)))
        true)
 
      ;; validate classes
@@ -87,3 +90,16 @@
     ;; need to return nil because returning
     ;; boolean value is deprecated in react
     nil))
+
+(defn- get-event-name
+  "Convert event symbol to google closure
+  library EventType and get event name.'"
+  [event]
+  (->> (name event)
+       gstr/toCamelCase
+       str/upper-case
+       (aget EventType)))
+
+(defn on [elem event handler]
+  (.addEventListener elem
+                     (get-event-name event) handler false))

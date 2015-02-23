@@ -1,14 +1,23 @@
 (ns vita.ui.search
   (:require
    [viter :as v]
-   [vita.base.bus :refer [trigger]]))
+   [vita.base.bus :refer [trigger]]
+   [vita.utils.utils :as utils]))
 
 (v/defc SearchResult [{:keys [atom key visible]}]
   [:li.&
    {:onClick #(trigger :ws-open key)
-    :class (when (:visible atom)
-             "&-visible")}
-   (:name atom)])
+    :class (if (:visible atom)
+             "&--visible" "&--hidden")}
+   (:name atom)]
+
+  :did-mount
+  (fn [this]
+    (let [elem (v/get-node this)]
+      (utils/on elem
+                :animation-start #(utils/remove-class elem "done"))
+      (utils/on elem
+                :animation-end #(utils/add-class elem "done")))))
 
 (v/defc SearchPanel [{:keys [search-term atoms ws-items]}]
   [:aside.&
