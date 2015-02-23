@@ -25,7 +25,9 @@
            did-update
            will-unmount]}]
   (->
-   #js {:shouldComponentUpdate
+   #js {:displayName displayName
+
+        :shouldComponentUpdate
         (fn [next-props]
           (or
            *force-render*
@@ -40,11 +42,11 @@
                          rendered   (render args this)]
                      (to-vDOM rendered displayName))))
 
-        :componentWillMount    (with-this  will-mount)
-        :componentDidMount     (with-this  did-mount)
-        :componentWillUpdate   (with-this  will-update)
-        :componentDidUpdate    (with-this  did-update)
-        :componentWillUnmount  (with-this  will-unmount)}
+        :componentWillMount   (with-this  will-mount)
+        :componentDidMount    (with-this  did-mount)
+        :componentWillUpdate  (with-this  will-update)
+        :componentDidUpdate   (with-this  did-update)
+        :componentWillUnmount (with-this  will-unmount)}
    react/create-class
    react/create-factory))
 
@@ -61,8 +63,8 @@
 (defn get-ref [this ref]
   (aget (.-refs this) ref))
 
-(defn get-node [el]
-  (.getDOMNode el))
+(defn get-node [this]
+  (.getDOMNode this))
 
 (defn deref-node
   "Get react node by ref."
