@@ -103,3 +103,10 @@
 (defn on [elem event handler]
   (.addEventListener elem
                      (get-event-name event) handler false))
+
+(defn watch-animation
+  "Listen for animation events on `elem' and
+  add `class' when animation ended."
+  [elem class]
+  (on elem :animation-start #(remove-class elem class))
+  (on elem :animation-end   #(add-class    elem class)))

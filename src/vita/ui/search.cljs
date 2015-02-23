@@ -8,16 +8,11 @@
   [:li.&
    {:onClick #(trigger :ws-open key)
     :class (if (:visible atom)
-             "&--visible" "&--hidden")}
+             "&--visible"
+             "&--hidden")}
    (:name atom)]
 
-  :did-mount
-  (fn [this]
-    (let [elem (v/get-node this)]
-      (utils/on elem
-                :animation-start #(utils/remove-class elem "done"))
-      (utils/on elem
-                :animation-end #(utils/add-class elem "done")))))
+  :did-mount #(utils/watch-animation (v/get-node %) "done"))
 
 (v/defc SearchPanel [{:keys [search-term atoms ws-items]}]
   [:aside.&
