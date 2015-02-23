@@ -21,6 +21,7 @@
   [{:keys [displayName render
            will-mount
            did-mount
+           will-update
            did-update
            will-unmount]}]
   (->
@@ -41,6 +42,7 @@
 
         :componentWillMount    (with-this  will-mount)
         :componentDidMount     (with-this  did-mount)
+        :componentWillUpdate   (with-this  will-update)
         :componentDidUpdate    (with-this  did-update)
         :componentWillUnmount  (with-this  will-unmount)}
    react/create-class
