@@ -8,10 +8,13 @@
 
     & &-search {
         position: fixed;
-        width: $w-search-px;
+        top: 0;
+        left: 0;
+
+        width: $w-left-p * 100%;
 
         // otherwise animated search result is higher
-        z-index: 1;
+        z-index: 10;
 
         cursor: pointer;
         box-shadow: 0px 8px 6px -6px #D3D3D3;
@@ -34,7 +37,7 @@
     & &-stats {
         position: fixed;
         bottom: 0;
-        width: $w-search-px;
+        width: $w-left-px;
 
         box-shadow: 0px -8px 6px -6px #D3D3D3;
 

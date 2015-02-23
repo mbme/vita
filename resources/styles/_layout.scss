@@ -15,12 +15,12 @@ html {
     }
 }
 
-$w-workspace-p: 1/$golden-ratio;
-$w-search-p: 1 - $w-workspace-p;
+$w-right-p: 1/$golden-ratio;
+$w-left-p: 1 - $w-right-p;
 
 $w-total-px: 1200px;
-$w-search-px: $w-total-px * $w-search-p;
-$w-workspace-px: $w-total-px - $w-search-px;
+$w-left-px: $w-total-px * $w-left-p;
+$w-right-px: $w-total-px - $w-left-px;
 
 .Root {
 
@@ -28,11 +28,11 @@ $w-workspace-px: $w-total-px - $w-search-px;
         position: fixed;
         height: 100%;
 
-        width: $w-search-p * 100%;
+        width: $w-left-p * 100%;
 
         > * {
             float: right;
-            width: $w-search-px;
+            width: $w-left-px;
         }
     }
 
@@ -40,12 +40,12 @@ $w-workspace-px: $w-total-px - $w-search-px;
         height: 100%;
         overflow-y: auto;
 
-        width: $w-workspace-p * 100%;
-        margin-left: $w-search-p * 100%;
+        width: $w-right-p * 100%;
+        margin-left: $w-left-p * 100%;
         padding-left: 20px;
 
         > * {
-            width: $w-workspace-px;
+            width: $w-right-px;
         }
     }
 }
