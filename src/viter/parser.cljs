@@ -46,7 +46,8 @@
   (->> (normalize-class-attr class-attr)
        (concat static-classes)
        (str/join " ")
-       (inject-comp-name comp-name)))
+       (inject-comp-name comp-name)
+       str/trimr))
 
 (defn- empty-val? [v]
   (or (nil? v) (str/blank? v)))
