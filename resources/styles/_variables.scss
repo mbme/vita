@@ -6,7 +6,7 @@ $base-font-family: $open-sans;
 $header-font-family: $open-sans;
 
 // Font Sizes
-$base-font-size: 21px;
+$base-font-size: 18px;
 
 $h1-font-size: $base-font-size * 2.25;
 $h2-font-size: $base-font-size * 2;
@@ -22,8 +22,11 @@ $header-line-height: 1.5;
 // Other Sizes
 $base-border-radius: 3px;
 $base-spacing: $base-line-height * 1em;
-$base-z-index: 0;
 $golden-ratio: 1.618;
+
+$z-top-panel: 10;
+$z-right: 15;
+$z-modal: 100;
 
 // Colors
 $blue: #477DCA;
@@ -35,7 +38,8 @@ $light-yellow: #FFF6BF;
 $light-green: #E6EFC2;
 
 // Background Color
-$base-background-color: white;
+$base-background-color: #EEEEEE;
+$background-color: white;
 
 // Font Colors
 $base-font-color: $dark-gray;

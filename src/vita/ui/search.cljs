@@ -18,17 +18,18 @@
   [:aside.&
    [:div.&-search
     [:input {:type "search"
+             :placeholder "SEARCH"
              :defaultValue search-term
-             :onChange #(trigger :search-update (v/e-val %))}]]
+             :onChange #(trigger :search-update (v/e-val %))}]
+
+    [:div.stats
+     (str (count (filter :visible atoms))
+          " of " (count atoms) " atoms, "
+          (count ws-items) " selected")]]
 
    `[:ul.&-results
      ~@(map
         (fn [atom]
           [SearchResult :key (:key atom) :atom atom])
         atoms)]
-
-   (let [total    (count atoms)
-         visible  (count (filter :visible atoms))
-         selected (count ws-items)]
-     [:div.&-stats
-      (str visible " of " total " atoms, " selected " selected")])])
+   ])

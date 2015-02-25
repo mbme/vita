@@ -43,7 +43,7 @@
                         :footer
                         [:div.buttons
                          [button :label "CANCEL"]
-                         [button :label "OK" :type :primary
+                         [button :label "DELETE" :type :primary
                           :onClick (fn [] (trigger :ws-delete key))]]})
 
             :close   #(trigger :ws-close key)}]

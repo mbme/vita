@@ -5,11 +5,17 @@
     }
 
     .WorkspaceItem {
-        @extend %paper-1;
+        @extend %z-depth-1-half;
+        @extend %rounded;
+
+        z-index: $z-right;
+        background-color: $background-color;
 
         min-height: 200px;
         margin-top: 20px;
         margin-bottom: 20px;
+
+        padding-bottom: 25px;
 
         // we need this to limit text selection in Chrome
         position: relative;
@@ -68,10 +74,15 @@
     }
 
     & &-body {
-        color: $base-text-color;
-        padding: 10px 30px;
+        color: rgba(0, 0, 0, 0.8);
 
-        cursor: default;
+        width: 58ch;
+        text-align: justify;
+        word-wrap: break-word;
+        letter-spacing: 0.01rem;
+
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 

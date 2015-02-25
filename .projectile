@@ -1,3 +1,7 @@
--/resources/public/out
+-/resources/Materialize
+-/resources/jquery
+-/resources/bourbon
+-/resources/ionicons
+-/resources/animate.css-scss
 -/out
 -/target

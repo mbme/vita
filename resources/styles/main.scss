@@ -18,8 +18,8 @@ $ionicons-font-path: "/ionicons/fonts";
 // Variables
 @import "variables";
 
-// Extends
-@import "extends/mixins";
+// Helpers
+@import "mixins";
 
 // Typography and Elements
 @import "components/typography";

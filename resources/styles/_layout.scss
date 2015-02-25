@@ -1,11 +1,4 @@
-
 // BASE
-html,
-body,
-.Root {
-    height: 100%;
-    overflow: hidden;
-}
 
 html {
     *,
@@ -15,6 +8,27 @@ html {
     }
 }
 
+html,
+body {
+    height: 100%;
+    background-color: $base-background-color;
+}
+
+body > .Top-Panel {
+    @extend %z-depth-1;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 60px;
+
+    background-color: $background-color;
+
+    z-index: $z-top-panel;
+}
+
 $w-right-p: 1/$golden-ratio;
 $w-left-p: 1 - $w-right-p;
 
@@ -22,27 +36,31 @@ $w-total-px: 1200px;
 $w-left-px: $w-total-px * $w-left-p;
 $w-right-px: $w-total-px - $w-left-px;
 
-.Root {
+body > .Root {
+    @include clearfix;
+
+    height: 100%;
+    width: 100%;
+    min-width: $w-total-px + 50px;
 
     .left {
-        position: fixed;
         height: 100%;
 
+        float: left;
         width: $w-left-p * 100%;
 
         > * {
-            float: right;
             width: $w-left-px;
+            float: right;
         }
     }
 
     .right {
         height: 100%;
-        overflow-y: auto;
+        overflow-y: scroll;
 
+        float: right;
         width: $w-right-p * 100%;
-        margin-left: $w-left-p * 100%;
-        padding-left: 20px;
 
         > * {
             width: $w-right-px;

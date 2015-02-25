@@ -8,43 +8,48 @@
 
     & &-search {
         position: fixed;
-        top: 0;
-        left: 0;
+        top: 4px;
 
-        width: $w-left-p * 100%;
+        z-index: 15;
 
-        // otherwise animated search result is higher
-        z-index: 10;
-
-        cursor: pointer;
-        box-shadow: 0px 8px 6px -6px #D3D3D3;
+        width: $w-left-px * 0.8;
+        margin-left: 15px;
 
         input {
+            @extend %rounded;
+
             margin: 0;
             box-shadow: none;
+
+            cursor: pointer;
+            font-size: 0.8em;
+
+            background-color: #F5F8FA;
+            border: 1px solid #E1E8ED;
+
+            @include transition(background-color, ease-in-out, 0.2s, 0s);
+
+            &:focus {
+                background-color: $background-color;
+                cursor: text;
+            }
+        }
+
+        .stats {
+            text-align: center;
+            background-color: $background-color;
+            font-size: 0.8em;
+
+            color: rgba(0, 0, 0, 0.44);
+            letter-spacing: -0.02em;
         }
     }
 
     & &-results {
         // for search box
         padding-top: 70px;
-        // for stats box
-        padding-bottom: 70px;
 
         margin-left: 5px;
-    }
-
-    & &-stats {
-        position: fixed;
-        bottom: 0;
-        width: $w-left-px;
-
-        box-shadow: 0px -8px 6px -6px #D3D3D3;
-
-        text-align: center;
-        color: $light-gray;
-        background-color: $base-background-color;
-        font-size: small;
     }
 }
 
