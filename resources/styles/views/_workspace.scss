@@ -1,31 +1,3 @@
-
-.Workspace {
-    &-records {
-        padding: 5px;
-    }
-
-    .WorkspaceItem {
-        @extend %z-depth-1-half;
-        @extend %rounded;
-
-        z-index: $z-right;
-        background-color: $background-color;
-
-        min-height: 200px;
-        margin-top: 20px;
-        margin-bottom: 20px;
-
-        padding-bottom: 25px;
-
-        // we need this to limit text selection in Chrome
-        position: relative;
-
-        &:first-child {
-            margin-top: 0;
-        }
-    }
-}
-
 .Panel {
     padding: 0 10px;
 
@@ -45,7 +17,7 @@
         font-size: 30px;
 
         color: lighten($base-font-color, 60%);
-        @include transition(color .4s);
+        @include transition(color .3s);
 
         &:hover {
             color: $base-font-color;
@@ -53,11 +25,26 @@
     }
 }
 
-%RecordBase {
+.WorkspaceItem {
+    @extend %z-depth-1-half;
+    @extend %rounded;
+
+    position: relative; // we need this to limit text selection in Chrome
+    z-index: $z-right;
+
+    min-height: 200px;
+
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+    padding-bottom: 25px;
+
+    background-color: $background-color;
+
     // make panel visible on hover
     .Panel {
         opacity: 0;
-        @include transition(opacity .4s);
+        @include transition(opacity .3s);
     }
 
     &:hover .Panel {
@@ -65,7 +52,9 @@
     }
 }
 
-.Record {
+.RecordView,
+.PreviewRecordView,
+.EditRecordView {
     & &-name {
         text-align: center;
         margin-bottom: 30px;
@@ -73,7 +62,7 @@
         cursor: default;
     }
 
-    & &-body {
+    & &-data {
         color: rgba(0, 0, 0, 0.8);
 
         width: 58ch;
@@ -86,39 +75,28 @@
     }
 }
 
-.RecordView, .PreviewRecordView{
-    @extend %RecordBase;
-}
-
 .EditRecordView {
-    @extend %RecordBase;
-
     & &-name {
         @extend h2;
-
-        text-align: center;
-        margin-bottom: 30px;
 
         padding: 0;
         box-shadow: none;
     }
 
     & &-data {
-        min-height: 300px;
-        margin-bottom: 0;
-        padding: 10px 30px;
-
-        color: $base-text-color;
-
-        overflow-y: hidden;
+        // disable default styles
+        display: block;
         resize: none;
-
+        padding: 0;
+        margin-bottom: 0;
+        overflow-y: hidden;
         border: 0 none;
         box-shadow: none;
-
         &:focus {
             box-shadow: none;
         }
+
+        min-height: 300px;
     }
 }
 

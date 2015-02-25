@@ -17,18 +17,19 @@
    `[:span.&-left  ~@(show-icons left)]
    `[:span.&-right ~@(show-icons right)]])
 
-(v/defc Record [{:keys [name data]}]
-  [:article.&
-   [:h2.&-name @name]
-   [:div.&-body {:dangerouslySetInnerHTML
-                 {:__html (utils/md->html @data)}}]])
+(defn- show-record [name data]
+  [:article
+   [:h2.&-name name]
+   [:div.&-data {:dangerouslySetInnerHTML
+                 {:__html (utils/md->html data)}}]])
 
-(v/defc RecordView [{:keys [key] :as record}]
+(v/defc RecordView [{:keys [key name data]}]
   [:div.&
    [Panel
     :left  {:edit   #(trigger :ws-edit key)}
     :right {:close  #(trigger :ws-close key)}]
-   [Record record]])
+
+   (show-record @name @data)])
 
 (v/defc EditRecordView [{:keys [key name data]}]
   [:div.&
@@ -66,10 +67,11 @@
                 (utils/focus-input! (v/deref-node % "input"))))
 
 
-(v/defc PreviewRecordView [{:keys [key] :as record}]
+(v/defc PreviewRecordView [{:keys [key name data]}]
   [:div.&
    [Panel :left {:edit #(trigger :ws-edit key)}]
-   [Record record]])
+
+   (show-record @name @data)])
 
 (v/defc WorkspaceItem [record]
   [:div.&
@@ -80,6 +82,4 @@
     record)])
 
 (v/defc Workspace [{:keys [ws-items]}]
-  [:div.&
-   [:div.&-records
-    (map WorkspaceItem ws-items)]])
+  [:div.& (map WorkspaceItem ws-items)])
