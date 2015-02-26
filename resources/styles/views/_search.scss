@@ -1,26 +1,21 @@
 .SearchPanel {
     height: 100%;
 
-    margin-left: 10px;
-    margin-right: 10px;
-
-    overflow-y: scroll;
+    z-index: 15px;
 
     & &-search {
-        position: fixed;
-        top: 4px;
-
-        z-index: 15;
-
+        height: $h-top-panel;
+        position: relative;
         width: $w-left-px * 0.8;
-        margin-left: 15px;
 
         input {
             @extend %rounded;
 
-            margin: 0;
-            box-shadow: none;
+            position: absolute;
+            top: 20px;
+            left: 20px;
 
+            box-shadow: none;
             cursor: pointer;
             font-size: 0.8em;
 
@@ -36,8 +31,12 @@
         }
 
         .stats {
+            position: absolute;
+            top: 55px;
+            left: 20px;
+
+            width: 100%;
             text-align: center;
-            background-color: $background-color;
             font-size: 0.8em;
 
             color: rgba(0, 0, 0, 0.44);
@@ -46,11 +45,12 @@
     }
 
     & &-results {
-        // for panel
-        padding-top: 70px;
-        padding-bottom: 15px;
+        @include calc(height, "100% - #{$h-top-panel}");
+        overflow-y: scroll;
 
-        margin-right: 10px;
+        // for panel
+        padding-top: 10px;
+        padding-bottom: 10px;
     }
 }
 

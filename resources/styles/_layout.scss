@@ -14,19 +14,16 @@ body {
     background-color: $base-background-color;
 }
 
+$h-top-panel: 90px;
 body > .Top-Panel {
-    @extend %z-depth-1;
-
     position: fixed;
     top: 0;
     left: 0;
 
     width: 100%;
-    height: 60px;
+    height: $h-top-panel;
 
-    background-color: $background-color;
-
-    z-index: $z-top-panel;
+    border-bottom: 1px solid #d0d0d0;
 }
 
 $w-right-p: 1/$golden-ratio;
@@ -49,6 +46,8 @@ body > .Root {
         float: left;
         width: $w-left-p * 100%;
 
+        padding-right: 10px;
+
         > * {
             width: $w-left-px;
             float: right;
@@ -61,6 +60,8 @@ body > .Root {
 
         float: right;
         width: $w-right-p * 100%;
+
+        padding-left: 10px;
 
         > * {
             width: $w-right-px;

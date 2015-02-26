@@ -8,6 +8,7 @@
    :save     "ion-android-upload"
    :delete   "ion-trash-a"
    :search   "ion-ios-search-strong"
+   :plus     "ion-plus"
 
    :record "ion-ios-paper-outline"})
 
@@ -40,22 +41,23 @@
 
 ;; button types: default primary secondary
 ;; button styles: flat(default) raised
-(v/defc button [{:keys [type style class label onClick]}]
+(v/defc button [{:keys [type style class label onClick large]}]
   (let [type-class (case type
-                     :primary    "btn-primary"
-                     :secondary  "btn-secondary"
-                     nil         ""
+                     :primary   "btn-primary"
+                     :secondary "btn-secondary"
+                     :floating  "btn-floating"
+                     nil        ""
                      (throw (str "bad button type " type)))
 
         style-class (case style
-                      :flat    "btn-flat"
-                      nil      "btn-flat"
-                      :raised  "btn"
+                      :flat   "btn-flat"
+                      nil     "btn-flat"
+                      :raised "btn"
                       (throw (str "bad button style " style)))]
 
     [:button
      {:class (str type-class
                   " " style-class
-                  " " class)
+                  " " class " " (when large "btn-large"))
       :onClick onClick}
      label]))

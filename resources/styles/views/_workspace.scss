@@ -1,3 +1,11 @@
+.Workspace-new {
+    position: absolute;
+    top: 60px;
+    right: 150px;
+
+    background-color: $secondary-color;
+}
+
 .Panel {
     padding: 0 10px;
 
@@ -26,7 +34,7 @@
 }
 
 .WorkspaceItem {
-    @extend %z-depth-1-half;
+    @extend %z-depth-1;
     @extend %rounded;
 
     position: relative; // we need this to limit text selection in Chrome

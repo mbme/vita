@@ -82,4 +82,11 @@
     record)])
 
 (v/defc Workspace [{:keys [ws-items]}]
-  [:div.& (map WorkspaceItem ws-items)])
+  [:div.&
+   [button
+    :class "&-new"
+    :label [icon :type :plus]
+    :type :floating
+    :style :raised
+    :large true]
+   (map WorkspaceItem ws-items)])
