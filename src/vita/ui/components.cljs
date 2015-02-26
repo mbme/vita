@@ -7,10 +7,13 @@
    :preview  "ion-eye"
    :save     "ion-android-upload"
    :delete   "ion-trash-a"
-   :search   "ion-ios-search-strong"})
+   :search   "ion-ios-search-strong"
+
+   :record "ion-ios-paper-outline"})
 
 (defn get-icon [type]
   (when-not (contains? icons type)
+    (println type)
     (throw (str "bad icon type " type)))
   (get icons type))
 

@@ -46,24 +46,58 @@
     }
 
     & &-results {
-        // for search box
+        // for panel
         padding-top: 70px;
-
-        margin-left: 5px;
     }
 }
 
 .SearchResult {
     cursor: pointer;
-    padding: 10px 5px;
 
+    height: 60px;
+    padding: 10px 15px;
+
+    .icon {
+        font-size: 30px;
+    }
+    .icon, .name {
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .name {
+        margin-left: 15px;
+    }
+
+    // borders
+    $border: 1px solid #E1E8ED;
+    border-top: $border;
+    border-left: $border;
+    border-right: $border;
+    &--visible.last {
+        border-bottom: $border;
+    }
+
+    // rounded borders
+    &--visible.first {
+        @include border-top-radius($base-border-radius);
+    }
+    &--visible.last {
+        @include border-bottom-radius($base-border-radius);
+    }
+
+    // highlighting
+    background-color: $background-color;
+    @include transition(background-color, ease-in-out, 0.2s, 0s);
+    &:hover {
+        background-color: #F5F8FA;
+    }
+
+    // fading
     opacity: 0;
-
     &--visible {
         @include fadeIn($duration: 0.25s);
         opacity: 1;
     }
-
     &--hidden {
         @include fadeOut($duration: 0.25s);
         opacity: 0;

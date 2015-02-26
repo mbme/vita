@@ -33,6 +33,11 @@
 
 ;; DOM
 
+;; make it possible to iterate node list (result of querySelectorAll)
+(extend-type js/NodeList
+  ISeqable
+  (-seq [array] (array-seq array 0)))
+
 (defn query [css-query]
   (.querySelector js/document css-query))
 
@@ -43,9 +48,10 @@
   (.bind (aget obj prop) obj))
 
 (defn classList [elem fn-name classes]
-  (apply
-   (get-bound-fn (.-classList elem) fn-name)
-   (if (seq? classes) classes [classes])))
+  (when-not (nil? elem)
+    (apply
+     (get-bound-fn (.-classList elem) fn-name)
+     (if (seq? classes) classes [classes]))))
 
 (defn add-class [elem & classes]
   (classList elem "add" classes))
