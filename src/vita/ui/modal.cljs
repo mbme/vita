@@ -6,8 +6,6 @@
 
 (defonce ^:private modals (atom []))
 
-(defonce ^:private body js/document.body)
-
 (declare close)
 
 (v/defc modal [{:keys [id body footer class click-close button-close]
@@ -21,13 +19,7 @@
     [:div.&-content body]
     [:div.&-footer  footer]]
 
-   [:div.&-overlay]]
-
-  :did-mount
-  #(utils/add-class body "modal-open")
-
-  :will-unmount
-  #(utils/remove-class body "modal-open"))
+   [:div.&-overlay]])
 
 ;; PUBLIC
 
