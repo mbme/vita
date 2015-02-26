@@ -5,15 +5,18 @@
    [vita.ui.components :refer [icon]]
    [vita.utils.utils :as utils]))
 
-(v/defc SearchResult [{:keys [key type name visible]}]
+(v/defc SearchResult [{:keys [atom open]}]
   [:li.&
-   {:onClick #(trigger :ws-open key)
-    :class (if visible "&--visible" "&--hidden")}
+   {:onClick #(trigger :ws-open (:key atom))
+    :class {:&--visible (:visible atom)
+            :&--hidden  (not (:visible atom))
+            :&--open    open}}
 
-   [icon :type type]
-   [:span.name name]]
+   [icon :type (:type atom)]
+   [:span.name (:name atom)]]
 
-  :did-mount #(utils/watch-animation (v/get-node %) "done"))
+  :did-mount #(utils/watch-animation
+               (v/get-node %) "done"))
 
 (v/defc SearchPanel [{:keys [search-term atoms ws-items]}]
   [:aside.&
@@ -28,7 +31,14 @@
           " of " (count atoms) " atoms, "
           (count ws-items) " selected")]]
 
-   `[:ul.&-results ~@(map SearchResult atoms)]]
+   (let [open-ids (set (map :id ws-items))]
+     `[:ul.&-results
+       ~@(map
+          (fn [atom]
+            [SearchResult
+             :atom atom
+             :open (contains? open-ids (:id atom))])
+          atoms)])]
 
   :did-update
   (fn []

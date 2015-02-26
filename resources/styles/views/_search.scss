@@ -52,21 +52,23 @@
 }
 
 .SearchResult {
-    cursor: pointer;
-
-    height: 60px;
-    padding: 10px 15px;
+    position: relative;
+    height: 70px;
 
     .icon {
         font-size: 30px;
+        position: absolute;
+        top: 10px;
+        left: 15px;
     }
-    .icon, .name {
+    .name {
+        margin-top: 20px;
+        margin-left: 55px;
         display: inline-block;
         vertical-align: middle;
     }
-    .name {
-        margin-left: 15px;
-    }
+
+    cursor: pointer;
 
     // borders
     $border: 1px solid #E1E8ED;
@@ -90,6 +92,11 @@
     @include transition(background-color, ease-in-out, 0.2s, 0s);
     &:hover {
         background-color: #F5F8FA;
+    }
+
+    // open item
+    &--open {
+        color: $secondary-color;
     }
 
     // fading
