@@ -4,6 +4,10 @@
     right: 150px;
 
     background-color: $secondary-color;
+
+    .icon {
+        font-size: 1.2rem;
+    }
 }
 
 .Panel {
@@ -42,7 +46,7 @@
 
     min-height: 200px;
 
-    margin-top: 20px;
+    margin-top: 15px;
     margin-bottom: 20px;
 
     padding-bottom: 25px;

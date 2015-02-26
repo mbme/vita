@@ -23,6 +23,7 @@ body > .Top-Panel {
     width: 100%;
     height: $h-top-panel;
 
+    background-color: #DEDEDE;
     border-bottom: 1px solid #d0d0d0;
 }
 
@@ -36,6 +37,7 @@ $w-right-px: $w-total-px - $w-left-px;
 body > .Root {
     @include clearfix;
 
+    position: relative;
     height: 100%;
     width: 100%;
     min-width: $w-total-px + 50px;

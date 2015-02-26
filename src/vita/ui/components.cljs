@@ -2,8 +2,8 @@
   (:require [viter :as v]))
 
 (def ^:private icons
-  {:close    "ion-close"
-   :edit     "ion-edit"
+  {:close    "ion-android-close"
+   :edit     "ion-android-create"
    :preview  "ion-eye"
    :save     "ion-android-upload"
    :delete   "ion-trash-a"
