@@ -18,9 +18,8 @@
   (get icons type))
 
 (v/defc icon [{:keys [class type] :as all}]
-  (let [icon-class  (get-icon type)
-        total-class (str class " " icon-class)]
-    [:i.& (assoc all :class total-class)]))
+  [:i.&
+   (assoc all :class [class (get-icon type)])])
 
 (defn- spinner-layer [color]
   [:div.spinner-layer {:class (str "spinner-" color)}
@@ -39,7 +38,7 @@
    (spinner-layer "green")])
 
 
-;; button types: default primary secondary
+;; button types: default primary secondary floating
 ;; button styles: flat(default) raised
 (v/defc button [{:keys [type style class label onClick large]}]
   (let [type-class (case type
@@ -55,9 +54,7 @@
                       :raised "btn"
                       (throw (str "bad button style " style)))]
 
-    [:button
-     {:class (str type-class
-                  " " style-class
-                  " " class " " (when large "btn-large"))
-      :onClick onClick}
+    [:button {:class [type-class style-class class
+                      (when large "btn-large")]
+              :onClick onClick}
      label]))

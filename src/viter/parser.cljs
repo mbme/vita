@@ -38,9 +38,12 @@
     (str/replace class #"&" comp-name)))
 
 (defn- normalize-class-attr [class]
-  (if (map? class)
-    (for [[k v] class :when v] (name k))
-    [class]))
+  (cond
+    (map? class) (for [[k v] class :when v] (name k))
+
+    (sequential? class) (remove str/blank? class)
+
+    :else [class]))
 
 (defn- build-class [class-attr static-classes comp-name]
   (->> (normalize-class-attr class-attr)
