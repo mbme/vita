@@ -66,8 +66,7 @@
 (defn- proces-native
   "Process native element form."
   [form comp-name]
-  (let [
-        {:keys [elem classes]} (parse-tag-line (name (first form)))
+  (let [{:keys [elem classes]} (parse-tag-line (name (first form)))
         [attrs params] (normalize-form (rest form))
         js-attrs (->>
                   (build-class (:class attrs) classes comp-name)
@@ -121,5 +120,8 @@
     (cond
       (viter-comp? (first form)) (process-custom form comp-name)
       (keyword? (first form))    (proces-native  form comp-name)
-      :else (clj->js form))
+
+      ;; handle lists of children
+      :else (apply array (map #(to-vDOM % comp-name) form)))
+
     (clj->js form)))

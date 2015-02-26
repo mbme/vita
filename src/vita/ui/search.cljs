@@ -32,13 +32,13 @@
           (count ws-items) " selected")]]
 
    (let [open-ids (set (map :id ws-items))]
-     `[:ul.&-results
-       ~@(map
-          (fn [atom]
-            [SearchResult
-             :atom atom
-             :open (contains? open-ids (:id atom))])
-          atoms)])]
+     [:ul.&-results
+      (map (fn [atom]
+             [SearchResult
+              :key (:key atom)
+              :atom atom
+              :open (contains? open-ids (:id atom))])
+           atoms)])]
 
   :did-update
   (fn []

@@ -13,7 +13,6 @@
 
 (defn get-icon [type]
   (when-not (contains? icons type)
-    (println type)
     (throw (str "bad icon type " type)))
   (get icons type))
 
