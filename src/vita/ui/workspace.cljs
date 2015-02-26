@@ -31,7 +31,7 @@
 
    (show-record @name @data)])
 
-(v/defc EditRecordView [{:keys [key name data]}]
+(v/defc EditRecordView [{:keys [key name data]} this]
   [:div.&
    [Panel
     :left  {:preview #(trigger :ws-preview key)}
@@ -52,15 +52,15 @@
    [:input.&-name
     {:type         "text"
      :defaultValue @name
+     :placeholder  "TITLE"
      :ref          "input"
      :onChange     #(reset! name (v/e-val %))}]
 
    [:textarea.&-data
     {:defaultValue @data
      :ref          "area"
-     :onChange     #(this-as this
-                             (reset! data (v/e-val %))
-                             (utils/autosize! (v/deref-node this "area")))}]]
+     :onChange     #(do (reset! data (v/e-val %))
+                        (utils/autosize! (v/deref-node this "area")))}]]
 
   :did-mount #(do
                 (utils/autosize!    (v/deref-node % "area"))
@@ -88,5 +88,6 @@
     :label [icon :type :plus]
     :type :floating
     :style :raised
-    :large true]
+    :large true
+    :onClick #(trigger :ws-new)]
    (map WorkspaceItem ws-items)])

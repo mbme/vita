@@ -22,3 +22,6 @@
 
 (defn atom->json [{:keys [id type name data]}]
   {"id" id "type" (keyword->str type) "name" @name "data" @data})
+
+(defn new-atom [type]
+  (->VitaAtom nil type (atom "") (atom "")))

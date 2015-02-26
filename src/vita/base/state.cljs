@@ -82,13 +82,6 @@
                   (update-visibility (:search-term @state))
                   (sort-by :name)))))
 
-(on :atom
-    (fn [item]
-      (let [atom (atom/json->atom item)
-            key  (key-by-id (:id atom))]
-        (log/info "open atom %s" (str atom))
-        (ws-add! (assoc atom :key key :state :view)))))
-
 (on :search-update
     (fn [term]
       (when-not (= term (:search-term @state))
@@ -104,10 +97,18 @@
     #(socket/send :atoms-list-read nil))
 
 ;; WS events
+
 (on :ws-open
     (fn [key]
       (when-not (ws-is-open? key (:ws-items @state))
         (socket/send :atom-read (id-by-key key)))))
+
+(on :atom
+    (fn [item]
+      (let [atom (atom/json->atom item)
+            key  (key-by-id (:id atom))]
+        (log/info "open atom %s" (str atom))
+        (ws-add! (assoc atom :key key :state :view)))))
 
 (on :ws-close ws-close!)
 
@@ -131,6 +132,10 @@
         (log/info "deleting atom " id)
         (socket/send :atom-delete (id-by-key key))
         (ws-close! key))))
+
+(on :ws-new
+    (fn [] (ws-add! (-> (atom/new-atom :record)
+                        (assoc :key (next-key) :state :edit)))))
 
 ;; PUBLIC
 
