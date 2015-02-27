@@ -10,7 +10,6 @@
             position: absolute;
             z-index: 1;
 
-            color: $light-gray;
             font-size: 22px;
 
             top: 20px;
@@ -43,7 +42,7 @@
             text-align: center;
             font-size: 0.8em;
 
-            color: rgba(0, 0, 0, 0.44);
+            color: $c-font-secondary;
             letter-spacing: -0.02em;
         }
     }
@@ -64,7 +63,7 @@
     margin-right: 5px;
 
     cursor: pointer;
-    background-color: $background-color;
+    background-color: $base-background-color;
 
     .icon {
         font-size: 30px;
@@ -98,10 +97,10 @@
     // open item
     @include transition(color, ease-in, 0.4s, 0s);
     &--open {
-        color: $secondary-color;
+        color: $base-font-accent-color;
 
         .icon {
-            color: $secondary-color;
+            color: $base-font-accent-color;
         }
     }
 

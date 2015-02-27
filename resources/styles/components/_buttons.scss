@@ -1,12 +1,5 @@
 /*** Buttons ***/
 
-$button-primary-color: $primary-color !default;
-$button-secondary-color: $secondary-color !default;
-
-$button-bg-color-disabled: #DFDFDF !default;
-$button-color-disabled: #9F9F9F !default;
-$button-color-flat: #343434 !default;
-$button-color-raised: #FFF !default;
 $button-floating-size: 37px !default;
 $button-height: 36px !default;
 $button-font-size-shared: 1.3rem !default;
@@ -63,8 +56,8 @@ $button-line-height: 36px !default;
 
 // Raised Button
 .btn {
-    background-color: $background-color;
-    color: $base-text-color;
+    background-color: transparent;
+    color: $base-font-color;
 
     text-decoration:none;
     text-align: center;
@@ -103,7 +96,6 @@ $button-line-height: 36px !default;
 
     &:hover {
         color: lighten($button-color-flat, 10%);
-        background-color: lighten($light-gray, 5%);
     }
 
     &.disabled {

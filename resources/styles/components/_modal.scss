@@ -1,6 +1,6 @@
 .modal {
     position: fixed;
-    z-index: $z-modal;
+    z-index: 100;
 
     width: 100%;
     height: 100%;
@@ -27,7 +27,7 @@
 
         padding: $dialog-padding;
 
-        background-color: $background-color;
+        background-color: $base-background-color;
     }
 
     &-footer {

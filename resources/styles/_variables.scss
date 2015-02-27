@@ -8,13 +8,6 @@ $header-font-family: $open-sans;
 // Font Sizes
 $base-font-size: 18px;
 
-$h1-font-size: $base-font-size * 2.25;
-$h2-font-size: $base-font-size * 2;
-$h3-font-size: $base-font-size * 1.75;
-$h4-font-size: $base-font-size * 1.5;
-$h5-font-size: $base-font-size * 1.25;
-$h6-font-size: $base-font-size;
-
 // Line height
 $base-line-height: 1.5;
 $header-line-height: 1.5;
@@ -24,54 +17,27 @@ $base-border-radius: 2px;
 $base-spacing: $base-line-height * 1em;
 $golden-ratio: 1.618;
 
-$z-top-panel: 10;
-$z-right: 15;
-$z-modal: 100;
-
 // Colors
-$blue: #477DCA;
-$dark-gray: #333;
-$medium-gray: #999;
-$light-gray: #737373;
-$light-red: #FBE3E4;
-$light-yellow: #FFF6BF;
-$light-green: #E6EFC2;
+$base-background-color: $backgroundColor;
 
-// Background Color
-$base-background-color: #EEEEEE;
-$background-color: white;
+$base-font-color: $primaryTextColor;
+$c-font-secondary: $secondaryTextColor;
+$base-font-accent-color: $accentColor;
+$base-icon-color: $textPrimaryColor;
 
-// Font Colors
-$base-font-color: $dark-gray;
-$base-text-color: #515558;
-$base-accent-color: $blue;
+$base-link-color: $primaryColor;
+$hover-link-color: $darkPrimaryColor;
 
-// Link Colors
-$base-link-color: $base-accent-color;
-$hover-link-color: darken($base-accent-color, 15);
-$base-button-color: $base-link-color;
-$hover-button-color: $hover-link-color;
+$c-flash-err: red;
 
-// Main colors
-$primary-color: #EE6E73;
-$secondary-color: #26a69a;
-$error-color: darken($light-red, 25%);
+$base-border-color: $dividerColor;
 
-// Flash Colors
-$alert-color: $light-yellow;
-$notice-color: lighten($base-accent-color, 40);
-$success-color: $light-green;
+$button-primary-color: $primaryColor;
+$button-secondary-color: $accentColor;
+$button-bg-color-disabled: #DFDFDF;
+$button-color-disabled: #9F9F9F;
+$button-color-flat: #343434;
+$button-color-raised: #FFFFFF;
 
-// Border color
-$base-border-color: #E1E8ED;
+// others
 $base-border: 1px solid $base-border-color;
-
-// Forms
-$form-border-color: $base-border-color;
-$form-border-color-hover: darken($base-border-color, 10);
-$form-border-color-focus: $base-accent-color;
-$form-border-radius: $base-border-radius;
-$form-box-shadow: inset 0 1px 3px rgba(black,0.06);
-$form-box-shadow-focus: $form-box-shadow, 0 0 5px rgba(darken($form-border-color-focus, 5), 0.7);
-$form-font-size: $base-font-size;
-$form-font-family: $base-font-family;

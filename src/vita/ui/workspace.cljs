@@ -58,6 +58,7 @@
 
    [:textarea.&-data
     {:defaultValue @data
+     :placeholder  "Type something..."
      :ref          "area"
      :onChange     #(do (reset! data (v/e-val %))
                         (utils/autosize! (v/deref-node this "area")))}]]

@@ -1,3 +1,6 @@
+$form-font-size: $base-font-size;
+$form-font-family: $base-font-family;
+
 fieldset {
     background: lighten($base-border-color, 10);
     border: $base-border;
@@ -29,8 +32,8 @@ label {
 textarea,
 #{$all-text-inputs},
 select[multiple=multiple] {
-    background-color: white;
-    box-shadow: $form-box-shadow;
+    background-color: $base-background-color;
+    box-shadow: none;
     font-family: $form-font-family;
     font-size: $form-font-size;
     margin-bottom: $base-spacing / 2;

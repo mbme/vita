@@ -3,7 +3,7 @@
     top: 60px;
     right: 150px;
 
-    background-color: $secondary-color;
+    background-color: $base-font-accent-color;
 
     .icon {
         font-size: 1.2rem;
@@ -42,7 +42,7 @@
     @extend %rounded;
 
     position: relative; // we need this to limit text selection in Chrome
-    z-index: $z-right;
+    z-index: 1;
 
     min-height: 200px;
 
@@ -51,7 +51,7 @@
 
     padding-bottom: 25px;
 
-    background-color: $background-color;
+    background-color: $base-background-color;
 
     // make panel visible on hover
     .Panel {
