@@ -18,14 +18,22 @@
   :did-mount #(utils/watch-animation
                (v/get-node %) "done"))
 
-(v/defc SearchPanel [{:keys [search-term atoms ws-items]}]
+(v/defc SearchPanel [{:keys [search-term atoms ws-items]} this]
   [:aside.&
-   [:div.&-search
+   [:div.&-search {:ref "search"}
     [icon :type :search]
     [:input {:type "search"
              :placeholder "SEARCH"
              :defaultValue search-term
-             :onChange #(trigger :search-update (v/e-val %))}]
+             :onChange #(trigger :search-update (v/e-val %))
+             :onFocus #(->
+                        (v/get-ref this "search")
+                        v/get-node
+                        (utils/add-class "focused"))
+             :onBlur #(->
+                       (v/get-ref this "search")
+                       v/get-node
+                       (utils/remove-class "focused"))}]
 
     [:div.stats
      (str (count (filter :visible atoms))

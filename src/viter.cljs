@@ -71,9 +71,12 @@
   [this ref]
   (get-node (get-ref this ref)))
 
+(defn e-target [evt]
+  (.-target evt))
+
 (defn e-val
   "Get value from react event."
-  [evt] (.-value (.-target evt)))
+  [evt] (.-value (e-target evt)))
 
 (defn get-words [s]
   (str/split s #"\s+"))
@@ -82,6 +85,8 @@
   (str/join " " col))
 
 (defn echo [v] (println v) v)
+
+(defn echol [v] (js/console.log v) v)
 
 ;; PUBLIC
 

@@ -44,6 +44,16 @@
 
             color: $lightPrimaryColor;
             letter-spacing: -0.02em;
+
+            @include fadeOut($duration: 0.25s);
+            opacity: 0;
+        }
+
+        &.focused {
+            .stats {
+                @include fadeIn($duration: 0.25s);
+                opacity: 1;
+            }
         }
     }
 
