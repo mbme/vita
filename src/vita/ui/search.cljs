@@ -29,8 +29,7 @@
 
     [:div.stats
      (str (count (filter :visible atoms))
-          " of " (count atoms) " atoms, "
-          (count ws-items) " selected")]]
+          " of " (count atoms) " atoms")]]
 
    (let [open-ids (set (map :id ws-items))]
      [:ul.&-results
