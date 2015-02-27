@@ -7,10 +7,9 @@
             [viter :as v]))
 
 (defn- show-icons [items]
-  (map
-   (fn [[type onClick]]
-     [icon :type type :onClick onClick])
-   items))
+  (for [[type onClick] items
+        :when (not (nil? onClick))]
+    [icon :type type :onClick onClick]))
 
 (v/defc Panel [{:keys [left right]}]
   [:div.&
@@ -31,22 +30,27 @@
 
    (show-record @name @data)])
 
-(v/defc EditRecordView [{:keys [key name data]} this]
+(defn- modal-delete? [key]
+  (modal/show!
+   {:id :delete-record
+    :class "delete-record"
+    :body
+    [:h2 "DELETE RECORD?"]
+    :footer
+    [:div.buttons
+     [button :label "CANCEL"]
+     [button :label "DELETE" :type :primary
+      :onClick (fn [] (trigger :ws-delete key))]]}
+   ))
+
+(v/defc EditRecordView [{:keys [id key name data]} this]
   [:div.&
    [Panel
     :left  {:preview #(trigger :ws-preview key)}
     :right {:save    #(trigger :ws-save key)
-            :delete  #(modal/show!
-                       {:id :delete-record
-                        :class "delete-record"
-                        :body
-                        [:h2 "DELETE RECORD?"]
-                        :footer
-                        [:div.buttons
-                         [button :label "CANCEL"]
-                         [button :label "DELETE" :type :primary
-                          :onClick (fn [] (trigger :ws-delete key))]]})
-
+            ;; show :delete if record has id
+            ;; (edit record, not add record)
+            :delete  (when id #(modal-delete? key))
             :close   #(trigger :ws-close key)}]
 
    [:input.&-name
