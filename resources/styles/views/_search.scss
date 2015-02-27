@@ -63,7 +63,7 @@
     margin-right: 5px;
 
     cursor: pointer;
-    background-color: $base-background-color;
+    background-color: $c-bg;
 
     .icon {
         font-size: 30px;
@@ -97,10 +97,10 @@
     // open item
     @include transition(color, ease-in, 0.4s, 0s);
     &--open {
-        color: $base-font-accent-color;
+        color: $c-font-accent;
 
         .icon {
-            color: $base-font-accent-color;
+            color: $c-font-accent;
         }
     }
 

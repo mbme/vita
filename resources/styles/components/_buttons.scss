@@ -35,14 +35,14 @@ $button-line-height: 36px !default;
 .btn:disabled,
 .btn-large:disabled,
 .btn-floating:disabled {
-    background-color: $button-bg-color-disabled;
+    background-color: $c-btn-bg-disabled;
     box-shadow: none;
-    color: $button-color-disabled;
+    color: $c-btn-disabled;
     cursor: default;
 
     &:hover {
-        background-color: $button-bg-color-disabled;
-        color: $button-color-disabled;
+        background-color: $c-btn-bg-disabled;
+        color: $c-btn-disabled;
     }
 }
 
@@ -57,7 +57,7 @@ $button-line-height: 36px !default;
 // Raised Button
 .btn {
     background-color: transparent;
-    color: $base-font-color;
+    color: $c-font;
 
     text-decoration:none;
     text-align: center;
@@ -70,20 +70,20 @@ $button-line-height: 36px !default;
     }
 
     &.btn-primary {
-        color: $button-color-raised;
-        background-color: $button-primary-color;
+        color: $c-btn-raised;
+        background-color: $c-btn-bg-primary;
 
         &:hover {
-            background-color: lighten($button-primary-color, 5%);
+            background-color: lighten($c-btn-bg-primary, 5%);
         }
     }
 
     &.btn-secondary {
-        color: $button-color-raised;
-        background-color: $button-secondary-color;
+        color: $c-btn-raised;
+        background-color: $c-btn-bg-secondary;
 
         &:hover {
-            background-color: lighten($button-secondary-color, 5%);
+            background-color: lighten($c-btn-bg-secondary, 5%);
         }
     }
 }
@@ -92,30 +92,30 @@ $button-line-height: 36px !default;
 .btn-flat {
     box-shadow: none;
     background-color: transparent;
-    color: $button-color-flat;
+    color: $c-btn-flat;
 
     &:hover {
-        color: lighten($button-color-flat, 10%);
+        color: lighten($c-btn-flat, 10%);
     }
 
     &.disabled {
-        color: lighten($button-color-disabled, 10%);
+        color: lighten($c-btn-disabled, 10%);
         cursor: default;
     }
 
     &.btn-primary {
-        color: darken($button-primary-color, 5%);
+        color: darken($c-btn-bg-primary, 5%);
 
         &:hover {
-            background-color: lighten($button-primary-color, 20%);
+            background-color: lighten($c-btn-bg-primary, 20%);
         }
     }
 
     &.btn-secondary {
-        color: darken($button-secondary-color, 5%);
+        color: darken($c-btn-bg-secondary, 5%);
 
         &:hover {
-            background-color: lighten($button-secondary-color, 25%);
+            background-color: lighten($c-btn-bg-secondary, 25%);
         }
     }
 
@@ -135,7 +135,7 @@ $button-line-height: 36px !default;
 // Floating button
 .btn-floating {
     display: inline-block;
-    color: $button-color-raised;
+    color: $c-btn-raised;
     position: relative;
     z-index: 1;
     width: $button-floating-size;
@@ -150,7 +150,7 @@ $button-line-height: 36px !default;
         width: inherit;
         display: inline-block;
         text-align: center;
-        color: $button-color-raised;
+        color: $c-btn-raised;
         font-size: 1.6rem;
         line-height: $button-floating-size;
     }

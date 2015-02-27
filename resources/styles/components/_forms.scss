@@ -2,7 +2,7 @@ $form-font-size: $base-font-size;
 $form-font-family: $base-font-family;
 
 fieldset {
-    background: lighten($base-border-color, 10);
+    background: lighten($c-border, 10);
     border: $base-border;
     margin: 0 0 ($base-spacing / 2) 0;
     padding: $base-spacing;
@@ -36,7 +36,7 @@ select[multiple=multiple] {
 
     width: 100%;
 
-    background-color: $base-background-color;
+    background-color: $c-bg;
     font-family: $form-font-family;
     font-size: $form-font-size;
 

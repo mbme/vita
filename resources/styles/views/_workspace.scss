@@ -3,7 +3,7 @@
     top: 60px;
     right: 150px;
 
-    background-color: $base-font-accent-color;
+    background-color: $c-font-accent;
 
     .icon {
         font-size: 1.2rem;
@@ -31,7 +31,7 @@
         @include transition(color .3s);
 
         &:hover {
-            color: $base-font-color;
+            color: $c-font;
         }
     }
 }

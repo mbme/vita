@@ -11,26 +11,32 @@ $dividerColor:       #B6B6B6;
 
 $backgroundColor:   #FAFAFA;
 
-// Colors
-$base-background-color: $backgroundColor;
+// COLORS
+
+// Backgrounds
+$c-bg: $backgroundColor;
 $c-bg-primary: #EDECEC;
 $c-bg-paper: #FAFAFA;
 
-$base-font-color: $primaryTextColor;
+// Text
+$c-font: $primaryTextColor;
 $c-font-secondary: $secondaryTextColor;
-$base-font-accent-color: $accentColor;
-$base-icon-color: $secondaryTextColor;
+$c-font-accent: $accentColor;
 
-$base-link-color: $primaryColor;
-$hover-link-color: $darkPrimaryColor;
+$c-icon: $secondaryTextColor;
 
+// Links
+$c-link: $primaryColor;
+$c-link-hover: $darkPrimaryColor;
+
+// Other
 $c-flash-err: red;
+$c-border: $dividerColor;
 
-$base-border-color: $dividerColor;
-
-$button-primary-color: $primaryColor;
-$button-secondary-color: $accentColor;
-$button-bg-color-disabled: #DFDFDF;
-$button-color-disabled: #9F9F9F;
-$button-color-flat: #343434;
-$button-color-raised: #FFFFFF;
+// Buttons
+$c-btn-bg-primary: $primaryColor;
+$c-btn-bg-secondary: $accentColor;
+$c-btn-bg-disabled: #DFDFDF;
+$c-btn-disabled: #9F9F9F;
+$c-btn-flat: #343434;
+$c-btn-raised: #FFFFFF;

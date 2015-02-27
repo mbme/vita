@@ -23,7 +23,7 @@
         min-width: 40%;
         max-width: 60%;
 
-        background-color: $base-background-color;
+        background-color: $c-bg;
 
         > * {
             min-height: 200px;
@@ -56,7 +56,7 @@
         top: 0px;
         left: 0px;
 
-        background-color: #555555;
-        opacity: 0.3;
+        background-color: $c-bg-primary;
+        opacity: 0.8;
     }
 }
