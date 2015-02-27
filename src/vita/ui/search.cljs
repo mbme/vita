@@ -32,18 +32,18 @@
           " of " (count atoms) " atoms")]]
 
    (let [open-ids (set (map :id ws-items))]
-     [:ul.&-results
-      (map (fn [atom]
-             [SearchResult
-              :key (:key atom)
-              :atom atom
-              :open (contains? open-ids (:id atom))])
-           atoms)])]
+     [:div.&-results
+      [:ul (map (fn [atom]
+                  [SearchResult
+                   :key (:key atom)
+                   :atom atom
+                   :open (contains? open-ids (:id atom))])
+                atoms)]])]
 
   :did-update
   (fn []
     (let [items (utils/query-all
-                 ".SearchPanel-results > .SearchResult")
+                 ".SearchPanel-results .SearchResult")
 
           visible (filter
                    #(utils/has-class % "SearchResult--visible")

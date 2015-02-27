@@ -52,15 +52,13 @@
         overflow-y: scroll;
 
         // for panel
-        padding-top: 10px;
-        padding-bottom: 10px;
+        padding: 10px;
     }
 }
 
 .SearchResult {
     position: relative;
     height: 70px;
-    margin-right: 5px;
 
     cursor: pointer;
     background-color: $c-bg;
@@ -111,7 +109,7 @@
         opacity: 1;
     }
     &--hidden {
-        @include fadeOut($duration: 0.25s);
+        @include fadeOut($duration: 0.15s);
         opacity: 0;
 
         &.done {
