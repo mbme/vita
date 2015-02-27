@@ -14,7 +14,7 @@
 
     $dialog-padding: 10px;
     &-dialog {
-        @extend %z-depth-2;
+        @extend %paper-2;
         @extend %rounded;
 
         position: relative;
@@ -23,11 +23,12 @@
         min-width: 40%;
         max-width: 60%;
 
-        min-height: 200px;
-
-        padding: $dialog-padding;
-
         background-color: $base-background-color;
+
+        > * {
+            min-height: 200px;
+            padding: $dialog-padding;
+        }
     }
 
     &-footer {

@@ -17,27 +17,5 @@ $base-border-radius: 2px;
 $base-spacing: $base-line-height * 1em;
 $golden-ratio: 1.618;
 
-// Colors
-$base-background-color: $backgroundColor;
-
-$base-font-color: $primaryTextColor;
-$c-font-secondary: $secondaryTextColor;
-$base-font-accent-color: $accentColor;
-$base-icon-color: $textPrimaryColor;
-
-$base-link-color: $primaryColor;
-$hover-link-color: $darkPrimaryColor;
-
-$c-flash-err: red;
-
-$base-border-color: $dividerColor;
-
-$button-primary-color: $primaryColor;
-$button-secondary-color: $accentColor;
-$button-bg-color-disabled: #DFDFDF;
-$button-color-disabled: #9F9F9F;
-$button-color-flat: #343434;
-$button-color-raised: #FFFFFF;
-
 // others
 $base-border: 1px solid $base-border-color;

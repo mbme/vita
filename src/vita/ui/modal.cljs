@@ -16,8 +16,9 @@
                      ".close"         #(close id))}
 
    [:div.&-dialog {:class class}
-    [:div.&-content body]
-    [:div.&-footer  footer]]
+    [:div
+     [:div.&-content body]
+     [:div.&-footer  footer]]]
 
    [:div.&-overlay]])
 

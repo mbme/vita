@@ -32,13 +32,18 @@ label {
 textarea,
 #{$all-text-inputs},
 select[multiple=multiple] {
+    display: block;
+
+    width: 100%;
+
     background-color: $base-background-color;
-    box-shadow: none;
     font-family: $form-font-family;
     font-size: $form-font-size;
-    margin-bottom: $base-spacing / 2;
+
+    border: 0 none;
+    box-shadow: none;
+
     padding: ($base-spacing / 3) ($base-spacing / 3);
-    width: 100%;
 
     &:focus {
         outline: none;

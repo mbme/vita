@@ -28,7 +28,6 @@
 
         font-size: 30px;
 
-        color: lighten($base-font-color, 60%);
         @include transition(color .3s);
 
         &:hover {
@@ -38,7 +37,7 @@
 }
 
 .WorkspaceItem {
-    @extend %z-depth-1;
+    @extend %paper-1;
     @extend %rounded;
 
     position: relative; // we need this to limit text selection in Chrome
@@ -49,9 +48,7 @@
     margin-top: 15px;
     margin-bottom: 20px;
 
-    padding-bottom: 25px;
-
-    background-color: $base-background-color;
+    background-color: $c-bg-paper;
 
     // make panel visible on hover
     .Panel {
@@ -67,6 +64,8 @@
 .RecordView,
 .PreviewRecordView,
 .EditRecordView {
+    padding-bottom: 20px;
+
     & &-name {
         text-align: center;
         margin-bottom: 30px;
@@ -75,8 +74,6 @@
     }
 
     & &-data {
-        color: rgba(0, 0, 0, 0.8);
-
         width: 58ch;
         text-align: justify;
         word-wrap: break-word;
@@ -96,17 +93,9 @@
     }
 
     & &-data {
-        // disable default styles
-        display: block;
         resize: none;
         padding: 0;
-        margin-bottom: 0;
         overflow-y: hidden;
-        border: 0 none;
-        box-shadow: none;
-        &:focus {
-            box-shadow: none;
-        }
     }
 }
 

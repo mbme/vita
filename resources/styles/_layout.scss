@@ -11,7 +11,7 @@ html {
 html,
 body {
     height: 100%;
-    background-color: $base-background-color;
+    background-color: $c-bg-primary;
 }
 
 $h-top-panel: 90px;
@@ -23,8 +23,8 @@ body > .Top-Panel {
     width: 100%;
     height: $h-top-panel;
 
-    background-color: #DEDEDE;
-    border-bottom: 1px solid #d0d0d0;
+    background-color: $primaryColor;
+    border-bottom: $base-border;
 }
 
 $w-right-p: 1/$golden-ratio;
