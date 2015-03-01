@@ -1,8 +1,14 @@
 (ns vita.base.socket
   (:require [vita.base.bus :as bus]
-            [vita.utils.log :as log]))
+            [vita.utils.log :as log]
+
+            [cljs.core.async :refer [chan put! close!]]))
 
 (defonce ^:private socket (atom nil))
+
+(defonce ^:private requests (volatile! {}))
+
+;; QUEUE
 (defonce ^:private socket-queue (volatile! []))
 
 (defn- add-to-queue [req]
@@ -41,21 +47,25 @@
     ;; convert them to clojure data structures
     (handle "onmessage"
             (fn [evt]
-              (let [{:strs [action
-                            params]}
-                    (->> (.-data evt)
-                         (.parse js/JSON)
-                         js->clj)]
+              (let [{:strs [id
+                            error
+                            result]} (->> (.-data evt)
+                                          (.parse js/JSON)
+                                          js->clj)
+                            result-chan (get @requests id)]
 
-                (log/debug "websocket: -> :%s" action)
-                ;; trigger server events on local bus
-                (bus/trigger (keyword action) params))))
+                (log/debug "websocket: -> %s %s"
+                           id
+                           (if error (str "error: " error) "ok"))
+                (put! result-chan (or error result))
+                (close! result-chan)
+                (vswap! requests dissoc id))))
 
     ;; better .send which converts clojure
     ;; data structures to JSON and serializes it
     (handle "send"
-            (fn [{:keys [action] :as req}]
-              (log/debug "websocket: <- %s" action)
+            (fn [{:keys [id method] :as req}]
+              (log/debug "websocket: <- %s %s" id method)
               (->> (clj->js req)
                    (.stringify js/JSON)
                    send)))
@@ -66,18 +76,35 @@
                (log/info "websocket: closed")
                (bus/trigger :socket-closed)))))
 
+
+;; Request id generator
+(let [last-id (volatile! 0)]
+  (defn- next-id []
+    (vswap! last-id inc)))
+
 ;; PUBLIC
 
 (defn connected? []
   (not (nil? @socket)))
 
-(defn send [action params]
+(defn send [method params]
   (let [s @socket
-        req {:action action
-             :params params}]
+        id (next-id)
+        req {:method method
+             :params params
+             :id id}
+        result-chan (chan)]
+
+    (vswap! requests assoc id result-chan)
+
     (if s
       (.send s req)
-      (add-to-queue req))))
+      (add-to-queue req))
+
+    result-chan))
+
+(defn read-atoms-list []
+  (send :atoms-list-read nil))
 
 (defn connect! [addr interval]
   (log/info "websocket: server %s; autoreconnect: %s ms" addr interval)

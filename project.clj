@@ -1,5 +1,6 @@
 (def clojure       "1.6.0")
 (def clojurescript "0.0-2913")
+(def core-async    "0.1.346.0-17112a-alpha")
 
 (def figwheel      "0.2.3-SNAPSHOT")
 (def cljsbuild     "1.0.4")
@@ -17,7 +18,8 @@
 
   :dependencies [[org.clojure/clojure ~clojure]
                  [org.clojure/clojurescript ~clojurescript
-                  :scope "provided"]]
+                  :scope "provided"]
+                 [org.clojure/core.async ~core-async]]
 
   :exclusions [org.clojure/clojure
                org.clojure/clojurescript]

@@ -1,13 +1,18 @@
 (ns vita.base.state
+  (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [vita.utils.log :as log]
             [vita.base.atom :as atom]
             [vita.base.socket :as socket]
-            [vita.base.bus :as bus :refer [on]]))
+            [vita.base.bus :as bus :refer [on]]
+
+            [cljs.core.async :refer [<!]]))
 
 ;; KEYS
 (let [last-key (volatile! 0)]
   (defn- next-key []
-    (vswap! last-key inc)))
+    (vswap! last-key inc))
+  (defn- reset-keys []
+    (vreset! last-key 0)))
 
 ;; STATE
 (defonce ^:private state
@@ -31,6 +36,7 @@
        first
        (:id)))
 
+;; helpers
 (defn- ws-items-update [fn]
   (swap! state #(assoc % :ws-items (fn (:ws-items %)))))
 
@@ -75,12 +81,13 @@
 (on :atoms-list
     (fn [items]
       (log/info "received list of %s atoms" (count items))
-      (swap! state
-             assoc :atoms
-             (->> (map atom/json->info items)
-                  (map #(assoc % :key (next-key)))
-                  (update-visibility (:search-term @state))
-                  (sort-by :name)))))
+      (reset-keys)
+      (swap! state assoc :atoms
+             (->>
+              (map atom/json->info items)
+              (map #(assoc % :key (next-key)))
+              (update-visibility (:search-term @state))
+              (sort-by :name)))))
 
 (on :search-update
     (fn [term]
@@ -94,7 +101,16 @@
                  :atoms atoms)))))
 
 (on :socket-open ;; request atoms list after socket connected
-    #(socket/send :atoms-list-read nil))
+    (fn []
+      (go (let [items (<! (socket/read-atoms-list))]
+            (log/info "received list of %s atoms" (count items))
+            (reset-keys)
+            (swap! state assoc :atoms
+                   (->>
+                    (map atom/json->info items)
+                    (map #(assoc % :key (next-key)))
+                    (update-visibility (:search-term @state))
+                    (sort-by :name)))))))
 
 ;; WS events
 
