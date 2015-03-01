@@ -54,10 +54,9 @@
                                           js->clj)
                             result-chan (get @requests id)]
 
-                (log/debug "websocket: -> %s %s"
-                           id
+                (log/debug "websocket: -> %s %s" id
                            (if error (str "error: " error) "ok"))
-                (put! result-chan (or error result))
+                (put! result-chan [result error])
                 (close! result-chan)
                 (vswap! requests dissoc id))))
 
@@ -82,12 +81,7 @@
   (defn- next-id []
     (vswap! last-id inc)))
 
-;; PUBLIC
-
-(defn connected? []
-  (not (nil? @socket)))
-
-(defn send [method params]
+(defn- send [method params]
   (let [s @socket
         id (next-id)
         req {:method method
@@ -103,17 +97,30 @@
 
     result-chan))
 
+;; PUBLIC
+
+(defn connected? []
+  (not (nil? @socket)))
+
 (defn read-atoms-list []
   (send :atoms-list-read nil))
 
 (defn read-atom [id]
   (send :atom-read id))
 
+(defn update-atom [data]
+  (send :atom-update data))
+
+(defn delete-atom [id]
+  (send :atom-delete id))
+
 (defn connect! [addr interval]
   (log/info "websocket: server %s; autoreconnect: %s ms" addr interval)
   (socket-connect addr)
 
   ;; auto reconnect
-  (js/setInterval #(when-not (connected?)
-                     (log/warn "websocket: not connected, reconnecting...")
-                     (socket-connect addr)) interval))
+  (js/setInterval
+   #(when-not (connected?)
+      (log/warn "websocket: not connected, reconnecting...")
+      (socket-connect addr))
+   interval))

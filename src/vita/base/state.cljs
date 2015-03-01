@@ -102,31 +102,33 @@
 
 (on :socket-open ;; request atoms list after socket connected
     (fn []
-      (go (let [items (<! (socket/read-atoms-list))]
-            (log/info "received list of %s atoms" (count items))
-            (reset-keys)
-            (swap! state assoc :atoms
-                   (->>
-                    (map atom/json->info items)
-                    (map #(assoc % :key (next-key)))
-                    (update-visibility (:search-term @state))
-                    (sort-by :name)))))))
+      (go (let [[items err] (<! (socket/read-atoms-list))]
+            (if err
+              (log/error "can't load atoms list: " err)
+              (do
+                (log/info "received list of %s atoms" (count items))
+                (reset-keys)
+                (swap! state assoc :atoms
+                       (->>
+                        (map atom/json->info items)
+                        (map #(assoc % :key (next-key)))
+                        (update-visibility (:search-term @state))
+                        (sort-by :name)))))))))
 
 ;; WS events
 
 (on :ws-open ;; request atom if it's not already open in workspace
     (fn [key]
-      (when-not
-          (ws-is-open? key (:ws-items @state))
-        (go
-          (let [id (id-by-key key)]
-            (log/info "open atom " id)
-
-            (->
-             (<! (socket/read-atom id))
-             atom/json->atom
-             (assoc :key key :state :view)
-             ws-add!))))))
+      (when-not (ws-is-open? key (:ws-items @state))
+        (go (let [id             (id-by-key key)
+                  [atom-str err] (<! (socket/read-atom id))]
+              (log/info "open atom " id)
+              (if err
+                (log/error "can't open atom %s: %s" id err)
+                (-> atom-str
+                    atom/json->atom
+                    (assoc :key key :state :view)
+                    ws-add!)))))))
 
 (on :ws-close ws-close!)
 
@@ -141,19 +143,21 @@
       (ws-update! key
                   (fn [a]
                     (log/info "saving atom " (:id a))
-                    (socket/send :atom-update (atom/atom->json a))
+                    (socket/update-atom (atom/atom->json a))
                     (assoc a :state :view)))))
 
 (on :ws-delete
     (fn [key]
       (let [id (id-by-key key)]
         (log/info "deleting atom " id)
-        (socket/send :atom-delete (id-by-key key))
+        (socket/delete-atom id)
         (ws-close! key))))
 
 (on :ws-new
-    (fn [] (ws-add! (-> (atom/new-atom :record)
-                        (assoc :key (next-key) :state :edit)))))
+    (fn []
+      (ws-add!
+       (-> (atom/new-atom :record)
+           (assoc :key (next-key) :state :edit)))))
 
 ;; PUBLIC
 
