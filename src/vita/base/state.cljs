@@ -114,17 +114,19 @@
 
 ;; WS events
 
-(on :ws-open
+(on :ws-open ;; request atom if it's not already open in workspace
     (fn [key]
-      (when-not (ws-is-open? key (:ws-items @state))
-        (socket/send :atom-read (id-by-key key)))))
+      (when-not
+          (ws-is-open? key (:ws-items @state))
+        (go
+          (let [id (id-by-key key)]
+            (log/info "open atom " id)
 
-(on :atom
-    (fn [item]
-      (let [atom (atom/json->atom item)
-            key  (key-by-id (:id atom))]
-        (log/info "open atom %s" (str atom))
-        (ws-add! (assoc atom :key key :state :view)))))
+            (->
+             (<! (socket/read-atom id))
+             atom/json->atom
+             (assoc :key key :state :view)
+             ws-add!))))))
 
 (on :ws-close ws-close!)
 

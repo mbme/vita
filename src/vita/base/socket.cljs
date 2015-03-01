@@ -106,6 +106,9 @@
 (defn read-atoms-list []
   (send :atoms-list-read nil))
 
+(defn read-atom [id]
+  (send :atom-read id))
+
 (defn connect! [addr interval]
   (log/info "websocket: server %s; autoreconnect: %s ms" addr interval)
   (socket-connect addr)
