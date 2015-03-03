@@ -2,7 +2,7 @@
 (def clojurescript "0.0-2913")
 (def core-async    "0.1.346.0-17112a-alpha")
 
-(def figwheel  "0.2.5-SNAPSHOT")
+(def figwheel  "0.2.3-SNAPSHOT")
 (def cljsbuild "1.0.4")
 (def ancient   "0.6.1")
 (def cider     "0.9.0-SNAPSHOT")

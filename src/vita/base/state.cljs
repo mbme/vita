@@ -37,8 +37,18 @@
        (:id)))
 
 ;; helpers
-(defn- ws-items-update [fn]
-  (swap! state #(assoc % :ws-items (fn (:ws-items %)))))
+(defn- atoms-update [updater]
+  (swap! state #(assoc % :atoms (updater (:atoms %)))))
+
+(defn- atom-update! [key updater]
+  (atoms-update
+   #(map (fn [atom]
+           (if (= key (:key atom))
+             (updater atom)
+             atom)) %)))
+
+(defn- ws-items-update [updater]
+  (swap! state #(assoc % :ws-items (updater (:ws-items %)))))
 
 (defn- ws-add!
   "Add new item to the workspace."
@@ -77,17 +87,6 @@
   (map #(assoc % :visible (atom-has-term? % term)) atoms))
 
 ;; SERVER EVENTS HANDLER
-
-(on :atoms-list
-    (fn [items]
-      (log/info "received list of %s atoms" (count items))
-      (reset-keys)
-      (swap! state assoc :atoms
-             (->>
-              (map atom/json->info items)
-              (map #(assoc % :key (next-key)))
-              (update-visibility (:search-term @state))
-              (sort-by :name)))))
 
 (on :search-update
     (fn [term]
@@ -140,18 +139,22 @@
 
 (on :ws-save
     (fn [key]
-      (ws-update! key
-                  (fn [a]
-                    (log/info "saving atom " (:id a))
-                    (socket/update-atom (atom/atom->json a))
-                    (assoc a :state :view)))))
+      (when-let [atom (ws-get key)]
+        (go
+          (<! (socket/update-atom (atom/atom->json atom)))
+          (log/info "saved atom " (:id atom))
+
+          (atom-update! key #(assoc % :name @(:name atom)))
+          (ws-update! key #(assoc % :state :view))))))
 
 (on :ws-delete
     (fn [key]
       (let [id (id-by-key key)]
-        (log/info "deleting atom " id)
-        (socket/delete-atom id)
-        (ws-close! key))))
+        (go
+          (<! (socket/delete-atom id))
+          (log/info "deleted atom " id)
+          (atoms-update (fn [atoms] (remove #(= id (:id %)) atoms)))
+          (ws-close! key)))))
 
 (on :ws-new
     (fn []
