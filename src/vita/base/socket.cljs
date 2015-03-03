@@ -2,79 +2,93 @@
   (:require [vita.base.bus :as bus]
             [vita.utils.log :as log]
 
-            [cljs.core.async :refer [chan put! close!]]))
+            [cljs.core.async :refer
+             [<! chan put! close! mix admix toggle]])
+  (:require-macros
+   [cljs.core.async.macros :refer [go-loop]]))
 
-(defonce ^:private socket (atom nil))
+(defonce ^:private req-queue (chan))
+(defonce ^:private requests  (volatile! {}))
 
-(defonce ^:private requests (volatile! {}))
-
-;; QUEUE
-(defonce ^:private socket-queue (volatile! []))
-
-(defn- add-to-queue [req]
-  (vswap! socket-queue conj req))
-
-(defn- send-queue []
-  (let [s     @socket
-        queue @socket-queue]
-    (when-not (or (nil? s)
-                  (empty? queue))
-      (log/info "websocket: sending %s queued messages" (count queue))
-      (vreset! socket-queue [])
-      (doseq [req queue] (.send s req)))))
-
-(declare connected?)
+(defonce ^:private socket-chan (chan))
+(defonce ^:private socket      (atom nil))
 (defn- socket-connect [addr]
-  (let [s    (js/WebSocket. addr)
-        handle (fn [name handler] (aset s name handler))
-        send (.bind (.-send s) s)]
+  (let [s         (new js/WebSocket addr)
 
-    (handle "onopen"
-            (fn []
-              (log/info "websocket: open")
+        ;; we use this flag to ignore close/error
+        ;; events for not connected sockets
+        connected (atom false)]
 
-              (reset! socket s)
-              (send-queue)
+    (aset s "onopen"  (fn [evt]
+                        (reset! connected true)
+                        (reset! socket s)
+                        (put! socket-chan [:open evt])))
 
-              (bus/trigger :socket-open)))
+    (aset s "onclose" (fn [evt]
+                        (when @connected
+                          (reset! socket nil)
+                          (put! socket-chan [:close evt]))))
 
-    (handle "onerror"
-            #(when (connected?)
-               (log/error "websocket: error: %o" %)
-               (bus/trigger :socket-error)))
+    (aset s "onerror" (fn [evt]
+                        (when @connected
+                          (put! socket-chan [:error evt]))))
 
-    ;; handle server messages, parse and
-    ;; convert them to clojure data structures
-    (handle "onmessage"
-            (fn [evt]
-              (let [{:strs [id
-                            error
-                            result]} (->> (.-data evt)
-                                          (.parse js/JSON)
-                                          js->clj)
-                            result-chan (get @requests id)]
+    (aset s "onmessage"
+          #(put! socket-chan [:message
+                              (->> (.-data %)
+                                   (.parse js/JSON)
+                                   js->clj)]))
 
-                (log/debug "websocket: -> %s %s" id
-                           (if error (str "error: " error) "ok"))
-                (put! result-chan [result error])
-                (close! result-chan)
-                (vswap! requests dissoc id))))
+    (aset s "sendData"
+          #(->> (clj->js %)
+                js/JSON.stringify
+                (.send s)))))
 
-    ;; better .send which converts clojure
-    ;; data structures to JSON and serializes it
-    (handle "send"
-            (fn [{:keys [id method] :as req}]
-              (log/debug "websocket: <- %s %s" id method)
-              (->> (clj->js req)
-                   (.stringify js/JSON)
-                   send)))
+(defonce _
+  (let [sender-chan  (chan)
+        sender-mixer (mix sender-chan)]
 
-    (handle "onclose"
-            #(when (connected?)
-               (reset! socket nil)
-               (log/info "websocket: closed")
-               (bus/trigger :socket-closed)))))
+    (admix sender-mixer socket-chan)
+    (admix sender-mixer req-queue)
 
+    ;; do not process requests queue until websocket connected
+    (toggle sender-mixer { req-queue {:pause true}})
+
+    (go-loop []
+      (let [[evt val] (<! sender-chan)]
+        (case evt
+          :open    (do
+                     (log/info "websocket: open")
+
+                     ;; start processing requests queue
+                     (toggle sender-mixer { req-queue {:pause false}})
+
+                     (bus/trigger :socket-open))
+
+          :close   (do
+                     (log/warn "websocket: closed")
+
+                     ;; stop processing requets queue
+                     (toggle sender-mixer { req-queue {:pause true}})
+
+                     (bus/trigger :socket-closed))
+
+          :message (let [{:strs [id error result]} val
+                         result-chan (get @requests id)]
+                     (log/debug "websocket: -> %s %s" id
+                                (if error (str "error: " error) "ok"))
+                     (put! result-chan [result error])
+                     (close! result-chan)
+                     (vswap! requests dissoc id))
+
+          :send    (let [{:keys [id method]} val]
+                     (log/debug "websocket: <- %s %s" id method)
+                     (.sendData @socket val))
+
+          :error   (do
+                     (log/error "websocket: error %o" val)
+                     (bus/trigger :socket-error))))
+      (recur))))
 
 ;; Request id generator
 (let [last-id (volatile! 0)]
@@ -82,18 +96,13 @@
     (vswap! last-id inc)))
 
 (defn- send [method params]
-  (let [s @socket
-        id (next-id)
-        req {:method method
-             :params params
-             :id id}
+  (let [id          (next-id)
         result-chan (chan)]
 
     (vswap! requests assoc id result-chan)
-
-    (if s
-      (.send s req)
-      (add-to-queue req))
+    (put! req-queue [:send {:method method
+                            :params params
+                            :id id}])
 
     result-chan))
 
