@@ -33,9 +33,10 @@
     (modal/init! overlay)
 
     ;; NO CONNECTION MODAL
-    (bus/on :socket-open #(modal/close :no-connection))
+    (bus/on :socket-open   #(modal/close :no-connection))
     (bus/on :socket-closed show-no-connection)
 
+    (state/install-handlers!)
     (state/watch!
      #(do
         (v/render! [search/SearchPanel %] left)

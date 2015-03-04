@@ -16,6 +16,12 @@
                     (conj handlers handler)
                     #{handler})))))
 
+(defn on-many [& items]
+  (->> (partition 2 items)
+       (map (fn [[action handler]]
+              (on action handler)))
+       doall))
+
 (defn trigger
   "Dispatch `action' with `params'."
   [action & params]

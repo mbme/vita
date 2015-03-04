@@ -3,11 +3,12 @@
   (:require [vita.utils.log :as log]
             [vita.base.atom :as atom]
             [vita.base.socket :as socket]
-            [vita.base.bus :as bus :refer [on]]
+            [vita.base.bus :refer [on-many]]
 
             [cljs.core.async :refer [<!]]))
 
 ;; KEYS
+;; ids-keys mapping is persistent across reloads
 (defonce ^:private last-key         (atom 0))
 (defonce ^:private ids-keys-mapping (atom {}))
 (defn- register-id-key-pair [id key]
@@ -94,17 +95,6 @@
 
 ;; SERVER EVENTS HANDLER
 
-(on :search-update
-    (fn [term]
-      (when-not (= term (:search-term @state))
-        (log/info "new search term:" term)
-        (let [atoms (->>
-                     (:atoms @state)
-                     (update-visibility term))]
-          (swap! state assoc
-                 :search-term term
-                 :atoms atoms)))))
-
 (defn- reload-atoms-list []
   (go
     (let [[items err] (<! (socket/read-atoms-list))]
@@ -119,72 +109,91 @@
                   (update-visibility (:search-term @state))
                   (sort-by :name))))))))
 
-;; request atoms list after socket connected
-(on :socket-open reload-atoms-list)
-
-;; WS events
-
-(on :ws-open ;; request atom if it's not already open in workspace
-    (fn [key]
-      (when-not (ws-is-open? key (:ws-items @state))
-        (go (let [id             (id-by-key key)
-                  [atom-str err] (<! (socket/read-atom id))]
-              (log/info "open atom " id)
-              (if err
-                (log/error "can't open atom %s: %s" id err)
-                (-> atom-str
-                    atom/json->atom
-                    (assoc :key key :state :view)
-                    ws-add!)))))))
-
-(on :ws-close ws-close!)
-
-(on :ws-edit
-    (fn [key] (ws-update! key #(assoc % :state :edit))))
-
-(on :ws-preview
-    (fn [key] (ws-update! key #(assoc % :state :preview))))
-
-(on :ws-save
-    (fn [key]
-      (let [atom   (ws-get key)
-            json   (atom/atom->json atom)
-            is-new (nil? (:id atom))]
-        (go
-          (if is-new ;; CREATE
-            (let [[id err] (<! (socket/create-atom json))]
-              (if err
-                (log/error "can't create atom: " err)
-                (do
-                  (log/info "created atom " id)
-                  (ws-update! key
-                              #(assoc % :state :view :id id))
-                  (register-id-key-pair id key)
-                  (reload-atoms-list))))
-
-            (do ;; UPDATE
-              (<! (socket/update-atom json))
-              (log/info "saved atom " (:id atom))
-
-              (atom-update! key #(assoc % :name @(:name atom)))
-              (ws-update! key #(assoc % :state :view))))))))
-
-(on :ws-delete
-    (fn [key]
-      (let [id (id-by-key key)]
-        (go
-          (<! (socket/delete-atom id))
-          (log/info "deleted atom " id)
-          (atoms-update (fn [atoms] (remove #(= id (:id %)) atoms)))
-          (ws-close! key)))))
-
-(on :ws-new
-    (fn []
-      (ws-add!
-       (-> (atom/new-atom :record)
-           (assoc :key (next-key) :state :edit)))))
 
 ;; PUBLIC
+
+(defn install-handlers! []
+  (on-many
+
+   ;; request atoms list after socket connected
+   :socket-open reload-atoms-list
+
+   ;; SEARCH PANEL EVENTS
+
+   :search-update
+   (fn [term]
+     (when-not (= term (:search-term @state))
+       (log/info "new search term:" term)
+       (let [atoms (->>
+                    (:atoms @state)
+                    (update-visibility term))]
+         (swap! state assoc
+                :search-term term
+                :atoms atoms))))
+
+   ;; WORKSPACE EVENTS
+
+   ;; request atom if it's not already open in workspace
+   :ws-open
+   (fn [key]
+     (when-not (ws-is-open? key (:ws-items @state))
+       (go (let [id             (id-by-key key)
+                 [atom-str err] (<! (socket/read-atom id))]
+             (log/info "open atom " id)
+             (if err
+               (log/error "can't open atom %s: %s" id err)
+               (-> atom-str
+                   atom/json->atom
+                   (assoc :key key :state :view)
+                   ws-add!))))))
+
+   :ws-close ws-close!
+
+   :ws-edit
+   (fn [key] (ws-update! key #(assoc % :state :edit)))
+
+   :ws-preview
+   (fn [key] (ws-update! key #(assoc % :state :preview)))
+
+   :ws-save
+   (fn [key]
+     (let [atom   (ws-get key)
+           json   (atom/atom->json atom)
+           is-new (nil? (:id atom))]
+       (go
+         (if is-new ;; CREATE
+           (let [[id err] (<! (socket/create-atom json))]
+             (if err
+               (log/error "can't create atom: " err)
+               (do
+                 (log/info "created atom " id)
+                 (ws-update! key
+                             #(assoc % :state :view :id id))
+                 (register-id-key-pair id key)
+                 (reload-atoms-list))))
+
+           (do ;; UPDATE
+             (<! (socket/update-atom json))
+             (log/info "saved atom " (:id atom))
+
+             (atom-update! key #(assoc % :name @(:name atom)))
+             (ws-update! key #(assoc % :state :view)))))))
+
+   :ws-delete
+   (fn [key]
+     (let [id (id-by-key key)]
+       (go
+         (<! (socket/delete-atom id))
+         (log/info "deleted atom " id)
+         (atoms-update (fn [atoms] (remove #(= id (:id %)) atoms)))
+         (ws-close! key))))
+
+   :ws-new
+   (fn []
+     (ws-add!
+      (-> (atom/new-atom :record)
+          (assoc :key (next-key) :state :edit))))))
+
 
 (defn watch! [func]
   (add-watch state :render (fn [_ _ _ data] (func data))))
