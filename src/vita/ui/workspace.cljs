@@ -40,8 +40,7 @@
     [:div.buttons
      [button :label "CANCEL"]
      [button :label "DELETE" :type :primary
-      :onClick (fn [] (trigger :ws-delete key))]]}
-   ))
+      :onClick (fn [] (trigger :ws-delete key))]]}))
 
 (v/defc EditRecordView [{:keys [id key name data]} this]
   [:div.&

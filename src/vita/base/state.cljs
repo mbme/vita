@@ -8,11 +8,17 @@
             [cljs.core.async :refer [<!]]))
 
 ;; KEYS
-(let [last-key (volatile! 0)]
-  (defn- next-key []
-    (vswap! last-key inc))
-  (defn- reset-keys []
-    (vreset! last-key 0)))
+(defonce ^:private last-key         (atom 0))
+(defonce ^:private ids-keys-mapping (atom {}))
+(defn- register-id-key-pair [id key]
+  (swap! ids-keys-mapping assoc id key))
+(defn- next-key []
+  (swap! last-key inc))
+(defn- key-for-id [id]
+  (when-not (contains? @ids-keys-mapping id)
+    (register-id-key-pair id (next-key)))
+  (get @ids-keys-mapping id))
+
 
 ;; STATE
 (defonce ^:private state
@@ -99,20 +105,22 @@
                  :search-term term
                  :atoms atoms)))))
 
-(on :socket-open ;; request atoms list after socket connected
-    (fn []
-      (go (let [[items err] (<! (socket/read-atoms-list))]
-            (if err
-              (log/error "can't load atoms list: " err)
-              (do
-                (log/info "received list of %s atoms" (count items))
-                (reset-keys)
-                (swap! state assoc :atoms
-                       (->>
-                        (map atom/json->info items)
-                        (map #(assoc % :key (next-key)))
-                        (update-visibility (:search-term @state))
-                        (sort-by :name)))))))))
+(defn- reload-atoms-list []
+  (go
+    (let [[items err] (<! (socket/read-atoms-list))]
+      (if err
+        (log/error "can't load atoms list: " err)
+        (do
+          (log/info "received list of %s atoms" (count items))
+          (swap! state assoc :atoms
+                 (->>
+                  (map atom/json->info items)
+                  (map #(assoc % :key (key-for-id (:id %))))
+                  (update-visibility (:search-term @state))
+                  (sort-by :name))))))))
+
+;; request atoms list after socket connected
+(on :socket-open reload-atoms-list)
 
 ;; WS events
 
@@ -139,13 +147,27 @@
 
 (on :ws-save
     (fn [key]
-      (when-let [atom (ws-get key)]
+      (let [atom   (ws-get key)
+            json   (atom/atom->json atom)
+            is-new (nil? (:id atom))]
         (go
-          (<! (socket/update-atom (atom/atom->json atom)))
-          (log/info "saved atom " (:id atom))
+          (if is-new ;; CREATE
+            (let [[id err] (<! (socket/create-atom json))]
+              (if err
+                (log/error "can't create atom: " err)
+                (do
+                  (log/info "created atom " id)
+                  (ws-update! key
+                              #(assoc % :state :view :id id))
+                  (register-id-key-pair id key)
+                  (reload-atoms-list))))
 
-          (atom-update! key #(assoc % :name @(:name atom)))
-          (ws-update! key #(assoc % :state :view))))))
+            (do ;; UPDATE
+              (<! (socket/update-atom json))
+              (log/info "saved atom " (:id atom))
+
+              (atom-update! key #(assoc % :name @(:name atom)))
+              (ws-update! key #(assoc % :state :view))))))))
 
 (on :ws-delete
     (fn [key]

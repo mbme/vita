@@ -114,6 +114,9 @@
 (defn read-atoms-list []
   (send :atoms-list-read nil))
 
+(defn create-atom [data]
+  (send :atom-create data))
+
 (defn read-atom [id]
   (send :atom-read id))
 
