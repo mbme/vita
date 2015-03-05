@@ -1,6 +1,17 @@
-@include font-face("OpenSans", "/open-sans/OpenSans-Regular", normal, $file-formats: ttf);
-@include font-face("OpenSans", "/open-sans/OpenSans-Bold", bold, $file-formats: ttf);
+@include font-face("OpenSans", "/open-sans/OpenSans-Light", 300, $file-formats: ttf);
+@include font-face("OpenSans", "/open-sans/OpenSans-LightItalic", 300, italic, $file-formats: ttf);
+
+@include font-face("OpenSans", "/open-sans/OpenSans-Regular", 400, $file-formats: ttf);
+@include font-face("OpenSans", "/open-sans/OpenSans-Italic", 400, italic, $file-formats: ttf);
+
 @include font-face("OpenSans", "/open-sans/OpenSans-Semibold", 600, $file-formats: ttf);
+@include font-face("OpenSans", "/open-sans/OpenSans-SemiboldItalic", 600, italic, $file-formats: ttf);
+
+@include font-face("OpenSans", "/open-sans/OpenSans-Bold", 700, $file-formats: ttf);
+@include font-face("OpenSans", "/open-sans/OpenSans-BoldItalic", 700, italic, $file-formats: ttf);
+
+@include font-face("OpenSans", "/open-sans/OpenSans-ExtraBold", 800, $file-formats: ttf);
+@include font-face("OpenSans", "/open-sans/OpenSans-ExtraBoldItalic", 800, italic, $file-formats: ttf);
 
 $h1-font-size: $base-font-size * 2.25;
 $h2-font-size: $base-font-size * 2;
