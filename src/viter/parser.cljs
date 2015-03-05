@@ -39,7 +39,7 @@
 
 (defn- normalize-class-attr [class]
   (cond
-    (map? class) (for [[k v] class :when v] (name k))
+    (map? class) (for [[k v] class :when v] k)
 
     (sequential? class) (remove str/blank? class)
 
@@ -47,6 +47,10 @@
 
 (defn- build-class [class-attr static-classes comp-name]
   (->> (normalize-class-attr class-attr)
+
+       ;; convert keywords to strings
+       (map #(if (keyword? %) (name %) %))
+
        (concat static-classes)
        (str/join " ")
        (inject-comp-name comp-name)

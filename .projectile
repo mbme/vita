@@ -1,9 +1,11 @@
 -/resources/Materialize
 -/resources/jquery
+-/resources/react
 -/resources/bourbon
 -/resources/ionicons
 -/resources/animate.css-scss
 -/resources/open-sans
 -/resources/markdown-it
+-/resources/normalize-scss
 -/out
 -/target
