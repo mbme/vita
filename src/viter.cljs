@@ -93,16 +93,23 @@
 (defn create-component
   "Creates viter component."
   [comp-name render config]
-  (let [comp (-> config
-                 (assoc :render render
-                        :displayName comp-name)
-                 create-react-element)]
+  (let [element (-> config
+                    (assoc :displayName comp-name)
+                    (assoc :render render)
+                    create-react-element)]
 
-    (with-meta ;; add some metadata to identify viter components
+    ;; add some metadata to identify viter components
+    (with-meta
 
-      (fn [{:keys [key] :or {key js/undefined} :as args}]
-        ;; add key attribute to react element properties if passed
-        (comp (js-obj "args" args "key" key)))
+      (fn component
+        ;; this allows to call component with list of params
+        ([k v & rest]
+         (-> (apply hash-map rest)
+             (assoc k v)
+             component))
+        ([{:keys [key] :or {key js/undefined} :as args}]
+         ;; add key attribute to react element properties if passed
+         (element (js-obj "args" args "key" key))))
 
       {:type :viter
        :name comp-name})))
