@@ -18,7 +18,7 @@
     & &-search {
         height: $h-top-panel;
         position: relative;
-        width: $w-left-px * 0.8;
+        width: $w-left-px - 30px;
 
         .icon {
             position: absolute;
@@ -27,7 +27,7 @@
             font-size: 22px;
 
             top: 20px;
-            left: 35px;
+            left: 15px;
         }
 
         input {
@@ -36,10 +36,16 @@
 
             position: absolute;
             top: 15px;
-            left: 20px;
 
-            padding-left: 45px;
             border: $base-border;
+
+            $padding-l: 43px;
+            $padding-r: 9px;
+
+            padding-left: $padding-l;
+            padding-right: $padding-r;
+            $padding: $padding-l + $padding-r;
+            @include calc(width, "100% - #{$padding}");
 
             cursor: pointer;
             &:focus {
@@ -50,7 +56,6 @@
         .stats {
             position: absolute;
             top: 63px;
-            left: 20px;
 
             width: 100%;
             text-align: center;
@@ -84,7 +89,7 @@
             width: $w-left-px - 30px;
         }
 
-        padding: 10px 5px 10px 10px;
+        padding: 10px 5px 10px 0;
     }
 }
 
