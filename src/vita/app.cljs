@@ -11,9 +11,9 @@
 
             [viter :as v]))
 
-(defonce left (utils/query ".Root>.left"))
-(defonce right (utils/query ".Root>.right"))
-(defonce overlay (utils/query "body>.Overlay"))
+(defonce left (utils/q1 ".Root>.left"))
+(defonce right (utils/q1 ".Root>.right"))
+(defonce overlay (utils/q1 "body>.Overlay"))
 
 (defn- show-no-connection []
   (modal/show!

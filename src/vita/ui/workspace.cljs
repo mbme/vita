@@ -4,11 +4,7 @@
             [vita.ui.components :refer [icon button]]
             [vita.ui.modal :as modal]
 
-            [goog.style :as style]
-            [goog.dom :as dom]
-
-            [viter :as v])
-  (:import goog.fx.dom.Scroll))
+            [viter :as v]))
 
 (defn- show-icons [items]
   (for [[type onClick] items
@@ -81,20 +77,9 @@
 
    (show-record @name @data)])
 
-(defn- scroll-to [el container]
-  (let [old-x (.-scrollTop container)
-        new-x (->
-               (style/getContainerOffsetToScrollInto el container)
-               (.-y)
-               (- 20))]
-    (.play (new Scroll container
-                (array 0 old-x)
-                (array 0 new-x)
-                300))))
-
 (defn- scroll-if-active [el]
   (when (utils/has-class el "active")
-    (scroll-to el (dom/getAncestorByClass el "right"))))
+    (utils/scroll-to el (utils/q-parents el ".right") 300)))
 
 (v/defc WorkspaceItem [record]
   [:div.& {:class (when (:active record) "active")}

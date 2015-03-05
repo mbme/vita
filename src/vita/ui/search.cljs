@@ -58,8 +58,7 @@
 
   :did-update
   (fn []
-    (let [items (utils/query-all
-                 ".SearchPanel-results .SearchResult")
+    (let [items (utils/q ".SearchPanel-results .SearchResult")
 
           visible (filter
                    #(utils/has-class % "SearchResult--visible")
