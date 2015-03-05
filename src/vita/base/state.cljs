@@ -161,23 +161,28 @@
            json   (atom/atom->json atom)
            is-new (nil? (:id atom))]
        (go
-         (if is-new ;; CREATE
-           (let [[id err] (<! (socket/create-atom json))]
+         (if is-new
+
+           ;; CREATE
+           (let [[data err] (<! (socket/create-atom json))]
              (if err
-               (log/error "can't create atom: " err)
+               (log/error "can't create atom: %s %s" err (str data))
                (do
-                 (log/info "created atom " id)
+                 (log/info "created atom " data)
                  (ws-update! key
-                             #(assoc % :state :view :id id))
-                 (register-id-key-pair id key)
+                             #(assoc % :state :view :id data))
+                 (register-id-key-pair data key)
                  (reload-atoms-list))))
 
-           (do ;; UPDATE
-             (<! (socket/update-atom json))
-             (log/info "saved atom " (:id atom))
+           ;; UPDATE
+           (let [[data err] (<! (socket/update-atom json))]
+             (if err
+               (log/error "can't save atom: %s %s" err (str data))
+               (do
+                 (log/info "saved atom " (:id atom))
 
-             (atom-update! key #(assoc % :name @(:name atom)))
-             (ws-update! key #(assoc % :state :view)))))))
+                 (atom-update! key #(assoc % :name @(:name atom)))
+                 (ws-update! key #(assoc % :state :view)))))))))
 
    :ws-delete
    (fn [key]
