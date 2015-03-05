@@ -61,7 +61,10 @@ p {
 a {
     @include transition(color 0.1s linear);
     color: $c-link;
+
     text-decoration: none;
+    border-bottom: $base-border;
+    border-color: $c-link;
 
     &:hover {
         color: $c-link-hover;
