@@ -1,3 +1,17 @@
+.category {
+    color: $c-font-secondary;
+    cursor: pointer;
+    padding: 5px;
+    font-size: 0.8em;
+
+    &-icon {
+        color: inherit;
+        padding-right: 1px;
+        opacity: 0.85;
+        font-size: 0.85em;
+    }
+}
+
 .SearchPanel {
     height: 100%;
 
@@ -59,10 +73,15 @@
 
     & &-results {
         @include calc(height, "100% - #{$h-top-panel}");
+        width: 100%;
 
         overflow-y: hidden;
         &:hover {
-            overflow-y: scroll;
+            overflow-y: auto;
+        }
+        & > ul {
+            // to not jump when scroll appears
+            width: $w-left-px - 30px;
         }
 
         padding: 10px 5px 10px 10px;
@@ -73,20 +92,42 @@
     position: relative;
     height: 70px;
 
-    cursor: pointer;
     background-color: $c-bg;
 
-    .icon {
+    &-icon {
         font-size: 30px;
         position: absolute;
         top: 10px;
         left: 15px;
     }
-    .name {
+
+    &-name {
         margin-top: 20px;
         margin-left: 55px;
+
         display: inline-block;
         vertical-align: middle;
+
+        color: $c-font;
+        cursor: pointer;
+
+        border-bottom: 1px solid $c-bg;
+        @include transition(border-bottom, 0.15s, 0);
+        &:hover {
+            border-bottom-color: $c-font;
+        }
+    }
+
+    &-categories {
+        position: absolute;
+        top: -7px;
+        right: 0;
+
+        .category {
+            &:hover {
+                color: $c-font-accent;
+            }
+        }
     }
 
     // borders
@@ -110,7 +151,7 @@
     &--open {
         color: $c-font-accent;
 
-        .icon {
+        .SearchResult-icon {
             color: $c-font-accent;
         }
     }

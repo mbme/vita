@@ -9,6 +9,7 @@
    :delete   "ion-trash-a"
    :search   "ion-ios-search-strong"
    :plus     "ion-plus"
+   :tag      "ion-pound"
 
    :record "ion-ios-paper-outline"})
 

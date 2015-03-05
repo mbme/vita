@@ -7,10 +7,10 @@
   (str keyword))
 
 ;; Atom Info
-(defrecord AtomInfo [id type name])
+(defrecord AtomInfo [id type name categories])
 
-(defn json->info [{:strs [id type name]}]
-  (->AtomInfo id (str->keyword type) name))
+(defn json->info [{:strs [id type name categories]}]
+  (->AtomInfo id (str->keyword type) name categories))
 
 ;; Atom
 (defrecord VitaAtom [id type name data]
