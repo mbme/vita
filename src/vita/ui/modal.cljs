@@ -10,7 +10,7 @@
 
 (v/defc modal [{:keys [id body footer class click-close button-close]
                 :or {click-close true button-close true}}]
-  [:div.& {:onClick (utils/ev-handlers
+  [:div.& {:onClick (utils/delegate
                      ".modal-overlay" #(when click-close (close id))
                      "button"         #(close id)
                      ".close"         #(close id))}

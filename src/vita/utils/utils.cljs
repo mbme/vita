@@ -10,35 +10,11 @@
   (:import goog.events.EventType
            goog.fx.dom.Scroll))
 
-(when (nil? js/markdownit)
-  (throw "can't find markdownIt library"))
-
-;; TO MARKDOWN
-(def ^:private markdownIt
-  (js/markdownit
-   "default"
-   #js {:html true
-        :linkify true
-        :typographer true}))
-
-(defn md->html [md]
-  (.render markdownIt md))
-
-(defn autosize! [elem]
-  (aset (.-style elem) "height" "auto")
-  (when (< (.-clientHeight elem)
-           (.-scrollHeight elem))
-    (aset (.-style elem) "height" (str (.-scrollHeight elem) "px"))))
-
-(defn focus-input! [input]
-  (let [len (.-length (.-value input))]
-    (aset input "selectionStart" len)
-    (aset input "selectionEnd" len)
-    (.focus input)))
-
+;; HELPERS
 
 (defn get-bound-fn [obj prop]
   (.bind (aget obj prop) obj))
+
 
 ;; CLASS MANAGEMENT
 
@@ -57,7 +33,13 @@
 (defn has-class [elem class]
   (classList elem "contains" class))
 
-;; DOM
+
+;; DOM utils
+
+;; make it possible to iterate node list (result of querySelectorAll)
+(extend-type js/NodeList
+  ISeqable
+  (-seq [array] (array-seq array 0)))
 
 (defn is-elem
   "Check if dom element corresponds to tag line."
@@ -78,11 +60,6 @@
      (every? true?
              (map #(has-class dom-elem %) classes)))))
 
-;; make it possible to iterate node list (result of querySelectorAll)
-(extend-type js/NodeList
-  ISeqable
-  (-seq [array] (array-seq array 0)))
-
 (defn q1 [css-query]
   (.querySelector js/document css-query))
 
@@ -92,23 +69,53 @@
 (defn q-parents [el pattern]
   (dom/getAncestor el #(is-elem % pattern)))
 
-;; SCROLLING
 
-(defn scroll-to [el container time]
+;; TO MARKDOWN
+
+(when (nil? js/markdownit)
+  (throw "can't find markdownIt library"))
+
+(def ^:private markdownIt
+  (js/markdownit
+   "default"
+   #js {:html true
+        :linkify true
+        :typographer true}))
+
+(defn md->html [md]
+  (.render markdownIt md))
+
+
+;; UI utils
+
+(defn autosize! [elem]
+  (style/setHeight elem 10)
+  (let [current (.-clientHeight elem)
+        total   (.-scrollHeight elem)]
+    (style/setHeight elem total)))
+
+(defn focus-input! [input]
+  (let [len (aget input "value" "length")]
+    (aset input "selectionStart" len)
+    (aset input "selectionEnd" len)
+    (.focus input)))
+
+(defn scroll-to! [el container time]
   (let [old-x (.-scrollTop container)
         new-x (->
                (style/getContainerOffsetToScrollInto el container)
                (.-y)
-               (- 20))]
+               (- 10))]
     (.play (new Scroll container
                 (array 0 old-x)
                 (array 0 new-x)
                 time))))
 
-;; OTHER
+;; EVENT utils
 
-(defn ev-handlers
-  "Simple event delegation."
+(defn delegate
+  "Simple event delegation.
+  Accepts pairs of element tag line : event handler."
   [& args]
   (fn [evt]
     (->>
@@ -123,22 +130,22 @@
     ;; boolean value is deprecated in react
     nil))
 
-(defn- get-event-name
-  "Convert event symbol to google closure
-  library EventType and get event name.'"
-  [event]
-  (->> (name event)
-       gstr/toCamelCase
-       str/upper-case
-       (aget EventType)))
+(defn subscribe
+  "Subscribe to element's event.
+  Handles cross-browser event names."
+  [elem event handler]
 
-(defn on [elem event handler]
-  (.addEventListener elem
-                     (get-event-name event) handler false))
+  ;; Convert event symbol to google closure
+  ;; library EventType and get event name.
+  (let [event-name (->> (name event)
+                        gstr/toCamelCase
+                        str/upper-case
+                        (aget EventType))]
+    (.addEventListener elem event-name handler false)))
 
 (defn watch-animation
   "Listen for animation events on `elem' and
   add `class' when animation ended."
   [elem class]
-  (on elem :animation-start #(remove-class elem class))
-  (on elem :animation-end   #(add-class    elem class)))
+  (subscribe elem :animation-start #(remove-class elem class))
+  (subscribe elem :animation-end   #(add-class    elem class)))

@@ -16,6 +16,7 @@
    `[:span.&-left  ~@(show-icons left)]
    `[:span.&-right ~@(show-icons right)]])
 
+
 (defn- show-record [name data]
   [:article
    [:h2.&-name name]
@@ -77,9 +78,10 @@
 
    (show-record @name @data)])
 
+
 (defn- scroll-if-active [el]
   (when (utils/has-class el "active")
-    (utils/scroll-to el (utils/q-parents el ".right") 300)))
+    (utils/scroll-to! el (utils/q-parents el ".right") 300)))
 
 (v/defc WorkspaceItem [record]
   [:div.& {:class (when (:active record) "active")}
