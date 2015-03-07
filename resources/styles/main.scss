@@ -22,7 +22,6 @@ $ionicons-font-path: "/ionicons/fonts";
 // Helpers
 @import "mixins";
 
-// Typography and Elements
 @import "components/typography";
 @import "components/forms";
 @import "components/tables";
@@ -30,6 +29,7 @@ $ionicons-font-path: "/ionicons/fonts";
 @import "components/buttons";
 @import "components/icons";
 @import "components/modal";
+@import "components/categories";
 
 @import "components/paper";
 @import "components/preloader";

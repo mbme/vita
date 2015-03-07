@@ -2,11 +2,8 @@
   (:require
    [viter :as v]
    [vita.base.bus :refer [trigger]]
-   [vita.ui.components :refer [icon]]
+   [vita.ui.components :refer [icon category]]
    [vita.utils.utils :as utils]))
-
-(v/defc category [{:keys [key]}]
-  [:span.& [icon :type :tag :class "&-icon"] key])
 
 (v/defc SearchResult [{:keys [atom open]}]
   [:li.&
@@ -32,7 +29,7 @@
     [icon :type :search]
     [:input
      {:type "search"
-      :placeholder "SEARCH"
+      :placeholder "Filter atoms"
       :defaultValue search-term
       :onChange #(trigger :search-update (v/e-val %))
       :onFocus #(->

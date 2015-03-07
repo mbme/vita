@@ -179,8 +179,8 @@
                (log/error "can't create atom: %s %s" err (str data))
                (do
                  (log/info "created atom " data)
-                 (ws-update! key
-                             #(assoc % :state :view :id data))
+                 (ws-update! key #(assoc % :state :view :id data))
+
                  (register-id-key-pair data key)
                  (reload-atoms-list))))
 
@@ -190,9 +190,9 @@
                (log/error "can't save atom: %s %s" err (str data))
                (do
                  (log/info "saved atom " (:id atom))
+                 (ws-update! key #(assoc % :state :view))
 
-                 (atom-update! key #(assoc % :name @(:name atom)))
-                 (ws-update! key #(assoc % :state :view)))))))))
+                 (reload-atoms-list))))))))
 
    :ws-delete
    (fn [key]

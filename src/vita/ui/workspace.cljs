@@ -1,7 +1,8 @@
 (ns vita.ui.workspace
   (:require [vita.base.bus    :refer [trigger]]
             [vita.utils.utils :as utils]
-            [vita.ui.components :refer [icon button]]
+            [vita.ui.components
+             :refer [icon button category]]
             [vita.ui.modal :as modal]
 
             [viter :as v]))
@@ -17,19 +18,20 @@
    `[:span.&-right ~@(show-icons right)]])
 
 
-(defn- show-record [name data]
+(defn- show-record [name data categories]
   [:article
-   [:h2.&-name name]
+   [:div.&-name name]
+   [:div.&-categories (map #(category :key %) categories)]
    [:div.&-data {:dangerouslySetInnerHTML
                  {:__html (utils/md->html data)}}]])
 
-(v/defc RecordView [{:keys [key name data]}]
+(v/defc RecordView [{:keys [key name data categories]}]
   [:div.&
    [Panel
     :left  {:edit   #(trigger :ws-edit key)}
     :right {:close  #(trigger :ws-close key)}]
 
-   (show-record @name @data)])
+   (show-record @name @data @categories)])
 
 (defn- modal-delete? [key]
   (modal/show!
@@ -43,7 +45,7 @@
      [button :label "DELETE" :type :primary
       :onClick (fn [] (trigger :ws-delete key))]]}))
 
-(v/defc EditRecordView [{:keys [id key name data]} this]
+(v/defc EditRecordView [{:keys [id key name data categories]} this]
   [:div.&
    [Panel
     :left  {:preview #(trigger :ws-preview key)}
@@ -60,6 +62,14 @@
      :ref          "input"
      :onChange     #(reset! name (v/e-val %))}]
 
+   [:input.&-categories
+    {:type         "text"
+     :defaultValue (v/join @categories)
+     :placeholder  "atom categories"
+     :onChange     #(reset! categories (->
+                                        (v/e-val %)
+                                        v/get-words))}]
+
    [:textarea.&-data
     {:defaultValue @data
      :placeholder  "Type something..."
@@ -72,11 +82,11 @@
                 (utils/focus-input! (v/deref-node % "input"))))
 
 
-(v/defc PreviewRecordView [{:keys [key name data]}]
+(v/defc PreviewRecordView [{:keys [key name data categories]}]
   [:div.&
    [Panel :left {:edit #(trigger :ws-edit key)}]
 
-   (show-record @name @data)])
+   (show-record @name @data @categories)])
 
 
 (defn- scroll-if-active [el]

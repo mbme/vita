@@ -66,10 +66,16 @@
     padding-bottom: 20px;
 
     & &-name {
+        @extend h2;
+
         text-align: center;
-        margin-bottom: 30px;
 
         cursor: default;
+    }
+
+    & &-categories {
+        margin-bottom: 30px;
+        text-align: center;
     }
 
     & &-data {
@@ -85,10 +91,13 @@
 
 .EditRecordView {
     & &-name {
-        @extend h2;
-
         padding: 0;
         box-shadow: none;
+    }
+
+    & &-categories {
+        @extend %category;
+        word-spacing: 7px;
     }
 
     & &-data {

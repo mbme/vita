@@ -1,0 +1,17 @@
+%category {
+    font-size: 0.8em;
+    color: $c-font-secondary;
+}
+
+.category {
+    @extend %category;
+
+    cursor: pointer;
+    padding-left: 5px;
+    padding-right: 5px;
+
+    @include transition(color, 0.2s);
+    &:hover {
+        color: $c-font-accent;
+    }
+}

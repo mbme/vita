@@ -13,15 +13,23 @@
   (->AtomInfo id (str->keyword type) name categories))
 
 ;; Atom
-(defrecord VitaAtom [id type name data]
+(defrecord VitaAtom [id type name data categories]
   Object
-  (toString [this] (str id type "/" @name)))
+  (toString [this] (str id type "/" @name " " categories)))
 
-(defn json->atom [{:strs [id type name data]}]
-  (->VitaAtom id (str->keyword type) (atom name) (atom data)))
+(defn json->atom [{:strs [id type name data categories]}]
+  (->VitaAtom id
+              (str->keyword type)
+              (atom name)
+              (atom data)
+              (atom categories)))
 
-(defn atom->json [{:keys [id type name data]}]
-  {"id" id "type" (keyword->str type) "name" @name "data" @data})
+(defn atom->json [{:keys [id type name data categories]}]
+  {"id"   id
+   "type" (keyword->str type)
+   "name" @name
+   "data" @data
+   "categories" @categories})
 
 (defn new-atom [type]
-  (->VitaAtom nil type (atom "") (atom "")))
+  (->VitaAtom nil type (atom "") (atom "") (atom [])))

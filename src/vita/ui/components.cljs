@@ -59,3 +59,6 @@
                       (when large "btn-large")]
               :onClick onClick}
      label]))
+
+(v/defc category [{:keys [key]}]
+  [:span.& key])
