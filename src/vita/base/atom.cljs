@@ -7,24 +7,57 @@
   (str keyword))
 
 ;; Atom Info
-(defrecord AtomInfo [id type name categories])
+(defrecord AtomInfo [id
+                     type
+                     name
+                     categories
+                     ts-created
+                     ts-updated])
 
-(defn json->info [{:strs [id type name categories]}]
-  (->AtomInfo id (str->keyword type) name categories))
+(defn json->info [{:strs [id
+                          type
+                          name
+                          categories
+                          ts_created
+                          ts_updated]}]
+  (->AtomInfo id
+              (str->keyword type)
+              name
+              categories
+              ts_created
+              ts_updated))
 
 ;; Atom
-(defrecord VitaAtom [id type name data categories]
+(defrecord VitaAtom [id
+                     type
+                     name
+                     data
+                     categories
+                     ts-created
+                     ts-updated]
   Object
   (toString [this] (str id type "/" @name " " categories)))
 
-(defn json->atom [{:strs [id type name data categories]}]
+(defn json->atom [{:strs [id
+                          type
+                          name
+                          data
+                          categories
+                          ts_created
+                          ts_updated]}]
   (->VitaAtom id
               (str->keyword type)
               (atom name)
               (atom data)
-              (atom categories)))
+              (atom categories)
+              ts_created
+              ts_updated))
 
-(defn atom->json [{:keys [id type name data categories]}]
+(defn atom->json [{:keys [id
+                          type
+                          name
+                          data
+                          categories]}]
   {"id"   id
    "type" (keyword->str type)
    "name" @name
@@ -32,4 +65,10 @@
    "categories" @categories})
 
 (defn new-atom [type]
-  (->VitaAtom nil type (atom "") (atom "") (atom [])))
+  (->VitaAtom nil
+              type
+              (atom "")
+              (atom "")
+              (atom [])
+              nil
+              nil))
