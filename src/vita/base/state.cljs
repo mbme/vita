@@ -110,7 +110,7 @@
           (log/info "received list of %s atoms" (count items))
           (swap! state assoc :atoms
                  (->>
-                  (map atom/json->info items)
+                  items
                   (map #(assoc % :key (key-for-id (:id %))))
                   (update-visibility (:search-term @state))
                   (sort-by :name))))))))
@@ -146,13 +146,12 @@
        (ws-mark-active! key)
        (go
          (let [id             (id-by-key key)
-               [atom-str err] (<! (socket/read-atom id))]
+               [atom err] (<! (socket/read-atom id))]
            (if err
              (log/error "can't open atom %s: %s" id err)
              (do
                (log/info "open atom " id)
-               (-> atom-str
-                   atom/json->atom
+               (-> atom
                    (assoc :key key :state :view)
                    ws-add!)
                (ws-mark-active! key)))))))
@@ -168,29 +167,28 @@
    :ws-save
    (fn [key]
      (let [atom   (ws-get key)
-           json   (atom/atom->json atom)
            is-new (nil? (:id atom))]
        (go
          (if is-new
 
            ;; CREATE
-           (let [[data err] (<! (socket/create-atom json))]
+           (let [[data err] (<! (socket/create-atom atom))]
              (if err
                (log/error "can't create atom: %s %s" err (str data))
                (do
-                 (log/info "created atom " data)
-                 (ws-update! key #(assoc % :state :view :id data))
+                 (log/info "created atom " (:id data))
+                 (ws-update! key #(merge % data {:state :view}))
 
                  (register-id-key-pair data key)
                  (reload-atoms-list))))
 
            ;; UPDATE
-           (let [[data err] (<! (socket/update-atom json))]
+           (let [[data err] (<! (socket/update-atom atom))]
              (if err
                (log/error "can't save atom: %s %s" err (str data))
                (do
                  (log/info "saved atom " (:id atom))
-                 (ws-update! key #(assoc % :state :view))
+                 (ws-update! key #(merge % data {:state :view}))
 
                  (reload-atoms-list))))))))
 

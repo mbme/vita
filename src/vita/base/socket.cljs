@@ -1,9 +1,12 @@
 (ns vita.base.socket
-  (:require [vita.base.bus :as bus]
-            [vita.utils.log :as log]
+  (:require
+   [vita.base.bus :as bus]
+   [vita.base.atom :as atom]
 
-            [cljs.core.async :refer
-             [<! chan put! close! mix admix toggle]])
+   [vita.utils.log :as log]
+
+   [cljs.core.async :refer
+    [<! chan put! close! mix admix toggle]])
   (:require-macros
    [cljs.core.async.macros :refer [go-loop]]))
 
@@ -95,16 +98,22 @@
   (defn- next-id []
     (vswap! last-id inc)))
 
-(defn- send [method params]
-  (let [id          (next-id)
-        result-chan (chan)]
+(defn- send
+  ([method params] (send method params nil))
+  ([method params transform]
+   (let [id          (next-id)
+         result-chan (chan 1 (map
+                              (fn [[body err :as msg]]
+                                (if err
+                                  msg
+                                  (transform msg)))))]
 
-    (vswap! requests assoc id result-chan)
-    (put! req-queue [:send {:method method
-                            :params params
-                            :id id}])
+     (vswap! requests assoc id result-chan)
+     (put! req-queue [:send {:method method
+                             :params params
+                             :id id}])
 
-    result-chan))
+     result-chan)))
 
 ;; PUBLIC
 
@@ -112,16 +121,24 @@
   (not (nil? @socket)))
 
 (defn read-atoms-list []
-  (send :atoms-list-read nil))
+  (send :atoms-list-read nil
+        (fn [[body err]]
+          [(map atom/json->info body) err])))
 
 (defn create-atom [data]
-  (send :atom-create data))
+  (send :atom-create (atom/atom->json data)
+        (fn [[body err]]
+          [(atom/json->atom body) err])))
 
 (defn read-atom [id]
-  (send :atom-read id))
+  (send :atom-read id
+        (fn [[body err]]
+          [(atom/json->atom body) err])))
 
 (defn update-atom [data]
-  (send :atom-update data))
+  (send :atom-update (atom/atom->json data)
+        (fn [[body err]]
+          [(atom/json->atom body) err])))
 
 (defn delete-atom [id]
   (send :atom-delete id))
