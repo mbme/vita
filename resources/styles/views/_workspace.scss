@@ -22,14 +22,15 @@
         width: 50%;
     }
 
-    .icon {
-        cursor: pointer;
-        padding: 0 5px;
+    button {
+        margin: 0;
+        padding: 0 9px;
 
-        font-size: 30px;
+        font-size: 0.85em;
+
+        color: $c-font-secondary;
 
         @include transition(color .3s);
-
         &:hover {
             color: $c-font;
         }

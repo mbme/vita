@@ -7,15 +7,15 @@
 
             [viter :as v]))
 
-(defn- show-icons [items]
-  (for [[type onClick] items
+(defn- show-items [items]
+  (for [[text onClick] items
         :when (not (nil? onClick))]
-    [icon :type type :onClick onClick]))
+    [button :label text :onClick onClick]))
 
 (v/defc Panel [{:keys [left right]}]
   [:div.&
-   `[:span.&-left  ~@(show-icons left)]
-   `[:span.&-right ~@(show-icons right)]])
+   `[:span.&-left  ~@(show-items left)]
+   `[:span.&-right ~@(show-items right)]])
 
 
 (defn- show-record [name data categories]
