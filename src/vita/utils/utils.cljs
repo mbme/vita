@@ -91,6 +91,16 @@
 (when (nil? js/moment)
   (throw "can't find moment.js library"))
 
+(def ^:private moment-locale
+  #js {:lastDay  "[yesterday at] LT"
+       :sameDay  "LT"
+       :nextDay  "[tomorrow at] LT"
+       :lastWeek  "[last] dddd [at] LT"
+       :nextWeek  "dddd [at] LT"
+       :sameElse  "L"})
+
+(js/moment.locale "en" (js-obj "calendar" moment-locale))
+
 (defn unix-moment [seconds]
   (js/moment.unix seconds))
 
