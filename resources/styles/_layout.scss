@@ -40,7 +40,7 @@ body > .Root {
     position: relative;
     height: 100%;
     width: 100%;
-    min-width: $w-total-px + 50px;
+    min-width: $w-total-px + 100px;
 
     .left {
         height: 100%;
@@ -48,7 +48,7 @@ body > .Root {
         float: left;
         width: $w-left-p * 100%;
 
-        padding-right: 10px;
+        padding-right: 5px;
 
         > * {
             width: $w-left-px;
@@ -63,7 +63,7 @@ body > .Root {
         float: right;
         width: $w-right-p * 100%;
 
-        padding-left: 10px;
+        padding-left: 5px;
 
         > * {
             width: $w-right-px;

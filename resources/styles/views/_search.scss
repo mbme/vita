@@ -4,7 +4,7 @@
     & &-search {
         height: $h-top-panel;
         position: relative;
-        width: $w-left-px - 30px;
+        width: $w-left-px - 20px;
 
         .icon {
             position: absolute;
@@ -66,16 +66,16 @@
         @include calc(height, "100% - #{$h-top-panel}");
         width: 100%;
 
+        padding: 10px 10px 10px 0;
+
         overflow-y: hidden;
         &:hover {
             overflow-y: auto;
         }
         & > ul {
             // to not jump when scroll appears
-            width: $w-left-px - 30px;
+            width: $w-left-px - 20px;
         }
-
-        padding: 10px 5px 10px 0;
     }
 }
 
