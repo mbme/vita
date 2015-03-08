@@ -82,6 +82,7 @@
 .SearchResult {
     position: relative;
     height: 70px;
+    cursor: pointer;
 
     background-color: $c-bg;
 
@@ -102,13 +103,6 @@
         vertical-align: middle;
 
         color: $c-font;
-        cursor: pointer;
-
-        border-bottom: 1px solid $c-bg;
-        @include transition(border-bottom, 0.15s, 0);
-        &:hover {
-            border-bottom-color: $c-font;
-        }
     }
 
     &-time {

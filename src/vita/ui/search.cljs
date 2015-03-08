@@ -10,16 +10,16 @@
    {:class [(if (:visible atom)
               "&--visible"
               "&--hidden")
-            (when open "&--open")]}
+            (when open "&--open")]
+
+    :onClick #(trigger :ws-open (:key atom))}
 
    [icon :type (:type atom) :class "&-icon"]
 
    [:time.&-time {:dateTime (:ts-updated atom)}
     (utils/calendar-moment (:ts-updated atom))]
 
-   [:span.&-name
-    {:onClick #(trigger :ws-open (:key atom))}
-    (:name atom)]
+   [:span.&-name (:name atom)]
 
    [:div.&-categories
     (map #(category :key %) (:categories atom))]]
