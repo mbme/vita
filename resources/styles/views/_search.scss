@@ -116,12 +116,15 @@
         right: 10px;
         margin-top: $m-top;
 
-        font-size: 0.8em;
+        font-size: 0.7em;
         color: $c-font-secondary;
     }
 
     &-categories {
         margin-left: $m-left;
+        .category:first-child {
+            padding-left: 0;
+        }
     }
 
     // borders

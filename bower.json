@@ -20,6 +20,7 @@
     "markdown-it": "*",
     "react": "*",
     "normalize-scss": "*",
-    "animate.css-scss": "geoffgraham/animate.scss"
+    "animate.css-scss": "geoffgraham/animate.scss",
+    "moment": "~2.9.0"
   }
 }

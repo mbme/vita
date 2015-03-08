@@ -1,5 +1,6 @@
 (ns vita.utils.utils
   (:require [org.markdownIt]
+            [com.momentJs]
 
             [goog.string :as gstr]
             [goog.style :as style]
@@ -85,6 +86,16 @@
 (defn md->html [md]
   (.render markdownIt md))
 
+;; MOMENT.JS
+
+(when (nil? js/moment)
+  (throw "can't find moment.js library"))
+
+(defn unix-moment [seconds]
+  (js/moment.unix seconds))
+
+(defn calendar-moment [seconds]
+  (.calendar (unix-moment seconds)))
 
 ;; UI utils
 

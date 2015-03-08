@@ -15,7 +15,7 @@
    [icon :type (:type atom) :class "&-icon"]
 
    [:time.&-time {:dateTime (:ts-updated atom)}
-    (:ts-updated atom)]
+    (utils/calendar-moment (:ts-updated atom))]
 
    [:span.&-name
     {:onClick #(trigger :ws-open (:key atom))}

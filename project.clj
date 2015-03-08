@@ -52,6 +52,10 @@
                 :file-min ~(res "/jquery/dist/jquery.min.js")
                 :provides ["com.JQuery"]}
 
+               {:file     ~(res "/moment/moment.js")
+                :file-min ~(res "/moment/min/moment.min.js")
+                :provides ["com.momentJs"]}
+
                {:file     ~(res "/markdown-it/dist/markdown-it.js")
                 :file-min ~(res "/markdown-it/dist/markdown-it.min.js")
                 :provides ["org.markdownIt"]}]
