@@ -13,6 +13,10 @@
             (when open "&--open")]}
 
    [icon :type (:type atom) :class "&-icon"]
+
+   [:time.&-time {:dateTime (:ts-updated atom)}
+    (:ts-updated atom)]
+
    [:span.&-name
     {:onClick #(trigger :ws-open (:key atom))}
     (:name atom)]

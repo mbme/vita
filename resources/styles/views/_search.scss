@@ -92,9 +92,11 @@
         left: 15px;
     }
 
+    $m-left: 55px;
+    $m-top: 10px;
     &-name {
-        margin-top: 20px;
-        margin-left: 55px;
+        margin-top: $m-top;
+        margin-left: $m-left;
 
         display: inline-block;
         vertical-align: middle;
@@ -109,10 +111,17 @@
         }
     }
 
-    &-categories {
+    &-time {
         position: absolute;
-        top: -7px;
-        right: 0;
+        right: 10px;
+        margin-top: $m-top;
+
+        font-size: 0.8em;
+        color: $c-font-secondary;
+    }
+
+    &-categories {
+        margin-left: $m-left;
     }
 
     // borders
