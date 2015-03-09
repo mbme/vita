@@ -4,8 +4,16 @@
 ;; EVENT BUS (ACTIONS)
 (def events (atom {}))
 
+(defn off [action handler]
+  (swap! events
+         (fn [events]
+           (if-let [handlers (get events action)]
+             (assoc events action (disj handlers handler))
+             (log/error "can't unsubscribe handler for event" action)))))
+
 (defn on
-  "Register `handler' for `action'."
+  "Register `handler' for `action'.
+  Returns function which unsubscribes handler."
   [action handler]
   (swap! events
          (fn [events]
@@ -14,7 +22,14 @@
                   ;; new handler to the set, else create new set
                   (if-let [handlers (get events action)]
                     (conj handlers handler)
-                    #{handler})))))
+                    #{handler}))))
+  #(off action handler))
+
+(defn on-filter [action filter handler]
+  (on action
+      (fn [& params]
+        (when (apply filter params)
+          (apply handler params)))))
 
 (defn on-many [& items]
   (->> (partition 2 items)

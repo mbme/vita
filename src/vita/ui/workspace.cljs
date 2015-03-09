@@ -1,5 +1,5 @@
 (ns vita.ui.workspace
-  (:require [vita.base.bus    :refer [trigger]]
+  (:require [vita.base.bus :as bus :refer [trigger]]
             [vita.utils.utils :as utils]
             [vita.ui.components
              :refer [icon button category]]
@@ -89,8 +89,9 @@
    (show-record @name @data @categories)])
 
 
+(def scrollable (utils/q1 ".right"))
 (defn- scroll-to [el]
-  (utils/scroll-to! el (utils/q-parents el ".right") 300))
+  (utils/scroll-to! el scrollable 200 0.6))
 
 (v/defc WorkspaceItem [record]
   [:div.&
@@ -100,9 +101,25 @@
       :view    RecordView)
     record)]
 
-  :did-mount  #(let [el (v/get-node %)]
+  :did-mount (fn [this]
+               (let [el    (v/get-node this)
+                     key   (:key (v/this-args this))
+                     state (v/this-local-state this)]
+
                  ;; scroll on open
-                 (scroll-to el)))
+                 (scroll-to el)
+
+                 ;; scroll on every click
+                 (swap! state assoc
+                        :scroll-unsub
+                        (bus/on-filter :ws-open
+                                       #(= % key)
+                                       #(scroll-to el)))))
+
+  :will-unmount (fn [this]
+                  (let [state (v/this-local-state this)
+                        unsub (get @state :scroll-unsub)]
+                    (unsub))))
 
 (v/defc Workspace [{:keys [ws-items]}]
   [:div.&

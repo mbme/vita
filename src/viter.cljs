@@ -8,6 +8,12 @@
 
 (defn- get-args [obj] (aget obj "args"))
 
+(defn- this-args [this]
+  (get-args (.-props this)))
+
+(defn- this-local-state [this]
+  (.-localState this))
+
 (defn- try-to-run [func & rest]
   (when func (apply func rest)))
 
@@ -27,19 +33,21 @@
   (->
    #js {:displayName displayName
 
+        :localState (atom {})
+
         :shouldComponentUpdate
         (fn [next-props]
           (or
            *force-render*
            (this-as this
-                    (not= (get-args (.-props this))
+                    (not= (this-args this)
                           (get-args next-props)))))
 
         :render
         (fn []
           (this-as this
-                   (let [args (get-args (.-props this))
-                         rendered   (render args this)]
+                   (let [args     (this-args this)
+                         rendered (render args this)]
                      (to-vDOM rendered displayName))))
 
         :componentWillMount   (with-this  will-mount)

@@ -121,7 +121,7 @@
     (aset input "selectionEnd" len)
     (.focus input)))
 
-(defn scroll-to! [el container time]
+(defn scroll-to! [el container time accel]
   (let [old-x (.-scrollTop container)
         new-x (->
                (style/getContainerOffsetToScrollInto el container)
@@ -130,7 +130,7 @@
     (.play (new Scroll container
                 (array 0 old-x)
                 (array 0 new-x)
-                time))))
+                time accel))))
 
 ;; EVENT utils
 
