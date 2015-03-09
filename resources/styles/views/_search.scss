@@ -47,10 +47,9 @@
             text-align: center;
             font-size: 0.8em;
 
-            color: $lightPrimaryColor;
+            color: $primaryColor;
             letter-spacing: -0.02em;
 
-            @include fadeOut($duration: 0.25s);
             opacity: 0;
         }
 

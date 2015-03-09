@@ -46,8 +46,11 @@
                 (utils/remove-class "focused"))}]
 
     [:div.stats
-     (str (count (filter :visible atoms))
-          " of " (count atoms) " atoms")]]
+     (str
+      (count (filter :visible atoms))
+      " of "
+      (count atoms)
+      " atoms visible")]]
 
    (let [open-ids (set (map :id ws-items))]
      [:div.&-results
