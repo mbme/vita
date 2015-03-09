@@ -71,12 +71,6 @@
              (updater atom)
              atom)) %)))
 
-(defn- ws-mark-active! [key]
-  (ws-items-update
-   #(map (fn [atom]
-           (assoc atom
-                  :active (= key (:key atom)))) %)))
-
 (defn- ws-close! [key]
   (ws-items-update
    (fn [items]
@@ -142,8 +136,7 @@
    ;; request atom if it's not already open in workspace
    :ws-open
    (fn [key]
-     (if (ws-is-open? key (:ws-items @state))
-       (ws-mark-active! key)
+     (when-not (ws-is-open? key (:ws-items @state))
        (go
          (let [id             (id-by-key key)
                [atom err] (<! (socket/read-atom id))]
@@ -153,8 +146,7 @@
                (log/info "open atom " id)
                (-> atom
                    (assoc :key key :state :view)
-                   ws-add!)
-               (ws-mark-active! key)))))))
+                   ws-add!)))))))
 
    :ws-close ws-close!
 

@@ -89,23 +89,24 @@
    (show-record @name @data @categories)])
 
 
-(defn- scroll-if-active [el]
-  (when (utils/has-class el "active")
-    (utils/scroll-to! el (utils/q-parents el ".right") 300)))
+(defn- scroll-to [el]
+  (utils/scroll-to! el (utils/q-parents el ".right") 300))
 
 (v/defc WorkspaceItem [record]
-  [:div.& {:class (when (:active record) "active")}
+  [:div.&
    ((case (:state record)
       :edit    EditRecordView
       :preview PreviewRecordView
       :view    RecordView)
     record)]
 
-  :did-mount  #(scroll-if-active (v/get-node %))
-  :did-update #(scroll-if-active (v/get-node %)))
+  :did-mount  #(let [el (v/get-node %)]
+                 ;; scroll on open
+                 (scroll-to el)))
 
 (v/defc Workspace [{:keys [ws-items]}]
   [:div.&
+
    [button
     :class "&-new"
     :label [icon :type :plus]
@@ -113,4 +114,5 @@
     :style :raised
     :large true
     :onClick #(trigger :ws-new)]
+
    (map WorkspaceItem ws-items)])
