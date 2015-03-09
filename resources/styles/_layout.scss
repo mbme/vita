@@ -30,9 +30,9 @@ body > .Top-Panel {
 $w-right-p: 1/$golden-ratio;
 $w-left-p: 1 - $w-right-p;
 
-$w-total-px: 1200px;
-$w-left-px: $w-total-px * $w-left-p;
-$w-right-px: $w-total-px - $w-left-px;
+$w-total-px: 1350px;
+$w-left-px: 470px;
+$w-right-px: 700px;
 
 body > .Root {
     @include clearfix;
@@ -40,7 +40,7 @@ body > .Root {
     position: relative;
     height: 100%;
     width: 100%;
-    min-width: $w-total-px + 100px;
+    min-width: $w-total-px;
 
     .left {
         height: 100%;
@@ -63,7 +63,7 @@ body > .Root {
         float: right;
         width: $w-right-p * 100%;
 
-        padding-left: 5px;
+        padding-left: 10px;
 
         > * {
             width: $w-right-px;

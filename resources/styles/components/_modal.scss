@@ -14,7 +14,7 @@
 
     $dialog-padding: 10px;
     &-dialog {
-        @extend %paper-2;
+        @extend %z-depth-2;
         @extend %rounded;
 
         position: relative;

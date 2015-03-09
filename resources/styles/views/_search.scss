@@ -18,7 +18,7 @@
 
         input {
             @extend %rounded;
-            @extend %paper-1;
+            @extend %z-depth-1;
 
             position: absolute;
             top: 15px;
