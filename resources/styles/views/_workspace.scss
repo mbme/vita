@@ -38,14 +38,14 @@
 }
 
 .WorkspaceItem {
-    @extend %z-depth-1-half;
+    @extend %z-depth-1;
     @extend %rounded;
 
     position: relative; // we need this to limit text selection in Chrome
     z-index: 1;
 
     margin-top: 15px;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 
     background-color: $c-bg-paper;
 
@@ -68,11 +68,13 @@
     padding-bottom: 30px;
 
     & &-name {
-        @extend h2;
+        @extend h1;
 
         text-align: center;
 
         cursor: default;
+
+        color: $c-font-accent;
     }
 
     & &-categories {
@@ -81,12 +83,14 @@
     }
 
     & &-data {
+        // TYPOGRAPHY
         text-align: justify;
         word-wrap: break-word;
         letter-spacing: 0.01rem;
+        text-rendering: optimizeLegibility;
+        @include font-feature-settings("pnum", "kern");
 
         padding: 0 42px;
-
         :last-child {
             margin-bottom: 0;
         }
