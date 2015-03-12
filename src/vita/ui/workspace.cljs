@@ -5,6 +5,8 @@
              :refer [icon button category]]
             [vita.ui.modal :as modal]
 
+            [goog.style :as style]
+
             [viter :as v]))
 
 (defn- show-items [items]
@@ -132,4 +134,11 @@
     :large true
     :onClick #(trigger :ws-new)]
 
-   (map WorkspaceItem ws-items)])
+   (map WorkspaceItem ws-items)]
+
+  ;; fix workspace height on update to avoid redundant jumps
+  :will-update #(let [el (v/get-node %1)
+                      size (style/getSize el)]
+                  (style/setHeight el (.-height size)))
+  :did-update  #(let [el (v/get-node %1)]
+                  (style/setHeight el "auto")))
