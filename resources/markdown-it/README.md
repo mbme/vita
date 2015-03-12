@@ -9,6 +9,8 @@
 
 __[Live demo](https://markdown-it.github.io)__
 
+__v4.+ changed internals! Plugins need update. See [migration details](https://github.com/markdown-it/markdown-it/blob/master/docs/4.0_migration.md)__
+
 - Supports the CommonMark spec + syntax extensions + sugar (URL autolinking, typographer).
 - Configurable syntax! You can add new rules and even replace existing ones.
 - High speed!
@@ -212,10 +214,10 @@ Selected samples: (1 of 27)
  > spec
 
 Sample: spec.txt (110610 bytes)
- > commonmark-reference x 40.42 ops/sec ±4.07% (51 runs sampled)
- > current x 74.99 ops/sec ±4.69% (67 runs sampled)
- > current-commonmark x 93.76 ops/sec ±1.23% (79 runs sampled)
- > marked-0.3.2 x 22.92 ops/sec ±0.79% (41 runs sampled)
+ > commonmark-reference x 68.63 ops/sec ±6.53% (72 runs sampled)
+ > current x 79.62 ops/sec ±3.22% (80 runs sampled)
+ > current-commonmark x 103 ops/sec ±1.10% (76 runs sampled)
+ > marked-0.3.2 x 23.14 ops/sec ±1.66% (42 runs sampled)
 ```
 
 As you can see, `markdown-it` doesn't pay with speed for it's flexibility.
