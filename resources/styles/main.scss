@@ -8,8 +8,8 @@
 
 // Animate.scss mixins
 @import "../animate.css-scss/properties";
-@import "../animate.css-scss/_fading-entrances/fading-entrances";
-@import "../animate.css-scss/_fading-exits/fading-exits";
+@import "../animate.css-scss/_fading-entrances/fadeIn";
+@import "../animate.css-scss/_fading-exits/fadeOut";
 
 // Icons
 $ionicons-font-path: "/ionicons/fonts";
