@@ -48,10 +48,6 @@
                 :file-min ~(res "/react/react.min.js")
                 :provides ["com.facebook.React"]}
 
-               {:file     ~(res "/jquery/dist/jquery.js")
-                :file-min ~(res "/jquery/dist/jquery.min.js")
-                :provides ["com.JQuery"]}
-
                {:file     ~(res "/moment/moment.js")
                 :file-min ~(res "/moment/min/moment.min.js")
                 :provides ["com.momentJs"]}
