@@ -5,11 +5,11 @@
             [goog.string :as gstr]
             [goog.style :as style]
             [goog.dom :as dom]
+            [goog.events.EventType :as EventType]
 
             [viter.parser :refer [parse-tag-line]]
             [clojure.string :as str])
-  (:import goog.events.EventType
-           goog.fx.dom.Scroll))
+  (:import goog.fx.dom.Scroll))
 
 ;; HELPERS
 
@@ -152,21 +152,13 @@
     nil))
 
 (defn subscribe
-  "Subscribe to element's event.
-  Handles cross-browser event names."
+  "Subscribe to element's event."
   [elem event handler]
-
-  ;; Convert event symbol to google closure
-  ;; library EventType and get event name.
-  (let [event-name (->> (name event)
-                        gstr/toCamelCase
-                        str/upper-case
-                        (aget EventType))]
-    (.addEventListener elem event-name handler false)))
+  (.addEventListener elem event handler false))
 
 (defn watch-animation
   "Listen for animation events on `elem' and
   add `class' when animation ended."
   [elem class]
-  (subscribe elem :animation-start #(remove-class elem class))
-  (subscribe elem :animation-end   #(add-class    elem class)))
+  (subscribe elem EventType/ANIMATIONSTART #(remove-class elem class))
+  (subscribe elem EventType/ANIMATIONEND   #(add-class    elem class)))

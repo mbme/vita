@@ -12,7 +12,7 @@
   (get-args (.-props this)))
 
 (defn- this-local-state [this]
-  (.-localState this))
+  (aget this (name :localState)))
 
 (defn- try-to-run [func & rest]
   (when func (apply func rest)))

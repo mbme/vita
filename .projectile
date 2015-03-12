@@ -8,5 +8,5 @@
 -/resources/markdown-it
 -/resources/normalize-scss
 -/resources/moment
--/out
 -/target
+-/dist

@@ -10,6 +10,19 @@
   ([]     (res ""))
   ([path] (str "resources" path)))
 
+(def foreign-libs
+  [{:file     (res "/react/react.js")
+    :file-min (res "/react/react.min.js")
+    :provides ["com.facebook.React"]}
+
+   {:file     (res "/moment/moment.js")
+    :file-min (res "/moment/min/moment.min.js")
+    :provides ["com.momentJs"]}
+
+   {:file     (res "/markdown-it/dist/markdown-it.js")
+    :file-min (res "/markdown-it/dist/markdown-it.min.js")
+    :provides ["org.markdownIt"]}])
+
 (defproject vita "0.1.0-SNAPSHOT"
   :description "Vita UI"
 
@@ -25,42 +38,64 @@
 
   :plugins [[lein-cljsbuild ~cljsbuild :exclusions [org.clojure/clojure]]]
 
-  :profiles {:dev
+  :clean-targets
+  ^{:protect false} ["target"
+                     "dist/app.js"
+                     "dist/app.js.map"
+                     "dist/out"
+                     "resources/app"
+                     "resources/app.js"]
+
+  :cljsbuild {:builds
+              [{:id "prod"
+                :source-paths ["src/"]
+
+                :compiler {:output-to "dist/app.js"
+                           :main "vita.app"
+
+                           ;; :source-map "dist/app.js.map"
+                           ;; :output-dir "dist/out"
+
+                           :foreign-libs ~foreign-libs
+                           :externs [~(res "/react/react.js")
+                                     ~(res "/moment/moment.js")
+                                     ~(res "/markdown-it/dist/markdown-it.js")]
+
+                           :pretty-print false
+                           :elide-asserts true
+                           :optimizations :advanced
+                           :closure-warnings {:externs-validation :off
+                                              :non-standard-jsdoc :off}
+
+                           :warnings {:single-segment-namespace false}
+                           :language-in :ecmascript5
+                           :language-out :ecmascript5}}]}
+
+
+  :profiles {:develop
              {:dependencies [[figwheel ~figwheel]]
               :plugins [[cider/cider-nrepl ~cider :exclusions [org.clojure/clojure]]
                         [lein-figwheel ~figwheel
                          :exclusions [org.apache.httpcomponents/httpcore
                                       org.codehaus.plexus/plexus-utils
-                                      org.clojure/clojure]]]}}
+                                      org.clojure/clojure]]]
+              :cljsbuild
+              {:builds [{:id "dev"
+                         :source-paths ["src/" "src-dev/"]
 
-  :cljsbuild
-  {:builds [{:id "dev"
-             :source-paths ["src/" "src-dev/"]
-             :compiler
-             {:output-to  ~(res "/app.js")
-              :output-dir ~(res "/app")
-              :main "vita.dev"
-              :asset-path "/app"
-              :foreign-libs
-              [{:file     ~(res "/react/react.js")
-                :file-min ~(res "/react/react.min.js")
-                :provides ["com.facebook.React"]}
+                         :compiler {:output-to  ~(res "/app.js")
+                                    :output-dir ~(res "/app")
+                                    :main "vita.dev"
+                                    :asset-path "/app"
+                                    :foreign-libs ~foreign-libs
+                                    :optimizations :none
 
-               {:file     ~(res "/moment/moment.js")
-                :file-min ~(res "/moment/min/moment.min.js")
-                :provides ["com.momentJs"]}
+                                    :warnings {:single-segment-namespace false}
+                                    :language-in :ecmascript5
+                                    :language-out :ecmascript5}}]}
 
-               {:file     ~(res "/markdown-it/dist/markdown-it.js")
-                :file-min ~(res "/markdown-it/dist/markdown-it.min.js")
-                :provides ["org.markdownIt"]}]
-
-              :optimizations :none
-              :warnings {:single-segment-namespace false}
-              :pretty-print true
-              :source-map true}}]}
-
-  :figwheel {:server-port 8080
-             :http-server-root ""
-             :repl false
-             :server-logfile ".lein-figwheel-server.log"
-             :css-dirs [ ~(res "/styles")]})
+              :figwheel {:server-port 8080
+                         :http-server-root ""
+                         :repl false
+                         :server-logfile ".lein-figwheel-server.log"
+                         :css-dirs [ ~(res "/styles")]}}})

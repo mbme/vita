@@ -40,12 +40,7 @@
           #(put! socket-chan [:message
                               (->> (.-data %)
                                    (.parse js/JSON)
-                                   js->clj)]))
-
-    (aset s "sendData"
-          #(->> (clj->js %)
-                js/JSON.stringify
-                (.send s)))))
+                                   js->clj)]))))
 
 (defonce _
   (let [sender-chan  (chan)
@@ -86,7 +81,9 @@
 
           :send    (let [{:keys [id method]} val]
                      (log/debug "websocket: <- %s %s" id method)
-                     (.sendData @socket val))
+                     (->> (clj->js val)
+                          js/JSON.stringify
+                          (.send @socket)))
 
           :error   (do
                      (log/error "websocket: error %o" val)
