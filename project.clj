@@ -1,10 +1,9 @@
-(def clojure       "1.6.0")
+(def clojure       "1.7.0-alpha5")
 (def clojurescript "0.0-3058")
 (def core-async    "0.1.346.0-17112a-alpha")
 
 (def figwheel  "0.2.3-SNAPSHOT")
-(def cljsbuild "1.0.4")
-(def ancient   "0.6.1")
+(def cljsbuild "1.0.5")
 (def cider     "0.9.0-SNAPSHOT")
 
 (defn res
@@ -24,8 +23,7 @@
   :exclusions [org.clojure/clojure
                org.clojure/clojurescript]
 
-  :plugins [[lein-cljsbuild ~cljsbuild :exclusions [org.clojure/clojure]]
-            [lein-ancient   ~ancient   :exclusions [org.clojure/clojure]]]
+  :plugins [[lein-cljsbuild ~cljsbuild :exclusions [org.clojure/clojure]]]
 
   :profiles {:dev
              {:dependencies [[figwheel ~figwheel]]
