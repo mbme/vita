@@ -9,6 +9,7 @@
 
             [viter.parser :refer [parse-tag-line]]
             [clojure.string :as str])
+  (:require-macros [vita.utils.utils :as u])
   (:import goog.fx.dom.Scroll))
 
 ;; HELPERS
@@ -151,14 +152,9 @@
     ;; boolean value is deprecated in react
     nil))
 
-(defn subscribe
-  "Subscribe to element's event."
-  [elem event handler]
-  (.addEventListener elem event handler false))
-
 (defn watch-animation
   "Listen for animation events on `elem' and
   add `class' when animation ended."
   [elem class]
-  (subscribe elem EventType/ANIMATIONSTART #(remove-class elem class))
-  (subscribe elem EventType/ANIMATIONEND   #(add-class    elem class)))
+  (u/subscribe elem :animation-start #(remove-class elem class))
+  (u/subscribe elem :animation-end   #(add-class    elem class)))
