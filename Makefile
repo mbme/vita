@@ -1,13 +1,14 @@
 DIST := ./dist
 
 clean:
+	rm .lein-figwheel-server.log
 	lein clean
-	rm -rf $(DIST)
 
 serv: clean
-	lein with-profile develop figwheel
+	rlwrap lein with-profile develop figwheel
 
-build: clean
+build:
+	rm -rf $(DIST)
 	lein cljsbuild once
 	cp resources/index.html        $(DIST)
 	cp -r resources/open-sans      $(DIST)/open-sans/
