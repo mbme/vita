@@ -1,7 +1,7 @@
 clean:
 	lein clean
 
-serv:
+serv: clean
 	lein with-profile develop figwheel
 
 build: clean
