@@ -21,7 +21,7 @@ var config = {
     interval: 5*1000
 };
 config.buildCommand= 'go build ' + config.baseDir;
-config.runCommand= config.baseDir + '/skelet';
+config.runCommand= config.baseDir + '/vita';
 
 var child;
 var killApp = function () {

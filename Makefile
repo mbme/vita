@@ -23,6 +23,6 @@ run: build
 	$(BASE)/$(APP)
 
 serv:
-	node $(BASE)/watch.js $(BASE)
+	node $(BASE)/dev/watch.js $(BASE)
 
 .PHONY: clean build test install check run serv
