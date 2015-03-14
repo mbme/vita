@@ -1,20 +1,28 @@
-DIST := ./dist
+DIRS := . ./storage
+BASE := .
+GO_FILES = $(wildcard *.go)
+APP := vita
 
 clean:
-	rm .lein-figwheel-server.log
-	lein clean
-
-serv: clean
-	rlwrap lein with-profile develop figwheel
+	rm -f $(BASE)/$(APP)
 
 build:
-	rm -rf $(DIST)
-	lein cljsbuild once
-	cp resources/index.html        $(DIST)
-	cp -r resources/open-sans      $(DIST)/open-sans/
-	mkdir $(DIST)/ionicons
-	cp -r resources/ionicons/fonts $(DIST)/ionicons/fonts
-	mkdir $(DIST)/styles
-	scss -t compressed -I resources/styles resources/styles/main.scss $(DIST)/styles/main.css
+	go build -v $(BASE)
 
-.PHONY: clean serv build
+test:
+	go test -v ${DIRS}
+
+install:
+	go install $(BASE)
+
+check:
+	go vet $(BASE)
+	golint $(BASE)
+
+run: build
+	$(BASE)/$(APP)
+
+serv:
+	node $(BASE)/watch.js $(BASE)
+
+.PHONY: clean build test install check run serv
