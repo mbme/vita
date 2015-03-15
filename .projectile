@@ -1,15 +1,15 @@
 -/dev/node_modules
 
--/static/Materialize
--/static/jquery
--/static/react
--/static/bourbon
--/static/ionicons
--/static/animate.css-scss
--/static/open-sans
--/static/markdown-it
--/static/normalize-scss
--/static/moment
+-/vendor/Materialize
+-/vendor/jquery
+-/vendor/react
+-/vendor/bourbon
+-/vendor/ionicons
+-/vendor/animate.css-scss
+-/vendor/open-sans
+-/vendor/markdown-it
+-/vendor/normalize-scss
+-/vendor/moment
 
 -/target
 -/dist

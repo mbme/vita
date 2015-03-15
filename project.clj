@@ -7,7 +7,7 @@
 
 (defn res
   ([]     (res ""))
-  ([path] (str "static" path)))
+  ([path] (str "vendor" path)))
 
 (defn dist [path]
   (str "dist" path))
