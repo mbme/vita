@@ -6,7 +6,7 @@ import (
 
 	"log"
 
-	s "github.com/mbme/vita/storage"
+	s "github.com/mbme/vita/go/storage"
 )
 
 var (
@@ -172,8 +172,7 @@ var handlers = map[RequestMethod]func(*RequestParams) (any, error){
 	},
 }
 
-// ProcessRequest handle client request
-func ProcessRequest(reqType RequestMethod, params *RequestParams) (any, error) {
+func processRequest(reqType RequestMethod, params *RequestParams) (any, error) {
 	handler, ok := handlers[reqType]
 
 	if !ok {

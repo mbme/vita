@@ -2,12 +2,16 @@
 
 note taking app
 
-## TODO
 
-* use core.typed
-? use core.async
-* fix UI warnings
-* separate UI and backend
+## BUILD
+
+### DEPENDENCIES
+
+* GNU make to build app
+* go 1.5 to compile app
+* leiningen (& java) to compile ClojureScript
+* sass to compile styles
+* node.js for bower(updating UI dependencies) and watch.js (auto-rebuilding go app on change)
 
 ## License
 

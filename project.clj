@@ -7,7 +7,10 @@
 
 (defn res
   ([]     (res ""))
-  ([path] (str "resources" path)))
+  ([path] (str "static" path)))
+
+(defn dist [path]
+  (str "target" path))
 
 (def foreign-libs
   [{:file     (res "/react/react.js")
@@ -25,8 +28,6 @@
 (defproject vita "0.1.0-SNAPSHOT"
   :description "Vita UI"
 
-  :global-vars {*warn-on-reflection* true}
-
   :dependencies [[org.clojure/clojure ~clojure]
                  [org.clojure/clojurescript ~clojurescript
                   :scope "provided"]
@@ -37,19 +38,11 @@
 
   :plugins [[lein-cljsbuild ~cljsbuild :exclusions [org.clojure/clojure]]]
 
-  :clean-targets
-  ^{:protect false} ["target"
-                     "dist/app.js"
-                     "dist/app.js.map"
-                     "dist/out"
-                     "resources/app"
-                     "resources/app.js"]
-
   :cljsbuild {:builds
               [{:id "prod"
-                :source-paths ["src/"]
+                :source-paths ["cljs/"]
 
-                :compiler {:output-to "dist/app.js"
+                :compiler {:output-to ~(dist "/app.js")
                            :main "vita.app"
 
                            ;; :source-map "dist/app.js.map"
@@ -79,12 +72,14 @@
                                       org.clojure/clojure]]]
               :cljsbuild
               {:builds [{:id "dev"
-                         :source-paths ["src/" "src-dev/"]
+                         :source-paths ["cljs/" "dev/cljs/"]
 
-                         :compiler {:output-to  ~(res "/app.js")
-                                    :output-dir ~(res "/app")
+                         :compiler {:output-to  ~(dist "/app.js")
+                                    :output-dir ~(dist "/app")
+
                                     :main "vita.dev"
                                     :asset-path "/app"
+
                                     :foreign-libs ~foreign-libs
                                     :optimizations :none
 
@@ -96,4 +91,4 @@
                          :http-server-root ""
                          :repl false
                          :server-logfile ".lein-figwheel-server.log"
-                         :css-dirs [ ~(res "/styles")]}}})
+                         :css-dirs [ "/styles" ]}}})

@@ -79,7 +79,7 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 
 		// process request
 		params := RequestParams(req.Params)
-		resp.Result, err = ProcessRequest(req.Method, &params)
+		resp.Result, err = processRequest(req.Method, &params)
 
 		if err == nil {
 			log.Printf("%v -> ok", req.Method)

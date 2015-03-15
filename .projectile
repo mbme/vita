@@ -1,14 +1,13 @@
--/node_modules
+-/dev/node_modules
 
--/ui/resources/Materialize
--/ui/resources/jquery
--/ui/resources/react
--/ui/resources/bourbon
--/ui/resources/ionicons
--/ui/resources/animate.css-scss
--/ui/resources/open-sans
--/ui/resources/markdown-it
--/ui/resources/normalize-scss
--/ui/resources/moment
--/ui/target
--/ui/dist
+-/static/Materialize
+-/static/jquery
+-/static/react
+-/static/bourbon
+-/static/ionicons
+-/static/animate.css-scss
+-/static/open-sans
+-/static/markdown-it
+-/static/normalize-scss
+-/static/moment
+-/target
