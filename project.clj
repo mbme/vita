@@ -10,7 +10,7 @@
   ([path] (str "static" path)))
 
 (defn dist [path]
-  (str "target" path))
+  (str "dist" path))
 
 (def foreign-libs
   [{:file     (res "/react/react.js")
@@ -38,30 +38,31 @@
 
   :plugins [[lein-cljsbuild ~cljsbuild :exclusions [org.clojure/clojure]]]
 
-  :cljsbuild {:builds
-              [{:id "prod"
-                :source-paths ["cljs/"]
+  :cljsbuild
+  {:builds
+   [{:id "prod"
+     :source-paths ["cljs/"]
 
-                :compiler {:output-to ~(dist "/app.js")
-                           :main "vita.app"
+     :compiler {:output-to ~(dist "/app.js")
+                :main "vita.app"
 
-                           ;; :source-map "dist/app.js.map"
-                           ;; :output-dir "dist/out"
+                ;; :source-map "dist/app.js.map"
+                ;; :output-dir "dist/out"
 
-                           :foreign-libs ~foreign-libs
-                           :externs [~(res "/react/react.js")
-                                     ~(res "/moment/moment.js")
-                                     ~(res "/markdown-it/dist/markdown-it.js")]
+                :foreign-libs ~foreign-libs
+                :externs [~(res "/react/react.js")
+                          ~(res "/moment/moment.js")
+                          ~(res "/markdown-it/dist/markdown-it.js")]
 
-                           :pretty-print false
-                           :elide-asserts true
-                           :optimizations :advanced
-                           :closure-warnings {:externs-validation :off
-                                              :non-standard-jsdoc :off}
+                :pretty-print false
+                :elide-asserts true
+                :optimizations :advanced
+                :closure-warnings {:externs-validation :off
+                                   :non-standard-jsdoc :off}
 
-                           :warnings {:single-segment-namespace false}
-                           :language-in :ecmascript5
-                           :language-out :ecmascript5}}]}
+                :warnings {:single-segment-namespace false}
+                :language-in :ecmascript5
+                :language-out :ecmascript5}}]}
 
 
   :profiles {:develop
@@ -75,7 +76,6 @@
                          :source-paths ["cljs/" "dev/cljs/"]
 
                          :compiler {:output-to  ~(dist "/app.js")
-                                    :output-dir ~(dist "/app")
 
                                     :main "vita.dev"
                                     :asset-path "/app"
@@ -87,8 +87,6 @@
                                     :language-in :ecmascript5
                                     :language-out :ecmascript5}}]}
 
-              :figwheel {:server-port 8080
-                         :http-server-root ""
-                         :repl false
+              :figwheel {:repl false
                          :server-logfile ".lein-figwheel-server.log"
                          :css-dirs [ "/styles" ]}}})

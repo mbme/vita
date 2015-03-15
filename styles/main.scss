@@ -1,19 +1,23 @@
 @charset "UTF-8";
 
 // Reset
-@import "../normalize-scss/normalize";
+@import "../static/normalize-scss/normalize";
 
 // Bourbon mixins
-@import "../bourbon/app/assets/stylesheets/bourbon";
+@import "../static/bourbon/app/assets/stylesheets/bourbon";
 
 // Animate.scss mixins
-@import "../animate.css-scss/properties";
-@import "../animate.css-scss/_fading-entrances/fadeIn";
-@import "../animate.css-scss/_fading-exits/fadeOut";
+@import "../static/animate.css-scss/properties";
+@import "../static/animate.css-scss/_fading-entrances/fadeIn";
+@import "../static/animate.css-scss/_fading-exits/fadeOut";
+
+// Fonts
+$OpenSansPath: "./open-sans-fontface/fonts";
+@import "../static/open-sans-fontface/open-sans";
 
 // Icons
 $ionicons-font-path: "/ionicons/fonts";
-@import "../ionicons/scss/ionicons";
+@import "../static/ionicons/scss/ionicons";
 
 // Variables
 @import "palette";

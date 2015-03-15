@@ -1,9 +1,13 @@
 BASE := .
 
+DIST := $(BASE)/dist
+
 GOSRC  := $(BASE)/go
 GODIRS := $(GOSRC) $(GOSRC)/storage
 TARGET := $(BASE)/target
 APP    := $(TARGET)/vita
+
+STYLES := $(BASE)/styles
 
 clean:
 	rm -f $(BASE)/.lein-figwheel-server.log
@@ -29,8 +33,8 @@ run: build
 serv:
 	node $(BASE)/dev/watch.js $(GOSRC) $(APP)
 
-# serv: clean
-# 	rlwrap lein with-profile develop figwheel
+serv-cljs:
+	rlwrap lein with-profile develop figwheel
 
 # build:
 # 	rm -rf $(DIST)

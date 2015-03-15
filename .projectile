@@ -10,4 +10,6 @@
 -/static/markdown-it
 -/static/normalize-scss
 -/static/moment
+
 -/target
+-/dist
