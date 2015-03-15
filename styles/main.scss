@@ -12,11 +12,11 @@
 @import "../vendor/animate.css-scss/_fading-exits/fadeOut";
 
 // Fonts
-$OpenSansPath: "./open-sans-fontface/fonts";
+$OpenSansPath: "/vendor/open-sans-fontface/fonts";
 @import "../vendor/open-sans-fontface/open-sans";
 
 // Icons
-$ionicons-font-path: "/ionicons/fonts";
+$ionicons-font-path: "/vendor/ionicons/fonts";
 @import "../vendor/ionicons/scss/ionicons";
 
 // Variables

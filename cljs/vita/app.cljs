@@ -9,6 +9,8 @@
             [vita.ui.components :refer [spinner]]
             [vita.ui.modal :as modal]
 
+            [clojure.string :as string]
+
             [viter :as v]))
 
 (defonce left (utils/q1 ".Root>.left"))
@@ -29,7 +31,10 @@
                   (show-no-connection)) 1500)
 
 (defonce _
-  (do
+  (let [addr (-> js/window.location
+                 (str "ws")
+                 (string/replace-first #"^http" "ws"))]
+
     (modal/init! overlay)
 
     ;; NO CONNECTION MODAL
@@ -45,4 +50,4 @@
     ;; render app first time
     (state/trigger-update!)
 
-    (socket/connect! "ws://test.dev:8081/ws" 5000)))
+    (socket/connect! addr 5000)))

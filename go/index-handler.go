@@ -1,8 +1,8 @@
 package main
 
 import (
+	"io"
 	"log"
-	"net/http"
 	"text/template"
 )
 
@@ -12,7 +12,7 @@ var indexTpl, _ = template.New("index.html").Parse(`
     <head>
         <meta charset="utf-8">
 
-        <link href="/main.css" rel="stylesheet"/>
+        <link href="/styles/main.css" rel="stylesheet"/>
     </head>
     <body>
         <div class="Top-Panel"></div>
@@ -22,17 +22,12 @@ var indexTpl, _ = template.New("index.html").Parse(`
         </div>
         <div class="Overlay"></div>
 
-        <script src="/app.js"></script>
+        <script src="/dist/app.js"></script>
     </body>
 </html>
 `)
 
-func indexHandler(w http.ResponseWriter, req *http.Request) {
-	if req.URL.Path != "/" {
-		http.NotFound(w, req)
-		return
-	}
-
+func writeIndexHTML(w io.Writer) {
 	if err := indexTpl.Execute(w, nil); err != nil {
 		log.Printf("can't serve index.html: %v", err)
 	}

@@ -29,6 +29,18 @@ func listenSignals() {
 	}()
 }
 
+func indexHandler(w http.ResponseWriter, req *http.Request) {
+	path := req.URL.Path
+	log.Println("GET", path)
+
+	if path == "/" {
+		writeIndexHTML(w)
+		return
+	}
+
+	http.ServeFile(w, req, "."+path)
+}
+
 func main() {
 	configureLogger()
 	listenSignals()
