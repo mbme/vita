@@ -76,9 +76,10 @@
                          :source-paths ["cljs/" "dev/cljs/"]
 
                          :compiler {:output-to  ~(dist "/app.js")
+                                    :output-dir ~(dist "/app")
 
                                     :main "vita.dev"
-                                    :asset-path "/app"
+                                    :asset-path ~(dist "/app")
 
                                     :foreign-libs ~foreign-libs
                                     :optimizations :none
@@ -88,5 +89,4 @@
                                     :language-out :ecmascript5}}]}
 
               :figwheel {:repl false
-                         :server-logfile ".lein-figwheel-server.log"
-                         :css-dirs [ "/styles" ]}}})
+                         :server-logfile ".lein-figwheel-server.log"}}})
