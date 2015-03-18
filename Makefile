@@ -31,7 +31,7 @@ run: build
 	$(APP)
 
 serv:
-	node $(BASE)/dev/watch.js $(GOSRC) $(APP)
+	$(BASE)/dev/watch -d $(GOSRC) -f "\.go$$" -b 'make build' -r $(APP)
 
 serv-cljs:
 	rlwrap lein with-profile develop figwheel

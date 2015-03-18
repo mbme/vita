@@ -7,6 +7,7 @@ const SIGINT = 'SIGINT';
 var watch = require('node-watch');
 var colors = require('colors');
 var Proc = require('child_process');
+var program = require('commander');
 
 var log = function () {
     var args = Array.prototype.slice.call(arguments, 0);
@@ -15,13 +16,42 @@ var log = function () {
     console.log.apply(console, args);
 };
 
-var config = {
-    pattern: /\.go$/,
-    baseDir: process.argv[2] || '.',
-    interval: 5*1000
+var exit = function (exitCode) {
+    process.exit(exitCode || 0);
 };
-config.buildCommand= 'go build ' + config.baseDir;
-config.runCommand= config.baseDir + '/vita';
+
+var validateOpt = function (opt, val) {
+    if (val === undefined) {
+        log((opt + ' is required').red);
+        exit(1);
+    }
+};
+
+program
+    .description("watch dir for changes and run app on successful build")
+    .option('-d, --dir <dir>', 'directory to watch for changes')
+    .option('-f, --filter [filter]', 'files names filter', '.')
+    .option('-b, --build-command <build-command>', 'build command to run on change')
+    .option('-r, --run-command <run-command>', 'run command to run on successful build')
+    .option('-i, --interval [interval]', 'interval to check for changes (in seconds)', parseInt, 5)
+    .parse(process.argv);
+
+// show help if no args specified
+if (process.argv.length === 2) {
+    program.help();
+}
+
+validateOpt('--dir', program.dir);
+validateOpt('--build-command', program.buildCommand);
+validateOpt('--run-command', program.runCommand);
+
+var config = {
+    pattern: new RegExp(program.filter),
+    baseDir: program.dir,
+    interval: program.interval*1000,
+    buildCommand: program.buildCommand,
+    runCommand: program.runCommand
+};
 
 var child;
 var killApp = function () {
@@ -82,7 +112,7 @@ setInterval(function () {
 process.on(SIGINT, function () {
     log('got a SIGINT, closing');
     killApp();
-    process.exit(0);
+    exit(0);
 });
 
 // run app first time
