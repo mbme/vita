@@ -2,11 +2,8 @@ package main
 
 import (
 	"log"
-	"net/http"
 	"os"
 	"os/signal"
-
-	"github.com/codegangsta/cli"
 )
 
 func configureLogger() {
@@ -27,48 +24,4 @@ func listenSignals() {
 		log.Printf("received SIGINT, closing")
 		os.Exit(0)
 	}()
-}
-
-func indexHandler(w http.ResponseWriter, req *http.Request) {
-	path := req.URL.Path
-	log.Println("GET", path)
-
-	if path == "/" {
-		writeIndexHTML(w)
-		return
-	}
-
-	http.ServeFile(w, req, "."+path)
-}
-
-func main() {
-	configureLogger()
-	listenSignals()
-
-	app := cli.NewApp()
-	app.Name = "vita"
-
-	app.Flags = []cli.Flag{
-		cli.IntFlag{
-			Name:  "port",
-			Value: 8080,
-			Usage: "websockets port",
-		},
-	}
-
-	app.Action = func(c *cli.Context) {
-		var port = c.String("port")
-		log.Printf("listening on port %v", port)
-
-		http.HandleFunc("/", indexHandler)
-		http.HandleFunc("/ws", wsHandler)
-
-		if err := http.ListenAndServe(":"+port, nil); err != nil {
-			log.Fatal(err)
-		}
-	}
-
-	if err := app.Run(os.Args); err != nil {
-		log.Fatal(err)
-	}
 }

@@ -7,15 +7,18 @@ GODIRS := $(GOSRC) $(GOSRC)/storage
 TARGET := $(BASE)/target
 APP    := $(TARGET)/vita
 
+VENDOR := $(BASE)/vendor
+
 STYLES := $(BASE)/styles
 
 clean:
 	rm -f $(BASE)/.lein-figwheel-server.log
-	rm -f $(APP)
+	rm -rf $(TARGET)
+	rm -rf $(DIST)
 	lein clean
 
 build:
-	go build -o $(APP) -v $(GOSRC)
+	go build -tags='dev' -o $(APP) -v $(GOSRC)
 
 test:
 	go test -v ${GODIRS}
@@ -36,14 +39,19 @@ serv:
 serv-cljs:
 	rlwrap lein with-profile develop figwheel
 
-# build:
-# 	rm -rf $(DIST)
-# 	lein cljsbuild once
-# 	cp resources/index.html        $(DIST)
-# 	cp -r resources/open-sans      $(DIST)/open-sans/
-# 	mkdir $(DIST)/ionicons
-# 	cp -r resources/ionicons/fonts $(DIST)/ionicons/fonts
-# 	mkdir $(DIST)/styles
-# 	scss -t compressed -I resources/styles resources/styles/main.scss $(DIST)/styles/main.css
+prod: clean
+	mkdir $(DIST)
 
-.PHONY: clean build test install check run serv
+	cp -r $(VENDOR)/open-sans-fontface/fonts $(DIST)/open-sans
+	cp -r $(VENDOR)/ionicons/fonts $(DIST)/ionicons
+	# remove all other ttf/otf/svg fonts
+	find $(DIST) -type f ! -name "*.woff" -delete
+
+	lein cljsbuild once
+	scss -t compressed --sourcemap=none $(STYLES)/main.scss $(DIST)/main.css
+
+	# generate go source file with all the resources
+	go-bindata -o go/resources-prod.go -tags="prod" -nomemcopy -prefix "dist" dist/...
+	go build -tags='prod' -o $(APP) -v $(GOSRC)
+
+.PHONY: clean build test install check run serv serv-cljs prod
