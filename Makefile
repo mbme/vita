@@ -13,9 +13,7 @@ STYLES := $(BASE)/styles
 
 clean:
 	rm -f $(BASE)/.lein-figwheel-server.log
-	rm -rf $(TARGET)
-	rm -rf $(DIST)
-	lein clean
+	rm -rf $(TARGET) $(DIST)
 
 build:
 	go build -tags='dev' -o $(APP) -v $(GOSRC)
