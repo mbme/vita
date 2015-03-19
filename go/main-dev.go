@@ -7,12 +7,18 @@ import (
 	"net/http"
 )
 
+var indexHTML = renderIndexHTML(&indexHTMLConfig{
+	Styles: "/styles/main.css",
+	App:    "/dist/app.js",
+})
+
 func indexHandler(w http.ResponseWriter, req *http.Request) {
 	path := req.URL.Path
-	log.Println("GET", path)
 
 	if path == "/" {
-		writeIndexHTML(w)
+		if _, err := w.Write(indexHTML); err != nil {
+			log.Println("can't render index.html:", err)
+		}
 		return
 	}
 

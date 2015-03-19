@@ -88,7 +88,7 @@ func app_js() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindata_file_info{name: "app.js", size: 474770, mode: os.FileMode(420), modTime: time.Unix(1426714646, 0)}
+	info := bindata_file_info{name: "app.js", size: 474770, mode: os.FileMode(420), modTime: time.Unix(1426792793, 0)}
 	a := &asset{bytes: bytes, info:  info}
 	return a, nil
 }
@@ -108,7 +108,7 @@ func ionicons_ionicons_woff() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindata_file_info{name: "ionicons/ionicons.woff", size: 67904, mode: os.FileMode(420), modTime: time.Unix(1426714642, 0)}
+	info := bindata_file_info{name: "ionicons/ionicons.woff", size: 67904, mode: os.FileMode(420), modTime: time.Unix(1426792787, 0)}
 	a := &asset{bytes: bytes, info:  info}
 	return a, nil
 }
@@ -128,7 +128,7 @@ func main_css() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindata_file_info{name: "main.css", size: 79786, mode: os.FileMode(420), modTime: time.Unix(1426714667, 0)}
+	info := bindata_file_info{name: "main.css", size: 79786, mode: os.FileMode(420), modTime: time.Unix(1426792819, 0)}
 	a := &asset{bytes: bytes, info:  info}
 	return a, nil
 }
@@ -148,7 +148,7 @@ func open_sans_bold_opensans_bold_woff() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindata_file_info{name: "open-sans/Bold/OpenSans-Bold.woff", size: 63564, mode: os.FileMode(420), modTime: time.Unix(1426714642, 0)}
+	info := bindata_file_info{name: "open-sans/Bold/OpenSans-Bold.woff", size: 63564, mode: os.FileMode(420), modTime: time.Unix(1426792787, 0)}
 	a := &asset{bytes: bytes, info:  info}
 	return a, nil
 }
@@ -168,7 +168,7 @@ func open_sans_bolditalic_opensans_bolditalic_woff() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindata_file_info{name: "open-sans/BoldItalic/OpenSans-BoldItalic.woff", size: 73624, mode: os.FileMode(420), modTime: time.Unix(1426714642, 0)}
+	info := bindata_file_info{name: "open-sans/BoldItalic/OpenSans-BoldItalic.woff", size: 73624, mode: os.FileMode(420), modTime: time.Unix(1426792787, 0)}
 	a := &asset{bytes: bytes, info:  info}
 	return a, nil
 }
@@ -188,7 +188,7 @@ func open_sans_extrabold_opensans_extrabold_woff() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindata_file_info{name: "open-sans/ExtraBold/OpenSans-ExtraBold.woff", size: 69932, mode: os.FileMode(420), modTime: time.Unix(1426714642, 0)}
+	info := bindata_file_info{name: "open-sans/ExtraBold/OpenSans-ExtraBold.woff", size: 69932, mode: os.FileMode(420), modTime: time.Unix(1426792787, 0)}
 	a := &asset{bytes: bytes, info:  info}
 	return a, nil
 }
@@ -208,7 +208,7 @@ func open_sans_extrabolditalic_opensans_extrabolditalic_woff() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindata_file_info{name: "open-sans/ExtraBoldItalic/OpenSans-ExtraBoldItalic.woff", size: 71720, mode: os.FileMode(420), modTime: time.Unix(1426714642, 0)}
+	info := bindata_file_info{name: "open-sans/ExtraBoldItalic/OpenSans-ExtraBoldItalic.woff", size: 71720, mode: os.FileMode(420), modTime: time.Unix(1426792787, 0)}
 	a := &asset{bytes: bytes, info:  info}
 	return a, nil
 }
@@ -228,7 +228,7 @@ func open_sans_italic_opensans_italic_woff() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindata_file_info{name: "open-sans/Italic/OpenSans-Italic.woff", size: 76104, mode: os.FileMode(420), modTime: time.Unix(1426714642, 0)}
+	info := bindata_file_info{name: "open-sans/Italic/OpenSans-Italic.woff", size: 76104, mode: os.FileMode(420), modTime: time.Unix(1426792787, 0)}
 	a := &asset{bytes: bytes, info:  info}
 	return a, nil
 }
@@ -248,7 +248,7 @@ func open_sans_light_opensans_light_woff() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindata_file_info{name: "open-sans/Light/OpenSans-Light.woff", size: 62844, mode: os.FileMode(420), modTime: time.Unix(1426714642, 0)}
+	info := bindata_file_info{name: "open-sans/Light/OpenSans-Light.woff", size: 62844, mode: os.FileMode(420), modTime: time.Unix(1426792787, 0)}
 	a := &asset{bytes: bytes, info:  info}
 	return a, nil
 }
@@ -268,7 +268,7 @@ func open_sans_lightitalic_opensans_lightitalic_woff() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindata_file_info{name: "open-sans/LightItalic/OpenSans-LightItalic.woff", size: 76408, mode: os.FileMode(420), modTime: time.Unix(1426714642, 0)}
+	info := bindata_file_info{name: "open-sans/LightItalic/OpenSans-LightItalic.woff", size: 76408, mode: os.FileMode(420), modTime: time.Unix(1426792787, 0)}
 	a := &asset{bytes: bytes, info:  info}
 	return a, nil
 }
@@ -288,7 +288,7 @@ func open_sans_regular_opensans_regular_woff() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindata_file_info{name: "open-sans/Regular/OpenSans-Regular.woff", size: 63712, mode: os.FileMode(420), modTime: time.Unix(1426714642, 0)}
+	info := bindata_file_info{name: "open-sans/Regular/OpenSans-Regular.woff", size: 63712, mode: os.FileMode(420), modTime: time.Unix(1426792787, 0)}
 	a := &asset{bytes: bytes, info:  info}
 	return a, nil
 }
@@ -308,7 +308,7 @@ func open_sans_semibold_opensans_semibold_woff() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindata_file_info{name: "open-sans/Semibold/OpenSans-Semibold.woff", size: 69888, mode: os.FileMode(420), modTime: time.Unix(1426714642, 0)}
+	info := bindata_file_info{name: "open-sans/Semibold/OpenSans-Semibold.woff", size: 69888, mode: os.FileMode(420), modTime: time.Unix(1426792787, 0)}
 	a := &asset{bytes: bytes, info:  info}
 	return a, nil
 }
@@ -328,7 +328,7 @@ func open_sans_semibolditalic_opensans_semibolditalic_woff() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindata_file_info{name: "open-sans/SemiboldItalic/OpenSans-SemiboldItalic.woff", size: 75620, mode: os.FileMode(420), modTime: time.Unix(1426714642, 0)}
+	info := bindata_file_info{name: "open-sans/SemiboldItalic/OpenSans-SemiboldItalic.woff", size: 75620, mode: os.FileMode(420), modTime: time.Unix(1426792787, 0)}
 	a := &asset{bytes: bytes, info:  info}
 	return a, nil
 }
