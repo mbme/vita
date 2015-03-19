@@ -15,15 +15,25 @@ clean:
 	rm -f $(BASE)/.lein-figwheel-server.log
 	rm -rf $(TARGET) $(DIST)
 
+clean-cljs:
+	rm -f $(DIST)/app.js
+
+# install project deps
+deps:
+	go get -u github.com/codegangsta/cli
+	go get -u github.com/gorilla/websocket
+
 build:
 	go build -tags='dev' -o $(APP) -v $(GOSRC)
 
+build-cljs: clean-cljs
+	lein with-profile develop cljsbuild once
+
+# run tests
 test:
 	go test -v ${GODIRS}
 
-install:
-	go install $(GOSRC)
-
+# check code
 check:
 	go vet $(GOSRC)
 	golint $(GOSRC)
