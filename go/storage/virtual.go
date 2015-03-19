@@ -1,7 +1,9 @@
 package storage
 
-import "errors"
-import "time"
+import (
+	"errors"
+	"time"
+)
 
 var errorAtomNotFound = errors.New("atom not found")
 

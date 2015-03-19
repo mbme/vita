@@ -1,9 +1,11 @@
 package storage
 
-import "fmt"
-import "strings"
-import "time"
-import "strconv"
+import (
+	"fmt"
+	"strconv"
+	"strings"
+	"time"
+)
 
 // AtomType is type of atom
 type AtomType string
