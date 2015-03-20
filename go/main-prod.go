@@ -26,11 +26,10 @@ func indexHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// skip leading slash
+	// drop leading slash
 	path = path[1:]
 
 	data, err := Asset(path)
-	// log.Println(AssetInfo(path))
 
 	if err != nil {
 		log.Println("GET", path, " 404 NOT FOUND")
@@ -52,9 +51,9 @@ func main() {
 
 	app.Flags = []cli.Flag{
 		cli.IntFlag{
-			Name:  "port",
+			Name:  "port,p",
 			Value: 8080,
-			Usage: "websockets port",
+			Usage: "port to listen on",
 		},
 	}
 

@@ -25,7 +25,7 @@
     :file-min (res "/markdown-it/dist/markdown-it.min.js")
     :provides ["org.markdownIt"]}])
 
-(defproject vita "0.1.0-SNAPSHOT"
+(defproject vita "X"
   :description "Vita UI"
 
   :dependencies [[org.clojure/clojure ~clojure]
