@@ -47,8 +47,6 @@
     margin-top: 15px;
     margin-bottom: 40px;
 
-    background-color: $c-bg-paper;
-
     // make panel visible on hover
     .Panel {
         opacity: 0;
@@ -58,7 +56,17 @@
     &:hover .Panel {
         opacity: 1;
     }
+
+    background-color: $c-bg-paper;
+    &.target {
+        background-color: #FFFF66;
+    }
+    &.target.target-active {
+        @include transition(background-color .8s ease-out);
+        background-color: $c-bg-paper;
+    }
 }
+
 
 .RecordView,
 .PreviewRecordView,

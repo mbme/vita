@@ -8,9 +8,9 @@
             [goog.events.EventType :as EventType]
 
             [viter.parser :refer [parse-tag-line]]
+            [viter :refer [request-animation-frame]]
             [clojure.string :as str])
-  (:require-macros [vita.utils.utils :as u])
-  (:import goog.fx.dom.Scroll))
+  (:require-macros [vita.utils.utils :as u]))
 
 ;; HELPERS
 
@@ -108,31 +108,6 @@
 (defn calendar-moment [seconds]
   (.calendar (unix-moment seconds)))
 
-;; UI utils
-
-(defn autosize! [elem]
-  (style/setHeight elem 10)
-  (let [current (.-clientHeight elem)
-        total   (.-scrollHeight elem)]
-    (style/setHeight elem total)))
-
-(defn focus-input! [input]
-  (let [len (aget input "value" "length")]
-    (aset input "selectionStart" len)
-    (aset input "selectionEnd" len)
-    (.focus input)))
-
-(defn scroll-to! [el container time accel]
-  (let [old-x (.-scrollTop container)
-        new-x (->
-               (style/getContainerOffsetToScrollInto el container)
-               (.-y)
-               (- 10))]
-    (.play (new Scroll container
-                (array 0 old-x)
-                (array 0 new-x)
-                time accel))))
-
 ;; EVENT utils
 
 (defn delegate
@@ -158,3 +133,41 @@
   [elem class]
   (u/subscribe elem :animation-start #(remove-class elem class))
   (u/subscribe elem :animation-end   #(add-class    elem class)))
+
+(defn after-animation [elem cb]
+  (let [onend-ref (atom nil)
+        onend #(when (= elem (.-target %))
+                 (u/unsubscribe elem :animation-end  @onend-ref)
+                 (u/unsubscribe elem :transition-end @onend-ref)
+                 (cb))]
+    (reset! onend-ref onend)
+    (u/subscribe elem :animation-end onend)
+    (u/subscribe elem :transition-end onend)))
+
+;; UI utils
+
+(defn autosize! [elem]
+  (style/setHeight elem 10)
+  (let [current (.-clientHeight elem)
+        total   (.-scrollHeight elem)]
+    (style/setHeight elem total)))
+
+(defn focus-input! [input]
+  (let [len (aget input "value" "length")]
+    (aset input "selectionStart" len)
+    (aset input "selectionEnd" len)
+    (.focus input)))
+
+(defn animate! [el class]
+  (let [active-class (str class "-active")
+        cleanup #(remove-class el class active-class)]
+
+    ;; remove current animation if there is one in progress
+    (cleanup)
+
+    ;; remove classes after animation
+    (after-animation el cleanup)
+
+    (add-class el class)
+    (request-animation-frame
+     #(add-class el active-class))))

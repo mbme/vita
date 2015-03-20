@@ -90,10 +90,12 @@
 
    (show-record @name @data @categories)])
 
+(defn- highlight [el]
+  (utils/animate! el "target"))
 
-(def scrollable (utils/q1 ".right"))
 (defn- scroll-to [el]
-  (utils/scroll-to! el scrollable 200 0.6))
+  (.scrollIntoView el)
+  (highlight el))
 
 (v/defc WorkspaceItem [record]
   [:div.&
