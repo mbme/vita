@@ -135,12 +135,11 @@
   (u/subscribe elem :animation-end   #(add-class    elem class)))
 
 (defn after-animation [elem cb]
-  (let [onend-ref (atom nil)
-        onend #(when (= elem (.-target %))
-                 (u/unsubscribe elem :animation-end  @onend-ref)
-                 (u/unsubscribe elem :transition-end @onend-ref)
+  (declare onend)
+  (let [onend #(when (= elem (.-target %))
+                 (u/unsubscribe elem :animation-end  onend)
+                 (u/unsubscribe elem :transition-end onend)
                  (cb))]
-    (reset! onend-ref onend)
     (u/subscribe elem :animation-end onend)
     (u/subscribe elem :transition-end onend)))
 
@@ -168,6 +167,8 @@
     ;; remove classes after animation
     (after-animation el cleanup)
 
-    (add-class el class)
     (request-animation-frame
-     #(add-class el active-class))))
+     (fn []
+       (add-class el class)
+       (request-animation-frame
+        #(add-class el active-class))))))
