@@ -1,0 +1,81 @@
+$form-font-size: $base-font-size;
+$form-font-family: $base-font-family;
+
+fieldset {
+    background: lighten($c-border, 10);
+    border: $base-border;
+    margin: 0 0 ($base-spacing / 2) 0;
+    padding: $base-spacing;
+}
+
+input,
+label,
+select {
+    display: block;
+    font-family: $form-font-family;
+    font-size: $form-font-size;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: $base-spacing / 4;
+
+    &.required:after {
+        content: "*";
+    }
+
+    abbr {
+        display: none;
+    }
+}
+
+textarea,
+#{$all-text-inputs},
+select[multiple=multiple] {
+    display: block;
+
+    width: 100%;
+
+    background-color: $c-bg;
+    font-family: $form-font-family;
+    font-size: $form-font-size;
+
+    border: 0 none;
+    box-shadow: none;
+
+    padding: ($base-spacing / 3) ($base-spacing / 3);
+
+    &:focus {
+        outline: none;
+    }
+}
+
+textarea {
+    resize: vertical;
+}
+
+input[type="search"] {
+    @include appearance(none);
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    display: inline;
+    margin-right: $base-spacing / 4;
+}
+
+input[type="file"] {
+    padding-bottom: $base-spacing / 2;
+    width: 100%;
+}
+
+select {
+    margin-bottom: $base-spacing;
+    max-width: 100%;
+    width: auto;
+}
+
+input[type="text"],
+input[type="search"] {
+    border: 0 none;
+}

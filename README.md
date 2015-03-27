@@ -1,21 +1,24 @@
 # vita
 
-FIXME
+note taking app
 
-## Prerequisites
 
-You will need [Leiningen][1] 1.7.0 or above installed.
+## BUILD
 
-[1]: https://github.com/technomancy/leiningen
+### TOOLS
 
-## Running
+* GNU make to build app
+* go 1.5+ to compile app
+* leiningen (& java) to compile ClojureScript
+* sass to compile styles
+* [go-bindata](https://github.com/jteeuwen/go-bindata) to embed UI resources into executable file
+* (DEV) node.js for bower(updating UI dependencies) and watch.js (auto-rebuilding go app on change)
 
-To start a web server for the application, run:
+### DEPENDENCIES
 
-    lein ring server
-
-## TODO
+* https://github.com/codegangsta/cli
+* https://github.com/gorilla/websocket
 
 ## License
 
-Copyright © 2014 FIXME
+Copyright © 2015 mbme

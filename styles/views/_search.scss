@@ -1,0 +1,163 @@
+.SearchPanel {
+    height: 100%;
+
+    & &-search {
+        height: $h-top-panel;
+        position: relative;
+        width: $w-left-px - 20px;
+
+        .icon {
+            position: absolute;
+            z-index: 1;
+
+            font-size: 22px;
+
+            top: 20px;
+            left: 15px;
+        }
+
+        input {
+            @extend %rounded;
+            @extend %z-depth-1;
+
+            position: absolute;
+            top: 15px;
+
+            border: $base-border;
+
+            $padding-l: 43px;
+            $padding-r: 9px;
+
+            padding-left: $padding-l;
+            padding-right: $padding-r;
+            $padding: $padding-l + $padding-r;
+            @include calc(width, "100% - #{$padding}");
+
+            cursor: pointer;
+            &:focus {
+                cursor: text;
+            }
+        }
+
+        .stats {
+            position: absolute;
+            top: 63px;
+
+            width: 100%;
+            text-align: center;
+            font-size: 0.8em;
+
+            color: $primaryColor;
+            letter-spacing: -0.02em;
+
+            opacity: 0;
+        }
+
+        &.focused {
+            .stats {
+                @include fadeIn($duration: 0.25s);
+                opacity: 1;
+            }
+        }
+    }
+
+    & &-results {
+        @include calc(height, "100% - #{$h-top-panel}");
+        width: 100%;
+
+        padding: 10px 10px 10px 0;
+
+        overflow-y: hidden;
+        &:hover {
+            overflow-y: auto;
+        }
+        & > ul {
+            // to not jump when scroll appears
+            width: $w-left-px - 20px;
+        }
+    }
+}
+
+.SearchResult {
+    position: relative;
+    height: 70px;
+    cursor: pointer;
+
+    background-color: $c-bg;
+
+    &-icon {
+        font-size: 30px;
+        position: absolute;
+        top: 10px;
+        left: 15px;
+    }
+
+    $m-left: 55px;
+    $m-top: 10px;
+    &-name {
+        margin-top: $m-top;
+        margin-left: $m-left;
+
+        display: inline-block;
+        vertical-align: middle;
+
+        color: $c-font;
+    }
+
+    &-time {
+        position: absolute;
+        right: 10px;
+        margin-top: $m-top;
+
+        font-size: 0.7em;
+        color: $c-font-secondary;
+    }
+
+    &-categories {
+        margin-left: $m-left;
+        .category:first-child {
+            padding-left: 0;
+        }
+    }
+
+    // borders
+    border-top: $base-border;
+    border-left: $base-border;
+    border-right: $base-border;
+    &--visible.last {
+        border-bottom: $base-border;
+    }
+
+    // rounded borders
+    &--visible.first {
+        @include border-top-radius($base-border-radius);
+    }
+    &--visible.last {
+        @include border-bottom-radius($base-border-radius);
+    }
+
+    // open item
+    @include transition(color, ease-in, 0.4s, 0s);
+    &--open {
+        color: $c-font-accent;
+
+        .SearchResult-icon {
+            color: $c-font-accent;
+        }
+    }
+
+    // fading
+    opacity: 0;
+    &--visible {
+        @include fadeIn($duration: 0.25s);
+        opacity: 1;
+    }
+    &--hidden {
+        @include fadeOut($duration: 0.15s);
+        opacity: 0;
+
+        &.done {
+            display: none;
+        }
+    }
+}

@@ -1,0 +1,45 @@
+@charset "UTF-8";
+
+// Reset
+@import "../vendor/normalize-scss/normalize";
+
+// Bourbon mixins
+@import "../vendor/bourbon/app/assets/stylesheets/bourbon";
+
+// Animate.scss mixins
+@import "../vendor/animate.css-scss/properties";
+@import "../vendor/animate.css-scss/_fading-entrances/fadeIn";
+@import "../vendor/animate.css-scss/_fading-exits/fadeOut";
+
+// Fonts
+$OpenSansPath: "/vendor/open-sans-fontface/fonts";
+@import "../vendor/open-sans-fontface/open-sans";
+
+// Icons
+$ionicons-font-path: "/vendor/ionicons/fonts";
+@import "../vendor/ionicons/scss/ionicons";
+
+// Variables
+@import "palette";
+@import "variables";
+
+// Helpers
+@import "mixins";
+
+@import "components/typography";
+@import "components/forms";
+@import "components/tables";
+@import "components/lists";
+@import "components/buttons";
+@import "components/icons";
+@import "components/modal";
+@import "components/categories";
+
+@import "components/paper";
+@import "components/preloader";
+
+// App
+@import "layout";
+@import "views/search";
+@import "views/workspace";
+@import "views/no_connection";

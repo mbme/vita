@@ -1,0 +1,133 @@
+.Workspace-new {
+    position: absolute;
+    top: 60px;
+    margin-left: $w-right-px + 10px;
+
+    background-color: $c-font-accent;
+
+    .icon {
+        font-size: 1.2rem;
+    }
+}
+
+.Panel {
+    padding: 0 10px;
+
+    & &-right {
+        text-align: right;
+    }
+
+    &-left, &-right {
+        display: inline-block;
+        width: 50%;
+    }
+
+    button {
+        margin: 0;
+        padding: 0 9px;
+
+        font-size: 0.85em;
+
+        color: $c-font-secondary;
+
+        @include transition(color .3s);
+        &:hover {
+            color: $c-font;
+        }
+    }
+}
+
+.WorkspaceItem {
+    @extend %z-depth-1;
+    @extend %rounded;
+
+    position: relative; // we need this to limit text selection in Chrome
+    z-index: 1;
+
+    margin-top: 15px;
+    margin-bottom: 40px;
+
+    // make panel visible on hover
+    .Panel {
+        opacity: 0;
+        @include transition(opacity .3s);
+    }
+
+    &:hover .Panel {
+        opacity: 1;
+    }
+
+    background-color: $c-bg-paper;
+    &.target {
+        background-color: #FFFF66;
+    }
+    &.target.target-active {
+        @include transition(background-color .8s ease-out);
+        background-color: $c-bg-paper;
+    }
+}
+
+
+.RecordView,
+.PreviewRecordView,
+.EditRecordView {
+    min-height: 200px;
+
+    padding-bottom: 30px;
+
+    & &-name {
+        @extend h1;
+
+        text-align: center;
+
+        cursor: default;
+
+        color: $c-font-accent;
+    }
+
+    & &-categories {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    & &-data {
+        // TYPOGRAPHY
+        text-align: justify;
+        word-wrap: break-word;
+        letter-spacing: 0.01rem;
+        text-rendering: optimizeLegibility;
+        @include font-feature-settings("pnum", "kern");
+
+        padding: 0 42px;
+        :last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.EditRecordView {
+    & &-name {
+        padding: 0;
+        box-shadow: none;
+    }
+
+    & &-categories {
+        @extend %category;
+        word-spacing: 7px;
+    }
+
+    & &-data {
+        resize: none;
+        overflow-y: hidden;
+    }
+}
+
+.modal-dialog.delete-record {
+    h2 {
+        text-align: center;
+    }
+
+    .buttons button {
+        margin-right: 30px;
+    }
+}
