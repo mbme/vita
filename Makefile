@@ -62,4 +62,4 @@ prod: clean
 	go-bindata -o go/resources-prod.go -tags="prod" -nomemcopy -prefix "dist" dist/...
 	go build -tags='prod' -o $(APP) -v $(GOSRC)
 
-.PHONY: clean build test install check run serv serv-cljs prod
+.PHONY: clean clean-cljs deps build build-cljs test check run serv serv-cljs prod
