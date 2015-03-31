@@ -27,28 +27,26 @@
   :did-mount #(utils/watch-animation
                (v/get-node %) "done"))
 
-(v/defc SearchPanel [{:keys [search-term atoms ws-items]} this]
+(v/defc SearchPanel [{:keys [search-term atoms ws-items]}]
   (let [open-ids (set (map :id ws-items))
         visible-atoms (filter :visible atoms)
         first-visible (first visible-atoms)
         last-visible (last visible-atoms)]
 
     [:aside.&
-     [:div.&-search {:ref "search"}
+     [:div.&-search
       [icon :type :search]
       [:input
        {:type "search"
         :placeholder "Filter atoms"
         :defaultValue search-term
         :onChange #(trigger :search-update (v/e-val %))
-        :onFocus #(->
-                   (v/get-ref this "search")
-                   v/get-node
-                   (utils/add-class "focused"))
-        :onBlur #(->
-                  (v/get-ref this "search")
-                  v/get-node
-                  (utils/remove-class "focused"))}]
+        :onFocus #(-> (.-target %)
+                      (.-parentNode)
+                      (utils/add-class "focused"))
+        :onBlur #(-> (.-target %)
+                     (.-parentNode)
+                     (utils/remove-class "focused"))}]
       [:div.stats
        (str
         (count visible-atoms) " of " (count atoms) " atoms visible")]]

@@ -47,7 +47,7 @@
      [button :label "DELETE" :type :primary
       :onClick (fn [] (trigger :ws-delete key))]]}))
 
-(v/defc EditRecordView [{:keys [id key name data categories]} this]
+(v/defc EditRecordView [{:keys [id key name data categories]}]
   [:div.&
    [Panel
     :left  {:preview #(trigger :ws-preview key)}
@@ -77,7 +77,7 @@
      :placeholder  "Type something..."
      :ref          "area"
      :onChange     #(do (reset! data (v/e-val %))
-                        (utils/autosize! (v/deref-node this "area")))}]]
+                        (utils/autosize! (.-target %)))}]]
 
   :did-mount #(do
                 (utils/autosize!    (v/deref-node % "area"))

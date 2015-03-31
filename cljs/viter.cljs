@@ -47,7 +47,7 @@
         (fn []
           (this-as this
                    (let [args     (this-args this)
-                         rendered (render args this)]
+                         rendered (render args)]
                      (to-vDOM rendered displayName))))
 
         :componentWillMount   (with-this  will-mount)
