@@ -1,4 +1,4 @@
-/*! markdown-it 4.0.1 https://github.com//markdown-it/markdown-it @license MIT */(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.markdownit = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+/*! markdown-it 4.1.0 https://github.com//markdown-it/markdown-it @license MIT */(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.markdownit = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 // HTML5 entities map: { name -> utf16string }
 //
 'use strict';
@@ -757,19 +757,26 @@ var config = {
   commonmark: require('./presets/commonmark')
 };
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// This validator does not pretend to functionality of full weight sanitizers.
+// It's a tradeoff between default security, simplicity and usability.
+// If you need different setup - override validator method as you wish. Or
+// replace it with dummy function and use external sanitizer.
+//
 
-var BAD_PROTOCOLS    = [ 'vbscript', 'javascript', 'file' ];
+var BAD_PROTO_RE = /^(vbscript|javascript|file|data):/;
+var GOOD_DATA_RE = /^data:image\/(gif|png|jpeg|webp);/;
 
 function validateLink(url) {
   // url should be normalized at this point, and existing entities are decoded
-  //
   var str = url.trim().toLowerCase();
 
-  if (str.indexOf(':') >= 0 && BAD_PROTOCOLS.indexOf(str.split(':')[0]) >= 0) {
-    return false;
-  }
-  return true;
+  return BAD_PROTO_RE.test(str) ? (GOOD_DATA_RE.test(str) ? true : false) : true;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+
 
 var RECODE_HOSTNAME_FOR = [ 'http:', 'https:', 'mailto:' ];
 
@@ -1828,7 +1835,7 @@ default_rules.image = function (tokens, idx, options, env, self) {
   token.attrs[token.attrIndex('alt')][1] =
     self.renderInlineAsText(token.children, options, env);
 
-  return self.renderToken(tokens, idx, options, env, self);
+  return self.renderToken(tokens, idx, options);
 };
 
 
@@ -2001,7 +2008,7 @@ Renderer.prototype.renderInline = function (tokens, options, env) {
     if (typeof rules[type] !== 'undefined') {
       result += rules[type](tokens, i, options, env, this);
     } else {
-      result += this.renderToken(tokens, i, options, env);
+      result += this.renderToken(tokens, i, options);
     }
   }
 
@@ -2782,8 +2789,8 @@ module.exports = function hr(state, startLine, endLine, silent) {
 var block_names = require('../common/html_blocks');
 
 
-var HTML_TAG_OPEN_RE = /^<([a-zA-Z]{1,15})[\s\/>]/;
-var HTML_TAG_CLOSE_RE = /^<\/([a-zA-Z]{1,15})[\s>]/;
+var HTML_TAG_OPEN_RE = /^<([a-zA-Z][a-zA-Z0-9]{0,14})[\s\/>]/;
+var HTML_TAG_CLOSE_RE = /^<\/([a-zA-Z][a-zA-Z0-9]{0,14})[\s>]/;
 
 function isLetter(ch) {
   /*eslint no-bitwise:0*/
@@ -3933,6 +3940,10 @@ module.exports = function inline(state) {
 
 var RARE_RE = /\+-|\.\.|\?\?\?\?|!!!!|,,|--/;
 
+// Workaround for phantomjs - need regex without /g flag,
+// or root check will fail every second time
+var SCOPED_ABBR_TEST_RE = /\((c|tm|r|p)\)/i;
+
 var SCOPED_ABBR_RE = /\((c|tm|r|p)\)/ig;
 var SCOPED_ABBR = {
   'c': '©',
@@ -3989,7 +4000,7 @@ module.exports = function replace(state) {
 
     if (state.tokens[blkIdx].type !== 'inline') { continue; }
 
-    if (SCOPED_ABBR_RE.test(state.tokens[blkIdx].content)) {
+    if (SCOPED_ABBR_TEST_RE.test(state.tokens[blkIdx].content)) {
       replace_scoped(state.tokens[blkIdx].children);
     }
 
@@ -4029,14 +4040,14 @@ function process_inlines(tokens, state) {
   for (i = 0; i < tokens.length; i++) {
     token = tokens[i];
 
-    if (token.type !== 'text' || QUOTE_TEST_RE.test(token.text)) { continue; }
-
     thisLevel = tokens[i].level;
 
     for (j = stack.length - 1; j >= 0; j--) {
       if (stack[j].level <= thisLevel) { break; }
     }
     stack.length = j + 1;
+
+    if (token.type !== 'text') { continue; }
 
     text = token.content;
     pos = 0;
@@ -4463,11 +4474,11 @@ module.exports = function emphasis(state, silent) {
 
   if (count % 2) {
     token        = state.push('em_close', 'em', -1);
-    token.markup = String.fromCharCode(marker) + String.fromCharCode(marker);
+    token.markup = String.fromCharCode(marker);
   }
   for (count = startCount; count > 1; count -= 2) {
     token        = state.push('strong_close', 'strong', -1);
-    token.markup = String.fromCharCode(marker);
+    token.markup = String.fromCharCode(marker) + String.fromCharCode(marker);
   }
 
   state.pos = state.posMax + startCount;
@@ -6162,8 +6173,8 @@ function compile(self) {
                       .map(escapeRE)
                       .join('|');
   // (?!_) cause 1.5x slowdown
-  self.re.schema_test   = RegExp('(^|(?!_)(?:>|' + re.src_ZPCcCf + '))(' + slist + ')', 'i');
-  self.re.schema_search = RegExp('(^|(?!_)(?:>|' + re.src_ZPCcCf + '))(' + slist + ')', 'ig');
+  self.re.schema_test   = RegExp('(^|(?!_)(?:>|' + re.src_ZPCc + '))(' + slist + ')', 'i');
+  self.re.schema_search = RegExp('(^|(?!_)(?:>|' + re.src_ZPCc + '))(' + slist + ')', 'ig');
 
   self.re.pretest       = RegExp(
                             '(' + self.re.schema_test.source + ')|' +
@@ -6511,22 +6522,21 @@ module.exports = LinkifyIt;
 // Use direct extract instead of `regenerate` to reduse browserified size
 var src_Any = exports.src_Any = require('uc.micro/properties/Any/regex').source;
 var src_Cc  = exports.src_Cc = require('uc.micro/categories/Cc/regex').source;
-var src_Cf  = exports.src_Cf = require('uc.micro/categories/Cf/regex').source;
 var src_Z   = exports.src_Z  = require('uc.micro/categories/Z/regex').source;
 var src_P   = exports.src_P  = require('uc.micro/categories/P/regex').source;
 
 // \p{\Z\P\Cc\CF} (white spaces + control + format + punctuation)
-var src_ZPCcCf = exports.src_ZPCcCf = [ src_Z, src_P, src_Cc, src_Cf ].join('|');
+var src_ZPCc = exports.src_ZPCc = [ src_Z, src_P, src_Cc ].join('|');
 
-// \p{\Z\Cc\CF} (white spaces + control + format)
-var src_ZCcCf = exports.src_ZCcCf = [ src_Z, src_Cc, src_Cf ].join('|');
+// \p{\Z\Cc} (white spaces + control)
+var src_ZCc = exports.src_ZCc = [ src_Z, src_Cc ].join('|');
 
 // All possible word characters (everything without punctuation, spaces & controls)
 // Defined via punctuation & spaces to save space
 // Should be something like \p{\L\N\S\M} (\w but without `_`)
-var src_pseudo_letter       = '(?:(?!' + src_ZPCcCf + ')' + src_Any + ')';
+var src_pseudo_letter       = '(?:(?!' + src_ZPCc + ')' + src_Any + ')';
 // The same as abothe but without [0-9]
-var src_pseudo_letter_non_d = '(?:(?![0-9]|' + src_ZPCcCf + ')' + src_Any + ')';
+var src_pseudo_letter_non_d = '(?:(?![0-9]|' + src_ZPCc + ')' + src_Any + ')';
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -6534,7 +6544,7 @@ var src_ip4 = exports.src_ip4 =
 
   '(?:(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)';
 
-exports.src_auth    = '(?:(?:(?!' + src_ZCcCf + ').)+@)?';
+exports.src_auth    = '(?:(?:(?!' + src_ZCc + ').)+@)?';
 
 var src_port = exports.src_port =
 
@@ -6542,27 +6552,27 @@ var src_port = exports.src_port =
 
 var src_host_terminator = exports.src_host_terminator =
 
-  '(?=$|' + src_ZPCcCf + ')(?!-|_|:\\d|\\.-|\\.(?!$|' + src_ZPCcCf + '))';
+  '(?=$|' + src_ZPCc + ')(?!-|_|:\\d|\\.-|\\.(?!$|' + src_ZPCc + '))';
 
 var src_path = exports.src_path =
 
   '(?:' +
     '[/?#]' +
       '(?:' +
-        '(?!' + src_ZCcCf + '|[()[\\]{}.,"\'?!\\-]).|' +
-        '\\[(?:(?!' + src_ZCcCf + '|\\]).)*\\]|' +
-        '\\((?:(?!' + src_ZCcCf + '|[)]).)*\\)|' +
-        '\\{(?:(?!' + src_ZCcCf + '|[}]).)*\\}|' +
-        '\\"(?:(?!' + src_ZCcCf + '|["]).)+\\"|' +
-        "\\'(?:(?!" + src_ZCcCf + "|[']).)+\\'|" +
+        '(?!' + src_ZCc + '|[()[\\]{}.,"\'?!\\-]).|' +
+        '\\[(?:(?!' + src_ZCc + '|\\]).)*\\]|' +
+        '\\((?:(?!' + src_ZCc + '|[)]).)*\\)|' +
+        '\\{(?:(?!' + src_ZCc + '|[}]).)*\\}|' +
+        '\\"(?:(?!' + src_ZCc + '|["]).)+\\"|' +
+        "\\'(?:(?!" + src_ZCc + "|[']).)+\\'|" +
         "\\'(?=" + src_pseudo_letter + ').|' +  // allow `I'm_king` if no pair found
         '\\.{2,3}[a-zA-Z0-9%]|' + // github has ... in commit range links. Restrict to
                                   // english & percent-encoded only, until more examples found.
-        '\\.(?!' + src_ZCcCf + '|[.]).|' +
-        '\\-(?!' + src_ZCcCf + '|--(?:[^-]|$))(?:[-]+|.)|' +  // `---` => long dash, terminate
-        '\\,(?!' + src_ZCcCf + ').|' +      // allow `,,,` in paths
-        '\\!(?!' + src_ZCcCf + '|[!]).|' +
-        '\\?(?!' + src_ZCcCf + '|[?]).' +
+        '\\.(?!' + src_ZCc + '|[.]).|' +
+        '\\-(?!' + src_ZCc + '|--(?:[^-]|$))(?:[-]+|.)|' +  // `---` => long dash, terminate
+        '\\,(?!' + src_ZCc + ').|' +      // allow `,,,` in paths
+        '\\!(?!' + src_ZCc + '|[!]).|' +
+        '\\?(?!' + src_ZCc + '|[?]).' +
       ')+' +
     '|\\/' +
   ')?';
@@ -6638,19 +6648,19 @@ var tpl_host_port_fuzzy_strict = exports.tpl_host_port_fuzzy_strict =
 // Rude test fuzzy links by host, for quick deny
 exports.tpl_host_fuzzy_test =
 
-  'localhost|\\.\\d{1,3}\\.|(?:\\.(?:%TLDS%)(?:' + src_ZPCcCf + '|$))';
+  'localhost|\\.\\d{1,3}\\.|(?:\\.(?:%TLDS%)(?:' + src_ZPCc + '|$))';
 
 exports.tpl_email_fuzzy =
 
-    '(^|>|' + src_ZCcCf + ')(' + src_email_name + '@' + tpl_host_fuzzy_strict + ')';
+    '(^|>|' + src_ZCc + ')(' + src_email_name + '@' + tpl_host_fuzzy_strict + ')';
 
 exports.tpl_link_fuzzy =
     // Fuzzy link can't be prepended with .:/\- and non punctuation.
     // but can start with > (markdown blockquote)
-    '(^|(?![.:/\\-_@])(?:[$+<=>^`|]|' + src_ZPCcCf + '))' +
+    '(^|(?![.:/\\-_@])(?:[$+<=>^`|]|' + src_ZPCc + '))' +
     '((?![$+<=>^`|])' + tpl_host_port_fuzzy_strict + src_path + ')';
 
-},{"uc.micro/categories/Cc/regex":60,"uc.micro/categories/Cf/regex":61,"uc.micro/categories/P/regex":62,"uc.micro/categories/Z/regex":63,"uc.micro/properties/Any/regex":65}],55:[function(require,module,exports){
+},{"uc.micro/categories/Cc/regex":60,"uc.micro/categories/P/regex":62,"uc.micro/categories/Z/regex":63,"uc.micro/properties/Any/regex":65}],55:[function(require,module,exports){
 
 'use strict';
 
