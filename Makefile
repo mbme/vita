@@ -16,7 +16,7 @@ clean:
 	rm -rf $(TARGET) $(DIST)
 
 clean-cljs:
-	rm -f $(DIST)/app.js
+	rm -rf $(DIST)/app*
 
 # install project deps
 deps:
