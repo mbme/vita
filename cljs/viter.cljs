@@ -47,6 +47,9 @@
    (vswap! render-queue
            conj component)))
 
+(defn node [this]
+  (react/get-node this))
+
 ;; REACT COMPONENT
 
 (def *force-render* false)
@@ -65,15 +68,15 @@
           (or
            *force-render*
            (this-as this
-                    (not= (aget this "props" "args")
-                          (aget next-props   "args")))))
+                    (not= (aget this "props" "props")
+                          (aget next-props   "props")))))
 
         :render
         (fn []
           (this-as this
-                   (let [args     (aget this "props" "args")
+                   (let [props    (aget this "props" "props")
                          state    (aget this "localState")
-                         rendered (render args state)]
+                         rendered (render props state)]
                      (to-vDOM rendered displayName))))
 
         :componentWillMount
@@ -87,37 +90,28 @@
         (fn []
           (this-as this
                    (when-let [cb (:did-mount (aget this "callbacks"))]
-                     (cb this))))
+                     (cb (node this)))))
 
         :componentWillUpdate
         (fn []
           (this-as this
                    (when-let [cb (:will-update (aget this "callbacks"))]
-                     (cb this))))
+                     (cb (node this)))))
 
         :componentDidUpdate
         (fn []
           (this-as this
                    (when-let [cb (:did-update (aget this "callbacks"))]
-                     (cb this))))
+                     (cb (node this)))))
 
         :componentWillUnmount
         (fn []
           (this-as this
                    (when-let [cb (:will-unmount (aget this "callbacks"))]
-                     (cb this))))}
+                     (cb (node this)))))}
 
    react/create-class
    react/create-factory))
-
-
-;; UTILS
-
-(defn node [this]
-  (react/get-node this))
-
-(defn ref [this ref]
-  (node (aget this "refs" (name ref))))
 
 
 ;; PUBLIC
@@ -136,9 +130,9 @@
          (-> (apply hash-map rest)
              (assoc k v)
              component))
-        ([{:keys [key] :or {key js/undefined} :as args}]
+        ([{:keys [key] :or {key js/undefined} :as props}]
          ;; add key attribute to react element properties if passed
-         (element (js-obj "args" args "key" key))))
+         (element (js-obj "props" props "key" key))))
 
       {:type :viter
        :name comp-name})))
