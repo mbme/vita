@@ -50,6 +50,9 @@
 (defn node [this]
   (react/get-node this))
 
+(defn e-val [e]
+  (aget e "target" "value"))
+
 ;; REACT COMPONENT
 
 (def *force-render* false)
@@ -74,47 +77,56 @@
         :render
         (fn []
           (this-as this
-                   (let [props    (aget this "props" "props")
-                         state    (aget this "localState")
+                   (let [state    (aget this "localState")
+                         props    (aget this "props" "props")
                          rendered (render props state)]
                      (to-vDOM rendered displayName))))
 
         :componentWillMount
         (fn []
           (this-as this
-                   (let [state (aget this "localState")]
-                     (when init (aset this "callbacks" (init state)))
+                   (let [state (aget this "localState")
+                         props (aget this "props" "props")
+                         callbacks (if (map? init)
+                                     init
+                                     (init this state props))]
+                     (aset this "callbacks" callbacks)
                      (add-watch state :render #(render! this)))))
 
         :componentDidMount
         (fn []
           (this-as this
                    (when-let [cb (:did-mount (aget this "callbacks"))]
-                     (cb (node this)))))
+                     (let [state (aget this "localState")
+                           props (aget this "props" "props")]
+                       (cb this state props)))))
 
         :componentWillUpdate
         (fn []
           (this-as this
                    (when-let [cb (:will-update (aget this "callbacks"))]
-                     (cb (node this)))))
+                     (let [state (aget this "localState")
+                           props (aget this "props" "props")]
+                       (cb this state props)))))
 
         :componentDidUpdate
         (fn []
           (this-as this
                    (when-let [cb (:did-update (aget this "callbacks"))]
-                     (cb (node this)))))
+                     (let [state (aget this "localState")
+                           props (aget this "props" "props")]
+                       (cb this state props)))))
 
         :componentWillUnmount
         (fn []
           (this-as this
                    (when-let [cb (:will-unmount (aget this "callbacks"))]
-                     (cb (node this)))))}
+                     (let [state (aget this "localState")
+                           props (aget this "props" "props")]
+                       (cb this state props)))))}
 
    react/create-class
    react/create-factory))
-
-
-;; PUBLIC
 
 (defn create-component
   "Creates viter component."

@@ -1,9 +1,12 @@
 (ns viter)
 
-;; defines new component
-(defmacro defc [name args render init]
-  `(def ~name
-     (create-component
-      (str '~name)
-      (fn ~args ~render)
-      ~init)))
+(defmacro defc
+  "Define new viter component."
+  ([name args render]
+   (defc &form &env name args render {}))
+  ([name args render init]
+   `(def ~name
+      (create-component
+       (str '~name)
+       (fn ~args ~render)
+       ~init))))
