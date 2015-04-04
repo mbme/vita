@@ -109,16 +109,19 @@
     & &-name {
         padding: 0;
         box-shadow: none;
+        background-color: inherit;
     }
 
     & &-categories {
         @extend %category;
         word-spacing: 7px;
+        background-color: inherit;
     }
 
     & &-data {
         resize: none;
         overflow-y: hidden;
+        background-color: inherit;
     }
 }
 
