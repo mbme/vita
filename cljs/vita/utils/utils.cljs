@@ -62,11 +62,16 @@
      (every? true?
              (map #(has-class dom-elem %) classes)))))
 
-(defn q1 [css-query]
-  (.querySelector js/document css-query))
+(defn q1
+  ([css-query]
+   (q1 js/document css-query))
+  ([el css-query]
+   (.querySelector el css-query)))
 
-(defn q [css-query]
-  (.querySelectorAll js/document css-query))
+(defn q
+  ([css-query] (q js/document css-query))
+  ([el css-query]
+   (.querySelectorAll el css-query)))
 
 (defn q-parents [el pattern]
   (dom/getAncestor el #(is-elem % pattern)))

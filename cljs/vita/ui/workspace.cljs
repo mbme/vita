@@ -6,8 +6,15 @@
             [vita.ui.modal :as modal]
 
             [goog.style :as style]
+            [clojure.string :as str]
 
             [viter :as v]))
+
+(defn get-words [s]
+  (str/split s #"\s+"))
+
+(defn join [col]
+  (str/join " " col))
 
 (defn- show-items [items]
   (for [[text onClick] items
@@ -57,31 +64,27 @@
             :delete  (when id #(modal-delete? key))
             :close   #(trigger :ws-close key)}]
 
-   [:input.&-name
+   [:input.&-name.js-name
     {:type         "text"
      :defaultValue @name
      :placeholder  "TITLE"
-     :ref          "input"
      :onChange     #(reset! name (v/e-val %))}]
 
    [:input.&-categories
     {:type         "text"
-     :defaultValue (v/join @categories)
+     :defaultValue (join @categories)
      :placeholder  "atom categories"
-     :onChange     #(reset! categories (->
-                                        (v/e-val %)
-                                        v/get-words))}]
+     :onChange     #(reset! categories (get-words (v/e-val %)))}]
 
-   [:textarea.&-data
+   [:textarea.&-data.js-data
     {:defaultValue @data
      :placeholder  "Type something..."
-     :ref          "area"
      :onChange     #(do (reset! data (v/e-val %))
                         (utils/autosize! (.-target %)))}]]
 
-  :did-mount #(do
-                (utils/autosize!    (v/deref-node % "area"))
-                (utils/focus-input! (v/deref-node % "input"))))
+  {:did-mount #(let [el (v/node %1)]
+                 (utils/autosize!    (utils/q1 el ".js-data"))
+                 (utils/focus-input! (utils/q1 el ".js-name")))})
 
 
 (v/defc PreviewRecordView [{:keys [key name data categories]}]
@@ -105,25 +108,12 @@
       :view    RecordView)
     record)]
 
-  :did-mount (fn [this]
-               (let [el    (v/get-node this)
-                     key   (:key (v/this-args this))
-                     state (v/this-local-state this)]
-
-                 ;; scroll on open
-                 (scroll-to el)
-
-                 ;; scroll on every click
-                 (swap! state assoc
-                        :scroll-unsub
-                        (bus/on-filter :ws-open
-                                       #(= % key)
-                                       #(scroll-to el)))))
-
-  :will-unmount (fn [this]
-                  (let [state (v/this-local-state this)
-                        unsub (get @state :scroll-unsub)]
-                    (unsub))))
+  (fn [this state props]
+    (let [key (:key props)
+          ;; scroll on every click
+          unsub (bus/on-filter :ws-open #(= % key) #(scroll-to (v/node this)))]
+      {:did-mount #(scroll-to (v/node this))
+       :will-unmount unsub})))
 
 (v/defc Workspace [{:keys [ws-items]}]
   [:div.&
@@ -139,8 +129,6 @@
    (map WorkspaceItem ws-items)]
 
   ;; fix workspace height on update to avoid redundant jumps
-  :will-update #(let [el (v/get-node %1)
-                      size (style/getSize el)]
-                  (style/setHeight el (.-height size)))
-  :did-update  #(let [el (v/get-node %1)]
-                  (style/setHeight el "auto")))
+  {:will-update #(let [el (v/node %1)]
+                   (style/setHeight el (.-height (style/getSize el))))
+   :did-update  #(style/setHeight (v/node %1) "auto")})

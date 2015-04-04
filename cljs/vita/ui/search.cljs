@@ -24,8 +24,7 @@
    [:div.&-categories
     (map #(category :key %) (:categories atom))]]
 
-  :did-mount #(utils/watch-animation
-               (v/get-node %) "done"))
+  {:did-mount #(utils/watch-animation (v/node %) "done")})
 
 (v/defc SearchPanel [{:keys [search-term atoms ws-items]}]
   (let [open-ids (set (map :id ws-items))
