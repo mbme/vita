@@ -11,6 +11,5 @@
 ;; code auto reload
 (fw/watch-and-reload
  :websocket-url   "ws://localhost:3449/figwheel-ws"
- :jsload-callback #(do (js/console.warn "APP RELOADED")
-                       (modal/clear!)
+ :jsload-callback #(do (modal/clear!)
                        (state/trigger-update!)))
