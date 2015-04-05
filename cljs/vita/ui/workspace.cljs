@@ -111,9 +111,11 @@
   (fn [this state props]
     (let [key (:key props)
           ;; scroll on every click
-          unsub (bus/on-filter :ws-open #(= % key) #(scroll-to (v/node this)))]
+          handler #(when (= % key)
+                     (scroll-to (v/node this)))]
+      (bus/on :ws-open handler)
       {:did-mount #(scroll-to (v/node this))
-       :will-unmount unsub})))
+       :will-unmount #(bus/off :ws-open handler)})))
 
 (v/defc Workspace [{:keys [ws-items]}]
   [:div.&
