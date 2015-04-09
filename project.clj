@@ -1,5 +1,5 @@
 (def clojure       "1.7.0-alpha6")
-(def clojurescript "0.0-3126")
+(def clojurescript "0.0-3191")
 (def core-async    "0.1.346.0-17112a-alpha")
 
 (def figwheel  "0.2.3-SNAPSHOT")
