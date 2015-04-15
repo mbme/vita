@@ -1,0 +1,23 @@
+.Tabs {
+    .Tabs-tabs {
+        .tab {
+            display: inline-block;
+            padding: 0 20px;
+            cursor: pointer;
+
+            &.active {
+                background-color: green;
+            }
+        }
+    }
+
+    .Tabs-body {
+        .body-item {
+            display: none;
+
+            &.active {
+                display: block;
+            }
+        }
+    }
+}

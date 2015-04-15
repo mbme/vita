@@ -34,6 +34,33 @@
    [:div.&-data {:dangerouslySetInnerHTML
                  {:__html (utils/md->html data)}}]])
 
+
+(v/defc Tabs [{:keys [items]} state]
+  (let [selected @state]
+    [:div.&
+     `[:div.&-tabs
+       ~@(->> items
+              (map :label)
+              (map-indexed
+               (fn [pos label]
+                 [:div.tab
+                  {:class (when (= pos selected) "active")
+                   :onClick #(when-not (= pos selected)
+                               (reset! state pos))}
+                  label])))]
+     `[:div.&-body
+       ~@(->> items
+              (map :body)
+              (map-indexed
+               (fn [pos body]
+                 [:div.body-item
+                  {:class (when (= pos selected) "active")}
+                  body])))]
+     ])
+  (fn [_ state]
+    (reset! state 0)))
+
+
 (v/defc RecordView [{:keys [key name data categories]}]
   [:div.&
    [Panel
@@ -102,11 +129,18 @@
 
 (v/defc WorkspaceItem [record]
   [:div.&
-   ((case (:state record)
-      :edit    EditRecordView
-      :preview PreviewRecordView
-      :view    RecordView)
-    record)]
+
+   [Tabs
+    :items [{:label "test tab"
+             :body [:div "BODY"]}
+            {:label "tab 2"
+             :body [:h1 "haha"]}]]
+   ;; ((case (:state record)
+   ;;    :edit    EditRecordView
+   ;;    :preview PreviewRecordView
+   ;;    :view    RecordView)
+   ;;  record)
+   ]
 
   (fn [this state props]
     (let [key (:key props)
