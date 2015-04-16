@@ -45,7 +45,7 @@ serv:
 	$(BASE)/dev/watch -d $(GOSRC) -f "\.go$$" -b 'make build' -r $(APP)
 
 serv-cljs: clean-cljs
-	rlwrap lein with-profile develop figwheel
+	rlwrap lein with-profile +develop figwheel dev
 
 prod: clean
 	mkdir $(DIST)

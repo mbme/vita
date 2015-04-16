@@ -8,7 +8,7 @@ import (
 )
 
 var indexHTML = renderIndexHTML(&indexHTMLConfig{
-	Styles: "/styles/main.css",
+	Styles: "http://test.dev:3449/styles/main.css",
 	App:    "/dist/app.js",
 })
 

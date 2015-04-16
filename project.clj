@@ -1,8 +1,8 @@
 (def clojure       "1.7.0-alpha6")
-(def clojurescript "0.0-3191")
+(def clojurescript "0.0-3208")
 (def core-async    "0.1.346.0-17112a-alpha")
 
-(def figwheel  "0.2.3-SNAPSHOT")
+(def figwheel  "0.2.6")
 (def cljsbuild "1.0.5")
 
 (defn res
@@ -68,9 +68,7 @@
   :profiles {:develop
              {:dependencies [[figwheel ~figwheel]]
               :plugins [[lein-figwheel ~figwheel
-                         :exclusions [org.apache.httpcomponents/httpcore
-                                      org.codehaus.plexus/plexus-utils
-                                      org.clojure/clojure]]]
+                         :exclusions [org.clojure/clojure]]]
               :cljsbuild
               {:builds [{:id "dev"
                          :source-paths ["cljs/" "dev/cljs/"]
@@ -88,5 +86,8 @@
                                     :language-in :ecmascript5
                                     :language-out :ecmascript5}}]}
 
+              :resource-paths ["."]
               :figwheel {:repl false
+                         :http-server-root "."
+                         :css-dirs ["styles/"]
                          :server-logfile ".lein-figwheel-server.log"}}})

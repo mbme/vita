@@ -9,7 +9,7 @@
 (set! viter/*force-render* true)
 
 ;; code auto reload
-(fw/watch-and-reload
- :websocket-url   "ws://localhost:3449/figwheel-ws"
- :jsload-callback #(do (modal/clear!)
-                       (state/trigger-update!)))
+(fw/start
+ {:websocket-url   "ws://localhost:3449/figwheel-ws"
+  :jsload-callback #(do (modal/clear!)
+                        (state/trigger-update!))})
