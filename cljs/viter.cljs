@@ -61,69 +61,73 @@
   "Create new ReactElement."
   [displayName render init]
   (->
-   #js {:displayName displayName
+   #js
+   {:displayName displayName
 
-        :callbacks {}
-        :localState (atom nil)
+    :componentWillMount
+    (fn []
+      (this-as this
+               (let [state (atom nil)
+                     props (aget this "props" "props")
+                     callbacks (if (map? init)
+                                 ;; if init is a map then use it as callbacks map
+                                 init
+                                 ;; else it should be a function
+                                 ;; which should return callbacks map
+                                 (init this state props))]
+                 ;; re-render component on state changes
+                 (add-watch state :render #(render! this))
+                 (aset this "state"
+                       #js {"localState" state
+                            "callbacks" callbacks}))))
 
-        :shouldComponentUpdate
-        (fn [next-props]
-          (or
-           *force-render*
-           (this-as this
-                    (not= (aget this "props" "props")
-                          (aget next-props   "props")))))
+    :shouldComponentUpdate
+    (fn [next-props]
+      (or
+       *force-render*
+       (this-as this
+                (not= (aget this "props" "props")
+                      (aget next-props   "props")))))
 
-        :render
-        (fn []
-          (this-as this
-                   (let [state    (aget this "localState")
-                         props    (aget this "props" "props")
-                         rendered (render props state)]
-                     (to-vDOM rendered displayName))))
+    :render
+    (fn []
+      (this-as this
+               (let [state    (aget this "state" "localState")
+                     props    (aget this "props" "props")
+                     rendered (render props state)]
+                 (to-vDOM rendered displayName))))
 
-        :componentWillMount
-        (fn []
-          (this-as this
-                   (let [state (aget this "localState")
-                         props (aget this "props" "props")
-                         callbacks (if (map? init)
-                                     init
-                                     (init this state props))]
-                     (aset this "callbacks" callbacks)
-                     (add-watch state :render #(render! this)))))
+    :componentDidMount
+    (fn []
+      (this-as this
+               (when-let [cb (:did-mount (aget this "state" "callbacks"))]
+                 (let [state (aget this "state" "localState")
+                       props (aget this "props" "props")]
+                   (cb this state props)))))
 
-        :componentDidMount
-        (fn []
-          (this-as this
-                   (when-let [cb (:did-mount (aget this "callbacks"))]
-                     (let [state (aget this "localState")
-                           props (aget this "props" "props")]
-                       (cb this state props)))))
+    :componentWillUpdate
+    (fn []
+      (this-as this
+               (when-let [cb (:will-update (aget this "state" "callbacks"))]
+                 (let [state (aget this "state" "localState")
+                       props (aget this "props" "props")]
+                   (cb this state props)))))
 
-        :componentWillUpdate
-        (fn []
-          (this-as this
-                   (when-let [cb (:will-update (aget this "callbacks"))]
-                     (let [state (aget this "localState")
-                           props (aget this "props" "props")]
-                       (cb this state props)))))
+    :componentDidUpdate
+    (fn []
+      (this-as this
+               (when-let [cb (:did-update (aget this "state" "callbacks"))]
+                 (let [state (aget this "state" "localState")
+                       props (aget this "props" "props")]
+                   (cb this state props)))))
 
-        :componentDidUpdate
-        (fn []
-          (this-as this
-                   (when-let [cb (:did-update (aget this "callbacks"))]
-                     (let [state (aget this "localState")
-                           props (aget this "props" "props")]
-                       (cb this state props)))))
-
-        :componentWillUnmount
-        (fn []
-          (this-as this
-                   (when-let [cb (:will-unmount (aget this "callbacks"))]
-                     (let [state (aget this "localState")
-                           props (aget this "props" "props")]
-                       (cb this state props)))))}
+    :componentWillUnmount
+    (fn []
+      (this-as this
+               (when-let [cb (:will-unmount (aget this "state" "callbacks"))]
+                 (let [state (aget this "state" "localState")
+                       props (aget this "props" "props")]
+                   (cb this state props)))))}
 
    react/create-class
    react/create-factory))
