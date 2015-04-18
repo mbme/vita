@@ -62,3 +62,27 @@
 
 (v/defc category [{:keys [key]}]
   [:span.& key])
+
+(v/defc Tabs [{:keys [items]} state]
+  (let [selected @state]
+    [:div.&
+     `[:div.&-tabs
+       ~@(->> items
+              (map :label)
+              (map-indexed
+               (fn [pos label]
+                 [:div.tab
+                  {:class (when (= pos selected) "active")
+                   :onClick #(when-not (= pos selected)
+                               (reset! state pos))}
+                  label])))]
+     [:div.&-body
+      (->> items
+           (keep-indexed
+            (fn [pos item]
+              (when (= pos selected)
+                (:body item))))
+           first)]
+     ])
+  (fn [_ state]
+    (reset! state 0)))

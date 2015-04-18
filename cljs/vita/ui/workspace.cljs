@@ -2,7 +2,7 @@
   (:require [vita.base.bus :as bus :refer [trigger]]
             [vita.utils.utils :as utils]
             [vita.ui.components
-             :refer [icon button category]]
+             :refer [icon button category Tabs]]
             [vita.ui.modal :as modal]
 
             [goog.style :as style]
@@ -10,11 +10,20 @@
 
             [viter :as v]))
 
-(defn get-words [s]
+;; UTILS
+
+(defn- get-words [s]
   (str/split s #"\s+"))
 
-(defn join [col]
+(defn- join [col]
   (str/join " " col))
+
+(defn- highlight [el]
+  (utils/animate! el "target"))
+
+(defn- scroll-to [el]
+  (.scrollIntoView el)
+  (highlight el))
 
 (defn- show-record [name data categories]
   [:article
@@ -24,30 +33,7 @@
                  {:__html (utils/md->html data)}}]])
 
 
-(v/defc Tabs [{:keys [items]} state]
-  (let [selected @state]
-    [:div.&
-     `[:div.&-tabs
-       ~@(->> items
-              (map :label)
-              (map-indexed
-               (fn [pos label]
-                 [:div.tab
-                  {:class (when (= pos selected) "active")
-                   :onClick #(when-not (= pos selected)
-                               (reset! state pos))}
-                  label])))]
-     [:div.&-body
-      (->> items
-           (keep-indexed
-            (fn [pos item]
-              (when (= pos selected)
-                (:body item))))
-           first)]
-     ])
-  (fn [_ state]
-    (reset! state 0)))
-
+;; COMPONENTS
 
 (v/defc RecordView [{:keys [name data categories]}]
   [:article.&
@@ -97,13 +83,6 @@
         data (:data record)
         categories (:categories record)]
     (show-record name data categories)))
-
-(defn- highlight [el]
-  (utils/animate! el "target"))
-
-(defn- scroll-to [el]
-  (.scrollIntoView el)
-  (highlight el))
 
 (v/defc WorkspaceItem [{:keys [id key name data categories] :as props} state]
   (if (:edit @state)
