@@ -60,9 +60,9 @@
                           categories]}]
   {"id"   id
    "type" (keyword->str type)
-   "name" @name
-   "data" @data
-   "categories" @categories})
+   "name" name
+   "data" data
+   "categories" categories})
 
 (defn new-atom [type]
   (->VitaAtom nil

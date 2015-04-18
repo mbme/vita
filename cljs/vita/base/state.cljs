@@ -145,20 +145,14 @@
              (do
                (log/info "open atom " id)
                (-> atom
-                   (assoc :key key :state :view)
+                   (assoc :key key)
                    ws-add!)))))))
 
    :ws-close ws-close!
 
-   :ws-edit
-   (fn [key] (ws-update! key #(assoc % :state :edit)))
-
-   :ws-preview
-   (fn [key] (ws-update! key #(assoc % :state :preview)))
-
    :ws-save
-   (fn [key]
-     (let [atom   (ws-get key)
+   (fn [atom]
+     (let [key    (:key atom)
            is-new (nil? (:id atom))]
        (go
          (if is-new
@@ -169,7 +163,7 @@
                (log/error "can't create atom: %s %s" err (str data))
                (do
                  (log/info "created atom " (:id data))
-                 (ws-update! key #(merge % data {:state :view}))
+                 (ws-update! key #(merge atom data))
 
                  (register-id-key-pair data key)
                  (reload-atoms-list))))
@@ -180,7 +174,7 @@
                (log/error "can't save atom: %s %s" err (str data))
                (do
                  (log/info "saved atom " (:id atom))
-                 (ws-update! key #(merge % data {:state :view}))
+                 (ws-update! key #(merge atom data))
 
                  (reload-atoms-list))))))))
 
@@ -197,7 +191,7 @@
    (fn []
      (ws-add!
       (-> (atom/new-atom :record)
-          (assoc :key (next-key) :state :edit))))))
+          (assoc :key (next-key)))))))
 
 
 (defn watch! [func]

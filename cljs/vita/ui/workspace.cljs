@@ -16,17 +16,6 @@
 (defn join [col]
   (str/join " " col))
 
-(defn- show-items [items]
-  (for [[text onClick] items
-        :when (not (nil? onClick))]
-    [button :label text :onClick onClick]))
-
-(v/defc Panel [{:keys [left right]}]
-  [:div.&
-   `[:span.&-left  ~@(show-items left)]
-   `[:span.&-right ~@(show-items right)]])
-
-
 (defn- show-record [name data categories]
   [:article
    [:div.&-name name]
@@ -79,38 +68,6 @@
      [button :label "DELETE" :type :primary
       :onClick (fn [] (trigger :ws-delete key))]]}))
 
-(v/defc EditRecordView [{:keys [id key name data categories]}]
-  [:div.&
-   [Panel
-    :left  {:preview #(trigger :ws-preview key)}
-    :right {:save    #(trigger :ws-save key)
-            ;; show :delete if record has id
-            ;; (edit record, not add record)
-            :delete  (when id #(modal-delete? key))
-            :close   #(trigger :ws-close key)}]
-
-   [:input.&-name.js-name
-    {:type         "text"
-     :defaultValue @name
-     :placeholder  "TITLE"
-     :onChange     #(reset! name (v/e-val %))}]
-
-   [:input.&-categories
-    {:type         "text"
-     :defaultValue (join @categories)
-     :placeholder  "atom categories"
-     :onChange     #(reset! categories (get-words (v/e-val %)))}]
-
-   [:textarea.&-data.js-data
-    {:defaultValue @data
-     :placeholder  "Type something..."
-     :onChange     #(do (reset! data (v/e-val %))
-                        (utils/autosize! (.-target %)))}]]
-
-  {:did-mount #(let [el (v/node %1)]
-                 (utils/autosize!    (utils/q1 el ".js-data"))
-                 (utils/focus-input! (utils/q1 el ".js-name")))})
-
 (v/defc RecordEditor [{:keys [record]}]
   [:div.&
 
@@ -148,12 +105,19 @@
   (.scrollIntoView el)
   (highlight el))
 
-(v/defc WorkspaceItem [{:keys [key name data categories] :as props} state]
+(v/defc WorkspaceItem [{:keys [id key name data categories] :as props} state]
   (if (:edit @state)
 
     [:div.&.is-edited
-     [button :label "SAVE" :onClick #(println "save")]
-     [button :label "CANCEL" :onClick #(swap! state assoc :edit false)]
+     [button :label "SAVE" :onClick (fn []
+                                      (trigger :ws-save @(:record @state))
+                                      (swap! state assoc :edit false))]
+     (when id
+       [button :label "CANCEL" :onClick #(swap! state assoc :edit false)])
+     (if id ;; we cannot delete new record
+       [button :label "DELETE" :onClick #(modal-delete? key)]
+       ;; instead we can close it
+       [button :label "CLOSE" :onClick #(trigger :ws-close key)])
      [Tabs :items
       [{:label "WRITE"
         :body [RecordEditor :record (:record @state)]}
@@ -165,14 +129,15 @@
         :body [:h1 "FILES"]}]]]
 
     [:div.&.is-showed
-     [button :label "EDIT" :onClick #(swap! state assoc
-                                            :edit true
-                                            :record (atom props))]
+     [button :label "EDIT" :onClick #(reset! state
+                                             {:edit true
+                                              :record (atom props)})]
      [button :label "CLOSE" :onClick #(trigger :ws-close key)]
      (show-record name data categories)])
 
   (fn [this state props]
-    (reset! state {:edit false})
+    (reset! state {:edit (nil? (:id props))
+                   :record (atom props)})
 
     (let [key (:key props)
           ;; scroll on every click on records list
