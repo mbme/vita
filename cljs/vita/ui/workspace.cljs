@@ -48,26 +48,24 @@
                    :onClick #(when-not (= pos selected)
                                (reset! state pos))}
                   label])))]
-     `[:div.&-body
-       ~@(->> items
-              (map :body)
-              (map-indexed
-               (fn [pos body]
-                 [:div.body-item
-                  {:class (when (= pos selected) "active")}
-                  body])))]
+     [:div.&-body
+      (->> items
+           (keep-indexed
+            (fn [pos item]
+              (when (= pos selected)
+                (:body item))))
+           first)]
      ])
   (fn [_ state]
     (reset! state 0)))
 
 
-(v/defc RecordView [{:keys [key name data categories]}]
-  [:div.&
-   [Panel
-    :left  {:edit   #(trigger :ws-edit key)}
-    :right {:close  #(trigger :ws-close key)}]
-
-   (show-record @name @data @categories)])
+(v/defc RecordView [{:keys [name data categories]}]
+  [:article.&
+   [:div.&-name name]
+   [:div.&-categories (map #(category :key %) categories)]
+   [:div.&-data {:dangerouslySetInnerHTML
+                 {:__html (utils/md->html data)}}]])
 
 (defn- modal-delete? [key]
   (modal/show!
@@ -113,12 +111,35 @@
                  (utils/autosize!    (utils/q1 el ".js-data"))
                  (utils/focus-input! (utils/q1 el ".js-name")))})
 
-
-(v/defc PreviewRecordView [{:keys [key name data categories]}]
+(v/defc RecordEditor [{:keys [record]}]
   [:div.&
-   [Panel :left {:edit #(trigger :ws-edit key)}]
 
-   (show-record @name @data @categories)])
+   [:input.&-name.js-name
+    {:type         "text"
+     :defaultValue (:name @record)
+     :placeholder  "TITLE"
+     :onChange     #(swap! record assoc :name (v/e-val %))}]
+
+   [:input.&-categories
+    {:type         "text"
+     :defaultValue (join (:categories @record))
+     :placeholder  "atom categories"
+     :onChange     #(swap! record assoc :categories (get-words (v/e-val %)))}]
+
+   [:textarea.&-data
+    {:defaultValue (:data @record)
+     :placeholder  "Type something..."
+     :onChange     #(swap! record assoc :data (v/e-val %))}]]
+
+  {:did-mount #(utils/focus-input!
+                (utils/q1 (v/node %1) ".js-name"))})
+
+(v/defc RecordPreviewer [{:keys [record]}]
+  (let [record @record
+        name (:name record)
+        data (:data record)
+        categories (:categories record)]
+    (show-record name data categories)))
 
 (defn- highlight [el]
   (utils/animate! el "target"))
@@ -127,24 +148,34 @@
   (.scrollIntoView el)
   (highlight el))
 
-(v/defc WorkspaceItem [record]
-  [:div.&
+(v/defc WorkspaceItem [{:keys [key name data categories] :as props} state]
+  (if (:edit @state)
 
-   [Tabs
-    :items [{:label "test tab"
-             :body [:div "BODY"]}
-            {:label "tab 2"
-             :body [:h1 "haha"]}]]
-   ;; ((case (:state record)
-   ;;    :edit    EditRecordView
-   ;;    :preview PreviewRecordView
-   ;;    :view    RecordView)
-   ;;  record)
-   ]
+    [:div.&.is-edited
+     [button :label "SAVE" :onClick #(println "save")]
+     [button :label "CANCEL" :onClick #(swap! state assoc :edit false)]
+     [Tabs :items
+      [{:label "WRITE"
+        :body [RecordEditor :record (:record @state)]}
+
+       {:label "PREVIEW"
+        :body [RecordPreviewer :record (:record @state)]}
+
+       {:label "FILES"
+        :body [:h1 "FILES"]}]]]
+
+    [:div.&.is-showed
+     [button :label "EDIT" :onClick #(swap! state assoc
+                                            :edit true
+                                            :record (atom props))]
+     [button :label "CLOSE" :onClick #(trigger :ws-close key)]
+     (show-record name data categories)])
 
   (fn [this state props]
+    (reset! state {:edit false})
+
     (let [key (:key props)
-          ;; scroll on every click
+          ;; scroll on every click on records list
           handler #(when (= % key)
                      (scroll-to (v/node this)))]
       (bus/on :ws-open handler)

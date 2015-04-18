@@ -47,9 +47,9 @@
                           ts_updated]}]
   (->VitaAtom id
               (str->keyword type)
-              (atom name)
-              (atom data)
-              (atom categories)
+              name
+              data
+              categories
               ts_created
               ts_updated))
 
@@ -67,8 +67,8 @@
 (defn new-atom [type]
   (->VitaAtom nil
               type
-              (atom "")
-              (atom "")
-              (atom [])
+              ""
+              ""
+              []
               nil
               nil))
