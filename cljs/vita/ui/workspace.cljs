@@ -26,21 +26,12 @@
   (highlight el))
 
 (defn- show-record [name data categories]
-  [:article
-   [:div.&-name name]
-   [:div.&-categories (map #(category :key %) categories)]
-   [:div.&-data {:dangerouslySetInnerHTML
-                 {:__html (utils/md->html data)}}]])
-
-
-;; COMPONENTS
-
-(v/defc RecordView [{:keys [name data categories]}]
   [:article.&
    [:div.&-name name]
    [:div.&-categories (map #(category :key %) categories)]
    [:div.&-data {:dangerouslySetInnerHTML
                  {:__html (utils/md->html data)}}]])
+
 
 (defn- modal-delete? [key]
   (modal/show!
@@ -53,6 +44,13 @@
      [button :label "CANCEL"]
      [button :label "DELETE" :type :primary
       :onClick (fn [] (trigger :ws-delete key))]]}))
+
+
+;; COMPONENTS
+
+(v/defc RecordView [{:keys [name data categories]}]
+  (show-record name data categories))
+
 
 (v/defc RecordEditor [{:keys [record]}]
   [:div.&
@@ -77,6 +75,7 @@
   {:did-mount #(utils/focus-input!
                 (utils/q1 (v/node %1) ".js-name"))})
 
+
 (v/defc RecordPreviewer [{:keys [record]}]
   (let [record @record
         name (:name record)
@@ -84,19 +83,25 @@
         categories (:categories record)]
     (show-record name data categories)))
 
+
 (v/defc WorkspaceItem [{:keys [id key name data categories] :as props} state]
   (if (:edit @state)
 
     [:div.&.is-edited
-     [button :label "SAVE" :onClick (fn []
-                                      (trigger :ws-save @(:record @state))
-                                      (swap! state assoc :edit false))]
-     (when id
-       [button :label "CANCEL" :onClick #(swap! state assoc :edit false)])
-     (if id ;; we cannot delete new record
-       [button :label "DELETE" :onClick #(modal-delete? key)]
-       ;; instead we can close it
-       [button :label "CLOSE" :onClick #(trigger :ws-close key)])
+     [:div.panel
+      [button :label "SAVE" :class "&-save"
+       :onClick (fn []
+                  (trigger :ws-save @(:record @state))
+                  (swap! state assoc :edit false))]
+      (when id
+        [button :label "CANCEL" :class "&-cancel"
+         :onClick #(swap! state assoc :edit false)])
+      (if id ;; we cannot delete new record
+        [button :label "DELETE" :class "&-delete"
+         :onClick #(modal-delete? key)]
+        ;; instead we can close it
+        [button :label "CLOSE" :class "&-close"
+         :onClick #(trigger :ws-close key)])]
      [Tabs :items
       [{:label "WRITE"
         :body [RecordEditor :record (:record @state)]}
@@ -108,11 +113,12 @@
         :body [:h1 "FILES"]}]]]
 
     [:div.&.is-showed
-     [button :label "EDIT" :onClick #(reset! state
-                                             {:edit true
-                                              :record (atom props)})]
-     [button :label "CLOSE" :onClick #(trigger :ws-close key)]
-     (show-record name data categories)])
+     [:div.panel
+      [button :label "EDIT" :class "&-edit"
+       :onClick #(reset! state {:edit true :record (atom props)})]
+      [button :label "CLOSE" :class "&-close"
+       :onClick #(trigger :ws-close key)]]
+     [RecordView props]])
 
   (fn [this state props]
     (reset! state {:edit (nil? (:id props))
@@ -125,6 +131,7 @@
       (bus/on :ws-open handler)
       {:did-mount #(scroll-to (v/node this))
        :will-unmount #(bus/off :ws-open handler)})))
+
 
 (v/defc Workspace [{:keys [ws-items]}]
   [:div.&
