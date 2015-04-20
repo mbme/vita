@@ -59,6 +59,8 @@
 }
 
 @mixin Record {
+    line-height: 1.45;
+
     min-height: 200px;
 
     padding-bottom: 30px;
