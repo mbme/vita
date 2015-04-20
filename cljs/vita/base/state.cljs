@@ -165,7 +165,7 @@
                  (log/info "created atom " (:id data))
                  (ws-update! key #(merge atom data))
 
-                 (register-id-key-pair data key)
+                 (register-id-key-pair (:id data) key)
                  (reload-atoms-list))))
 
            ;; UPDATE
