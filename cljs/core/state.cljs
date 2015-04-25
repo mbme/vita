@@ -1,9 +1,9 @@
-(ns vita.base.state
+(ns core.state
   (:require-macros [cljs.core.async.macros :refer [go]])
-  (:require [vita.utils.log :as log]
-            [vita.base.atom :as atom]
-            [vita.base.socket :as socket]
-            [vita.base.bus :refer [on-many]]
+  (:require [core.log :as log]
+            [core.atom :as atom]
+            [core.socket :as socket]
+            [core.bus :refer [on-many]]
 
             [cljs.core.async :refer [<!]]))
 

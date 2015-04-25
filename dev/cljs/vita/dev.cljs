@@ -1,8 +1,8 @@
 (ns vita.dev
   (:require
-   [vita.app] ;; load main app
-   [vita.base.state :as state]
-   [vita.ui.modal :as modal]
+   [vita] ;; load main app
+   [core.state :as state]
+   [ui.modal :as modal]
    [viter]
    [figwheel.client :as fw :include-macros true]))
 

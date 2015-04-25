@@ -1,4 +1,4 @@
-(ns vita.utils.utils
+(ns utils
   (:require [org.markdownIt]
             [com.momentJs]
 
@@ -10,7 +10,7 @@
             [viter.parser :refer [parse-tag-line]]
             [viter :refer [request-animation-frame]]
             [clojure.string :as str])
-  (:require-macros [vita.utils.utils :as u]))
+  (:require-macros [utils :as u]))
 
 ;; HELPERS
 

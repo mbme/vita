@@ -1,5 +1,5 @@
-(ns vita.base.bus
-  (:require [vita.utils.log :as log])
+(ns core.bus
+  (:require [core.log :as log])
   (:import goog.pubsub.PubSub))
 
 (def bus (new PubSub))

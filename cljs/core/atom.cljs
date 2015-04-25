@@ -1,4 +1,4 @@
-(ns vita.base.atom)
+(ns core.atom)
 
 (defn str->keyword [str]
   (keyword (.substring str 1)))

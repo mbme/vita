@@ -1,9 +1,8 @@
-(ns vita.base.socket
+(ns core.socket
   (:require
-   [vita.base.bus :as bus]
-   [vita.base.atom :as atom]
-
-   [vita.utils.log :as log]
+   [core.bus  :as bus]
+   [core.atom :as atom]
+   [core.log  :as log]
 
    [cljs.core.async :refer
     [<! chan put! close! mix admix toggle]])

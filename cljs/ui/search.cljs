@@ -1,9 +1,9 @@
-(ns vita.ui.search
+(ns ui.search
   (:require
    [viter :as v]
-   [vita.base.bus :refer [trigger]]
-   [vita.ui.components :refer [icon category]]
-   [vita.utils.utils :as utils]))
+   [core.bus :refer [trigger]]
+   [ui.components :refer [icon category]]
+   [utils]))
 
 (v/defc SearchResult [{:keys [atom open first last]}]
   [:li.&

@@ -1,4 +1,4 @@
-(ns vita.utils.log)
+(ns core.log)
 
 (defmacro deflog [level]
   `(defmacro ~level [& args#]

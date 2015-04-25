@@ -1,4 +1,4 @@
-(ns vita.ui.components
+(ns ui.components
   (:require [viter :as v]))
 
 (def ^:private icons

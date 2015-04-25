@@ -44,7 +44,7 @@
      :source-paths ["cljs/"]
 
      :compiler {:output-to ~(dist "/app.js")
-                :main "vita.app"
+                :main "vita"
 
                 ;; :source-map "dist/app.js.map"
                 ;; :output-dir "dist/out"

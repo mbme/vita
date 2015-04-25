@@ -1,4 +1,4 @@
-(ns vita.utils.utils
+(ns utils
   (:require [clojure.string :as str]))
 
 (defn- to-closure-event

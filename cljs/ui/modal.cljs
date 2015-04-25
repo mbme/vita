@@ -1,8 +1,8 @@
-(ns vita.ui.modal
+(ns ui.modal
   (:require
    [viter :as v]
-   [vita.utils.utils :as utils]
-   [vita.utils.log :as log]))
+   [utils]
+   [core.log :as log]))
 
 (defonce ^:private modals (atom []))
 

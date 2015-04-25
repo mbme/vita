@@ -1,13 +1,13 @@
-(ns vita.app
-  (:require [vita.base.state :as state]
-            [vita.base.socket :as socket]
-            [vita.utils.utils :as utils]
-            [vita.base.bus :as bus]
+(ns vita
+  (:require [core.state :as state]
+            [core.socket :as socket]
+            [utils]
+            [core.bus :as bus]
 
-            [vita.ui.workspace :as ws]
-            [vita.ui.search :as search]
-            [vita.ui.components :refer [spinner]]
-            [vita.ui.modal :as modal]
+            [ui.ws.workspace :as ws]
+            [ui.search :as search]
+            [ui.components :refer [spinner]]
+            [ui.modal :as modal]
 
             [clojure.string :as string]
 
