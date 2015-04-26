@@ -1,5 +1,5 @@
 (ns ui.ws.record
-  (:require [viter :as v]
+  (:require [viter :refer-macros [defc]]
             [ui.components :refer [category]]))
 
 
@@ -11,11 +11,11 @@
                  {:__html (utils/md->html data)}}]])
 
 
-(v/defc RecordView [{:keys [name data categories]}]
+(defc RecordView [{:keys [name data categories]}]
   (show-record name data categories))
 
 
-(v/defc RecordPreviewer [{:keys [record]}]
+(defc RecordPreviewer [{:keys [record]}]
   (let [record @record
         name (:name record)
         data (:data record)

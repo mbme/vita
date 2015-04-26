@@ -1,11 +1,11 @@
 (ns ui.search
   (:require
-   [viter :as v]
+   [viter :as v :refer-macros [defc]]
    [core.bus :refer [trigger]]
    [ui.components :refer [icon category]]
    [utils]))
 
-(v/defc SearchResult [{:keys [atom open first last]}]
+(defc SearchResult [{:keys [atom open first last]}]
   [:li.&
    {:class [(if (:visible atom) "&--visible" "&--hidden")
             (when open "&--open")
@@ -26,7 +26,7 @@
 
   {:did-mount #(utils/watch-animation (v/node %) "done")})
 
-(v/defc SearchPanel [{:keys [search-term atoms ws-items]}]
+(defc SearchPanel [{:keys [search-term atoms ws-items]}]
   (let [open-ids (set (map :id ws-items))
         visible-atoms (filter :visible atoms)
         first-visible (first visible-atoms)

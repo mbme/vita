@@ -1,6 +1,6 @@
 (ns ui.modal
   (:require
-   [viter :as v]
+   [viter :as v :refer-macros [defc]]
    [utils]
    [core.log :as log]))
 
@@ -8,8 +8,8 @@
 
 (declare close)
 
-(v/defc modal [{:keys [id body footer class click-close button-close]
-                :or {click-close true button-close true}}]
+(defc modal [{:keys [id body footer class click-close button-close]
+              :or {click-close true button-close true}}]
   [:div.& {:onClick (utils/delegate
                      ".modal-overlay" #(when click-close (close id))
                      "button"         #(close id)

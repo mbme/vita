@@ -8,7 +8,7 @@
 
             [goog.style :as style]
 
-            [viter :as v]))
+            [viter :as v :refer-macros [defc]]))
 
 (defn- highlight [el]
   (utils/animate! el "target"))
@@ -32,7 +32,7 @@
 
 ;; COMPONENTS
 
-(v/defc WorkspaceItem [{:keys [id key name data categories] :as props} state]
+(defc WorkspaceItem [{:keys [id key name data categories] :as props} state]
   (if (:edit @state)
 
     [:div.&.is-edited
@@ -84,7 +84,7 @@
        :will-unmount #(bus/off :ws-open handler)})))
 
 
-(v/defc Workspace [{:keys [ws-items]}]
+(defc Workspace [{:keys [ws-items]}]
   [:div.&
 
    [button

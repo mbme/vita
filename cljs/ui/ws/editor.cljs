@@ -1,5 +1,5 @@
 (ns ui.ws.editor
-  (:require [viter :as v]
+  (:require [viter :as v :refer-macros [defc]]
             [utils]
 
             [clojure.string :as str]))
@@ -11,7 +11,7 @@
   (str/join " " col))
 
 
-(v/defc RecordEditor [{:keys [record]}]
+(defc RecordEditor [{:keys [record]}]
   [:div.&
 
    [:input.&-name.js-name

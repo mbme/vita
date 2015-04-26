@@ -1,5 +1,5 @@
 (ns ui.components
-  (:require [viter :as v]))
+  (:require [viter :refer-macros [defc]]))
 
 (def ^:private icons
   {:close    "ion-android-close"
@@ -18,7 +18,7 @@
     (throw (str "bad icon type " type)))
   (get icons type))
 
-(v/defc icon [{:keys [class type] :as all}]
+(defc icon [{:keys [class type] :as all}]
   [:i.&
    (assoc all :class [class (get-icon type)])])
 
@@ -28,7 +28,7 @@
    [:div.gap-patch            [:div.circle]]
    [:div.circle-clipper.right [:div.circle]]])
 
-(v/defc spinner [{:keys [active size]}]
+(defc spinner [{:keys [active size]}]
   [:div.&.preloader-wrapper
    {:class {:active (not= active false)
             :big (= size :big)
@@ -41,7 +41,7 @@
 
 ;; button types: default primary secondary floating
 ;; button styles: flat(default) raised
-(v/defc button [{:keys [type style class label onClick large]}]
+(defc button [{:keys [type style class label onClick large]}]
   (let [type-class (case type
                      :primary   "btn-primary"
                      :secondary "btn-secondary"
@@ -60,10 +60,10 @@
               :onClick onClick}
      label]))
 
-(v/defc category [{:keys [key]}]
+(defc category [{:keys [key]}]
   [:span.& key])
 
-(v/defc Tabs [{:keys [items]} state]
+(defc Tabs [{:keys [items]} state]
   (let [selected @state]
     [:div.&
      `[:div.&-tabs
