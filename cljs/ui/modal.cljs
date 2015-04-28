@@ -29,12 +29,15 @@
 
    [:div.&-overlay]])
 
-(defn init! [elem]
 
-  ;; listen to :modal events and add new modal to stack
-  (bus/on :modal (fn [id config]
-                   (log/debug "showing modal %s" id)
-                   (swap! modals conj config)))
+;; listen to :modal events and add new modal to stack
+(bus/on :modal (fn [id config]
+                 (log/debug "showing modal %s" id)
+                 (swap! modals conj config)))
+
+;; PUBLIC
+
+(defn init! [elem]
   (add-watch
    modals :render
    (fn [_ _ _ modals]

@@ -9,11 +9,12 @@
   (:require-macros
    [cljs.core.async.macros :refer [go-loop]]))
 
-(defonce ^:private req-queue (chan))
-(defonce ^:private requests  (volatile! {}))
+(def ^:private req-queue (chan))
+(def ^:private requests  (volatile! {}))
 
-(defonce ^:private socket-chan (chan))
-(defonce ^:private socket      (atom nil))
+(def ^:private socket-chan (chan))
+(def ^:private socket      (atom nil))
+
 (defn- socket-connect [addr]
   (let [s         (new js/WebSocket addr)
 
@@ -41,53 +42,53 @@
                                    (.parse js/JSON)
                                    js->clj)]))))
 
-(defonce _
-  (let [sender-chan  (chan)
-        sender-mixer (mix sender-chan)]
+(let [sender-chan  (chan)
+      sender-mixer (mix sender-chan)]
 
-    (admix sender-mixer socket-chan)
-    (admix sender-mixer req-queue)
+  (admix sender-mixer socket-chan)
+  (admix sender-mixer req-queue)
 
-    ;; do not process requests queue until websocket connected
-    (toggle sender-mixer { req-queue {:pause true}})
+  ;; do not process requests queue until websocket connected
+  (toggle sender-mixer { req-queue {:pause true}})
 
-    (go-loop []
-      (let [[evt val] (<! sender-chan)]
-        (case evt
-          :open    (do
-                     (log/info "websocket: open")
+  (go-loop []
+    (let [[evt val] (<! sender-chan)]
+      (case evt
+        :open    (do
+                   (log/info "websocket: open")
 
-                     ;; start processing requests queue
-                     (toggle sender-mixer { req-queue {:pause false}})
+                   ;; start processing requests queue
+                   (toggle sender-mixer { req-queue {:pause false}})
 
-                     (bus/trigger :socket-open))
+                   (bus/trigger :socket-open))
 
-          :close   (do
-                     (log/warn "websocket: closed")
+        :close   (do
+                   (log/warn "websocket: closed")
 
-                     ;; stop processing requets queue
-                     (toggle sender-mixer { req-queue {:pause true}})
+                   ;; stop processing requets queue
+                   (toggle sender-mixer { req-queue {:pause true}})
 
-                     (bus/trigger :socket-closed))
+                   (bus/trigger :socket-closed))
 
-          :message (let [{:strs [id error result]} val
-                         result-chan (get @requests id)]
-                     (log/debug "websocket: -> %s %s" id
-                                (if error (str "error: " error) "ok"))
-                     (put! result-chan [result error])
-                     (close! result-chan)
-                     (vswap! requests dissoc id))
+        :message (let [{:strs [id error result]} val
+                       result-chan (get @requests id)]
+                   (log/debug "websocket: -> %s %s" id
+                              (if error (str "error: " error) "ok"))
+                   (put! result-chan [result error])
+                   (close! result-chan)
+                   (vswap! requests dissoc id))
 
-          :send    (let [{:keys [id method]} val]
-                     (log/debug "websocket: <- %s %s" id method)
-                     (->> (clj->js val)
-                          js/JSON.stringify
-                          (.send @socket)))
+        :send    (let [{:keys [id method]} val]
+                   (log/debug "websocket: <- %s %s" id method)
+                   (->> (clj->js val)
+                        js/JSON.stringify
+                        (.send @socket)))
 
-          :error   (do
-                     (log/error "websocket: error %o" val)
-                     (bus/trigger :socket-error))))
-      (recur))))
+        :error   (do
+                   (log/error "websocket: error %o" val)
+                   (bus/trigger :socket-error))))
+    (recur)))
+
 
 ;; Request id generator
 (let [last-id (volatile! 0)]
