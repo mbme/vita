@@ -43,16 +43,10 @@
        first
        (:id)))
 
-;; helpers
-(defn- atoms-update [updater]
+(defn- atoms-update
+  "Apply `updater' to atoms."
+  [updater]
   (swap! state #(assoc % :atoms (updater (:atoms %)))))
-
-(defn- atom-update! [key updater]
-  (atoms-update
-   #(map (fn [atom]
-           (if (= key (:key atom))
-             (updater atom)
-             atom)) %)))
 
 (defn- ws-items-update [updater]
   (swap! state #(assoc % :ws-items (updater (:ws-items %)))))

@@ -1,12 +1,14 @@
 (ns core.atom)
 
-(defn str->keyword [str]
+(defn- str->keyword [str]
   (keyword (.substring str 1)))
 
-(defn keyword->str [keyword]
+(defn- keyword->str [keyword]
   (str keyword))
 
+
 ;; Atom Info
+
 (defrecord AtomInfo [id
                      type
                      name
@@ -27,7 +29,9 @@
               ts_created
               ts_updated))
 
+
 ;; Atom
+
 (defrecord VitaAtom [id
                      type
                      name
@@ -36,7 +40,7 @@
                      ts-created
                      ts-updated]
   Object
-  (toString [this] (str id type "/" @name " " categories)))
+  (toString [this] (str id type "/" name " " categories)))
 
 (defn json->atom [{:strs [id
                           type

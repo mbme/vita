@@ -24,7 +24,7 @@
 
   {:did-mount #(utils/watch-animation (v/node %) "done")})
 
-(defn- atom-has-term? [atom term]
+(defn- has-term? [atom term]
   (if (pos? (count term))
     (-> (:name atom)
         (.toLowerCase)
@@ -33,8 +33,10 @@
     true))
 
 (defc SearchPanel [{:keys [atoms ws-items]} state]
-  (let [search-term @state
-        atoms (map #(assoc % :visible (atom-has-term? % search-term)) atoms)
+  (let [term @state
+        atoms (map
+               #(assoc % :visible (has-term? % term))
+               atoms)
         open-ids (set (map :id ws-items))
         visible-atoms (filter :visible atoms)]
 
@@ -44,7 +46,7 @@
       [:input
        {:type "search"
         :placeholder "Filter atoms"
-        :defaultValue search-term
+        :defaultValue term
         :onChange #(reset! state (v/e-val %))
         :onFocus #(-> (.-target %)
                       (.-parentNode)
