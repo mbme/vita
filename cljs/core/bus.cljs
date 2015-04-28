@@ -16,13 +16,6 @@
   (.unsubscribe bus (name topic) handler)
   nil)
 
-(defn on-many [& items]
-  (->> (partition 2 items)
-       (map (fn [[topic handler]]
-              (on topic handler)))
-       doall)
-  nil)
-
 (defn trigger [topic & params]
   (let [topic-name (name topic)
         count (handlers-count topic)]

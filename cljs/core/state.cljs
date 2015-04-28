@@ -3,7 +3,7 @@
   (:require [core.log :as log]
             [core.atom :as atom]
             [core.socket :as socket]
-            [core.bus :refer [on-many]]
+            [core.bus :as bus]
 
             [cljs.core.async :refer [<!]]))
 
@@ -98,76 +98,73 @@
                   (map #(assoc % :key (key-for-id (:id %))))
                   (sort-by :name))))))))
 
-
 ;; PUBLIC
 
 (defn install-handlers! []
-  (on-many
+  ;; request atoms list after socket connected
+  (bus/on :socket-open reload-atoms-list)
 
-   ;; request atoms list after socket connected
-   :socket-open reload-atoms-list
+  ;; WORKSPACE EVENTS
 
-   ;; WORKSPACE EVENTS
+  ;; request atom if it's not already open in workspace
+  (bus/on :ws-open
+          (fn [key]
+            (when-not (ws-is-open? key (:ws-items @state))
+              (go
+                (let [id             (id-by-key key)
+                      [atom err] (<! (socket/read-atom id))]
+                  (if err
+                    (log/error "can't open atom %s: %s" id err)
+                    (do
+                      (log/info "open atom " id)
+                      (-> atom
+                          (assoc :key key)
+                          ws-add!))))))))
 
-   ;; request atom if it's not already open in workspace
-   :ws-open
-   (fn [key]
-     (when-not (ws-is-open? key (:ws-items @state))
-       (go
-         (let [id             (id-by-key key)
-               [atom err] (<! (socket/read-atom id))]
-           (if err
-             (log/error "can't open atom %s: %s" id err)
-             (do
-               (log/info "open atom " id)
-               (-> atom
-                   (assoc :key key)
-                   ws-add!)))))))
+  (bus/on :ws-close ws-close!)
 
-   :ws-close ws-close!
+  (bus/on :ws-save
+          (fn [atom]
+            (let [key    (:key atom)
+                  is-new (nil? (:id atom))]
+              (go
+                (if is-new
 
-   :ws-save
-   (fn [atom]
-     (let [key    (:key atom)
-           is-new (nil? (:id atom))]
-       (go
-         (if is-new
+                  ;; CREATE
+                  (let [[data err] (<! (socket/create-atom atom))]
+                    (if err
+                      (log/error "can't create atom: %s %s" err (str data))
+                      (do
+                        (log/info "created atom " (:id data))
+                        (ws-update! key #(merge atom data))
 
-           ;; CREATE
-           (let [[data err] (<! (socket/create-atom atom))]
-             (if err
-               (log/error "can't create atom: %s %s" err (str data))
-               (do
-                 (log/info "created atom " (:id data))
-                 (ws-update! key #(merge atom data))
+                        (register-id-key-pair (:id data) key)
+                        (reload-atoms-list))))
 
-                 (register-id-key-pair (:id data) key)
-                 (reload-atoms-list))))
+                  ;; UPDATE
+                  (let [[data err] (<! (socket/update-atom atom))]
+                    (if err
+                      (log/error "can't save atom: %s %s" err (str data))
+                      (do
+                        (log/info "saved atom " (:id atom))
+                        (ws-update! key #(merge atom data))
 
-           ;; UPDATE
-           (let [[data err] (<! (socket/update-atom atom))]
-             (if err
-               (log/error "can't save atom: %s %s" err (str data))
-               (do
-                 (log/info "saved atom " (:id atom))
-                 (ws-update! key #(merge atom data))
+                        (reload-atoms-list)))))))))
 
-                 (reload-atoms-list))))))))
+  (bus/on :ws-delete
+          (fn [key]
+            (let [id (id-by-key key)]
+              (go
+                (<! (socket/delete-atom id))
+                (log/info "deleted atom " id)
+                (atoms-update (fn [atoms] (remove #(= id (:id %)) atoms)))
+                (ws-close! key)))))
 
-   :ws-delete
-   (fn [key]
-     (let [id (id-by-key key)]
-       (go
-         (<! (socket/delete-atom id))
-         (log/info "deleted atom " id)
-         (atoms-update (fn [atoms] (remove #(= id (:id %)) atoms)))
-         (ws-close! key))))
-
-   :ws-new
-   (fn []
-     (ws-add!
-      (-> (atom/new-atom :record)
-          (assoc :key (next-key)))))))
+  (bus/on :ws-new
+          (fn []
+            (ws-add!
+             (-> (atom/new-atom :record)
+                 (assoc :key (next-key)))))))
 
 
 (defn watch! [func]
