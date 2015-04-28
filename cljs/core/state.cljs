@@ -25,7 +25,7 @@
 (defonce ^:private state
   (atom {:atoms    [] ;; atom/AtomInfo
          :ws-items [] ;; atom/VitaAtom
-         :search-term ""}))
+         }))
 
 (defn- key-by-id
   "Get local atom key by specified atom id."
@@ -82,16 +82,6 @@
 (defn- ws-is-open? [key ws-items]
   (some true? (map #(= key (:key %)) ws-items)))
 
-(defn- atom-has-term? [atom term]
-  (if (pos? (count term))
-    (-> (:name atom)
-        (.toLowerCase)
-        (.indexOf (.toLowerCase term))
-        (> -1))
-    true))
-
-(defn- update-visibility [term atoms]
-  (map #(assoc % :visible (atom-has-term? % term)) atoms))
 
 ;; SERVER EVENTS HANDLER
 
@@ -106,7 +96,6 @@
                  (->>
                   items
                   (map #(assoc % :key (key-for-id (:id %))))
-                  (update-visibility (:search-term @state))
                   (sort-by :name))))))))
 
 
@@ -117,19 +106,6 @@
 
    ;; request atoms list after socket connected
    :socket-open reload-atoms-list
-
-   ;; SEARCH PANEL EVENTS
-
-   :search-update
-   (fn [term]
-     (when-not (= term (:search-term @state))
-       (log/info "new search term:" term)
-       (let [atoms (->>
-                    (:atoms @state)
-                    (update-visibility term))]
-         (swap! state assoc
-                :search-term term
-                :atoms atoms))))
 
    ;; WORKSPACE EVENTS
 

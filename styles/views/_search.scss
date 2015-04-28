@@ -83,7 +83,9 @@
     height: 70px;
     cursor: pointer;
 
-    background-color: $c-bg;
+    &:hover {
+        background-color: lighten($c-bg-primary, 10%);
+    }
 
     &-icon {
         font-size: 30px;
@@ -120,24 +122,7 @@
         }
     }
 
-    // borders
-    border-top: $base-border;
-    border-left: $base-border;
-    border-right: $base-border;
-    &--visible.last {
-        border-bottom: $base-border;
-    }
-
-    // rounded borders
-    &--visible.first {
-        @include border-top-radius($base-border-radius);
-    }
-    &--visible.last {
-        @include border-bottom-radius($base-border-radius);
-    }
-
     // open item
-    @include transition(color, ease-in, 0.4s, 0s);
     &--open {
         color: $c-font-accent;
 
