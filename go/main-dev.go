@@ -8,8 +8,8 @@ import (
 )
 
 var indexHTML = renderIndexHTML(&indexHTMLConfig{
-	Styles: "http://test.dev:3449/styles/main.css",
-	App:    "/dist/app.js",
+	Styles: "/styles/main.css",
+	App:    "/target/app.js",
 })
 
 func indexHandler(w http.ResponseWriter, req *http.Request) {

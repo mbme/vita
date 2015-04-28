@@ -29,6 +29,7 @@
 (js/setTimeout #(when-not (socket/connected?)
                   (show-no-connection)) 1500)
 
+;; (set! viter/*force-render* true)
 
 (defn init! []
   (modal/init! overlay)

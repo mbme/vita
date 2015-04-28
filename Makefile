@@ -1,7 +1,5 @@
 BASE := .
 
-DIST := $(BASE)/dist
-
 GOSRC  := $(BASE)/go
 GODIRS := $(GOSRC) $(GOSRC)/storage
 TARGET := $(BASE)/target
@@ -11,12 +9,14 @@ VENDOR := $(BASE)/vendor
 
 STYLES := $(BASE)/styles
 
+DIST := $(BASE)/dist
+DIST_DEV := $(TARGET)
+
 clean:
-	rm -f $(BASE)/.lein-figwheel-server.log
-	rm -rf $(TARGET) $(DIST)
+	rm -rf $(TARGET)
 
 clean-cljs:
-	rm -rf $(DIST)/app*
+	rm -rf $(DIST_DEV)/app*
 
 # install project deps
 deps:
@@ -26,8 +26,8 @@ deps:
 build:
 	go build -tags='dev' -o $(APP) -v $(GOSRC)
 
-build-cljs: clean-cljs
-	lein with-profile develop cljsbuild once
+build-cljs:
+	lein cljsbuild once dev
 
 # run tests
 test:
@@ -44,8 +44,8 @@ run: build
 serv:
 	$(BASE)/dev/watch -d $(GOSRC) -f "\.go$$" -b 'make build' -r $(APP)
 
-serv-cljs: clean-cljs
-	rlwrap lein with-profile +develop figwheel dev
+serv-cljs:
+	lein cljsbuild auto dev
 
 prod: clean
 	mkdir $(DIST)
