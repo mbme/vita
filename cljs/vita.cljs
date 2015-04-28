@@ -16,6 +16,8 @@
 
 ;; (set! v/*force-render* true)
 
+;; NO CONNECTION MODAL
+
 (defn- show-no-connection []
   (bus/trigger :modal :no-connection
                {:click-close false
@@ -29,11 +31,15 @@
 ;; show :no-connection modal on broken websocket
 (bus/on :socket-closed show-no-connection)
 ;; and close it when connection appears
-(bus/on :socket-open   #(modal/close :no-connection))
+(bus/on :socket-open
+        #(bus/trigger :modal-close :no-connection))
+
 ;; schedule first test if socket connection established
 (js/setTimeout #(when-not (socket/connected?)
                   (show-no-connection)) 1500)
 
+
+;; APP INIT
 
 (let [left  (q1 ".Root>.left")
       right (q1 ".Root>.right")

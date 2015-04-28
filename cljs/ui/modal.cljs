@@ -7,7 +7,7 @@
 
 (def ^:private modals (atom []))
 
-(defn close
+(defn- close
   "Close dialog with specified id."
   [id]
   (swap! modals
@@ -33,7 +33,12 @@
 ;; listen to :modal events and add new modal to stack
 (bus/on :modal (fn [id config]
                  (log/debug "showing modal %s" id)
-                 (swap! modals conj config)))
+                 (swap! modals conj (assoc config :id id))))
+
+;; listen to :modal-close events and close modal
+(bus/on :modal-close (fn [id]
+                       (log/debug "closing modal %s" id)
+                       (close id)))
 
 ;; PUBLIC
 
