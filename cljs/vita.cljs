@@ -18,28 +18,31 @@
 (defonce overlay (utils/q1 "body>.Overlay"))
 
 (defn- show-no-connection []
-  (modal/show!
-   {:id :no-connection
-    :click-close false
-    :body
-    [:div.no-connection
-     [:h2.message "NO CONNECTION"]
-     [spinner :size :big]]}))
+  (bus/trigger :modal :no-connection
+               {:click-close false
+                :body
+                [:div.no-connection
+                 [:h2.message "NO CONNECTION"]
+                 [spinner :size :big]]}))
 
-
+;; delay check if socket connection established
 (js/setTimeout #(when-not (socket/connected?)
                   (show-no-connection)) 1500)
+
+
+(defn init! []
+  (modal/init! overlay)
+
+  ;; show :no-connection modal on broken websocket
+  (bus/on :socket-closed show-no-connection)
+  ;; and close it when connection appears
+  (bus/on :socket-open   #(modal/close :no-connection)))
 
 (defonce _
   (let [addr (-> js/window.location
                  (str "ws")
                  (string/replace-first #"^http" "ws"))]
-
-    (modal/init! overlay)
-
-    ;; NO CONNECTION MODAL
-    (bus/on :socket-open   #(modal/close :no-connection))
-    (bus/on :socket-closed show-no-connection)
+    (init!)
 
     (state/install-handlers!)
     (state/watch!

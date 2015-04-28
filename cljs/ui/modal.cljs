@@ -2,14 +2,21 @@
   (:require
    [viter :as v :refer-macros [defc]]
    [utils]
+   [core.bus :as bus]
    [core.log :as log]))
 
-(defonce ^:private modals (atom []))
+(def ^:private modals (atom []))
 
-(declare close)
+(defn close
+  "Close dialog with specified id."
+  [id]
+  (swap! modals
+         (fn [modals] (remove #(= id (:id %)) modals))))
 
-(defc modal [{:keys [id body footer class click-close button-close]
-              :or {click-close true button-close true}}]
+
+(defc modal
+  [{:keys [id body footer class click-close button-close]
+    :or {click-close true button-close true}}]
   [:div.& {:onClick (utils/delegate
                      ".modal-overlay" #(when click-close (close id))
                      "button"         #(close id)
@@ -22,9 +29,12 @@
 
    [:div.&-overlay]])
 
-;; PUBLIC
-
 (defn init! [elem]
+
+  ;; listen to :modal events and add new modal to stack
+  (bus/on :modal (fn [id config]
+                   (log/debug "showing modal %s" id)
+                   (swap! modals conj config)))
   (add-watch
    modals :render
    (fn [_ _ _ modals]
@@ -32,19 +42,3 @@
                   [:div]
                   [modal (first modals)])
                 elem))))
-
-(defn show!
-  "Show new modal dialog."
-  [{:keys [id] :as props}]
-  (when (nil? id) (throw "modal id must be specified"))
-  (log/debug "showing modal %s" id)
-  (swap! modals conj props))
-
-(defn close
-  "Close dialog with specified id."
-  [id]
-  (swap! modals
-         (fn [modals] (remove #(= id (:id %)) modals))))
-
-(defn clear! []
-  (reset! modals []))

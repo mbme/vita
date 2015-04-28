@@ -24,7 +24,7 @@
 ;; STATE
 (defonce ^:private state
   (atom {:atoms    [] ;; atom/AtomInfo
-         :ws-items [] ; atom/InfoAtoms
+         :ws-items [] ;; atom/VitaAtom
          :search-term ""}))
 
 (defn- key-by-id

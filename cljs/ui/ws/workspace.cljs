@@ -2,9 +2,8 @@
   (:require [core.bus :as bus]
             [utils]
             [ui.components :refer [icon button Tabs]]
-            [ui.modal :as modal]
-            [ui.ws.editor :refer [RecordEditor]]
-            [ui.ws.record :refer [RecordView RecordPreviewer]]
+            [ui.ws.editor  :refer [RecordEditor]]
+            [ui.ws.record  :refer [RecordView RecordPreviewer]]
 
             [goog.style :as style]
 
@@ -18,9 +17,9 @@
   (highlight el))
 
 (defn- modal-delete? [key]
-  (modal/show!
-   {:id :delete-record
-    :class "delete-record"
+  (bus/trigger
+   :modal :delete-record
+   {:class "delete-record"
     :body
     [:h2 "DELETE RECORD?"]
     :footer
