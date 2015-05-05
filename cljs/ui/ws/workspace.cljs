@@ -4,6 +4,7 @@
             [ui.components :refer [icon button Tabs]]
             [ui.ws.editor  :refer [RecordEditor]]
             [ui.ws.record  :refer [RecordView RecordPreviewer]]
+            [ui.ws.files   :refer [FilesList]]
 
             [goog.style :as style]
 
@@ -53,7 +54,7 @@
       :body [RecordPreviewer :record (:record @state)]}
 
      {:label "FILES"
-      :body [:h1 "FILES"]}]]])
+      :body [FilesList :record (:record @state)]}]]])
 
 (defn- ws-show [props state]
   [:div.&.is-showed

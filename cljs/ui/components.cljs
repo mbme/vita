@@ -11,6 +11,11 @@
    :plus     "ion-plus"
    :tag      "ion-pound"
 
+   ;; files icons
+   :image "ion-image"
+   :video "ion-social-youtube-outline"
+   :text "ion-document-text"
+
    :record "ion-ios-paper-outline"})
 
 (defn get-icon [type]

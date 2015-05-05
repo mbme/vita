@@ -3,6 +3,8 @@
             [com.momentJs]
 
             [goog.string :as gstr]
+            [goog.string.format]
+
             [goog.style :as style]
             [goog.dom :as dom]
             [goog.events.EventType :as EventType]
@@ -16,6 +18,21 @@
 
 (defn get-bound-fn [obj prop]
   (.bind (aget obj prop) obj))
+
+(def B-in-KB 1024)
+(def B-in-MB (* B-in-KB 1024))
+(def B-in-GB (* B-in-MB 1024))
+(def B-in-PB (* B-in-GB 1024))
+
+(defn format-bytes-size
+  "Pretty print sizes in bytes."
+  [bytes-size]
+  (condp > bytes-size
+    B-in-KB (str bytes-size "B")
+    B-in-MB (gstr/format "%.2fKB" (/ bytes-size B-in-KB))
+    B-in-GB (gstr/format "%.2fMB" (/ bytes-size B-in-MB))
+    B-in-PB (gstr/format "%.2fGB" (/ bytes-size B-in-GB))
+    (str bytes-size "B")))
 
 
 ;; CLASS MANAGEMENT

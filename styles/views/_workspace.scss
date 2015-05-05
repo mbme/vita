@@ -137,3 +137,42 @@
         margin-right: 30px;
     }
 }
+
+.FilesList {
+    &-add {
+        text-align: center;
+
+        button {
+            margin: 10px 0 0;
+        }
+    }
+
+    table {
+        margin: 0;
+
+        tr {
+            line-height: 30px;
+        }
+
+        td.icon {
+            width: 70px;
+
+            font-size: 27px;
+            text-align: center;
+        }
+
+        td.ts {
+            width: 200px;
+
+            font-size: 0.85em;
+            text-align: center;
+        }
+
+        td.size {
+            width: 70px;
+
+            font-size: 0.85em;
+            text-align: center;
+        }
+    }
+}
