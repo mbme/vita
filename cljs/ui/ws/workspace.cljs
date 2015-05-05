@@ -9,12 +9,9 @@
 
             [viter :as v :refer-macros [defc]]))
 
-(defn- highlight [el]
-  (utils/animate! el "target"))
-
 (defn- scroll-to [el]
   (.scrollIntoView el)
-  (highlight el))
+  (utils/animate! el "target"))
 
 (defn- modal-delete? [key]
   (bus/trigger
@@ -28,47 +25,49 @@
      [button :label "DELETE" :type :primary
       :onClick (fn [] (bus/trigger :ws-delete key))]]}))
 
+(defn- ws-edit [{:keys [key id]} state]
+  [:div.&.is-edited
+   [:div.panel
+    [button :label "SAVE" :class "&-save"
+     :onClick (fn []
+                (bus/trigger :ws-save @(:record @state))
+                (swap! state assoc :edit false))]
 
-;; COMPONENTS
-
-(defc WorkspaceItem [{:keys [id key name data categories] :as props} state]
-  (if (:edit @state)
-
-    [:div.&.is-edited
-     [:div.panel
-      [button :label "SAVE" :class "&-save"
-       :onClick (fn []
-                  (bus/trigger :ws-save @(:record @state))
-                  (swap! state assoc :edit false))]
-
-      (if id ;; we cannot delete new record
-        [button :label "DELETE" :class "&-delete"
-         :onClick #(modal-delete? key)]
-        ;; instead we can close it
-        [button :label "CLOSE" :class "&-close"
-         :onClick #(bus/trigger :ws-close key)])
-
-      (when id
-        [button :label "CANCEL" :class "&-cancel"
-         :onClick #(swap! state assoc :edit false)])]
-
-     [Tabs :items
-      [{:label "WRITE"
-        :body [RecordEditor :record (:record @state)]}
-
-       {:label "PREVIEW"
-        :body [RecordPreviewer :record (:record @state)]}
-
-       {:label "FILES"
-        :body [:h1 "FILES"]}]]]
-
-    [:div.&.is-showed
-     [:div.panel
-      [button :label "EDIT" :class "&-edit"
-       :onClick #(reset! state {:edit true :record (atom props)})]
+    (if id
+      ;; we cannot delete new record
+      [button :label "DELETE" :class "&-delete"
+       :onClick #(modal-delete? key)]
+      ;; instead we can close it
       [button :label "CLOSE" :class "&-close"
-       :onClick #(bus/trigger :ws-close key)]]
-     [RecordView props]])
+       :onClick #(bus/trigger :ws-close key)])
+
+    (when id
+      [button :label "CANCEL" :class "&-cancel"
+       :onClick #(swap! state assoc :edit false)])]
+
+   [Tabs :items
+    [{:label "WRITE"
+      :body [RecordEditor :record (:record @state)]}
+
+     {:label "PREVIEW"
+      :body [RecordPreviewer :record (:record @state)]}
+
+     {:label "FILES"
+      :body [:h1 "FILES"]}]]])
+
+(defn- ws-show [props state]
+  [:div.&.is-showed
+   [:div.panel
+    [button :label "EDIT" :class "&-edit"
+     :onClick #(reset! state {:edit true :record (atom props)})]
+    [button :label "CLOSE" :class "&-close"
+     :onClick #(bus/trigger :ws-close (:key props))]]
+   [RecordView props]])
+
+(defc WorkspaceItem [props state]
+  (if (:edit @state)
+    (ws-edit props state)
+    (ws-show props state))
 
   (fn [this state props]
     (reset! state {:edit (nil? (:id props))
