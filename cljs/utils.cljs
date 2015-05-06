@@ -124,11 +124,14 @@
 
 (js/moment.locale "en" (js-obj "calendar" moment-locale))
 
-(defn unix-moment [seconds]
-  (js/moment.unix seconds))
+(defn moment-unix [millis]
+  (js/moment.unix millis))
 
-(defn calendar-moment [seconds]
-  (.calendar (unix-moment seconds)))
+(defn moment-calendar [millis]
+  (.calendar (moment-unix millis)))
+
+(defn moment-format [millis]
+  (.format (moment-unix millis) "DD.MM.YYYY HH:mm"))
 
 ;; EVENT utils
 

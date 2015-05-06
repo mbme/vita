@@ -8,7 +8,7 @@
   [:tr
    [:td.icon [icon :type type]]
    [:td.name name]
-   [:td.ts   (utils/calendar-moment ts)]
+   [:td.ts   (utils/moment-format ts)]
    [:td.size (utils/format-bytes-size size)]])
 
 (defc FilesList [{:keys [record]}]

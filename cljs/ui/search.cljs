@@ -15,7 +15,7 @@
    [icon :type (:type atom) :class "&-icon"]
 
    [:time.&-time {:dateTime (:ts-updated atom)}
-    (utils/calendar-moment (:ts-updated atom))]
+    (utils/moment-calendar (:ts-updated atom))]
 
    [:span.&-name (:name atom)]
 
