@@ -44,13 +44,14 @@
    (spinner-layer "green")])
 
 
-;; button types: default primary secondary floating
+;; button types: default primary secondary floating link
 ;; button styles: flat(default) raised
 (defc button [{:keys [type style class label onClick large]}]
   (let [type-class (case type
                      :primary   "btn-primary"
                      :secondary "btn-secondary"
                      :floating  "btn-floating"
+                     :link      "btn-link"
                      nil        ""
                      (throw (str "bad button type " type)))
 
