@@ -71,15 +71,16 @@
     (ws-show props state))
 
   (fn [this state props]
+    ;; edit new records (records without id) by default
     (reset! state {:edit (nil? (:id props))
                    :record (atom props)})
 
-    (let [key (:key props)
-          ;; scroll on every click on records list
-          handler #(when (= % key)
-                     (scroll-to (v/node this)))]
+    (let [scroll-to-me #(scroll-to (v/node this))
+          handler #(when (= % (:key props)) (scroll-to-me))]
+
+      ;; scroll on every click on records info
       (bus/on :ws-open handler)
-      {:did-mount #(scroll-to (v/node this))
+      {:did-mount     scroll-to-me ; scroll first time
        :will-unmount #(bus/off :ws-open handler)})))
 
 

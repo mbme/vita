@@ -14,7 +14,7 @@
 (defc FilesList [{:keys [record]}]
   [:div.&
    [:div.&-add
-    [button :label "select file" :type :link] "or drag-n-drop it on record"]
+    "Drop files on record, or " [button :label "browse" :type :link]]
    [:table
     (map File
          [{:name "test.jpg" :ts 1430850772 :size 4096 :type :image}
