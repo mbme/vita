@@ -1,6 +1,8 @@
+import tpl from './main.hbs';
+
 class Test {
   constructor() {
-    console.log('TEST1');
+    console.log(tpl());
   }
 }
 new Test();
