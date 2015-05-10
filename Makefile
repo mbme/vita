@@ -3,7 +3,8 @@ GODIRS := $(GOSRC) $(GOSRC)/storage
 APP    := ./vita
 
 clean:
-	rm -rf $(TARGET)
+	rm -rf $(APP)
+	gulp clean
 
 # install project deps
 deps:
