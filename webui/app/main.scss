@@ -1,4 +1,4 @@
-html, body {
-    height: 100%;
-    background: green;
-}
+$roboto-font-path: "../vendor/materialize/font/roboto/";
+$icons-font-path: "../vendor/materialize/font/material-design-icons/";
+
+@import "../vendor/materialize/sass/materialize.scss";

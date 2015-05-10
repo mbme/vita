@@ -6,6 +6,7 @@
     "markdown-it": "*",
     "moment": "*",
     "lodash": "*",
-    "marionette": "*"
+    "marionette": "*",
+    "materialize": "*"
   }
 }
