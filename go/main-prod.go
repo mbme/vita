@@ -52,7 +52,7 @@ func main() {
 	app.Flags = []cli.Flag{
 		cli.IntFlag{
 			Name:  "port,p",
-			Value: 8080,
+			Value: 8081,
 			Usage: "port to listen on",
 		},
 	}

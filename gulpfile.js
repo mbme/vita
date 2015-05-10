@@ -1,7 +1,13 @@
 'use strict';
 
+var SIGINT = 'SIGINT';
+
 var src = './webui/';
 var dist = './webui/';
+
+var gosrc = './go';
+var goapp = './vita';
+
 var port = 8080;
 
 var webpackConfig = {
@@ -18,6 +24,7 @@ var webpackConfig = {
     ]
   }};
 
+var Proc = require('child_process');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var del = require('del');
@@ -49,18 +56,58 @@ gulp.task('styles', function taskStyles () {
   return gulp.src(src + 'app/bundle.scss')
     .pipe(plumber(suppressError))
     .pipe(sourcemaps.init())
-    .pipe(sass({
-
-    }))
+    .pipe(sass())
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(dist))
     .pipe(size({title: 'css'}))
     .pipe(connect.reload());
 });
 
+var skelet;
+var killSkelet = function () {
+  if (skelet) {
+    skelet.kill(SIGINT);
+    gutil.log('killed skelet');
+    skelet = null;
+  }
+};
+
+var startSkelet = function () {
+  skelet = Proc.spawn(goapp);
+  skelet.stdout.on('data', function(chunk) {
+    gutil.log(gutil.colors.green(chunk.toString()));
+  });
+  skelet.stderr.on('data', function(chunk) {
+    gutil.log(gutil.colors.red(chunk.toString()));
+  });
+
+  gutil.log('started skelet: PID', skelet.pid);
+};
+
+// handle Ctrl-C
+process.on(SIGINT, function () {
+  gutil.log('got a SIGINT, closing');
+  killSkelet();
+});
+
+gulp.task('skelet', function taskSkelet() {
+  Proc.exec('make build', function (error, stdout, stderr) {
+    if (error) {
+      gutil.log(gutil.colors.red('build failed:\n') + stderr);
+      return;
+    }
+
+    killSkelet();
+    startSkelet();
+  });
+});
+
 gulp.task('watch', function taskWatch () {
   gulp.watch(src + 'app/**/*.js', ['scripts']);
   gulp.watch(src + 'app/**/*.scss', ['styles']);
+  gulp.watch(gosrc + '**/*.go', {
+    readDelay: 5*1000
+  }, ['skelet']);
 });
 
 gulp.task('serve', function taskServ() {
@@ -74,7 +121,8 @@ gulp.task('serve', function taskServ() {
 });
 
 gulp.task('clean', function tasksClean (cb) {
-  del([dist + 'bundle.js',
+  del([goapp,
+       dist + 'bundle.js',
        dist + 'bundle.js.map',
        dist + 'bundle.css',
        dist + 'bundle.css.map'], cb);

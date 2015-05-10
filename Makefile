@@ -1,8 +1,6 @@
-BASE := .
-
-GOSRC  := $(BASE)/go
+GOSRC  := ./go
 GODIRS := $(GOSRC) $(GOSRC)/storage
-APP    := $(TARGET)/vita
+APP    := ./vita
 
 clean:
 	rm -rf $(TARGET)
@@ -26,6 +24,3 @@ check:
 
 run: build
 	$(APP)
-
-serv:
-	$(BASE)/dev/watch -d $(GOSRC) -f "\.go$$" -b 'make build' -r $(APP)
