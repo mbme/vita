@@ -1,0 +1,1 @@
+{"version":3,"sources":["main.scss"],"names":[],"mappings":"AAAM,IAAI,EAAE,IAAI,CAAL;EACP,MAAM,EAAE,IAAK;EACb,UAAU,EAAE,KAAM,GAFV","file":"bundle.css","sourcesContent":["html, body {\n    height: 100%;\n    background: green;\n}\n"],"sourceRoot":"/source/"}

@@ -12,6 +12,14 @@ note taking app
 
 ## BUILD
 
+webpack +
+gulp +
+handlebars -
+es6-babel +
+sass +
+
+materialize.scss
+
 ### TOOLS
 
 * GNU make to build app

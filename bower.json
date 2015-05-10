@@ -1,14 +1,9 @@
 {
-    "name": "deps",
-    "private": true,
-    "dependencies": {
-        "bourbon": "*",
-        "ionicons": "*",
-        "markdown-it": "*",
-        "react": "*",
-        "normalize-scss": "*",
-        "animate.css-scss": "geoffgraham/animate.scss",
-        "moment": "*",
-        "open-sans-fontface": "*"
-    }
+  "name": "deps",
+  "private": true,
+  "dependencies": {
+    "bourbon": "*",
+    "markdown-it": "*",
+    "moment": "*"
+  }
 }

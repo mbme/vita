@@ -23,9 +23,7 @@ _testmain.go
 *.test
 *.prof
 
-/dist
-/target
 /.tern-port
+/node_modules
 
 .sass-cache
-/styles/main.css*
