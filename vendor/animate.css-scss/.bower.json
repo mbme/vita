@@ -20,14 +20,13 @@
     "test",
     "tests"
   ],
-  "_release": "b51be531de",
+  "_release": "8bd5ca2e3a",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "b51be531de07bbd45422212db20c3cd1d31da8a1"
+    "commit": "8bd5ca2e3a871233de9e11da69ef71cf1cae6081"
   },
   "_source": "git://github.com/geoffgraham/animate.scss.git",
   "_target": "*",
-  "_originalSource": "geoffgraham/animate.scss",
-  "_direct": true
+  "_originalSource": "geoffgraham/animate.scss"
 }

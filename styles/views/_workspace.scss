@@ -10,33 +10,6 @@
     }
 }
 
-.Panel {
-    padding: 0 10px;
-
-    & &-right {
-        text-align: right;
-    }
-
-    &-left, &-right {
-        display: inline-block;
-        width: 50%;
-    }
-
-    button {
-        margin: 0;
-        padding: 0 9px;
-
-        font-size: 0.85em;
-
-        color: $c-font-secondary;
-
-        @include transition(color .3s);
-        &:hover {
-            color: $c-font;
-        }
-    }
-}
-
 .WorkspaceItem {
     @extend %z-depth-1;
     @extend %rounded;
@@ -47,15 +20,33 @@
     margin-top: 15px;
     margin-bottom: 40px;
 
-    // make panel visible on hover
-    .Panel {
+    .panel {
+        position: absolute;
+        right: 0;
+
         opacity: 0;
         @include transition(opacity .3s);
+
+        button {
+            margin: 0;
+            padding: 0 9px;
+
+            font-size: 0.85em;
+
+            color: $c-font-secondary;
+
+            @include transition(color .3s);
+            &:hover {
+                color: $c-font;
+            }
+        }
     }
 
-    &:hover .Panel {
+    // make panel visible on hover
+    &:hover .panel {
         opacity: 1;
     }
+
 
     background-color: $c-bg-paper;
     &.target {
@@ -67,10 +58,9 @@
     }
 }
 
+@mixin Record {
+    line-height: 1.45;
 
-.RecordView,
-.PreviewRecordView,
-.EditRecordView {
     min-height: 200px;
 
     padding-bottom: 30px;
@@ -103,22 +93,38 @@
             margin-bottom: 0;
         }
     }
+
+    @content;
 }
 
-.EditRecordView {
-    & &-name {
-        padding: 0;
-        box-shadow: none;
-    }
+.RecordView {
+    @include Record;
+}
 
-    & &-categories {
-        @extend %category;
-        word-spacing: 7px;
-    }
+.RecordPreviewer {
+    @include Record;
+}
 
-    & &-data {
-        resize: none;
-        overflow-y: hidden;
+.RecordEditor {
+    @include Record {
+        & &-name {
+            padding: 0;
+            box-shadow: none;
+            background-color: inherit;
+        }
+
+        & &-categories {
+            @extend %category;
+            word-spacing: 7px;
+            background-color: inherit;
+        }
+
+        & &-data {
+            resize: vertical;
+            overflow-y: auto;
+            background-color: inherit;
+        }
+
     }
 }
 
@@ -129,5 +135,44 @@
 
     .buttons button {
         margin-right: 30px;
+    }
+}
+
+.FilesList {
+    &-add {
+        text-align: center;
+
+        span {
+            color: $secondaryTextColor;
+        }
+    }
+
+    table {
+        margin: 0;
+
+        tr {
+            line-height: 30px;
+        }
+
+        td.icon {
+            width: 70px;
+
+            font-size: 27px;
+            text-align: center;
+        }
+
+        td.ts {
+            width: 200px;
+
+            font-size: 0.85em;
+            text-align: center;
+        }
+
+        td.size {
+            width: 70px;
+
+            font-size: 0.85em;
+            text-align: center;
+        }
     }
 }

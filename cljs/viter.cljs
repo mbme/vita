@@ -1,65 +1,27 @@
 (ns viter
   (:require-macros viter)
   (:require
-   [clojure.string :as str]
-
-   [viter.react :as react]
+   [viter.react  :as    react]
    [viter.parser :refer [to-vDOM]]))
 
-(defn- get-args [obj] (aget obj "args"))
+;; RENDER QUEUE
 
-(defn- this-args [this]
-  (get-args (.-props this)))
+(def ^:private render-queue (volatile! []))
 
-(defn- this-local-state [this]
-  (aget this (name :localState)))
-
-(defn- try-to-run [func & rest]
-  (when func (apply func rest)))
-
-(defn- with-this [method]
-  #(this-as this (try-to-run method this)))
-
-(def *force-render* false)
-
-(defn- create-react-element
-  "Create new ReactElement."
-  [{:keys [displayName render
-           will-mount
-           did-mount
-           will-update
-           did-update
-           will-unmount]}]
-  (->
-   #js {:displayName displayName
-
-        :localState (atom {})
-
-        :shouldComponentUpdate
-        (fn [next-props]
-          (or
-           *force-render*
-           (this-as this
-                    (not= (this-args this)
-                          (get-args next-props)))))
-
-        :render
-        (fn []
-          (this-as this
-                   (let [args     (this-args this)
-                         rendered (render args this)]
-                     (to-vDOM rendered displayName))))
-
-        :componentWillMount   (with-this  will-mount)
-        :componentDidMount    (with-this  did-mount)
-        :componentWillUpdate  (with-this  will-update)
-        :componentDidUpdate   (with-this  did-update)
-        :componentWillUnmount (with-this  will-unmount)}
-   react/create-class
-   react/create-factory))
-
-
-;; UTILS
+(defn- render
+  "Render all queued items."
+  []
+  (let [queue @render-queue]
+    ;; remove all items from queue
+    (vreset! render-queue [])
+    (doseq [item queue]
+      (if (vector? item)
+        ;; if vector then it's component and node to mount
+        (apply react/render item)
+        ;; else it's component to re-render
+        (when (.isMounted item)
+          ;; re-render only mounted components
+          (.forceUpdate item))))))
 
 (def request-animation-frame
   (or (.-requestAnimationFrame js/window)
@@ -68,43 +30,112 @@
       (.-msRequestAnimationFrame js/window)
       (fn [f] (.setTimeout js/window f 16))))
 
-(defn get-ref [this ref]
-  (aget (.-refs this) ref))
+(defn- schedule-render
+  "Schedule render if required."
+  []
+  (when (empty? @render-queue)
+    (request-animation-frame render)))
 
-(defn get-node [this]
-  (.getDOMNode this))
+(defn render!
+  ([form elem]
+   (schedule-render)
+   ;; add new item to the queue
+   (vswap! render-queue
+           conj [(to-vDOM form nil) elem]))
+  ([component]
+   (schedule-render)
+   (vswap! render-queue
+           conj component)))
 
-(defn deref-node
-  "Get react node by ref."
-  [this ref]
-  (get-node (get-ref this ref)))
+(defn node [this]
+  (react/get-node this))
 
-(defn e-target [evt]
-  (.-target evt))
+(defn e-val [e]
+  (aget e "target" "value"))
 
-(defn e-val
-  "Get value from react event."
-  [evt] (.-value (e-target evt)))
+;; REACT COMPONENT
 
-(defn get-words [s]
-  (str/split s #"\s+"))
+(def *force-render* false)
 
-(defn join [col]
-  (str/join " " col))
+(defn- create-react-element
+  "Create new ReactElement."
+  [displayName render init]
+  (->
+   #js
+   {:displayName displayName
 
-(defn echo [v] (println v) v)
+    :componentWillMount
+    (fn []
+      (this-as this
+               (let [state (atom nil)
+                     props (aget this "props" "props")
+                     callbacks (if (map? init)
+                                 ;; if init is a map then use it as callbacks map
+                                 init
+                                 ;; else it should be a function
+                                 ;; which should return callbacks map
+                                 (init this state props))]
+                 ;; re-render component on state changes
+                 (add-watch state :render #(render! this))
+                 (aset this "state"
+                       #js {"localState" state
+                            "callbacks" callbacks}))))
 
-(defn echol [v] (js/console.log v) v)
+    :shouldComponentUpdate
+    (fn [next-props]
+      (or
+       *force-render*
+       (this-as this
+                (not= (aget this "props" "props")
+                      (aget next-props   "props")))))
 
-;; PUBLIC
+    :render
+    (fn []
+      (this-as this
+               (let [state    (aget this "state" "localState")
+                     props    (aget this "props" "props")
+                     rendered (render props state)]
+                 (to-vDOM rendered displayName))))
+
+    :componentDidMount
+    (fn []
+      (this-as this
+               (when-let [cb (:did-mount (aget this "state" "callbacks"))]
+                 (let [state (aget this "state" "localState")
+                       props (aget this "props" "props")]
+                   (cb this state props)))))
+
+    :componentWillUpdate
+    (fn []
+      (this-as this
+               (when-let [cb (:will-update (aget this "state" "callbacks"))]
+                 (let [state (aget this "state" "localState")
+                       props (aget this "props" "props")]
+                   (cb this state props)))))
+
+    :componentDidUpdate
+    (fn []
+      (this-as this
+               (when-let [cb (:did-update (aget this "state" "callbacks"))]
+                 (let [state (aget this "state" "localState")
+                       props (aget this "props" "props")]
+                   (cb this state props)))))
+
+    :componentWillUnmount
+    (fn []
+      (this-as this
+               (when-let [cb (:will-unmount (aget this "state" "callbacks"))]
+                 (let [state (aget this "state" "localState")
+                       props (aget this "props" "props")]
+                   (cb this state props)))))}
+
+   react/create-class
+   react/create-factory))
 
 (defn create-component
   "Creates viter component."
-  [comp-name render config]
-  (let [element (-> config
-                    (assoc :displayName comp-name)
-                    (assoc :render render)
-                    create-react-element)]
+  [comp-name render init]
+  (let [element (create-react-element comp-name render init)]
 
     ;; add some metadata to identify viter components
     (with-meta
@@ -115,29 +146,9 @@
          (-> (apply hash-map rest)
              (assoc k v)
              component))
-        ([{:keys [key] :or {key js/undefined} :as args}]
+        ([{:keys [key] :or {key js/undefined} :as props}]
          ;; add key attribute to react element properties if passed
-         (element (js-obj "args" args "key" key))))
+         (element (js-obj "props" props "key" key))))
 
       {:type :viter
        :name comp-name})))
-
-(def ^:private render-queue (volatile! []))
-
-(defn- render
-  "Render all queued items."
-  []
-  (let [queue @render-queue]
-    ;; remove all items from queue
-    (vreset! render-queue [])
-    (doseq [[react-elem elem] queue]
-      (react/render react-elem elem))))
-
-(defn render! [form elem]
-  ;; schedule render if required
-  (when (empty? @render-queue)
-    (request-animation-frame render))
-
-  ;; add new item to the queue
-  (vswap! render-queue
-          conj [(to-vDOM form nil) elem]))

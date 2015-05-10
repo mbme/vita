@@ -119,6 +119,17 @@ $button-line-height: 36px !default;
         }
     }
 
+    &.btn-link {
+        margin: 0;
+        border-bottom: 1px dotted $c-btn-flat;
+        padding-left: 5px;
+        padding-right: 5px;
+        text-transform: none;
+
+        &:hover {
+            color: $c-btn-flat;
+        }
+    }
 }
 
 // Large button

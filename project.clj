@@ -1,16 +1,18 @@
-(def clojure       "1.7.0-alpha5")
-(def clojurescript "0.0-3126")
+(def clojure       "1.7.0-alpha6")
+(def clojurescript "0.0-3208")
 (def core-async    "0.1.346.0-17112a-alpha")
 
-(def figwheel  "0.2.3-SNAPSHOT")
 (def cljsbuild "1.0.5")
 
 (defn res
   ([]     (res ""))
   ([path] (str "vendor" path)))
 
-(defn dist [path]
+(defn dist-prod [path]
   (str "dist" path))
+
+(defn dist-dev [path]
+  (str "target" path))
 
 (def foreign-libs
   [{:file     (res "/react/react.js")
@@ -38,16 +40,13 @@
 
   :plugins [[lein-cljsbuild ~cljsbuild :exclusions [org.clojure/clojure]]]
 
+
   :cljsbuild
   {:builds
    [{:id "prod"
      :source-paths ["cljs/"]
-
-     :compiler {:output-to ~(dist "/app.js")
-                :main "vita.app"
-
-                ;; :source-map "dist/app.js.map"
-                ;; :output-dir "dist/out"
+     :compiler {:output-to ~(dist-prod "/app.js")
+                :main "vita"
 
                 :foreign-libs ~foreign-libs
                 :externs [~(res "/react/react.js")
@@ -62,31 +61,19 @@
 
                 :warnings {:single-segment-namespace false}
                 :language-in :ecmascript5
-                :language-out :ecmascript5}}]}
+                :language-out :ecmascript5}}
 
+    {:id "dev"
+     :source-paths ["cljs/"]
+     :compiler {:output-to  ~(dist-dev "/app.js")
+                :output-dir ~(dist-dev "/app")
+                :main "vita"
 
-  :profiles {:develop
-             {:dependencies [[figwheel ~figwheel]]
-              :plugins [[lein-figwheel ~figwheel
-                         :exclusions [org.apache.httpcomponents/httpcore
-                                      org.codehaus.plexus/plexus-utils
-                                      org.clojure/clojure]]]
-              :cljsbuild
-              {:builds [{:id "dev"
-                         :source-paths ["cljs/" "dev/cljs/"]
+                :asset-path ~(dist-dev "/app")
 
-                         :compiler {:output-to  ~(dist "/app.js")
-                                    :output-dir ~(dist "/app")
+                :foreign-libs ~foreign-libs
+                :optimizations :none
 
-                                    :main "vita.dev"
-                                    :asset-path ~(dist "/app")
-
-                                    :foreign-libs ~foreign-libs
-                                    :optimizations :none
-
-                                    :warnings {:single-segment-namespace false}
-                                    :language-in :ecmascript5
-                                    :language-out :ecmascript5}}]}
-
-              :figwheel {:repl false
-                         :server-logfile ".lein-figwheel-server.log"}}})
+                :warnings {:single-segment-namespace false}
+                :language-in :ecmascript5
+                :language-out :ecmascript5}}]})

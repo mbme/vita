@@ -1,3 +1,56 @@
+4.2.1 / 2015-05-01
+------------------
+
+- Minor emphasis update to match CM spec 0.19.
+
+
+4.2.0 / 2015-04-21
+------------------
+
+- Bumped [linkify-it](https://github.com/markdown-it/linkify-it) version to
+  1.1.0. Now links with IP hosts and without protocols are not linkified by
+  default, due possible collisions with some version numbers patterns (0.5.0.0).
+  You still can return back old behaviour by `md.linkify.set({ fuzzyIP: true })`.
+
+
+4.1.2 / 2015-04-19
+------------------
+
+- Bumped linkifier version. More strict 2-chars tald support for links without
+  schema. Should not linkify things like `io.js` and `node.js`.
+
+
+4.1.1 / 2015-04-15
+------------------
+
+- Improved pipe chars support in table cells, #86 (thanks to @jbt).
+
+
+4.1.0 / 2015-03-31
+------------------
+
+- Security: disabled `data:` URLs by default (except some image mimes), to avoid
+  possible XSS. Version bumped, because features changed (formally). If you did
+  not used `data:` URLs, consider this version as 4.0.4 (no API changes).
+- Simplified link validator code. Now more easy to understand and to copy
+  into your projects for customization.
+
+
+4.0.3 / 2015-03-25
+------------------
+
+- Updated linkifier.
+- Smartquotes rule cleanup (#76).
+- Fixed replacements rule bug in PhantomJS (#77).
+
+
+4.0.2 / 2015-03-22
+------------------
+
+- Fixed emphasis `marker` fields in tokens (#69).
+- Fixed html block tokens with numbers in name (#74).
+
+
 4.0.1 / 2015-03-13
 ------------------
 

@@ -25,3 +25,6 @@
   "Render ReactElement into DOM."
   [elem dom-elem]
   (.render React elem dom-elem))
+
+(defn get-node [comp]
+  (.findDOMNode React comp))

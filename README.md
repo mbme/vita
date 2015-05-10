@@ -2,6 +2,13 @@
 
 note taking app
 
+## CSS
+* classes with prefix "js-" for querying DOM elements: .js-editor, .js-data etc.
+* classes with prefix "u-" for utils, like .u-hide
+
+* component classes should start with component name: .WorkspaceItem-data
+* classes with prefix "is-" should modify component state and should never appear alone: .WorkspaceItem-data.is-hidden
+
 
 ## BUILD
 

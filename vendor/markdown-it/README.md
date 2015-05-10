@@ -9,11 +9,10 @@
 
 __[Live demo](https://markdown-it.github.io)__
 
-__v4.+ changed internals! Plugins need update. See [migration details](https://github.com/markdown-it/markdown-it/blob/master/docs/4.0_migration.md)__
-
-- Supports the CommonMark spec + syntax extensions + sugar (URL autolinking, typographer).
+- Follows the __[CommonMark spec](http://spec.commonmark.org/)__ + adds syntax extensions & sugar (URL autolinking, typographer).
 - Configurable syntax! You can add new rules and even replace existing ones.
-- High speed!
+- High speed.
+- [Safe](https://github.com/markdown-it/markdown-it/tree/master/docs/security.md) by default.
 - Community-written __[plugins](https://www.npmjs.org/browse/keyword/markdown-it-plugin)__ and [other packages](https://www.npmjs.org/browse/keyword/markdown-it) on npm.
 
 __Table of content__
@@ -65,7 +64,7 @@ var md = require('markdown-it')();
 var result = md.render('# markdown-it rulezz!');
 
 // browser without AMD, added to "window" on script load
-// Note, there are no dash.
+// Note, there is no dash in "markdownit".
 var md = window.markdownit();
 var result = md.render('# markdown-it rulezz!');
 ```
@@ -80,7 +79,7 @@ var result = md.renderInline('__markdown-it__ rulezz!');
 
 ### Init with presets and options
 
-(*) preset define combination of active rules and options. Can be
+(*) presets define combinations of active rules and options. Can be
 `"commonmark"`, `"zero"` or `"default"` (if skipped). See
 [API docs](https://markdown-it.github.io/markdown-it/#MarkdownIt.new) for more details.
 
@@ -189,7 +188,7 @@ Via plugins:
 ### Manage rules
 
 By default all rules are enabled, but can be restricted by options. On plugin
-load all it's rules are enabled automatically.
+load all its rules are enabled automatically.
 
 ```js
 // Activate/deactivate rules, with curring
@@ -209,22 +208,26 @@ md = require('markdown-it')('full', {
 
 ## Benchmark
 
-Here is result of CommonMark spec parse at Core i5 2.4 GHz (i5-4258U):
+Here is the result of readme parse at MB Pro Retina 2013 (2.4 GHz):
 
 ```bash
-$ benchmark/benchmark.js spec
-Selected samples: (1 of 27)
- > spec
+$ benchmark/benchmark.js readme
+Selected samples: (1 of 28)
+ > README
 
-Sample: spec.txt (110610 bytes)
- > commonmark-reference x 68.63 ops/sec ±6.53% (72 runs sampled)
- > current x 79.62 ops/sec ±3.22% (80 runs sampled)
- > current-commonmark x 103 ops/sec ±1.10% (76 runs sampled)
- > marked-0.3.2 x 23.14 ops/sec ±1.66% (42 runs sampled)
+Sample: README.md (7774 bytes)
+ > commonmark-reference x 1,222 ops/sec ±0.96% (97 runs sampled)
+ > current x 743 ops/sec ±0.84% (97 runs sampled)
+ > current-commonmark x 1,568 ops/sec ±0.84% (98 runs sampled)
+ > marked-0.3.2 x 1,587 ops/sec ±4.31% (93 runs sampled)
 ```
 
+__Note.__ CommonMark version runs with [simplified link normalizers](https://github.com/markdown-it/markdown-it/blob/master/benchmark/implementations/current-commonmark/index.js)
+for more "honest" compare. Difference is ~ 1.5x.
+
 As you can see, `markdown-it` doesn't pay with speed for it's flexibility.
-Because it's written in monomorphyc style and uses JIT inline caches effectively.
+Slowdown of "full" version caused by additional features not available in
+other implementations.
 
 
 ## Authors
@@ -248,6 +251,11 @@ during this project's development.
   also contains latest spec & online demo.
 - http://talk.commonmark.org - CommonMark forum, good place to collaborate
   developers' efforts.
+
+**Ports**
+
+- [motion-markdown-it](https://github.com/digitalmoksha/motion-markdown-it) - Ruby/RubyMotion
+
 
 ## License
 

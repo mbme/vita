@@ -9,7 +9,7 @@ import (
 
 var indexHTML = renderIndexHTML(&indexHTMLConfig{
 	Styles: "/styles/main.css",
-	App:    "/dist/app.js",
+	App:    "/target/app.js",
 })
 
 func indexHandler(w http.ResponseWriter, req *http.Request) {
