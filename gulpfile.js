@@ -18,9 +18,18 @@ var webpackConfig = {
     path: __dirname,
     filename: 'bundle.js'
   },
+  resolve: {
+    modulesDirectories: ['vendor'],
+    alias: {
+      'jquery':     'jquery/dist/jquery.js',
+      'underscore': 'lodash/lodash',
+      'backbone':   'backbone/backbone.js',
+      'marionette': 'marionette/lib/backbone.marionette.js'
+    }
+  },
   module : {
     loaders : [
-      { test: /\.js?$/, exclude: /node_modules/, loader: 'babel-loader' },
+      { test: /\.js?$/, exclude: /vendor/, loader: 'babel-loader' },
       { test: /\.hbs$/, loader: 'handlebars-loader'}
     ]
   }};

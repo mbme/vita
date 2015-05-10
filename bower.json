@@ -4,6 +4,8 @@
   "dependencies": {
     "bourbon": "*",
     "markdown-it": "*",
-    "moment": "*"
+    "moment": "*",
+    "lodash": "*",
+    "marionette": "*"
   }
 }
