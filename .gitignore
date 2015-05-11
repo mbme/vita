@@ -28,4 +28,4 @@ _testmain.go
 
 .sass-cache
 node_modules
-webui/bundle.*
+webui/*bundle.*
