@@ -23,11 +23,9 @@ var goapp = './vita';
 var port = 8080;
 
 var moduleAliases = {
-    'jquery':     'jquery/dist/jquery.js',
     'underscore': 'lodash/lodash',
     'backbone':   'backbone/backbone.js',
-    'marionette': 'marionette/lib/backbone.marionette.js',
-    'markdown-it': 'markdown-it/dist/markdown-it.js'
+    'marionette': 'marionette/lib/backbone.marionette.js'
 };
 
 function objectValues(object) {
@@ -50,6 +48,11 @@ var webpackConfig = {
     output: {
         path: __dirname,
         filename: 'bundle.js'
+    },
+
+    externals: {
+        'jquery': 'jQuery',
+        'markdown-it': 'markdownit'
     },
 
     resolve: {

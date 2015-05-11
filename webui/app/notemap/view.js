@@ -2,25 +2,44 @@
 
 import Marionette from 'marionette';
 import session from '../session';
+import {AtomView, EditAtomView} from './atom';
 
-let NoteView = Marionette.ItemView.extend({
+let NoteView = Marionette.LayoutView.extend({
     tagName: 'li',
     className: 'Note z-depth-1',
 
     template: require('./note.hbs'),
 
-    events: {
-        'click .js-edit': 'editNote',
-        'click .js-close': 'closeNote'
+    regions: {
+        content: '.content'
     },
 
-    editNote: function () {
-        console.log('edit atom %s', this.model.getId());
+    modelEvents: {
+        'change:edit': 'updateView'
     },
 
-    closeNote: function () {
+    childEvents: {
+        'atom:close': 'closeView',
+        'atom:edit':  'editView'
+    },
+
+    onShow: function () {
+        this.updateView();
+    },
+
+    updateView: function () {
+        var View = this.model.get('edit') ? EditAtomView : AtomView;
+        this.getRegion('content').show(new View({model: this.model}));
+    },
+
+    closeView: function () {
         console.log('closing atom %s', this.model.getId());
         this.model.collection.remove(this.model);
+    },
+
+    editView: function () {
+        console.log('edit atom %s', this.model.getId());
+        this.model.set('edit', true);
     }
 });
 

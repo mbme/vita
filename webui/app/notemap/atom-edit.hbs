@@ -1,0 +1,16 @@
+<div class="toolbar">
+    <i class="small mdi-editor-mode-edit js-edit"></i>
+    <i class="small mdi-navigation-close js-close"></i>
+</div>
+<div class="input-field title">
+    <input type="text" value="{{name}}" class="validate">
+    <label {{#if name}}class="active"{{/if}}>Title</label>
+</div>
+<div class="input-field categories">
+    <input type="text" value="{{[../hbs-helpers/cats] categories}}" class="validate">
+    <label {{#if categories}}class="active"{{/if}}>Categories</label>
+</div>
+<div class="input-field data">
+    <textarea class="materialize-textarea">{{data}}</textarea>
+    <label {{#if data}}class="active"{{/if}}>Data</label>
+</div>
