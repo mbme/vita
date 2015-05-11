@@ -61,5 +61,8 @@ export default Marionette.CompositeView.extend({
 
     createNote: function () {
         console.log('create new note');
+        this.collection.addAtom({
+            edit: true
+        });
     }
 });

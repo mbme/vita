@@ -28,5 +28,9 @@ export let AtomCollection = Backbone.Collection.extend({
 
     isOpen: function (id) {
         return !!this.get(id);
+    },
+
+    addAtom: function (data) {
+        this.add(data, {at: 0});
     }
 });

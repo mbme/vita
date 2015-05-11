@@ -8,7 +8,7 @@
 </div>
 <div class="input-field categories">
     <input type="text" value="{{[../hbs-helpers/cats] categories}}" class="validate">
-    <label {{#if categories}}class="active"{{/if}}>Categories</label>
+    <label {{#if categories.length}}class="active"{{/if}}>Categories</label>
 </div>
 <div class="input-field data">
     <textarea class="materialize-textarea">{{data}}</textarea>
