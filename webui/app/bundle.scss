@@ -1,1 +1,9 @@
+$c-bg-main: #EEEEEE;
+$c-bg: #FFFFFF;
+
 @import "./search-panel/view.scss";
+@import "./notemap/view.scss";
+
+html {
+    background: $c-bg-main;
+}

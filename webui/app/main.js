@@ -33,7 +33,7 @@ app.on('start', function () {
         } else {
             socket.getAtom(id).then(function (result) {
                 console.log('open atom ', id);
-                session.atomList.add(result);
+                session.atomList.add(result, {at:0});
             });
         }
     });
