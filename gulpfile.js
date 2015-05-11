@@ -136,10 +136,9 @@ gulp.task('skelet', function taskSkelet() {
 });
 
 gulp.task('watch', function taskWatch () {
-    gulp.watch([src + 'app/**/*.js',
-                src + 'app/**/*.hbs'],{
-                    readDelay: 5*1000
-                } ,['scripts']);
+    gulp.watch(src + 'app/**/*.js',{
+        readDelay: 5*1000
+    } ,['scripts']);
     gulp.watch(src + 'app/**/*.scss', ['styles']);
     gulp.watch(gosrc + '**/*.go', {
         readDelay: 5*1000

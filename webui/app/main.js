@@ -4,6 +4,7 @@ import Marionette from 'marionette';
 
 import session from './session';
 import Socket from './base/socket';
+
 import SearchPanel from './search-panel/view';
 
 let app = new Marionette.Application();
@@ -21,7 +22,8 @@ app.on('start', function () {
         session.socket = socket;
 
         socket.getAtomInfoList().then(function (result) {
-            console.log(result);
+            console.log('received list of %s atoms', result.length);
+            session.atomInfoList.reset(result);
         });
     });
 
