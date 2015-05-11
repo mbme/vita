@@ -26,7 +26,8 @@ var moduleAliases = {
     'jquery':     'jquery/dist/jquery.js',
     'underscore': 'lodash/lodash',
     'backbone':   'backbone/backbone.js',
-    'marionette': 'marionette/lib/backbone.marionette.js'
+    'marionette': 'marionette/lib/backbone.marionette.js',
+    'markdown-it': 'markdown-it/dist/markdown-it.js'
 };
 
 function objectValues(object) {
