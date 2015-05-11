@@ -1,12 +1,12 @@
 {
-  "name": "deps",
-  "private": true,
-  "dependencies": {
-    "bourbon": "*",
-    "markdown-it": "*",
-    "moment": "*",
-    "lodash": "*",
-    "marionette": "*",
-    "materialize": "*"
-  }
+    "name": "deps",
+    "private": true,
+    "dependencies": {
+        "bourbon": "*",
+        "markdown-it": "*",
+        "moment": "*",
+        "lodash": "*",
+        "marionette": "*",
+        "materialize": "*"
+    }
 }

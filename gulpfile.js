@@ -106,7 +106,7 @@ var killSkelet = function () {
 };
 
 var startSkelet = function () {
-    skelet = Proc.spawn(goapp);
+    skelet = Proc.spawn(goapp, ['-p', 8081]);
     skelet.stdout.on('data', function(chunk) {
         gutil.log(gutil.colors.green(chunk.toString()));
     });
@@ -136,7 +136,10 @@ gulp.task('skelet', function taskSkelet() {
 });
 
 gulp.task('watch', function taskWatch () {
-    gulp.watch(src + 'app/**/*.(js|hbs)', ['scripts']);
+    gulp.watch([src + 'app/**/*.js',
+                src + 'app/**/*.hbs'],{
+                    readDelay: 5*1000
+                } ,['scripts']);
     gulp.watch(src + 'app/**/*.scss', ['styles']);
     gulp.watch(gosrc + '**/*.go', {
         readDelay: 5*1000
@@ -167,4 +170,4 @@ gulp.task('build', ['clean'], function taskBuild (){
     gulp.start(['scripts', 'styles']);
 });
 
-gulp.task('default', ['build', 'serve', 'watch']);
+gulp.task('default', ['build', 'serve', 'skelet', 'watch']);

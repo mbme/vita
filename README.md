@@ -14,9 +14,10 @@ note taking app
 
 webpack +
 gulp +
-handlebars -
+handlebars +
 es6-babel +
 sass +
+eslint -
 
 materialize.scss
 

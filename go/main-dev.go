@@ -32,7 +32,7 @@ func main() {
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/ws", wsHandler)
 
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	if err := http.ListenAndServe(":8081", nil); err != nil {
 		log.Fatal(err)
 	}
 }

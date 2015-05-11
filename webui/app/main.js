@@ -1,24 +1,31 @@
+'use strict';
+
 import Marionette from 'marionette';
 
-import hahaTpl from './main.hbs';
+import session from './session';
+import Socket from './base/socket';
+import SearchPanel from './search-panel/view';
 
-var App = new Marionette.Application();
+let app = new Marionette.Application();
 
-
-var HaHaView = Marionette.ItemView.extend({
-  template: hahaTpl
+app.addRegions({
+    'sidePanel': '#side-panel',
+    'main': '#main',
+    'modals': '#modals'
 });
 
-App.addRegions({
-  'sidePanel': '#side-panel',
-  'main': '#main',
-  'modals': '#modals'
+app.on('start', function () {
+    let socket = new Socket(session.config.socketAddr);
+    socket.connect().then(function () {
+        console.log('websocket: connected');
+        session.socket = socket;
+
+        socket.getAtomInfoList().then(function (result) {
+            console.log(result);
+        });
+    });
+
+    app.getRegion('sidePanel').show(new SearchPanel());
 });
 
-App.on('start', function () {
-  'use strict';
-
-  App.getRegion('sidePanel').show(new HaHaView());
-});
-
-App.start();
+app.start();
