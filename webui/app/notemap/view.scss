@@ -1,5 +1,6 @@
 .NoteMap {
     $w-note: 700px;
+    $p-note: 25px;
 
     .note-add {
         position: fixed;
@@ -8,25 +9,36 @@
     }
 
     .Note {
-        background: $c-bg;
+        position: relative;
 
         width: $w-note;
-        margin-top: 25px;
+        background: $c-bg;
 
+        margin-top: 25px;
         padding: 10px;
 
+        .toolbar {
+            position: absolute;
+            right: 0px;
+
+            i {
+                cursor: pointer;
+                margin-right: 10px;
+            }
+        }
+
         .title {
-            margin-top: 0;
-            text-align: center;
+            margin-top: 15px;
+            padding-left: $p-note;
         }
 
         .categories {
-            text-align: center;
+            padding-left: $p-note;
         }
 
         .data {
             font-size: 1.2rem;
-            padding: 0 25px;
+            padding: 0 $p-note;
         }
     }
 }

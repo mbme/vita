@@ -7,7 +7,21 @@ let NoteView = Marionette.ItemView.extend({
     tagName: 'li',
     className: 'Note z-depth-1',
 
-    template: require('./note.hbs')
+    template: require('./note.hbs'),
+
+    events: {
+        'click .js-edit': 'editNote',
+        'click .js-close': 'closeNote'
+    },
+
+    editNote: function () {
+        console.log('edit atom %s', this.model.getId());
+    },
+
+    closeNote: function () {
+        console.log('closing atom %s', this.model.getId());
+        this.model.collection.remove(this.model);
+    }
 });
 
 export default Marionette.CompositeView.extend({
