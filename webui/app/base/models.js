@@ -8,6 +8,7 @@ export let AtomInfo = Backbone.Model.extend({
         id: null,
         name: null,
         type: null,
+        data: null,
         ts_created: null,
         ts_updated: null,
         categories: []
@@ -15,5 +16,17 @@ export let AtomInfo = Backbone.Model.extend({
 
     getName: function () {
         return this.get('name');
+    },
+
+    getId: function () {
+        return this.get('id');
+    }
+});
+
+export let AtomCollection = Backbone.Collection.extend({
+    model: AtomInfo,
+
+    isOpen: function (id) {
+        return !!this.get(id);
     }
 });

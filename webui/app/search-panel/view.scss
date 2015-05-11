@@ -1,5 +1,9 @@
 .SearchPanel {
-    .AtomInfo.is-hidden {
-        display: none;
+    .AtomInfo {
+        cursor: pointer;
+
+        &.is-hidden {
+            display: none;
+        }
     }
 }

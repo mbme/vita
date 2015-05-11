@@ -11,8 +11,12 @@ const FILTER_DELAY_MS = 350;
 
 let AtomInfo = Marionette.ItemView.extend({
     tagName: 'li',
-    className: 'AtomInfo',
+    className: 'AtomInfo collection-item',
     template: require('./item.hbs'),
+
+    events: {
+        'click': 'onClick'
+    },
 
     modelEvents: {
         'change:visible': 'onVisibilityChanged'
@@ -23,13 +27,19 @@ let AtomInfo = Marionette.ItemView.extend({
             this.el.classList.add('is-hidden');
         }
     },
+
     onVisibilityChanged: function () {
         this.el.classList.toggle('is-hidden');
+    },
+
+    onClick: function () {
+        session.bus.trigger('atom:open', this.model.getId());
     }
 });
 
 let AtomInfoList = Marionette.CollectionView.extend({
     tagName: 'ul',
+    className: 'collection',
     childView: AtomInfo
 });
 
