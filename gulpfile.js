@@ -114,6 +114,10 @@ gulp.task('skelet', function taskSkelet() {
 
 gulp.task('watch', function taskWatch () {
   gulp.watch(src + 'app/**/*.js', ['scripts']);
+  gulp.watch(src + 'app/**/*.hbs', function () {
+      gutil.log('handlebars templates changed, reloading');
+      connect.reload();
+  });
   gulp.watch(src + 'app/**/*.scss', ['styles']);
   gulp.watch(gosrc + '**/*.go', {
     readDelay: 5*1000
