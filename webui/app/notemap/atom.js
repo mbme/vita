@@ -8,7 +8,7 @@ export let AtomView = Marionette.ItemView.extend({
     template: require('./atom.hbs'),
 
     triggers: {
-        'click .js-edit': 'atom:edit',
+        'click .js-edit':  'atom:edit',
         'click .js-close': 'atom:close'
     }
 });
@@ -16,5 +16,11 @@ export let AtomView = Marionette.ItemView.extend({
 export let EditAtomView = Marionette.ItemView.extend({
     className: 'AtomView is-edit',
 
-    template: require('./atom-edit.hbs')
+    template: require('./atom-edit.hbs'),
+
+    triggers: {
+        'click .js-save':   'atom:save',
+        'click .js-delete': 'atom:delete',
+        'click .js-close':  'atom:close'
+    }
 });

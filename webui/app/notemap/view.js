@@ -6,7 +6,7 @@ import {AtomView, EditAtomView} from './atom';
 
 let NoteView = Marionette.LayoutView.extend({
     tagName: 'li',
-    className: 'Note z-depth-1',
+    className: 'Note',
 
     template: require('./note.hbs'),
 

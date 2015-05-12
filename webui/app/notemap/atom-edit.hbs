@@ -1,16 +1,21 @@
-<div class="toolbar">
-    <i class="small mdi-editor-mode-edit js-edit"></i>
-    <i class="small mdi-navigation-close js-close"></i>
+<div class="toolbar btn-group">
+    <button class="btn btn-default js-save" type="button">
+        <span class="glyphicon glyphicon-ok"></span>
+    </button>
+    <button class="btn btn-default js-delete" type="button">
+        <span class="glyphicon glyphicon-trash"></span>
+    </button>
+    <button class="btn btn-default js-close" type="button">
+        <span class="glyphicon glyphicon-remove"></span>
+    </button>
 </div>
-<div class="input-field title">
-    <input type="text" value="{{name}}" class="validate">
-    <label {{#if name}}class="active"{{/if}}>Title</label>
-</div>
-<div class="input-field categories">
-    <input type="text" value="{{[../hbs-helpers/cats] categories}}" class="validate">
-    <label {{#if categories.length}}class="active"{{/if}}>Categories</label>
-</div>
-<div class="input-field data">
-    <textarea class="materialize-textarea">{{data}}</textarea>
-    <label {{#if data}}class="active"{{/if}}>Data</label>
-</div>
+<input type="text"
+       class="form-control title"
+       placeholder="Title"
+       value="{{name}}" >
+<input type="text" class="form-control categories"
+       placeholder="Categories"
+       value="{{[../hbs-helpers/cats] categories}}" >
+<textarea class="form-control data" placeholder="Data" rows=10>
+    {{data}}
+</textarea>

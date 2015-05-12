@@ -1,9 +1,19 @@
 $c-bg-main: #EEEEEE;
 $c-bg: #FFFFFF;
+$base-font-size: 16px;
 
+$c-note-title: #EE6E73;
+
+@import "./shadows.scss";
 @import "./search-panel/view.scss";
 @import "./notemap/view.scss";
 
 html {
+    font-size: $base-font-size;
+    overflow-y: scroll;
+}
+
+.container {
     background: $c-bg-main;
+    height: 100%;
 }

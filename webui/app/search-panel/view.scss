@@ -1,9 +1,15 @@
 .SearchPanel {
+
     .AtomInfo {
+        list-style: none;
         cursor: pointer;
 
         &.is-hidden {
             display: none;
+        }
+
+        &:hover {
+            background: #F5F5F5;
         }
     }
 }

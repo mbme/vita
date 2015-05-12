@@ -11,7 +11,8 @@ const FILTER_DELAY_MS = 350;
 
 let AtomInfo = Marionette.ItemView.extend({
     tagName: 'li',
-    className: 'AtomInfo collection-item',
+    className: 'AtomInfo list-group-item',
+
     template: require('./item.hbs'),
 
     events: {
@@ -39,7 +40,7 @@ let AtomInfo = Marionette.ItemView.extend({
 
 let AtomInfoList = Marionette.CollectionView.extend({
     tagName: 'ul',
-    className: 'collection',
+    className: 'list-group',
     childView: AtomInfo
 });
 

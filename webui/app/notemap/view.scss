@@ -6,9 +6,26 @@
         position: fixed;
         margin-left: $w-note + 20;
         top: 70px;
+
+        @include card(2);
+        border-radius: 50%;
+
+        &,
+        &:focus,
+        &:hover,
+        &:active {
+            outline: none;
+        }
+    }
+
+    .notes {
+        padding-left: 0;
     }
 
     .Note {
+        @include card(1);
+
+        list-style: none;
         position: relative;
 
         width: $w-note;
@@ -19,17 +36,14 @@
 
         .toolbar {
             position: absolute;
-            right: 0px;
-
-            i {
-                cursor: pointer;
-                margin-right: 10px;
-            }
+            right: 0;
+            top: 0;
         }
 
         .title {
             margin-top: 15px;
             padding: 0 $p-note;
+            color: $c-note-title;
         }
 
         .categories {
@@ -39,6 +53,12 @@
         .data {
             font-size: 1.2rem;
             padding: 0 $p-note;
+        }
+    }
+
+    .AtomView.is-edit {
+        .data {
+            resize: vertical;
         }
     }
 }

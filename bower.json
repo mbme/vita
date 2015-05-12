@@ -7,6 +7,6 @@
         "moment": "*",
         "lodash": "*",
         "marionette": "*",
-        "materialize": "*"
+        "bootstrap": "*"
     }
 }
