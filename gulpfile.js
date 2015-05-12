@@ -56,13 +56,23 @@ var webpackConfig = {
     },
 
     resolve: {
-        modulesDirectories: ['vendor'],
+        modulesDirectories: ['vendor', 'node_modules'],
         alias: moduleAliases
     },
 
     module : {
         loaders : [
-            { test: /\.js?$/, exclude: /vendor/, loader: 'babel-loader' },
+            { test: /\.js?$/, include: /app/, loader: 'babel-loader',
+              query: {
+                  "stage": 0,
+                  "loose": true,
+                  "blacklist": [
+                      "es6.tailCall"
+                  ],
+                  "optional": [
+                      "runtime"
+                  ]
+              }},
             { test: /\.hbs$/, loader: 'handlebars-loader'}
         ]
     },
