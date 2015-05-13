@@ -78,7 +78,8 @@ var webpackConfig = {
     },
 
     plugins: [
-        new Webpack.optimize.CommonsChunkPlugin("vendor", "vendor.bundle.js")
+        new Webpack.optimize.CommonsChunkPlugin("vendor", "vendor.bundle.js"),
+        new Webpack.optimize.DedupePlugin()
     ]
 };
 
