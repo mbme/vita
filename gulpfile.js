@@ -1,5 +1,6 @@
 'use strict';
 
+var path = require('path');
 var Proc = require('child_process');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
@@ -14,6 +15,7 @@ var plumber = require('gulp-plumber');
 
 var SIGINT = 'SIGINT';
 
+var base = __dirname;
 var src = './webui/';
 var dist = './webui/';
 
@@ -46,7 +48,7 @@ var webpackConfig = {
     },
 
     output: {
-        path: __dirname,
+        path: base,
         filename: 'bundle.js'
     },
 
@@ -73,7 +75,10 @@ var webpackConfig = {
                       "runtime"
                   ]
               }},
-            { test: /\.hbs$/, loader: 'handlebars-loader'}
+            { test: /\.hbs$/, loader: 'handlebars-loader',
+              query: {
+                  helperDirs: [path.join(base, src, 'app/hbs-helpers')]
+              }}
         ]
     },
 
