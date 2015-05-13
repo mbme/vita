@@ -9,13 +9,33 @@
         {{> icon type="remove"}}
     </button>
 </div>
-<input type="text"
-       class="form-control title"
-       placeholder="Title"
-       value="{{name}}" >
-<input type="text" class="form-control categories"
-       placeholder="Categories"
-       value="{{cats categories}}" >
-<textarea class="form-control data" placeholder="Data" rows=10>
-    {{data}}
-</textarea>
+
+<ul class="nav nav-tabs">
+    <li class="active">
+        <a href="#tab-write" class="js-write" data-toggle="tab">Write</a>
+    </li>
+    <li>
+        <a href="#tab-preview" class="js-preview" data-toggle="tab">Preview</a>
+    </li>
+    <li>
+        <a href="#tab-files" class="js-files" data-toggle="tab">Files</a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <div id="tab-write" class="tab-pane active">
+        <input type="text"
+               class="form-control title"
+               placeholder="Title"
+               value="{{name}}" >
+        <input type="text" class="form-control categories"
+               placeholder="Categories"
+               value="{{cats categories}}" >
+        <textarea class="form-control data" placeholder="Data" rows=10>
+            {{data}}
+        </textarea>
+    </div>
+
+    <div id="tab-preview" class="tab-pane"></div>
+    <div id="tab-files" class="tab-pane"></div>
+</div>

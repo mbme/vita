@@ -2,7 +2,7 @@
 
 import Marionette from 'marionette';
 
-export let AtomView = Marionette.ItemView.extend({
+export default Marionette.ItemView.extend({
     className: 'AtomView',
 
     template: require('./atom.hbs'),
@@ -10,17 +10,5 @@ export let AtomView = Marionette.ItemView.extend({
     triggers: {
         'click .js-edit':  'atom:edit',
         'click .js-close': 'atom:close'
-    }
-});
-
-export let EditAtomView = Marionette.ItemView.extend({
-    className: 'AtomView is-edit',
-
-    template: require('./atom-edit.hbs'),
-
-    triggers: {
-        'click .js-save':   'atom:save',
-        'click .js-delete': 'atom:delete',
-        'click .js-close':  'atom:close'
     }
 });

@@ -2,7 +2,9 @@
 
 import Marionette from 'marionette';
 import session from '../session';
-import {AtomView, EditAtomView} from './atom';
+
+import AtomView from './atom';
+import EditAtomView from './atom-edit';
 
 let NoteView = Marionette.LayoutView.extend({
     tagName: 'li',
