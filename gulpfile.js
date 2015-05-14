@@ -163,10 +163,13 @@ gulp.task('skelet', function taskSkelet() {
 });
 
 gulp.task('watch', function taskWatch () {
-    gulp.watch(src + 'app/**/*.js',{
+    gulp.watch(
+        [src + 'app/**/*.js', src + 'app/**/*.hbs'],{
+            readDelay: 5*1000
+        } ,['scripts']);
+    gulp.watch(src + 'app/**/*.scss', {
         readDelay: 5*1000
-    } ,['scripts']);
-    gulp.watch(src + 'app/**/*.scss', ['styles']);
+    }, ['styles']);
     gulp.watch(gosrc + '**/*.go', {
         readDelay: 5*1000
     }, ['skelet']);
