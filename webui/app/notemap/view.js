@@ -56,7 +56,7 @@ export default Marionette.CompositeView.extend({
     template: require('./view.hbs'),
 
     childView: NoteView,
-    childViewContainer: 'ul',
+    childViewContainer: 'ul.notes',
 
     events: {
         'click .js-note-add': 'createNote'

@@ -60,5 +60,16 @@
         .data {
             resize: vertical;
         }
+
+        .file-upload {
+            margin-top: 15px;
+            margin-bottom: 15px;
+
+            text-align: center;
+            padding: 15px;
+            border: 1px dashed #DDD;
+            background: #FAFAFA;
+            color: #444;
+        }
     }
 }

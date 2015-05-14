@@ -9,11 +9,21 @@ $c-note-title: #EE6E73;
 @import "./notemap/styles.scss";
 
 html {
-    font-size: $base-font-size;
     overflow-y: scroll;
+}
+
+html, body {
+    font-size: $base-font-size;
 }
 
 .container {
     background: $c-bg-main;
     height: 100%;
+}
+
+a:hover,
+a:focus,
+a:active {
+    text-decoration: none;
+    border-bottom: 1px solid;
 }
