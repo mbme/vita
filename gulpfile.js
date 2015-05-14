@@ -2,16 +2,20 @@
 
 var path = require('path');
 var Proc = require('child_process');
+
+var del = require('del');
+var Webpack = require('webpack');
+
 var gulp = require('gulp');
 var gutil = require('gulp-util');
-var del = require('del');
+var plumber = require('gulp-plumber');
 var webpack = require('gulp-webpack');
-var Webpack = require('webpack');
 var size = require('gulp-size');
 var connect = require('gulp-connect');
 var sass = require('gulp-sass');
 var sourcemaps = require('gulp-sourcemaps');
-var plumber = require('gulp-plumber');
+var filter = require('gulp-filter');
+
 
 var SIGINT = 'SIGINT';
 
@@ -100,7 +104,7 @@ function suppressError (error) {
 
 gulp.task('scripts', function taskScripts () {
     return gulp.src(webpackConfig.entry.app)
-        .pipe(plumber(suppressError))
+        .pipe(plumber({errorHandler: suppressError}))
         .pipe(webpack(webpackConfig))
         .pipe(gulp.dest(dist))
         .pipe(size({ title : 'js' }))
@@ -109,12 +113,13 @@ gulp.task('scripts', function taskScripts () {
 
 gulp.task('styles', function taskStyles () {
     return gulp.src(src + 'app/bundle.scss')
-        .pipe(plumber(suppressError))
+        .pipe(plumber({errorHandler: suppressError}))
         .pipe(sourcemaps.init())
         .pipe(sass())
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(dist))
         .pipe(size({title: 'css'}))
+        .pipe(filter('**/*.css'))
         .pipe(connect.reload());
 });
 
