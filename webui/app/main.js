@@ -2,11 +2,11 @@
 
 import Marionette from 'marionette';
 
-import session from './session';
-import Socket from './base/socket';
+import session from 'session';
+import Socket from 'base/socket';
 
-import SearchPanel from './search-panel/view';
-import NoteMapView from './notemap/view';
+import SearchPanel from 'search-panel/view';
+import NoteMapView from 'notemap/view';
 
 
 let app = new Marionette.Application();

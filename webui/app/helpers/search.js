@@ -1,7 +1,7 @@
 'use strict';
 
 // https://github.com/bevacqua/fuzzysearch
-export function fuzzySearch (needle, haystack) {
+export default function (needle, haystack) {
     var hlen = haystack.length;
     var nlen = needle.length;
     if (!nlen) { // if needle is empty then it matches everything

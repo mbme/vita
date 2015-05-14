@@ -58,6 +58,7 @@ var webpackConfig = {
     },
 
     resolve: {
+        root: path.join(base, src, 'app'),
         modulesDirectories: ['vendor', 'node_modules'],
         alias: moduleAliases
     },
@@ -77,7 +78,8 @@ var webpackConfig = {
               }},
             { test: /\.hbs$/, loader: 'handlebars-loader',
               query: {
-                  helperDirs: [path.join(base, src, 'app/hbs-helpers')]
+                  helperDirs: [path.join(base, src, 'app/helpers'),
+                               path.join(base, src, 'app/partials')]
               }}
         ]
     },

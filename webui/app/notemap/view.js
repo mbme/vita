@@ -1,7 +1,8 @@
 'use strict';
 
 import Marionette from 'marionette';
-import session from '../session';
+
+import session from 'session';
 
 import {AtomView} from './atom';
 import EditAtomView from './atom-edit';

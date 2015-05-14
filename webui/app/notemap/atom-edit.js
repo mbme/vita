@@ -2,7 +2,7 @@
 
 import Marionette from 'marionette';
 
-import str2cats from '../hbs-helpers/str2cats';
+import str2cats from 'helpers/str2cats';
 import {RecordView} from './atom';
 
 export default Marionette.LayoutView.extend({

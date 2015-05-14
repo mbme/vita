@@ -21,7 +21,7 @@ export let AtomView = Marionette.LayoutView.extend({
         'click .js-close': 'atom:close'
     },
 
-    onRender(){
+    onRender () {
         this.getRegion('body').show(new RecordView({model: this.model}));
     }
 });

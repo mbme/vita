@@ -1,7 +1,7 @@
 'use strict';
 
 import Backbone from 'backbone';
-import {AtomInfo, AtomCollection} from './base/models';
+import {AtomInfo, AtomCollection} from 'base/models';
 
 let session = {
     config: {

@@ -4,8 +4,8 @@ import _ from 'underscore';
 import Backbone from 'backbone';
 import Marionette from 'marionette';
 
-import session from '../session';
-import {fuzzySearch} from '../base/utils';
+import session from 'session';
+import search from 'helpers/search';
 
 const FILTER_DELAY_MS = 350;
 
@@ -23,17 +23,17 @@ let AtomInfo = Marionette.ItemView.extend({
         'change:visible': 'onVisibilityChanged'
     },
 
-    onRender: function () {
+    onRender () {
         if (!this.model.get('visible')) {
             this.el.classList.add('is-hidden');
         }
     },
 
-    onVisibilityChanged: function () {
+    onVisibilityChanged () {
         this.el.classList.toggle('is-hidden');
     },
 
-    onClick: function () {
+    onClick () {
         session.bus.trigger('atom:open', this.model.getId());
     }
 });
@@ -62,7 +62,7 @@ export default Marionette.LayoutView.extend({
         'change:term': 'updateVisibility'
     },
 
-    initialize: function () {
+    initialize () {
         this.collection = session.atomInfoList;
         this.model = new Backbone.Model({
             term: ''
@@ -71,7 +71,7 @@ export default Marionette.LayoutView.extend({
         this.collection.on('add remove reset', this.updateVisibility, this);
     },
 
-    onRender: function () {
+    onRender () {
         this.getRegion('list').show(new AtomInfoList({
             collection: this.collection
         }));
@@ -81,15 +81,15 @@ export default Marionette.LayoutView.extend({
         this.model.set('term', e.target.value);
     }, FILTER_DELAY_MS),
 
-    updateVisibility: function () {
+    updateVisibility () {
         let term = this.model.get('term');
         this.collection.forEach(function (atomInfo) {
-            atomInfo.set('visible', fuzzySearch(term, atomInfo.getName().toLowerCase()));
+            atomInfo.set('visible', search(term, atomInfo.getName().toLowerCase()));
         });
         console.log('search term updated: %s', term);
     },
 
-    onDestroy: function () {
+    onDestroy () {
         this.collection.off('add remove reset', this.updateVisibility, this);
     }
 });
