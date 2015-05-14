@@ -17,7 +17,9 @@ gulp +
 handlebars +
 es6-babel +
 sass +
+
 eslint -
+jscs -
 
 materialize.scss
 

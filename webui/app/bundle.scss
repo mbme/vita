@@ -5,8 +5,8 @@ $base-font-size: 16px;
 $c-note-title: #EE6E73;
 
 @import "./shadows.scss";
-@import "./search-panel/view.scss";
-@import "./notemap/view.scss";
+@import "./search-panel/styles.scss";
+@import "./notemap/styles.scss";
 
 html {
     font-size: $base-font-size;

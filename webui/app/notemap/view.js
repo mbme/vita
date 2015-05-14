@@ -3,14 +3,18 @@
 import Marionette from 'marionette';
 import session from '../session';
 
-import AtomView from './atom';
+import {AtomView} from './atom';
 import EditAtomView from './atom-edit';
+
+
 
 let NoteView = Marionette.LayoutView.extend({
     tagName: 'li',
     className: 'Note',
 
-    template: require('./note.hbs'),
+    template() {
+        return '<div class="content"></div>';
+    },
 
     regions: {
         content: '.content'
@@ -25,21 +29,21 @@ let NoteView = Marionette.LayoutView.extend({
         'atom:edit':  'editView'
     },
 
-    onShow: function () {
+    onShow () {
         this.updateView();
     },
 
-    updateView: function () {
+    updateView () {
         var View = this.model.get('edit') ? EditAtomView : AtomView;
         this.getRegion('content').show(new View({model: this.model}));
     },
 
-    closeView: function () {
+    closeView () {
         console.log('closing atom %s', this.model.getId());
         this.model.collection.remove(this.model);
     },
 
-    editView: function () {
+    editView () {
         console.log('edit atom %s', this.model.getId());
         this.model.set('edit', true);
     }
@@ -57,11 +61,11 @@ export default Marionette.CompositeView.extend({
         'click .js-note-add': 'createNote'
     },
 
-    initialize: function () {
+    initialize () {
         this.collection = session.atomList;
     },
 
-    createNote: function () {
+    createNote () {
         console.log('create new note');
         this.collection.addAtom({
             edit: true

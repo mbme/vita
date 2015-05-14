@@ -6,19 +6,19 @@ import Backbone from 'backbone';
 export let AtomInfo = Backbone.Model.extend({
     defaults: {
         id: null,
-        name: null,
-        type: null,
-        data: null,
+        name: '',
+        type: '',
+        data: '',
         ts_created: null,
         ts_updated: null,
         categories: []
     },
 
-    getName: function () {
+    getName () {
         return this.get('name');
     },
 
-    getId: function () {
+    getId () {
         return this.get('id');
     }
 });
@@ -26,11 +26,11 @@ export let AtomInfo = Backbone.Model.extend({
 export let AtomCollection = Backbone.Collection.extend({
     model: AtomInfo,
 
-    isOpen: function (id) {
+    isOpen (id) {
         return !!this.get(id);
     },
 
-    addAtom: function (data) {
+    addAtom (data) {
         this.add(data, {at: 0});
     }
 });
