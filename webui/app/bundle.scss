@@ -4,6 +4,8 @@ $base-font-size: 16px;
 
 $c-note-title: #EE6E73;
 
+$ff-monospace: Menlo, Monaco, Consolas, "Courier New", monospace;
+
 @import "./shadows.scss";
 @import "./search-panel/styles.scss";
 @import "./notemap/styles.scss";

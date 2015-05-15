@@ -71,5 +71,28 @@
             background: #FAFAFA;
             color: #444;
         }
+
+        .files {
+            td.icon {
+                text-align: center;
+            }
+
+            td.icon {
+                text-align: center;
+            }
+
+            td.size {
+                font-family: $ff-monospace;
+                font-size: 0.9em;
+                text-align: center;
+            }
+
+            td.ts {
+                font-size: 0.9em;
+                text-align: right;
+                width: 150px;
+            }
+
+        }
     }
 }

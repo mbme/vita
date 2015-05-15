@@ -4,12 +4,12 @@ var path = require('path');
 var Proc = require('child_process');
 
 var del = require('del');
-var Webpack = require('webpack');
+var webpack = require('webpack');
 
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var plumber = require('gulp-plumber');
-var webpack = require('gulp-webpack');
+var gulpWebpack = require('gulp-webpack');
 var size = require('gulp-size');
 var connect = require('gulp-connect');
 var sass = require('gulp-sass');
@@ -90,8 +90,8 @@ var webpackConfig = {
     },
 
     plugins: [
-        new Webpack.optimize.CommonsChunkPlugin("vendor", "vendor.bundle.js"),
-        new Webpack.optimize.DedupePlugin()
+        new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.bundle.js"),
+        new webpack.optimize.DedupePlugin()
     ]
 };
 
@@ -106,7 +106,18 @@ function suppressError (error) {
 gulp.task('scripts', function taskScripts () {
     return gulp.src(webpackConfig.entry.app)
         .pipe(plumber({errorHandler: suppressError}))
-        .pipe(webpack(webpackConfig))
+        .pipe(gulpWebpack(webpackConfig, null, function (err, stats) {
+            if (err) {
+                throw err;
+                // suppressError(err);
+            }
+
+            var errors = stats.compilation.errors;
+            if (errors.length) {
+                throw errors;
+                // suppressError(errors);
+            }
+        }))
         .pipe(gulp.dest(dist))
         .pipe(size({ title : 'js' }))
         .pipe(connect.reload());
