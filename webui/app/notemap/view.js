@@ -21,12 +21,6 @@ let ModalCreateNote = Marionette.ItemView.extend({
 
     initialize (options) {
         this.notes = options.notes;
-        this.once('modal:shown', this.putFocus, this);
-    },
-
-    putFocus () {
-        this.ui.name.focus();
-        console.log('here');
     },
 
     createNote () {
