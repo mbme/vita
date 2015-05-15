@@ -41,3 +41,8 @@ html, body {
 a {
     @extend %link;
 }
+
+.file-size {
+    font-family: $ff-monospace;
+    font-size: 0.9em;
+}

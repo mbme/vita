@@ -2,8 +2,9 @@
 
 import Backbone from 'backbone';
 import Marionette from 'marionette';
-
 import Flow from 'flow';
+
+import session from 'session';
 
 let FileModel = Backbone.Model.extend({
     defaults: {
@@ -17,6 +18,21 @@ let FileModel = Backbone.Model.extend({
 let FileView = Marionette.ItemView.extend({
     tagName: 'tr',
     template: require('./atom-file.hbs')
+});
+
+let ModalAddFiles = Marionette.ItemView.extend({
+    className: 'ModalAddFiles',
+    template: require('./modal-add-files.hbs'),
+    modalOptions: {
+        backdrop: 'static'
+    },
+    initialize (options) {
+        let file = options.file;
+        this.model = new Backbone.Model({
+            name: file.name,
+            size: file.size
+        });
+    }
 });
 
 export default Marionette.CompositeView.extend({
@@ -55,13 +71,14 @@ export default Marionette.CompositeView.extend({
 
 
         this.flow = new Flow({
-            target: 'api/file'
+            target: 'api/file',
+            singleFile: true
         });
         if (!this.flow.support) {
             throw "unsupported browser";
         }
 
-        this.flow.on('filesAdded', this.onFilesAdded.bind(this));
+        this.flow.on('fileAdded', this.onFileAdded.bind(this));
     },
 
     onShow () {
@@ -69,8 +86,9 @@ export default Marionette.CompositeView.extend({
         this.flow.assignDrop(this.ui.dropZone[0]);
     },
 
-    onFilesAdded (file) {
+    onFileAdded (file) {
         console.log(file);
+        session.bus.trigger('modal:open', new ModalAddFiles({file:file}));
     },
 
     onDestroy () {

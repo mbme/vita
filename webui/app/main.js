@@ -7,6 +7,7 @@ import Socket from 'base/socket';
 
 import SearchPanel from 'search-panel/view';
 import NoteMapView from 'notemap/view';
+import ModalsView from 'base/modals';
 
 
 let app = new Marionette.Application();
@@ -26,6 +27,7 @@ app.on('start', function () {
 
     app.getRegion('sidePanel').show(new SearchPanel());
     app.getRegion('main').show(new NoteMapView());
+    app.getRegion('modals').show(new ModalsView());
 
     session.bus.on("atom:open", function (id) {
         if (session.atomList.isOpen(id)) {
