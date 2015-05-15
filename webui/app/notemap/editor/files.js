@@ -17,7 +17,7 @@ let FileModel = Backbone.Model.extend({
 
 let FileView = Marionette.ItemView.extend({
     tagName: 'tr',
-    template: require('./atom-file.hbs')
+    template: require('./file.hbs')
 });
 
 let ModalAddFiles = Marionette.ItemView.extend({
@@ -36,7 +36,7 @@ let ModalAddFiles = Marionette.ItemView.extend({
 });
 
 export default Marionette.CompositeView.extend({
-    template: require('./atom-files.hbs'),
+    template: require('./files.hbs'),
 
     childView: FileView,
     childViewContainer: 'table.files',

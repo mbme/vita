@@ -1,0 +1,41 @@
+.AtomView.is-edit {
+    .data {
+        resize: vertical;
+    }
+
+    .file-upload {
+        margin-top: 15px;
+        margin-bottom: 15px;
+
+        text-align: center;
+        padding: 15px;
+        border: 1px dashed #DDD;
+        background: #FAFAFA;
+        color: #444;
+
+        .upload-btn {
+            @extend %link;
+        }
+    }
+
+    .files {
+        td.icon {
+            text-align: center;
+        }
+
+        td.icon {
+            text-align: center;
+        }
+
+        td.file-size {
+            text-align: center;
+        }
+
+        td.ts {
+            font-size: 0.9em;
+            text-align: right;
+            width: 150px;
+        }
+
+    }
+}

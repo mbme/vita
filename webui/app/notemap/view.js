@@ -5,7 +5,7 @@ import Marionette from 'marionette';
 import session from 'session';
 
 import {AtomView} from './atom';
-import EditAtomView from './atom-edit';
+import EditAtomView from './editor/view';
 
 
 
@@ -35,7 +35,7 @@ let NoteView = Marionette.LayoutView.extend({
     },
 
     updateView () {
-        var View = this.model.get('edit') ? EditAtomView : AtomView;
+        let View = this.model.get('edit') ? EditAtomView : AtomView;
         this.getRegion('content').show(new View({model: this.model}));
     },
 

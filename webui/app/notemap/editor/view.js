@@ -3,13 +3,13 @@
 import Marionette from 'marionette';
 
 import str2cats from 'helpers/str2cats';
-import {RecordView} from './atom';
-import FilesView from './atom-files.js';
+import {RecordView} from '../atom';
+import FilesView from './files';
 
 export default Marionette.LayoutView.extend({
     className: 'AtomView is-edit',
 
-    template: require('./atom-edit.hbs'),
+    template: require('./view.hbs'),
 
     triggers: {
         'click .js-save':   'atom:save',
