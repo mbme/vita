@@ -3,8 +3,23 @@ $c-bg: #FFFFFF;
 $base-font-size: 16px;
 
 $c-note-title: #EE6E73;
+$c-link: #337AB7;
 
 $ff-monospace: Menlo, Monaco, Consolas, "Courier New", monospace;
+
+// UTILS
+
+%link {
+    &:hover,
+    &:focus,
+    &:active {
+        text-decoration: none;
+        border-bottom: 1px solid;
+    }
+
+    cursor: pointer;
+    color: $c-link;
+}
 
 @import "./shadows.scss";
 @import "./search-panel/styles.scss";
@@ -23,9 +38,6 @@ html, body {
     height: 100%;
 }
 
-a:hover,
-a:focus,
-a:active {
-    text-decoration: none;
-    border-bottom: 1px solid;
+a {
+    @extend %link;
 }

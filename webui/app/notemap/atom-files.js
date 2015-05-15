@@ -3,6 +3,8 @@
 import Backbone from 'backbone';
 import Marionette from 'marionette';
 
+import Flow from 'flow';
+
 let FileModel = Backbone.Model.extend({
     defaults: {
         name: '',
@@ -23,9 +25,12 @@ export default Marionette.CompositeView.extend({
     childView: FileView,
     childViewContainer: 'table.files',
 
-    events: {
-        'click .file-upload a': 'onSelectFiles'
+    ui: {
+        dropZone: '.file-upload',
+        uploadButton: '.file-upload .upload-btn'
     },
+
+    flow: null,
 
     initialize () {
         this.collection = new Backbone.Collection(
@@ -47,11 +52,28 @@ export default Marionette.CompositeView.extend({
                  type: 'video'
              }],
             {model: FileModel});
+
+
+        this.flow = new Flow({
+            target: 'api/file'
+        });
+        if (!this.flow.support) {
+            throw "unsupported browser";
+        }
+
+        this.flow.on('filesAdded', this.onFilesAdded.bind(this));
     },
 
-    onSelectFiles () {
-        console.log('selecting files');
+    onShow () {
+        this.flow.assignBrowse(this.ui.uploadButton[0]);
+        this.flow.assignDrop(this.ui.dropZone[0]);
+    },
 
-        return false;
+    onFilesAdded (file) {
+        console.log(file);
+    },
+
+    onDestroy () {
+        this.flow.off();
     }
 });

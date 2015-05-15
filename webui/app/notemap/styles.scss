@@ -70,6 +70,10 @@
             border: 1px dashed #DDD;
             background: #FAFAFA;
             color: #444;
+
+            .upload-btn {
+                @extend %link;
+            }
         }
 
         .files {
