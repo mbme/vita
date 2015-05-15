@@ -1,9 +1,14 @@
 'use strict';
 
 import Marionette from 'marionette';
+import _ from 'underscore';
 
 import session from 'session';
 
+const MODAL_OPTIONS = {
+    backdrop: 'static',
+    keyboard: false
+};
 
 export default Marionette.LayoutView.extend({
     className: 'modal',
@@ -16,6 +21,7 @@ export default Marionette.LayoutView.extend({
     },
 
     events: {
+        'shown.bs.modal':  'onModalShown',
         'hidden.bs.modal': 'cleanup'
     },
 
@@ -31,11 +37,15 @@ export default Marionette.LayoutView.extend({
         modalView.once('close', this.closeModal, this);
         this.getRegion('dialog').show(modalView);
 
-        this.$el.modal(modalView.modalOptions || {});
+        this.$el.modal(_.defaults({}, modalView.modalOptions, MODAL_OPTIONS));
     },
 
     onBeforeModalShow (view) {
         view.$el.addClass('modal-content');
+    },
+
+    onModalShown () {
+        this.getRegion('dialog').currentView.trigger('modal:shown');
     },
 
     closeModal () {

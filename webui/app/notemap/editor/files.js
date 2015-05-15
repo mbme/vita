@@ -23,9 +23,7 @@ let FileView = Marionette.ItemView.extend({
 let ModalAddFiles = Marionette.ItemView.extend({
     className: 'ModalAddFiles',
     template: require('./modal-add-files.hbs'),
-    modalOptions: {
-        backdrop: 'static'
-    },
+
     initialize (options) {
         let file = options.file;
         this.model = new Backbone.Model({
