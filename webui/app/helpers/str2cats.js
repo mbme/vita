@@ -1,5 +1,7 @@
 'use strict';
 
+import _ from 'underscore';
+
 export default function (str) {
-    return str.split(/\S+\s*/g);
+    return _.words(str, /[^, ]+/g);
 }
