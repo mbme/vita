@@ -25,17 +25,16 @@ $ff-monospace: Menlo, Monaco, Consolas, "Courier New", monospace;
 @import "./search-panel/styles.scss";
 @import "./notemap/styles.scss";
 
-html {
-    overflow-y: scroll;
-}
-
 html, body {
     font-size: $base-font-size;
 }
 
-.container {
-    background: $c-bg-main;
+body {
     height: 100%;
+    width: 100%;
+    overflow-y: scroll;
+
+    background: $c-bg-main;
 }
 
 a {
