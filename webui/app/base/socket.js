@@ -51,4 +51,8 @@ export default class Socket {
     getAtom(id) {
         return this.send("atom-read", id);
     }
+
+    createAtom (atom) {
+        return this.send("atom-create", atom.toJSON());
+    }
 }

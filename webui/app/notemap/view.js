@@ -6,36 +6,7 @@ import session from 'session';
 
 import {AtomView} from './atom';
 import EditAtomView from './editor/view';
-
-let ModalCreateNote = Marionette.ItemView.extend({
-    className: 'ModalCreateNote',
-    template: require('./modal-create-note.hbs'),
-
-    ui: {
-        name: 'input.name'
-    },
-
-    events: {
-        'click .js-create': 'createNote'
-    },
-
-    initialize (options) {
-        this.notes = options.notes;
-    },
-
-    createNote () {
-        let name = this.ui.name.val();
-        if (!name.trim()) {
-            console.error('name must not be empty');
-            return false;
-        }
-
-        this.notes.addAtom({
-            name,
-            edit: true
-        });
-    }
-});
+import ModalCreateNote from './modal-create-note';
 
 let NoteView = Marionette.LayoutView.extend({
     tagName: 'li',
@@ -96,6 +67,6 @@ export default Marionette.CompositeView.extend({
 
     createNote () {
         console.log('create new note');
-        session.bus.trigger('modal:open', new ModalCreateNote({notes: this.collection}));
+        session.bus.trigger('modal:open', new ModalCreateNote());
     }
 });
