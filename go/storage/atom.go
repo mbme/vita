@@ -82,7 +82,7 @@ func (a *Atom) Validate() []string {
 	if a.Type == nil {
 		errors = append(errors, "missing type")
 	} else if !a.Type.isValid() {
-		errors = append(errors, fmt.Sprintf("bad type: %v", a.Type))
+		errors = append(errors, fmt.Sprintf("bad type: %v", *a.Type))
 	}
 
 	if strings.TrimSpace(a.Name) == "" {
