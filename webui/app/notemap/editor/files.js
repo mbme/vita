@@ -4,7 +4,7 @@ import Backbone from 'backbone';
 import Marionette from 'marionette';
 import Flow from 'flow';
 
-import session from 'session';
+import bus from 'base/bus';
 
 let FileModel = Backbone.Model.extend({
     defaults: {
@@ -86,7 +86,7 @@ export default Marionette.CompositeView.extend({
 
     onFileAdded (file) {
         console.log(file);
-        session.bus.trigger('modal:open', new ModalAddFiles({file:file}));
+        bus.trigger('modal:open', new ModalAddFiles({file:file}));
     },
 
     onDestroy () {

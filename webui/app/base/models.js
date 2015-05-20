@@ -2,8 +2,7 @@
 
 import Backbone from 'backbone';
 
-
-export let AtomInfo = Backbone.Model.extend({
+export let NoteModel = Backbone.Model.extend({
     defaults: {
         id: null,
         name: '',
@@ -23,14 +22,11 @@ export let AtomInfo = Backbone.Model.extend({
     }
 });
 
-export let AtomCollection = Backbone.Collection.extend({
-    model: AtomInfo,
+export let NotesCollection = Backbone.Collection.extend({
+    model: NoteModel,
+    comparator: 'name'
+});
 
-    isOpen (id) {
-        return !!this.get(id);
-    },
-
-    addAtom (data) {
-        this.add(data, {at: 0});
-    }
+export let OpenNotesCollection = Backbone.Collection.extend({
+    model: NoteModel
 });

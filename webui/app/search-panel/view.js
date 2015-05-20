@@ -4,7 +4,7 @@ import _ from 'underscore';
 import Backbone from 'backbone';
 import Marionette from 'marionette';
 
-import session from 'session';
+import bus from 'base/bus';
 import search from 'helpers/search';
 
 const FILTER_DELAY_MS = 350;
@@ -34,7 +34,7 @@ let AtomInfo = Marionette.ItemView.extend({
     },
 
     onClick () {
-        session.bus.trigger('atom:open', this.model.getId());
+        bus.trigger('atom:open', this.model.getId());
     }
 });
 
@@ -62,8 +62,8 @@ export default Marionette.LayoutView.extend({
         'change:term': 'updateVisibility'
     },
 
-    initialize () {
-        this.collection = session.atomInfoList;
+    initialize (options) {
+        this.collection = options.collection;
         this.model = new Backbone.Model({
             term: ''
         });

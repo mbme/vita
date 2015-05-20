@@ -2,7 +2,7 @@
 
 import Marionette from 'marionette';
 
-import session from 'session';
+import bus from 'base/bus';
 
 import {AtomView} from './atom';
 import EditAtomView from './editor/view';
@@ -52,14 +52,14 @@ let NoteView = Marionette.LayoutView.extend({
 
     saveNote () {
         console.log('save atom %s', this.model.getId());
-        session.bus.trigger('atom:save', this.model);
+        bus.trigger('atom:save', this.model);
         this.model.set('edit', false);
     },
 
     deleteNote () {
         var id = this.model.getId();
         console.log('delete atom %s', id);
-        session.bus.trigger('atom:delete', id);
+        bus.trigger('atom:delete', id);
     }
 });
 
@@ -75,12 +75,12 @@ export default Marionette.CompositeView.extend({
         'click .js-note-add': 'createNote'
     },
 
-    initialize () {
-        this.collection = session.atomList;
+    initialize (options) {
+        this.collection = options.collection;
     },
 
     createNote () {
         console.log('create new note');
-        session.bus.trigger('modal:open', new ModalCreateNote());
+        bus.trigger('modal:open', new ModalCreateNote());
     }
 });

@@ -3,7 +3,7 @@
 import Marionette from 'marionette';
 import _ from 'underscore';
 
-import session from 'session';
+import bus from 'base/bus';
 
 const MODAL_OPTIONS = {
     backdrop: 'static',
@@ -30,7 +30,7 @@ export default Marionette.LayoutView.extend({
     },
 
     initialize () {
-        session.bus.on('modal:open', this.openModal, this);
+        bus.on('modal:open', this.openModal, this);
     },
 
     openModal (modalView) {
@@ -63,6 +63,6 @@ export default Marionette.LayoutView.extend({
     },
 
     onDestroy () {
-        session.bus.off('modal:open', this.openModal, this);
+        bus.off('modal:open', this.openModal, this);
     }
 });

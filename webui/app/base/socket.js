@@ -3,11 +3,12 @@
 let requestId = 0;
 
 export default class Socket {
-    constructor(address) {
+    constructor (address) {
         this.address = address;
         this._requests = {};
     }
-    connect() {
+
+    connect () {
         this.socket = new WebSocket(this.address);
         this.socket.onmessage = (evt) => {
             let msg = JSON.parse(evt.data);
@@ -29,7 +30,7 @@ export default class Socket {
                            this.socket.onopen = resolve);
     }
 
-    send(method, params) {
+    send (method, params) {
         let id = requestId += 1;
         this.socket.send(JSON.stringify({
             id: id,
@@ -44,15 +45,15 @@ export default class Socket {
         });
     }
 
-    getAtomInfoList() {
+    getAtomInfoList () {
         return this.send("atoms-list-read");
     }
 
-    getAtom(id) {
+    getAtom (id) {
         return this.send("atom-read", id);
     }
 
-    createAtom (atom) {
-        return this.send("atom-create", atom.toJSON());
+    createAtom (data) {
+        return this.send("atom-create", data);
     }
 }

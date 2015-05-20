@@ -47,7 +47,7 @@ var webpackConfig = {
     devtool : 'source-map',
 
     entry: {
-        app: src + 'app/main.js',
+        app: src + 'app/init.js',
         vendor: objectValues(moduleAliases).map(function (path) {
             return src + 'vendor/' + path;
         })

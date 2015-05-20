@@ -2,8 +2,7 @@
 
 import Marionette from 'marionette';
 
-import session from 'session';
-import {AtomInfo} from 'base/models';
+import bus from 'base/bus';
 import str2cats from 'helpers/str2cats';
 
 export default Marionette.ItemView.extend({
@@ -32,12 +31,10 @@ export default Marionette.ItemView.extend({
             return false;
         }
 
-        let atom = new AtomInfo({
+        bus.trigger('atom:create', {
             type: ':record',
             name,
             categories
         });
-
-        session.bus.trigger('atom:create', atom);
     }
 });
