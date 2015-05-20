@@ -25,8 +25,10 @@ let NoteView = Marionette.LayoutView.extend({
     },
 
     childEvents: {
-        'atom:close': 'closeView',
-        'atom:edit':  'editView'
+        'atom:close':  'closeNote',
+        'atom:edit':   'editNote',
+        'atom:save':   'saveNote',
+        'atom:delete': 'deleteNote'
     },
 
     onShow () {
@@ -38,14 +40,26 @@ let NoteView = Marionette.LayoutView.extend({
         this.getRegion('content').show(new View({model: this.model}));
     },
 
-    closeView () {
+    closeNote () {
         console.log('closing atom %s', this.model.getId());
         this.model.collection.remove(this.model);
     },
 
-    editView () {
+    editNote () {
         console.log('edit atom %s', this.model.getId());
         this.model.set('edit', true);
+    },
+
+    saveNote () {
+        console.log('save atom %s', this.model.getId());
+        session.bus.trigger('atom:save', this.model);
+        this.model.set('edit', false);
+    },
+
+    deleteNote () {
+        var id = this.model.getId();
+        console.log('delete atom %s', id);
+        session.bus.trigger('atom:delete', id);
     }
 });
 

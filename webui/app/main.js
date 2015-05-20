@@ -47,8 +47,10 @@ app.on('start', function () {
 
     session.bus.on('atom:create', function (atom) {
         socket.createAtom(atom).then(function (result) {
+            result.edit = true;
+
             loadAtomsList();
-            session.bus.trigger('atom:open', result.id, true);
+            session.atomList.addAtom(result);
         });
     });
 });
