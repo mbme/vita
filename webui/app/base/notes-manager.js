@@ -16,7 +16,7 @@ export default class NotesManager {
      * @param {number!} id
      */
     isNoteOpen (id) {
-        return this.openNotes.contains(id);
+        return Boolean(this.openNotes.get(id));
     }
 
     /*
@@ -29,5 +29,19 @@ export default class NotesManager {
         }
 
         this.openNotes.add(data, { at: 0 });
+    }
+
+    /*
+     * @param {number!} id
+     */
+    editNote (id) {
+        this.openNotes.get(id).set('edit', true);
+    }
+
+    /*
+     * @param {number!} id
+     */
+    closeNote (id) {
+        this.openNotes.remove(id);
     }
 }

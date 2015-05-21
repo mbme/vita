@@ -5,6 +5,7 @@ import Marionette from 'marionette';
 import Flow from 'flow';
 
 import bus from 'base/bus';
+import ModalAddFiles from './modal-add-files';
 
 let FileModel = Backbone.Model.extend({
     defaults: {
@@ -18,19 +19,6 @@ let FileModel = Backbone.Model.extend({
 let FileView = Marionette.ItemView.extend({
     tagName: 'tr',
     template: require('./file.hbs')
-});
-
-let ModalAddFiles = Marionette.ItemView.extend({
-    className: 'ModalAddFiles',
-    template: require('./modal-add-files.hbs'),
-
-    initialize (options) {
-        let file = options.file;
-        this.model = new Backbone.Model({
-            name: file.name,
-            size: file.size
-        });
-    }
 });
 
 export default Marionette.CompositeView.extend({

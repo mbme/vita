@@ -45,15 +45,15 @@ export default class Socket {
         });
     }
 
-    getAtomInfoList () {
+    getNotesInfoList () {
         return this.send("atoms-list-read");
     }
 
-    getAtom (id) {
+    getNote (id) {
         return this.send("atom-read", id);
     }
 
-    createAtom (data) {
+    createNote (data) {
         return this.send("atom-create", data);
     }
 }

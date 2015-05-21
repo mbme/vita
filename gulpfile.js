@@ -17,8 +17,6 @@ var sourcemaps = require('gulp-sourcemaps');
 var filter = require('gulp-filter');
 
 
-var SIGINT = 'SIGINT';
-
 var base = __dirname;
 var src = './webui/';
 var dist = './webui/';
@@ -96,11 +94,15 @@ var webpackConfig = {
     ]
 };
 
-function suppressError (error) {
+function printError(error) {
     gutil.log(
         gutil.colors.cyan('Plumber') + gutil.colors.red(' found unhandled error:\n'),
         error.toString()
     );
+}
+
+function suppressError (error) {
+    printError(error);
     this.emit('end');
 }
 
@@ -110,13 +112,11 @@ gulp.task('scripts', function taskScripts () {
         .pipe(gulpWebpack(webpackConfig, null, function (err, stats) {
             if (err) {
                 throw err;
-                // suppressError(err);
             }
 
             var errors = stats.compilation.errors;
             if (errors.length) {
                 throw errors;
-                // suppressError(errors);
             }
         }))
         .pipe(gulp.dest(dist))
@@ -139,7 +139,7 @@ gulp.task('styles', function taskStyles () {
 var skelet;
 var killSkelet = function () {
     if (skelet) {
-        skelet.kill(SIGINT);
+        skelet.kill("SIGINT");
         gutil.log('killed skelet');
         skelet = null;
     }
@@ -158,9 +158,18 @@ var startSkelet = function () {
 };
 
 // handle Ctrl-C
-process.on(SIGINT, function () {
+process.on("SIGINT", function () {
     gutil.log('got a SIGINT, closing');
     killSkelet();
+});
+
+process.on("exit", function () {
+    gutil.log('exit, closing');
+    killSkelet();
+});
+
+process.on("uncaughtException", function (err) {
+    gutil.log('uncaught exception', err);
 });
 
 gulp.task('skelet', function taskSkelet() {
@@ -179,7 +188,7 @@ gulp.task('watch', function taskWatch () {
     gulp.watch(
         [src + 'app/**/*.js', src + 'app/**/*.hbs'],{
             readDelay: 5*1000
-        } ,['scripts']);
+        }, ['scripts']);
     gulp.watch(src + 'app/**/*.scss', {
         readDelay: 5*1000
     }, ['styles']);

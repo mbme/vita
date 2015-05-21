@@ -21,7 +21,11 @@ sass +
 eslint -
 jscs -
 
-materialize.scss
+## TODO
+- save note
+- delete note
+- save file backend
+- save file, files list
 
 ### TOOLS
 

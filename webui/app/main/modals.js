@@ -45,11 +45,11 @@ export default Marionette.LayoutView.extend({
     },
 
     onModalShown () {
-        this.getRegion('dialog').currentView.trigger('modal:shown');
+        this.getChildView('dialog').trigger('modal:shown');
     },
 
     closeModal () {
-        let view = this.getRegion('dialog').currentView;
+        let view = this.getChildView('dialog');
 
         if (!view) {
             return;

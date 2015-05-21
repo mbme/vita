@@ -9,9 +9,9 @@ import search from 'helpers/search';
 
 const FILTER_DELAY_MS = 350;
 
-let AtomInfo = Marionette.ItemView.extend({
+let NoteInfo = Marionette.ItemView.extend({
     tagName: 'li',
-    className: 'AtomInfo list-group-item',
+    className: 'NoteInfo list-group-item',
 
     template: require('./item.hbs'),
 
@@ -34,14 +34,14 @@ let AtomInfo = Marionette.ItemView.extend({
     },
 
     onClick () {
-        bus.trigger('atom:open', this.model.getId());
+        bus.trigger('note:open', this.model.getId());
     }
 });
 
-let AtomInfoList = Marionette.CollectionView.extend({
+let NoteInfoList = Marionette.CollectionView.extend({
     tagName: 'ul',
     className: 'list-group',
-    childView: AtomInfo
+    childView: NoteInfo
 });
 
 
@@ -72,7 +72,7 @@ export default Marionette.LayoutView.extend({
     },
 
     onRender () {
-        this.getRegion('list').show(new AtomInfoList({
+        this.getRegion('list').show(new NoteInfoList({
             collection: this.collection
         }));
     },
@@ -83,8 +83,8 @@ export default Marionette.LayoutView.extend({
 
     updateVisibility () {
         let term = this.model.get('term');
-        this.collection.forEach(function (atomInfo) {
-            atomInfo.set('visible', search(term, atomInfo.getName().toLowerCase()));
+        this.collection.forEach(function (noteInfo) {
+            noteInfo.set('visible', search(term, noteInfo.getName().toLowerCase()));
         });
         console.log('search term updated: %s', term);
     },

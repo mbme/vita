@@ -31,7 +31,7 @@ export default Marionette.ItemView.extend({
             return false;
         }
 
-        bus.trigger('atom:create', {
+        bus.trigger('note:create', {
             type: ':record',
             name,
             categories
