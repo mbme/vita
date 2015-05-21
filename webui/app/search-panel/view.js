@@ -59,7 +59,7 @@ export default Marionette.LayoutView.extend({
     },
 
     modelEvents: {
-        'change:term': 'updateVisibility'
+        'change:term': 'updateSearchTerm'
     },
 
     initialize (options) {
@@ -81,12 +81,16 @@ export default Marionette.LayoutView.extend({
         this.model.set('term', e.target.value);
     }, FILTER_DELAY_MS),
 
+    updateSearchTerm (_, term) {
+        console.log('search term updated: %s', term);
+        this.updateVisibility();
+    },
+
     updateVisibility () {
         let term = this.model.get('term');
         this.collection.forEach(function (noteInfo) {
             noteInfo.set('visible', search(term, noteInfo.getName().toLowerCase()));
         });
-        console.log('search term updated: %s', term);
     },
 
     onDestroy () {
