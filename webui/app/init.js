@@ -29,12 +29,13 @@ bus.on("note:open", function (id, edit) {
 });
 
 bus.on('note:edit', function (id) {
-    if (notesManager.isNoteOpen(id)) {
-        console.log('edit note %s', id);
-        notesManager.editNote(id, true);
-    } else {
-        console.log('cannot edit note %s: not open', id);
+    if (!notesManager.isNoteOpen(id)) {
+        console.error('cannot edit note %s: not open', id);
+        return;
     }
+
+    console.log('edit note %s', id);
+    notesManager.editNote(id, true);
 });
 
 bus.on('note:close', function (id) {
@@ -69,7 +70,16 @@ bus.on('note:save', function (data) {
 });
 
 bus.on('note:delete', function (id) {
+    if (!notesManager.isNoteOpen(id)) {
+        console.error('cannot delete note %s: not open', id);
+        return;
+    }
+
     console.log('deleting note %s', id);
+    socket.deleteNote(id).then(function () {
+        loadNotesList();
+        notesManager.closeNote(id);
+    });
 });
 
 socket.connect().then(function () {

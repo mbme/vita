@@ -66,4 +66,11 @@ export default class Socket {
     updateNote (data) {
         return this.send("atom-update", data);
     }
+
+    /*
+     * @param {number!} id
+     */
+    deleteNote (id) {
+        return this.send("atom-delete", id);
+    }
 }
