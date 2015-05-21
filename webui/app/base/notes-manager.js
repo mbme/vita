@@ -20,6 +20,13 @@ export default class NotesManager {
     }
 
     /*
+     * @param {number!} id
+     */
+    getOpenNote (id) {
+        return this.openNotes.get(id);
+    }
+
+    /*
      * @param {object} data
      * @param {Boolean} [edit=false]
      */
@@ -33,9 +40,10 @@ export default class NotesManager {
 
     /*
      * @param {number!} id
+     * @param {boolean} [edit=false]
      */
-    editNote (id) {
-        this.openNotes.get(id).set('edit', true);
+    editNote (id, edit) {
+        this.openNotes.get(id).set('edit', Boolean(edit));
     }
 
     /*

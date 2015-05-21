@@ -107,7 +107,8 @@ export let RecordEditView  = Marionette.LayoutView.extend({
     },
 
     saveRecord () {
-        bus.trigger('note:save', this.model.getId());
+        this.syncModel();
+        bus.trigger('note:save', this.model.attributes);
     },
 
     deleteRecord () {

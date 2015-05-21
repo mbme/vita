@@ -53,7 +53,17 @@ export default class Socket {
         return this.send("atom-read", id);
     }
 
+    /*
+     * @param {Object} data
+     */
     createNote (data) {
         return this.send("atom-create", data);
+    }
+
+    /*
+     * @param {Object} data
+     */
+    updateNote (data) {
+        return this.send("atom-update", data);
     }
 }

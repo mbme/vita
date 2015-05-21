@@ -1,5 +1,6 @@
 'use strict';
 
+import _ from 'underscore';
 import Backbone from 'backbone';
 
 export let NoteModel = Backbone.Model.extend({
@@ -19,6 +20,13 @@ export let NoteModel = Backbone.Model.extend({
 
     getId () {
         return this.get('id');
+    },
+
+    toPublicJSON () {
+        return _.pick(
+            this.toJSON(),
+            ['id', 'name', 'type', 'data', 'categories']
+        );
     }
 });
 
