@@ -6,6 +6,7 @@ import bus from 'base/bus';
 
 import str2cats from 'helpers/str2cats';
 import FilesView from './files';
+import ModalDeleteRecord from './modal-delete-record';
 
 let Record = Marionette.ItemView.extend({
     className: 'Record',
@@ -112,6 +113,9 @@ export let RecordEditView  = Marionette.LayoutView.extend({
     },
 
     deleteRecord () {
-        bus.trigger('note:delete', this.model.getId());
+        bus.trigger('modal:open', new ModalDeleteRecord({
+            id:   this.model.getId(),
+            name: this.model.getName()
+        }));
     }
 });

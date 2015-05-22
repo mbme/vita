@@ -75,7 +75,7 @@ bus.on('note:delete', function (id) {
         return;
     }
 
-    console.log('deleting note %s', id);
+    console.log('delete note %s', id);
     socket.deleteNote(id).then(function () {
         loadNotesList();
         notesManager.closeNote(id);

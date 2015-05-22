@@ -21,13 +21,6 @@ sass +
 eslint -
 jscs -
 
-## TODO
-+ save note
-+ delete note
-- modal to ask if really delete note
-- save file backend
-- save file, files list
-
 ### TOOLS
 
 * GNU make to build app
