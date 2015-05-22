@@ -32,7 +32,18 @@ export let NoteModel = Backbone.Model.extend({
 
 export let NotesCollection = Backbone.Collection.extend({
     model: NoteModel,
-    comparator: 'name'
+    comparator (m1, m2) {
+        let n1 = m1.getName().toLowerCase();
+        let n2 = m2.getName().toLowerCase();
+
+        if (n1 > n2) {
+            return 1;
+        } else if (n1 < n2) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
 });
 
 export let OpenNotesCollection = Backbone.Collection.extend({
