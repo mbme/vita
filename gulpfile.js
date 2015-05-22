@@ -181,6 +181,7 @@ gulp.task('skelet', function taskSkelet() {
 
         killSkelet();
         startSkelet();
+        connect.reload();
     });
 });
 
