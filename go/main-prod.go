@@ -10,20 +10,11 @@ import (
 	"github.com/codegangsta/cli"
 )
 
-var indexHTML = renderIndexHTML(&indexHTMLConfig{
-	Styles: "/main.css",
-	App:    "/app.js",
-})
-
 func indexHandler(w http.ResponseWriter, req *http.Request) {
 	path := req.URL.Path
 
 	if path == "/" {
-		if _, err := w.Write(indexHTML); err != nil {
-			log.Println("GET", path, " 500 INTERNAL SERVER ERROR")
-			log.Println("can't render index.html:", err)
-		}
-		return
+		path = "/index.html"
 	}
 
 	// drop leading slash
