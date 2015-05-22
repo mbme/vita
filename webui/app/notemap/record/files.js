@@ -2,7 +2,6 @@
 
 import Backbone from 'backbone';
 import Marionette from 'marionette';
-import Flow from 'flow';
 
 import bus from 'base/bus';
 import ModalAddFiles from './modal-add-files';
@@ -28,11 +27,16 @@ export default Marionette.CompositeView.extend({
     childViewContainer: 'table.files',
 
     ui: {
-        dropZone: '.file-upload',
-        uploadButton: '.file-upload .upload-btn'
+        dropZone:         '.file-upload',
+        fileSelectorForm: '.file-selector',
+        uploadButton:     '.file-upload .upload-btn'
     },
 
-    flow: null,
+    events: {
+        'click  @ui.uploadButton':           'selectFile',
+        'change @ui.fileSelectorForm input': 'onFileSelected',
+        'drop   @ui.dropZone':               'onFileDropped'
+    },
 
     initialize () {
         this.collection = new Backbone.Collection(
@@ -54,30 +58,26 @@ export default Marionette.CompositeView.extend({
                  type: 'video'
              }],
             {model: FileModel});
+    },
 
+    selectFile () {
+        let $input = this.ui.fileSelectorForm.find('input');
+        $input.click();
+    },
 
-        this.flow = new Flow({
-            target: 'api/file',
-            singleFile: true
-        });
-        if (!this.flow.support) {
-            throw "unsupported browser";
+    onFileSelected (e) {
+        this.showFileDialog(e.target.files[0]);
+        this.ui.fileSelectorForm[0].reset();
+    },
+
+    onFileDropped (e) {
+        let files = e.originalEvent.dataTransfer.files;
+        if (files.length) {
+            this.showFileDialog(files[0]);
         }
-
-        this.flow.on('fileAdded', this.onFileAdded.bind(this));
     },
 
-    onShow () {
-        this.flow.assignBrowse(this.ui.uploadButton[0]);
-        this.flow.assignDrop(this.ui.dropZone[0]);
-    },
-
-    onFileAdded (file) {
-        console.log(file);
+    showFileDialog (file) {
         bus.trigger('modal:open', new ModalAddFiles({file:file}));
-    },
-
-    onDestroy () {
-        this.flow.off();
     }
 });

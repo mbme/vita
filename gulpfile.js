@@ -30,8 +30,7 @@ var moduleAliases = {
     'underscore': 'lodash/lodash.js',
     'backbone':   'backbone/backbone.js',
     'marionette': 'marionette/lib/backbone.marionette.js',
-    'moment':     'moment/moment.js',
-    'flow':       'flow.js/dist/flow.js'
+    'moment':     'moment/moment.js'
 };
 
 function objectValues(object) {
