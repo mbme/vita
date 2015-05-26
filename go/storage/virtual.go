@@ -5,17 +5,17 @@ import (
 	"time"
 )
 
-var errorAtomNotFound = errors.New("atom not found")
+var errorNoteNotFound = errors.New("note not found")
 
 type virtualStorage struct {
 }
 
-func newRecord(id AtomID, name, data string, categories []Category) *Atom {
-	atomType := Record
+func newRecord(id NoteID, name, data string, categories []Category) *Note {
+	noteType := Record
 
-	now := AtomTime(time.Now())
-	return &Atom{
-		Type:       &atomType,
+	now := NoteTime(time.Now())
+	return &Note{
+		Type:       &noteType,
 		ID:         &id,
 		Name:       name,
 		Data:       data,
@@ -25,8 +25,8 @@ func newRecord(id AtomID, name, data string, categories []Category) *Atom {
 	}
 }
 
-func (l *virtualStorage) getNewID() *AtomID {
-	maxID := AtomID(0)
+func (l *virtualStorage) getNewID() *NoteID {
+	maxID := NoteID(0)
 
 	for id := range records {
 		if id > maxID {
@@ -39,66 +39,66 @@ func (l *virtualStorage) getNewID() *AtomID {
 	return &newID
 }
 
-var records = map[AtomID]*Atom{}
+var records = map[NoteID]*Note{}
 
 // NewStorage create new Storage instance
 func NewStorage() Storager {
 	for i, rec := range rawData {
-		id := AtomID(i)
+		id := NoteID(i)
 		records[id] = newRecord(id, rec.Name, rec.Data, rec.Categories)
 	}
 	return &virtualStorage{}
 }
 
-func (l *virtualStorage) GetAtoms() []*Atom {
-	var atoms []*Atom
+func (l *virtualStorage) GetNotes() []*Note {
+	var notes []*Note
 	for _, a := range records {
-		atoms = append(atoms, a)
+		notes = append(notes, a)
 	}
 
-	return atoms
+	return notes
 }
 
-func (l *virtualStorage) CreateAtom(atom *Atom) {
-	now := AtomTime(time.Now())
-	atom.TsCreated = &now
-	atom.TsUpdated = &now
+func (l *virtualStorage) CreateNote(note *Note) {
+	now := NoteTime(time.Now())
+	note.TsCreated = &now
+	note.TsUpdated = &now
 
 	newID := l.getNewID()
-	atom.ID = newID
+	note.ID = newID
 
-	records[*newID] = atom
+	records[*newID] = note
 }
 
-func (l *virtualStorage) GetAtom(id *AtomID) (*Atom, error) {
-	atom, ok := records[*id]
+func (l *virtualStorage) GetNote(id *NoteID) (*Note, error) {
+	note, ok := records[*id]
 
 	if !ok {
-		return nil, errorAtomNotFound
+		return nil, errorNoteNotFound
 	}
 
-	return atom, nil
+	return note, nil
 }
 
-func (l *virtualStorage) UpdateAtom(newAtom *Atom) error {
-	atom, err := l.GetAtom(newAtom.ID)
+func (l *virtualStorage) UpdateNote(newNote *Note) error {
+	note, err := l.GetNote(newNote.ID)
 	if err != nil {
 		return err
 	}
 
-	now := AtomTime(time.Now())
-	atom.TsUpdated = &now
+	now := NoteTime(time.Now())
+	note.TsUpdated = &now
 
-	atom.Type = newAtom.Type
-	atom.Name = newAtom.Name
-	atom.Data = newAtom.Data
-	atom.Categories = newAtom.Categories
+	note.Type = newNote.Type
+	note.Name = newNote.Name
+	note.Data = newNote.Data
+	note.Categories = newNote.Categories
 
 	return nil
 }
 
-func (l *virtualStorage) DeleteAtom(id *AtomID) error {
-	if _, err := l.GetAtom(id); err != nil {
+func (l *virtualStorage) DeleteNote(id *NoteID) error {
+	if _, err := l.GetNote(id); err != nil {
 		return err
 	}
 

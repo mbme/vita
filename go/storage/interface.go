@@ -2,9 +2,9 @@ package storage
 
 // Storager general storage interface
 type Storager interface {
-	GetAtoms() []*Atom
-	GetAtom(*AtomID) (*Atom, error)
-	CreateAtom(*Atom)
-	UpdateAtom(*Atom) error
-	DeleteAtom(*AtomID) error
+	GetNotes() []*Note
+	GetNote(*NoteID) (*Note, error)
+	CreateNote(*Note)
+	UpdateNote(*Note) error
+	DeleteNote(*NoteID) error
 }

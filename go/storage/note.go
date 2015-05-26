@@ -7,20 +7,20 @@ import (
 	"time"
 )
 
-// AtomType is type of atom
-type AtomType string
+// NoteType is type of note
+type NoteType string
 
-// possible atom types
+// possible note types
 const (
-	Record AtomType = ":record"
+	Record NoteType = ":record"
 	File            = ":file"
 )
 
-func (t *AtomType) isValid() bool {
+func (t *NoteType) isValid() bool {
 	return *t == Record || *t == File
 }
 
-// Category is atom category (context)
+// Category is note category (context)
 type Category string
 
 // valid categories are trimmed lower-case strings
@@ -31,33 +31,33 @@ func (c Category) isValid() bool {
 	return str == trimmed && str == lower
 }
 
-// AtomID is id of atom
-type AtomID uint32
+// NoteID is id of note
+type NoteID uint32
 
-func (id *AtomID) String() string {
+func (id *NoteID) String() string {
 	return fmt.Sprintf("%v", *id)
 }
 
-// AtomTime timestamp
-type AtomTime time.Time
+// NoteTime timestamp
+type NoteTime time.Time
 
 // MarshalJSON implements json_Marshaller
-func (t AtomTime) MarshalJSON() ([]byte, error) {
+func (t NoteTime) MarshalJSON() ([]byte, error) {
 	return []byte(strconv.FormatInt(time.Time(t).Unix(), 10)), nil
 }
 
-// Atom is one information piece
-type Atom struct {
-	ID         *AtomID    `json:"id"`
-	Type       *AtomType  `json:"type"`
+// Note is one information piece
+type Note struct {
+	ID         *NoteID    `json:"id"`
+	Type       *NoteType  `json:"type"`
 	Name       string     `json:"name"`
 	Data       string     `json:"data"`
 	Categories []Category `json:"categories"`
-	TsCreated  *AtomTime  `json:"ts_created"`
-	TsUpdated  *AtomTime  `json:"ts_updated"`
+	TsCreated  *NoteTime  `json:"ts_created"`
+	TsUpdated  *NoteTime  `json:"ts_updated"`
 }
 
-func (a *Atom) String() string {
+func (a *Note) String() string {
 	return fmt.Sprintf("%v%v/%s %v", &a.ID, &a.Type, a.Name, a.Categories)
 }
 
@@ -75,8 +75,8 @@ func unique(arr []Category) []Category {
 	return result
 }
 
-// Validate validates atom and returns array of errors
-func (a *Atom) Validate() []string {
+// Validate validates note and returns array of errors
+func (a *Note) Validate() []string {
 	var errors []string
 
 	if a.Type == nil {
