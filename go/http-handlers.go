@@ -113,7 +113,7 @@ func writeJSON(w http.ResponseWriter, data any) error {
 	return err
 }
 
-func fileHandler(w http.ResponseWriter, r *http.Request) {
+func addFileHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
 	idStr := vars["noteId"]
@@ -150,5 +150,48 @@ func fileHandler(w http.ResponseWriter, r *http.Request) {
 
 	if writeJSON(w, info) != nil {
 		log.Printf("file upload for %v -> response error: %v", id, err)
+	}
+}
+
+func getFileHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+
+	idStr := vars["noteId"]
+	id, err := s.ParseNoteID(idStr)
+	if err != nil || !storage.NoteExists(id) {
+		log.Printf("file read: unknown note %v", idStr)
+		return
+	}
+
+	fileID := vars["fileId"]
+
+	data, err := storage.GetAttachment(id, fileID)
+	if err != nil {
+		log.Printf("file read for %v -> read error: %v", id, err)
+		return
+	}
+
+	_, err = w.Write(data)
+	if err != nil {
+		log.Printf("file read for %v -> write error: %v", id, err)
+	}
+}
+
+func removeFileHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+
+	idStr := vars["noteId"]
+	id, err := s.ParseNoteID(idStr)
+	if err != nil || !storage.NoteExists(id) {
+		log.Printf("file remove: unknown note %v", idStr)
+		return
+	}
+
+	fileID := vars["fileId"]
+
+	err = storage.RemoveAttachment(id, fileID)
+	if err != nil {
+		log.Printf("file remove for %v -> remove error: %v", id, err)
+		return
 	}
 }

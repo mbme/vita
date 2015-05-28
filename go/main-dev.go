@@ -16,7 +16,11 @@ func main() {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/ws", wsHandler)
-	r.HandleFunc("/notes/{noteId}/attachments", fileHandler).Methods("POST")
+
+	notesRouter := r.PathPrefix("/notes").Subrouter()
+	notesRouter.HandleFunc("/{noteId}/attachments", addFileHandler).Methods("POST")
+	notesRouter.HandleFunc("/{noteId}/attachments/{fileId}", getFileHandler).Methods("GET")
+	notesRouter.HandleFunc("/{noteId}/attachments/{fileId}", removeFileHandler).Methods("DELETE")
 
 	http.Handle("/", r)
 	if err := http.ListenAndServe(":8081", nil); err != nil {
