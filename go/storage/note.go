@@ -38,6 +38,18 @@ func (id *NoteID) String() string {
 	return fmt.Sprintf("%v", *id)
 }
 
+// ParseNoteID parse id from string
+func ParseNoteID(idStr string) (*NoteID, error) {
+	res, err := strconv.ParseUint(idStr, 10, 32)
+	if err != nil {
+		return nil, err
+	}
+
+	id := NoteID(res)
+
+	return &id, nil
+}
+
 // NoteTime timestamp
 type NoteTime time.Time
 

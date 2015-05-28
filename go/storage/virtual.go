@@ -101,6 +101,12 @@ func (l *virtualStorage) ListNotes() []*Note {
 	return notes
 }
 
+func (l *virtualStorage) NoteExists(id *NoteID) bool {
+	_, ok := records[*id]
+
+	return ok
+}
+
 func (l *virtualStorage) AddNote(note *Note) {
 	now := NoteTime(time.Now())
 	note.TsCreated = &now

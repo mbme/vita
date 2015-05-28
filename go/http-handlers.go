@@ -8,6 +8,11 @@ import (
 
 	"fmt"
 
+	"io/ioutil"
+
+	s "github.com/mbme/vita/go/storage"
+
+	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
 )
 
@@ -93,5 +98,57 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 		if err = conn.WriteJSON(resp); err != nil {
 			log.Printf("can't write response: %v", err)
 		}
+	}
+}
+
+func writeJSON(w http.ResponseWriter, data any) error {
+	js, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	_, err = w.Write(js)
+
+	return err
+}
+
+func fileHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+
+	idStr := vars["noteId"]
+	id, err := s.ParseNoteID(idStr)
+	if err != nil || !storage.NoteExists(id) {
+		log.Printf("file upload: unknown note %v", idStr)
+		return
+	}
+
+	if err := r.ParseMultipartForm(10 * 1024 * 1024); err != nil {
+		log.Printf("file upload for %v -> parse error: %v", id, err)
+		return
+	}
+
+	file, handler, err := r.FormFile("file")
+	if err != nil {
+		log.Printf("file upload for %v -> form parse error: %v", id, err)
+		return
+	}
+
+	name := handler.Filename
+
+	data, err := ioutil.ReadAll(file)
+	if err != nil {
+		log.Printf("file upload for %v -> file read error: %v", id, err)
+		return
+	}
+
+	info, err := storage.AddAttachment(id, name, data)
+	if err != nil {
+		log.Printf("file upload for %v -> attaching error: %v", id, err)
+		return
+	}
+
+	if writeJSON(w, info) != nil {
+		log.Printf("file upload for %v -> response error: %v", id, err)
 	}
 }
