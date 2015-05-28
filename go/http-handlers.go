@@ -120,17 +120,20 @@ func addFileHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := s.ParseNoteID(idStr)
 	if err != nil || !storage.NoteExists(id) {
 		log.Printf("file upload: unknown note %v", idStr)
+		http.Error(w, "unknown note", http.StatusBadRequest)
 		return
 	}
 
 	if err := r.ParseMultipartForm(10 * 1024 * 1024); err != nil {
 		log.Printf("file upload for %v -> parse error: %v", id, err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	file, handler, err := r.FormFile("file")
 	if err != nil {
 		log.Printf("file upload for %v -> form parse error: %v", id, err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -139,17 +142,20 @@ func addFileHandler(w http.ResponseWriter, r *http.Request) {
 	data, err := ioutil.ReadAll(file)
 	if err != nil {
 		log.Printf("file upload for %v -> file read error: %v", id, err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	info, err := storage.AddAttachment(id, name, data)
 	if err != nil {
 		log.Printf("file upload for %v -> attaching error: %v", id, err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	if writeJSON(w, info) != nil {
 		log.Printf("file upload for %v -> response error: %v", id, err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
@@ -160,6 +166,7 @@ func getFileHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := s.ParseNoteID(idStr)
 	if err != nil || !storage.NoteExists(id) {
 		log.Printf("file read: unknown note %v", idStr)
+		http.Error(w, "unknown note", http.StatusBadRequest)
 		return
 	}
 
@@ -168,11 +175,13 @@ func getFileHandler(w http.ResponseWriter, r *http.Request) {
 	data, err := storage.GetAttachment(id, fileID)
 	if err != nil {
 		log.Printf("file read for %v -> read error: %v", id, err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	_, err = w.Write(data)
 	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		log.Printf("file read for %v -> write error: %v", id, err)
 	}
 }
@@ -184,6 +193,7 @@ func removeFileHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := s.ParseNoteID(idStr)
 	if err != nil || !storage.NoteExists(id) {
 		log.Printf("file remove: unknown note %v", idStr)
+		http.Error(w, "unknown note", http.StatusBadRequest)
 		return
 	}
 
@@ -192,6 +202,7 @@ func removeFileHandler(w http.ResponseWriter, r *http.Request) {
 	err = storage.RemoveAttachment(id, fileID)
 	if err != nil {
 		log.Printf("file remove for %v -> remove error: %v", id, err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 }
