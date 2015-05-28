@@ -55,7 +55,7 @@ func toNoteInfo(note *s.Note) *noteInfo {
 }
 
 func getNotesList() []*noteInfo {
-	notes := storage.GetNotes()
+	notes := storage.ListNotes()
 	infos := make([]*noteInfo, len(notes))
 	for i, note := range notes {
 		infos[i] = toNoteInfo(note)
@@ -115,7 +115,7 @@ var handlers = map[RequestMethod]func(*RequestParams) (any, error){
 			return errors, errorBadParams
 		}
 
-		storage.CreateNote(note)
+		storage.AddNote(note)
 
 		return note, nil
 	},
@@ -164,7 +164,7 @@ var handlers = map[RequestMethod]func(*RequestParams) (any, error){
 			return nil, errorBadParams
 		}
 
-		if err := storage.DeleteNote(id); err != nil {
+		if err := storage.RemoveNote(id); err != nil {
 			return nil, err
 		}
 

@@ -12,12 +12,12 @@ type NoteType string
 
 // possible note types
 const (
-	Record NoteType = ":record"
-	File            = ":file"
+	Record  NoteType = ":record"
+	Contact          = ":contact"
 )
 
 func (t *NoteType) isValid() bool {
-	return *t == Record || *t == File
+	return *t == Record || *t == Contact
 }
 
 // Category is note category (context)
@@ -48,13 +48,14 @@ func (t NoteTime) MarshalJSON() ([]byte, error) {
 
 // Note is one information piece
 type Note struct {
-	ID         *NoteID    `json:"id"`
-	Type       *NoteType  `json:"type"`
-	Name       string     `json:"name"`
-	Data       string     `json:"data"`
-	Categories []Category `json:"categories"`
-	TsCreated  *NoteTime  `json:"ts_created"`
-	TsUpdated  *NoteTime  `json:"ts_updated"`
+	ID          *NoteID           `json:"id"`
+	Type        *NoteType         `json:"type"`
+	Name        string            `json:"name"`
+	Data        string            `json:"data"`
+	Categories  []Category        `json:"categories"`
+	Attachments []*AttachmentInfo `json:"attachments"`
+	TsCreated   *NoteTime         `json:"tsCreated"`
+	TsUpdated   *NoteTime         `json:"tsUpdated"`
 }
 
 func (a *Note) String() string {

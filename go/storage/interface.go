@@ -2,9 +2,14 @@ package storage
 
 // Storager general storage interface
 type Storager interface {
-	GetNotes() []*Note
+	ListNotes() []*Note
+
+	AddNote(*Note)
 	GetNote(*NoteID) (*Note, error)
-	CreateNote(*Note)
 	UpdateNote(*Note) error
-	DeleteNote(*NoteID) error
+	RemoveNote(*NoteID) error
+
+	AddAttachment(*NoteID, string, []byte) (*AttachmentInfo, error)
+	GetAttachment(*NoteID, string) ([]byte, error)
+	RemoveAttachment(*NoteID, string) error
 }

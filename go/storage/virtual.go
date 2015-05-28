@@ -2,10 +2,15 @@ package storage
 
 import (
 	"errors"
+	"net/http"
 	"time"
 )
 
-var errorNoteNotFound = errors.New("note not found")
+var (
+	errorNoteNotFound            = errors.New("note not found")
+	errorAttachmentNotFound      = errors.New("attachment not found")
+	errorAttachmentAlreadyExists = errors.New("attachment already exists")
+)
 
 type virtualStorage struct {
 }
@@ -39,7 +44,44 @@ func (l *virtualStorage) getNewID() *NoteID {
 	return &newID
 }
 
+type attachment struct {
+	info *AttachmentInfo
+	data []byte
+}
+
 var records = map[NoteID]*Note{}
+var attachments = map[NoteID][]*attachment{}
+
+func listAttachments(id *NoteID) []*attachment {
+	result, ok := attachments[*id]
+
+	if ok {
+		return result
+	}
+
+	return []*attachment{}
+}
+
+func listAttachmentsInfo(id *NoteID) []*AttachmentInfo {
+	list := listAttachments(id)
+	noteAttachments := make([]*AttachmentInfo, len(list))
+
+	for i, attachment := range list {
+		noteAttachments[i] = attachment.info
+	}
+
+	return noteAttachments
+}
+
+func getAttachment(attachments []*attachment, name string) (*attachment, int, error) {
+	for i, attachment := range attachments {
+		if attachment.info.Name == name {
+			return attachment, i, nil
+		}
+	}
+
+	return nil, 0, errorAttachmentNotFound
+}
 
 // NewStorage create new Storage instance
 func NewStorage() Storager {
@@ -50,7 +92,7 @@ func NewStorage() Storager {
 	return &virtualStorage{}
 }
 
-func (l *virtualStorage) GetNotes() []*Note {
+func (l *virtualStorage) ListNotes() []*Note {
 	var notes []*Note
 	for _, a := range records {
 		notes = append(notes, a)
@@ -59,13 +101,15 @@ func (l *virtualStorage) GetNotes() []*Note {
 	return notes
 }
 
-func (l *virtualStorage) CreateNote(note *Note) {
+func (l *virtualStorage) AddNote(note *Note) {
 	now := NoteTime(time.Now())
 	note.TsCreated = &now
 	note.TsUpdated = &now
 
 	newID := l.getNewID()
 	note.ID = newID
+
+	note.Attachments = listAttachmentsInfo(newID)
 
 	records[*newID] = note
 }
@@ -76,6 +120,8 @@ func (l *virtualStorage) GetNote(id *NoteID) (*Note, error) {
 	if !ok {
 		return nil, errorNoteNotFound
 	}
+
+	note.Attachments = listAttachmentsInfo(id)
 
 	return note, nil
 }
@@ -97,12 +143,65 @@ func (l *virtualStorage) UpdateNote(newNote *Note) error {
 	return nil
 }
 
-func (l *virtualStorage) DeleteNote(id *NoteID) error {
+func (l *virtualStorage) RemoveNote(id *NoteID) error {
 	if _, err := l.GetNote(id); err != nil {
 		return err
 	}
 
 	delete(records, *id)
+	delete(attachments, *id) // delete record attachments
+
+	return nil
+}
+
+func (l *virtualStorage) AddAttachment(id *NoteID, name string, data []byte) (*AttachmentInfo, error) {
+	_, err := l.GetNote(id)
+	if err != nil {
+		return nil, err
+	}
+
+	items := listAttachments(id)
+
+	if _, _, err := getAttachment(items, name); err == nil {
+		return nil, errorAttachmentAlreadyExists
+	}
+
+	now := NoteTime(time.Now())
+	info := &AttachmentInfo{name, &now, http.DetectContentType(data), len(data)}
+
+	attachments[*id] = append(items, &attachment{info, data})
+
+	return info, nil
+}
+
+func (l *virtualStorage) GetAttachment(id *NoteID, name string) ([]byte, error) {
+	_, err := l.GetNote(id)
+	if err != nil {
+		return nil, err
+	}
+
+	attachment, _, err := getAttachment(listAttachments(id), name)
+	if err != nil {
+		return nil, err
+	}
+
+	return attachment.data, nil
+}
+
+func (l *virtualStorage) RemoveAttachment(id *NoteID, name string) error {
+	_, err := l.GetNote(id)
+	if err != nil {
+		return err
+	}
+
+	items := listAttachments(id)
+
+	_, pos, err := getAttachment(items, name)
+	if err != nil {
+		return err
+	}
+
+	attachments[*id] = append(items[:pos], items[pos+1:]...)
 
 	return nil
 }
