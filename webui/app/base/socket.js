@@ -46,31 +46,31 @@ export default class Socket {
     }
 
     getNotesInfoList () {
-        return this.send("atoms-list-read");
+        return this.send("notes-list-read");
     }
 
     getNote (id) {
-        return this.send("atom-read", id);
+        return this.send("note-read", id);
     }
 
     /*
      * @param {Object} data
      */
     createNote (data) {
-        return this.send("atom-create", data);
+        return this.send("note-create", data);
     }
 
     /*
      * @param {Object} data
      */
     updateNote (data) {
-        return this.send("atom-update", data);
+        return this.send("note-update", data);
     }
 
     /*
      * @param {number!} id
      */
     deleteNote (id) {
-        return this.send("atom-delete", id);
+        return this.send("note-delete", id);
     }
 }
