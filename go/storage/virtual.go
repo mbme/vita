@@ -173,7 +173,8 @@ func (l *virtualStorage) AddAttachment(id *NoteID, name string, data []byte) (*A
 	}
 
 	now := NoteTime(time.Now())
-	info := &AttachmentInfo{name, &now, http.DetectContentType(data), len(data)}
+	mime := http.DetectContentType(data)
+	info := &AttachmentInfo{name, &now, mime, len(data), AttachmentTypeByMimeType(mime)}
 
 	attachments[*id] = append(items, &attachment{info, data})
 
