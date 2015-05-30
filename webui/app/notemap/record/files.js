@@ -93,12 +93,16 @@ export default Marionette.CompositeView.extend({
             url: session.getServerAddress(`/notes/${id}/attachments`),
             crossDomain: true,
             dataType: 'json',
+            cache: 'false',
             contentType: false,
             processData: false,
             data: data,
             success: (resp) => {
-                console.log('note %s attached file %s', id, resp.name);
+                console.log('note %s attached file %s', id, file.name);
                 this.collection.add(resp);
+            },
+            error (_, err, description) {
+                console.error('note %s: failed to attach file %s: %s %s', id, file.name, err, description);
             }
         });
     }
