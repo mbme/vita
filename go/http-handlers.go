@@ -157,6 +157,8 @@ func addFileHandler(w http.ResponseWriter, r *http.Request) {
 		log.Printf("file upload for %v -> response error: %v", id, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+
+	log.Printf("file upload for %v -> attached file %v", id, name)
 }
 
 func getFileHandler(w http.ResponseWriter, r *http.Request) {
