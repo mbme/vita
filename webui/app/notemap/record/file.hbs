@@ -1,4 +1,5 @@
 <td class="icon">{{>icon type=(file-type-icon type)}}</td>
-<td class="name">{{name}}</td>
+<td class="name"><a href="{{file-addr noteId name}}">{{name}}</a></td>
+<td class="mime-type">{{mime}}</td>
 <td class="file-size">{{byte-size size}}</td>
-<td class="ts">{{moment-format ts}}</td>
+<td class="ts">{{moment-format tsCreated}}</td>

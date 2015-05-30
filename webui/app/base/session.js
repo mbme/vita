@@ -4,7 +4,12 @@ import {NotesCollection, OpenNotesCollection} from 'base/models';
 
 let session = {
     config: {
-        socketAddr: "ws://test.dev:8081/ws"
+        socketAddr: "ws://test.dev:8081/ws",
+        serverAddr: "http://test.dev:8081"
+    },
+
+    getServerAddress (addr) {
+        return this.config.serverAddr + addr;
     },
 
     notes: new NotesCollection(),

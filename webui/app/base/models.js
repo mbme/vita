@@ -9,9 +9,10 @@ export let NoteModel = Backbone.Model.extend({
         name: '',
         type: '',
         data: '',
-        ts_created: null,
-        ts_updated: null,
-        categories: []
+        tsCreated: null,
+        tsUpdated: null,
+        categories: [],
+        attachments: []
     },
 
     getName () {
@@ -20,6 +21,10 @@ export let NoteModel = Backbone.Model.extend({
 
     getId () {
         return this.get('id');
+    },
+
+    getAttachments () {
+        return this.get('attachments');
     },
 
     toPublicJSON () {

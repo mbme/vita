@@ -2,22 +2,31 @@
 
 import Backbone from 'backbone';
 import Marionette from 'marionette';
+import $ from 'jquery';
 
 import bus from 'base/bus';
+import session from 'base/session';
 import ModalAddFiles from './modal-add-files';
 
 let FileModel = Backbone.Model.extend({
     defaults: {
         name: '',
         size: 0,
-        ts: 0,
+        tsCreated: 0,
+        mime: '',
         type: null
     }
 });
 
 let FileView = Marionette.ItemView.extend({
     tagName: 'tr',
-    template: require('./file.hbs')
+    template: require('./file.hbs'),
+
+    templateHelpers () {
+        return {
+            noteId: this.options.noteId
+        };
+    }
 });
 
 export default Marionette.CompositeView.extend({
@@ -25,6 +34,12 @@ export default Marionette.CompositeView.extend({
 
     childView: FileView,
     childViewContainer: 'table.files',
+
+    childViewOptions () {
+        return {
+            noteId: this.model.getId()
+        };
+    },
 
     ui: {
         dropZone:         '.file-upload',
@@ -40,24 +55,9 @@ export default Marionette.CompositeView.extend({
 
     initialize () {
         this.collection = new Backbone.Collection(
-            [{
-                name: 'test.jpg',
-                ts:  1430850772,
-                size: 4096,
-                type: 'image'
-            },
-             {
-                 name: 'haha.txt',
-                 ts: 1430310772,
-                 size: 123,
-                 type: 'text'
-             },{
-                 name: "long movie.avi",
-                 ts: 1430860772,
-                 size: 12432118,
-                 type: 'video'
-             }],
-            {model: FileModel});
+            this.model.getAttachments(),
+            {model: FileModel}
+        );
     },
 
     selectFile () {
@@ -78,6 +78,28 @@ export default Marionette.CompositeView.extend({
     },
 
     showFileDialog (file) {
-        bus.trigger('modal:open', new ModalAddFiles({file:file}));
+        let modal = new ModalAddFiles({file:file});
+        modal.on('file:upload', this.uploadFile, this);
+        bus.trigger('modal:open', modal);
+    },
+
+    uploadFile (file) {
+        let data = new FormData();
+        data.append('file', file);
+
+        let id = this.model.getId();
+        $.ajax({
+            type: 'POST',
+            url: session.getServerAddress(`/notes/${id}/attachments`),
+            crossDomain: true,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            data: data,
+            success: (resp) => {
+                console.log('note %s attached file %s', id, resp.name);
+                this.collection.add(resp);
+            }
+        });
     }
 });

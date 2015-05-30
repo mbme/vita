@@ -7,11 +7,19 @@ export default Marionette.ItemView.extend({
     className: 'ModalAddFiles',
     template: require('./modal-add-files.hbs'),
 
+    events: {
+        'click .js-upload': 'uploadFile'
+    },
+
     initialize (options) {
-        let file = options.file;
+        this.file = options.file;
         this.model = new Backbone.Model({
-            name: file.name,
-            size: file.size
+            name: this.file.name,
+            size: this.file.size
         });
+    },
+
+    uploadFile () {
+        this.trigger('file:upload', this.file);
     }
 });
