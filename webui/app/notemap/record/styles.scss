@@ -24,7 +24,7 @@
 
     .files {
         td {
-            vertical-align: baseline;
+            vertical-align: middle;
         }
 
         td.icon {
@@ -33,6 +33,7 @@
 
         td.file-size {
             text-align: center;
+            padding-top: 11px;
         }
 
         td.ts {
@@ -41,5 +42,16 @@
             width: 150px;
         }
 
+        td.buttons {
+            cursor: pointer;
+
+            span {
+                visibility: hidden;
+            }
+        }
+
+        tr:hover td.buttons span {
+            visibility: visible;
+        }
     }
 }

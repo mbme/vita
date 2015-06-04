@@ -6,6 +6,7 @@ import $ from 'jquery';
 import bus from 'base/bus';
 import session from 'base/session';
 import ModalAddFiles from './modal-add-files';
+import ModalDeleteFile from './modal-delete-file';
 
 let FileView = Marionette.ItemView.extend({
     tagName: 'tr',
@@ -15,6 +16,34 @@ let FileView = Marionette.ItemView.extend({
         return {
             noteId: this.options.noteId
         };
+    },
+
+    events: {
+        'click .buttons span': 'showRemoveFileDialog'
+    },
+
+    showRemoveFileDialog () {
+        let modal = new ModalDeleteFile({name: this.model.getName()});
+
+        modal.on('file:delete', this.deleteFile, this);
+        bus.trigger('modal:open', modal);
+    },
+
+    deleteFile () {
+        let id = this.options.noteId;
+        let fileName = this.model.getName();
+        $.ajax({
+            type: 'DELETE',
+            url: session.getServerAddress(`/notes/${id}/attachments/${fileName}`),
+            crossDomain: true,
+            success: () => {
+                console.log('note %s: removed attachment %s', id, fileName);
+                this.model.collection.remove(this.model);
+            },
+            error (_, err, description) {
+                console.error('note %s: failed to remove attachment %s: %s %s', id, fileName, err, description);
+            }
+        });
     }
 });
 

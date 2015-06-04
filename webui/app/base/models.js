@@ -11,7 +11,11 @@ let FileModel = Backbone.Model.extend({
         mime: '',
         type: null
     },
-    idAttribute: 'name'
+    idAttribute: 'name',
+
+    getName () {
+        return this.get('name');
+    }
 });
 
 let FilesCollection = Backbone.Collection.extend({

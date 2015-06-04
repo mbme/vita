@@ -17,7 +17,7 @@ function loadNotesList () {
     });
 }
 
-bus.on("note:open", function (id, edit) {
+bus.on('note:open', function (id, edit) {
     if (notesManager.isNoteOpen(id)) {
         console.log('note %s already open', id);
     } else {
