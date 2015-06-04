@@ -7,11 +7,7 @@ import bus from 'base/bus';
 import str2cats from 'helpers/str2cats';
 import FilesView from './files';
 import ModalDeleteRecord from './modal-delete-record';
-
-let Record = Marionette.ItemView.extend({
-    className: 'Record',
-    template: require('./record.hbs')
-});
+import Record from './record';
 
 export let RecordView = Marionette.LayoutView.extend({
     className: 'RecordView',
@@ -66,13 +62,10 @@ export let RecordEditView  = Marionette.LayoutView.extend({
         'click .js-close':  'closeRecord'
     },
 
-    initialize(options) {
-        this.model = options.model.clone();
-    },
-
     onRender() {
         this.getRegion('preview').show(new Record({model: this.model}));
-        this.getRegion('files').show(new FilesView({model: this.model}));
+        let filesView = new FilesView({model: this.model});
+        this.getRegion('files').show(filesView);
     },
 
     noteChanged: false,

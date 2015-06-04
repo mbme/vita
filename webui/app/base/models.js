@@ -3,6 +3,21 @@
 import _ from 'underscore';
 import Backbone from 'backbone';
 
+let FileModel = Backbone.Model.extend({
+    defaults: {
+        name: '',
+        size: 0,
+        tsCreated: 0,
+        mime: '',
+        type: null
+    },
+    idAttribute: 'name'
+});
+
+let FilesCollection = Backbone.Collection.extend({
+    model: FileModel
+});
+
 export let NoteModel = Backbone.Model.extend({
     defaults: {
         id: null,
@@ -12,7 +27,17 @@ export let NoteModel = Backbone.Model.extend({
         tsCreated: null,
         tsUpdated: null,
         categories: [],
-        attachments: []
+        attachments: null,
+
+        edit: false
+    },
+
+    constructor (attrs, opts) {
+        // put attachments array into collection
+        attrs.attachments = new FilesCollection(attrs.attachments);
+        Backbone.Model.call(this, attrs, opts);
+
+        this.on('change', this.backupAttributes, this);
     },
 
     getName () {
@@ -32,6 +57,30 @@ export let NoteModel = Backbone.Model.extend({
             this.toJSON(),
             ['id', 'name', 'type', 'data', 'categories']
         );
+    },
+
+    edit (edit) {
+        this.set('edit', Boolean(edit));
+    },
+
+    isEdited () {
+        return this.get('edit');
+    },
+
+    backupAttributes () {
+        if (this.backup) {
+            return;
+        }
+        this.backup = this.attributes;
+    },
+
+    commitAttributes () {
+        delete this.backup;
+    },
+
+    rollbackAttributes () {
+        this.set(this.backup);
+        delete this.backup;
     }
 });
 

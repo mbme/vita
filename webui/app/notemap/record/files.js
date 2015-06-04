@@ -1,22 +1,11 @@
 'use strict';
 
-import Backbone from 'backbone';
 import Marionette from 'marionette';
 import $ from 'jquery';
 
 import bus from 'base/bus';
 import session from 'base/session';
 import ModalAddFiles from './modal-add-files';
-
-let FileModel = Backbone.Model.extend({
-    defaults: {
-        name: '',
-        size: 0,
-        tsCreated: 0,
-        mime: '',
-        type: null
-    }
-});
 
 let FileView = Marionette.ItemView.extend({
     tagName: 'tr',
@@ -54,10 +43,7 @@ export default Marionette.CompositeView.extend({
     },
 
     initialize () {
-        this.collection = new Backbone.Collection(
-            this.model.getAttachments(),
-            {model: FileModel}
-        );
+        this.collection = this.model.getAttachments();
     },
 
     selectFile () {

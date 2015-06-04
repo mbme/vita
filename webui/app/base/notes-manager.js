@@ -1,6 +1,7 @@
 'use strict';
 
 import _ from 'underscore';
+import {NoteModel} from 'base/models';
 
 export default class NotesManager {
     constructor(notes, openNotes) {
@@ -31,19 +32,12 @@ export default class NotesManager {
      * @param {Boolean} [edit=false]
      */
     openNote (data, edit) {
+        let note = new NoteModel(data);
         if (!_.isUndefined(edit)) {
-            data.edit = Boolean(edit);
+            note.edit(true);
         }
 
-        this.openNotes.add(data, { at: 0 });
-    }
-
-    /*
-     * @param {number!} id
-     * @param {boolean} [edit=false]
-     */
-    editNote (id, edit) {
-        this.openNotes.get(id).set('edit', Boolean(edit));
+        this.openNotes.add(note, { at: 0 });
     }
 
     /*

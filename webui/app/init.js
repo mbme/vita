@@ -29,16 +29,23 @@ bus.on("note:open", function (id, edit) {
 });
 
 bus.on('note:edit', function (id) {
-    if (!notesManager.isNoteOpen(id)) {
+    let note = notesManager.getOpenNote(id);
+
+    if (!note) {
         console.error('cannot edit note %s: not open', id);
         return;
     }
 
     console.log('edit note %s', id);
-    notesManager.editNote(id, true);
+    note.edit(true);
 });
 
 bus.on('note:close', function (id) {
+    if (!notesManager.isNoteOpen(id)) {
+        console.error('cannot close note %s: not open', id);
+        return;
+    }
+
     console.log('close note %s', id);
     notesManager.closeNote(id);
 });
@@ -51,8 +58,7 @@ bus.on('note:create', function (data) {
     });
 });
 
-bus.on('note:save', function (data) {
-    let id = data.id;
+bus.on('note:save', function (id) {
     let note = notesManager.getOpenNote(id);
 
     if (!note) {
@@ -60,12 +66,13 @@ bus.on('note:save', function (data) {
         return;
     }
 
-    note.set(data);
-
     console.log('saving note %s', id);
     socket.updateNote(note.toPublicJSON()).then(function () {
         loadNotesList();
-        notesManager.editNote(id, false);
+        note.edit(false);
+        note.commitAttributes();
+    }, function (err) {
+        console.error('cannot save note %s: %s', id, err);
     });
 });
 
