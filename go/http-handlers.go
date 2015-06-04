@@ -207,4 +207,6 @@ func removeFileHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+
+	log.Printf("note %v: removed attachment %v", id, fileID)
 }
