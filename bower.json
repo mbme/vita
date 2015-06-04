@@ -3,9 +3,11 @@
     "private": true,
     "dependencies": {
         "markdown-it": "*",
-        "moment": "*",
-        "lodash": "*",
-        "marionette": "*",
-        "bootstrap": "*"
+        "moment":      "*",
+        "jquery":      "*",
+        "lodash":      "*",
+        "marionette":  "*",
+        "bootstrap":   "*",
+        "velocity":    "*"
     }
 }

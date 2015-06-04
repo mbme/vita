@@ -9,7 +9,7 @@
         margin-left: $w-note + 20;
         top: 70px;
 
-        @include card(2);
+        @include card(1);
         border-radius: 50%;
 
         &,
