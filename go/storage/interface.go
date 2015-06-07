@@ -1,5 +1,7 @@
 package storage
 
+import "errors"
+
 // Storager general storage interface
 type Storager interface {
 	ListNotes() []*Note
@@ -14,3 +16,9 @@ type Storager interface {
 	GetAttachment(*NoteID, string) ([]byte, error)
 	RemoveAttachment(*NoteID, string) error
 }
+
+var (
+	errorNoteNotFound            = errors.New("note not found")
+	errorAttachmentNotFound      = errors.New("attachment not found")
+	errorAttachmentAlreadyExists = errors.New("attachment already exists")
+)
