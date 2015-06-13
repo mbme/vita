@@ -36,7 +36,7 @@ func readNoteInfo(fileInfo os.FileInfo) (*note.Info, error) {
 }
 
 func getNoteFile(info *note.Info) string {
-	return fmt.Sprintf("%d_[%s]_%s.md", info.ID, note.StringifyCategories(info.Categories), info.Name)
+	return fmt.Sprintf("%d_[%s]_%s.md", *info.ID, note.StringifyCategories(info.Categories), info.Name)
 }
 
 func (s *fsStorage) getNoteFilePath(info *note.Info) string {

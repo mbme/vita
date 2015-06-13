@@ -17,7 +17,7 @@ func (n *Note) String() string {
 
 // Validate validates note and returns array of errors
 func (n *Note) Validate() []string {
-	var errors []string
+	errors := make([]string, 5)
 
 	if n.Type == nil {
 		errors = append(errors, "missing type")

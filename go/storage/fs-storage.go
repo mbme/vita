@@ -17,7 +17,8 @@ type fsStorage struct {
 // NewFsStorage create new Storager backed with file system
 func NewFsStorage(basePath string) Storager {
 	storage := &fsStorage{
-		base: basePath,
+		base:    basePath,
+		records: make(map[note.ID]*note.Info),
 	}
 
 	// read all note types
@@ -31,7 +32,9 @@ func NewFsStorage(basePath string) Storager {
 		for _, f := range files {
 			note, err := readNoteInfo(f)
 			if err != nil {
-				log.Println(err)
+				if err != errorNotNote {
+					log.Println(err)
+				}
 				continue
 			}
 			note.Type = &t
@@ -42,7 +45,9 @@ func NewFsStorage(basePath string) Storager {
 		for _, f := range files {
 			noteID, attachment, err := readAttachmentInfo(f)
 			if err != nil {
-				log.Println(err)
+				if err != errorNotAttachment {
+					log.Println(err)
+				}
 				continue
 			}
 			note, ok := storage.records[*noteID]
@@ -61,7 +66,7 @@ func NewFsStorage(basePath string) Storager {
 }
 
 func (s *fsStorage) ListNotes() []*note.Info {
-	var list []*note.Info
+	list := make([]*note.Info, len(s.records))
 
 	pos := 0
 	for _, note := range s.records {

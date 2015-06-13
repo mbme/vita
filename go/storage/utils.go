@@ -11,7 +11,7 @@ func listFiles(path string, dirs bool) ([]os.FileInfo, error) {
 		return nil, err
 	}
 
-	files := make([]os.FileInfo, len(items))
+	var files []os.FileInfo
 	for _, item := range items {
 		if item.IsDir() == dirs {
 			files = append(files, item)
