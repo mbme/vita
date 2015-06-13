@@ -39,7 +39,7 @@ func UniqueCategories(arr []Category) []Category {
 func ParseCategories(raw string) []Category {
 	rawCategories := delim.Split(raw, -1)
 
-	categories := make([]Category, len(rawCategories))
+	var categories []Category
 
 	for _, x := range rawCategories {
 		category := strings.TrimSpace(x)

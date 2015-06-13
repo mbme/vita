@@ -12,7 +12,7 @@ import (
 )
 
 var errorNotNote = errors.New("not a note")
-var noteMatcher = regexp.MustCompile("^(\\d+)_(\\[[a-zA-Z0-9 \\-]+\\])_([\\p{Cyrillic}\\w]+)\\.md$")
+var noteMatcher = regexp.MustCompile("^(\\d+)_\\[([a-zA-Z0-9 \\-]+)\\]_([\\p{Cyrillic}\\w]+)\\.md$")
 
 func preprocessCategories(categories []note.Category) ([]note.Category, error) {
 	categories = note.UniqueCategories(categories)
