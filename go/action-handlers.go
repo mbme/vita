@@ -6,6 +6,7 @@ import (
 
 	"log"
 
+	"github.com/mbme/vita/go/note"
 	s "github.com/mbme/vita/go/storage"
 )
 
@@ -32,45 +33,15 @@ const (
 	NoType = ""
 )
 
-var storage = s.NewStorage()
-
-type noteInfo struct {
-	ID         s.NoteID     `json:"id"`
-	Type       s.NoteType   `json:"type"`
-	Name       string       `json:"name"`
-	Categories []s.Category `json:"categories"`
-	TsCreated  *s.NoteTime  `json:"ts_created"`
-	TsUpdated  *s.NoteTime  `json:"ts_updated"`
-}
-
-func toNoteInfo(note *s.Note) *noteInfo {
-	return &noteInfo{
-		ID:         *note.ID,
-		Type:       *note.Type,
-		Name:       note.Name,
-		Categories: note.Categories,
-		TsCreated:  note.TsCreated,
-		TsUpdated:  note.TsUpdated,
-	}
-}
-
-func getNotesList() []*noteInfo {
-	notes := storage.ListNotes()
-	infos := make([]*noteInfo, len(notes))
-	for i, note := range notes {
-		infos[i] = toNoteInfo(note)
-	}
-
-	return infos
-}
+var storage = s.NewFsStorage("/tmp/vita")
 
 var handlers = map[RequestMethod]func(*RequestParams) (any, error){
 	NotesListRead: func(_ *RequestParams) (any, error) {
-		return getNotesList(), nil
+		return storage.ListNotes(), nil
 	},
 
 	NoteRead: func(params *RequestParams) (any, error) {
-		id := new(s.NoteID)
+		id := new(note.ID)
 		if err := params.readAs(id); err != nil {
 			log.Printf("error parsing params: %v", err)
 			return nil, errorBadParams
@@ -91,7 +62,7 @@ var handlers = map[RequestMethod]func(*RequestParams) (any, error){
 	},
 
 	NoteCreate: func(params *RequestParams) (any, error) {
-		note := &s.Note{}
+		note := &note.Note{}
 		if err := params.readAs(note); err != nil {
 			log.Printf("error parsing params: %v", err)
 			return nil, errorBadParams
@@ -102,12 +73,8 @@ var handlers = map[RequestMethod]func(*RequestParams) (any, error){
 			errors = append(errors, "id is not nil")
 		}
 
-		if note.TsCreated != nil {
-			errors = append(errors, "creation timestamp is not nil")
-		}
-
-		if note.TsUpdated != nil {
-			errors = append(errors, "creation timestamp is not nil")
+		if note.Timestamp != nil {
+			errors = append(errors, "timestamp is not nil")
 		}
 
 		if len(errors) > 0 {
@@ -115,13 +82,15 @@ var handlers = map[RequestMethod]func(*RequestParams) (any, error){
 			return errors, errorBadParams
 		}
 
-		storage.AddNote(note)
+		if err := storage.AddNote(note); err != nil {
+			return nil, err
+		}
 
 		return note, nil
 	},
 
 	NoteUpdate: func(params *RequestParams) (any, error) {
-		note := &s.Note{}
+		note := &note.Note{}
 		if err := params.readAs(note); err != nil {
 			log.Printf("error parsing params: %v", err)
 			return nil, errorBadParams
@@ -132,12 +101,8 @@ var handlers = map[RequestMethod]func(*RequestParams) (any, error){
 			errors = append(errors, "missing id")
 		}
 
-		if note.TsCreated != nil {
-			errors = append(errors, "creation timestamp is not nil")
-		}
-
-		if note.TsUpdated != nil {
-			errors = append(errors, "creation timestamp is not nil")
+		if note.Timestamp != nil {
+			errors = append(errors, "timestamp is not nil")
 		}
 
 		if len(errors) > 0 {
@@ -153,7 +118,7 @@ var handlers = map[RequestMethod]func(*RequestParams) (any, error){
 	},
 
 	NoteDelete: func(params *RequestParams) (any, error) {
-		id := new(s.NoteID)
+		id := new(note.ID)
 		if err := params.readAs(id); err != nil {
 			log.Printf("error parsing params: %v", err)
 			return nil, errorBadParams

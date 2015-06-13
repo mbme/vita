@@ -10,7 +10,7 @@ import (
 
 	"io/ioutil"
 
-	s "github.com/mbme/vita/go/storage"
+	"github.com/mbme/vita/go/note"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
@@ -117,7 +117,7 @@ func addFileHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
 	idStr := vars["noteId"]
-	id, err := s.ParseNoteID(idStr)
+	id, err := note.ParseID(idStr)
 	if err != nil || !storage.NoteExists(id) {
 		log.Printf("file upload: unknown note %v", idStr)
 		http.Error(w, "unknown note", http.StatusBadRequest)
@@ -165,7 +165,7 @@ func getFileHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
 	idStr := vars["noteId"]
-	id, err := s.ParseNoteID(idStr)
+	id, err := note.ParseID(idStr)
 	if err != nil || !storage.NoteExists(id) {
 		log.Printf("file read: unknown note %v", idStr)
 		http.Error(w, "unknown note", http.StatusBadRequest)
@@ -192,7 +192,7 @@ func removeFileHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
 	idStr := vars["noteId"]
-	id, err := s.ParseNoteID(idStr)
+	id, err := note.ParseID(idStr)
 	if err != nil || !storage.NoteExists(id) {
 		log.Printf("file remove: unknown note %v", idStr)
 		http.Error(w, "unknown note", http.StatusBadRequest)
