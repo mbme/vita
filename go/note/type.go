@@ -11,6 +11,7 @@ type Type string
 const (
 	Record  Type = ":record"
 	Contact Type = ":contact"
+	NoType  Type = ""
 )
 
 // Types are possible note types
@@ -18,14 +19,19 @@ var Types = []Type{Record, Contact}
 
 var errorBadType = errors.New("bad type")
 
-func (t *Type) isValid() bool {
+// IsValid checks if type is one of valid note types
+func (t Type) IsValid() bool {
 	for _, x := range Types {
-		if x == *t {
+		if x == t {
 			return true
 		}
 	}
 
 	return false
+}
+
+func (t Type) String() string {
+	return string(t)
 }
 
 // ParseType parse type string

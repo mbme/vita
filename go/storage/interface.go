@@ -5,6 +5,10 @@ import "github.com/mbme/vita/go/note"
 
 var (
 	errorNoteNotFound            = errors.New("note not found")
+	errorBadNoteType             = errors.New("bad note type")
+	errorBadNoteID               = errors.New("bad note id")
+	errorBadNoteName             = errors.New("bad note name")
+	errorNoCategories            = errors.New("missing categories")
 	errorAttachmentNotFound      = errors.New("attachment not found")
 	errorAttachmentAlreadyExists = errors.New("attachment already exists")
 )
@@ -13,13 +17,13 @@ var (
 type Storager interface {
 	ListNotes() []*note.Info
 
-	AddNote(*note.Note) error
-	GetNote(*note.ID) (*note.Note, error)
-	UpdateNote(*note.Note) error
-	RemoveNote(*note.ID) error
-	NoteExists(*note.ID) bool
+	AddNote(noteType note.Type, name string, categories []note.Category) (note.ID, error)
+	GetNote(id note.ID) (*note.Note, error)
+	UpdateNote(id note.ID, name string, data string, categories []note.Category) error
+	RemoveNote(id note.ID) error
+	NoteExists(id note.ID) bool
 
-	AddAttachment(*note.ID, string, []byte) (*note.FileInfo, error)
-	GetAttachment(*note.ID, string) ([]byte, error)
-	RemoveAttachment(*note.ID, string) error
+	AddAttachment(id note.ID, fileName string, data []byte) (*note.FileInfo, error)
+	GetAttachment(id note.ID, fileName string) ([]byte, error)
+	RemoveAttachment(id note.ID, fileName string) error
 }

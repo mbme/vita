@@ -9,9 +9,8 @@ import (
 type Time time.Time
 
 // ParseTime timestamp to note time
-func ParseTime(ts time.Time) *Time {
-	res := Time(ts)
-	return &res
+func ParseTime(ts time.Time) Time {
+	return Time(ts)
 }
 
 // MarshalJSON implements json_Marshaller

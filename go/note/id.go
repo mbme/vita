@@ -1,25 +1,19 @@
 package note
 
-import (
-	"fmt"
-	"strconv"
-)
+import "strconv"
 
 // ID is id of note
 type ID uint32
 
-func (id *ID) String() string {
-	return fmt.Sprintf("%v", *id)
-}
+// NotID means missing or wrong id
+const NotID ID = 0
 
 // ParseID parse id from string
-func ParseID(idStr string) (*ID, error) {
+func ParseID(idStr string) (ID, error) {
 	res, err := strconv.ParseUint(idStr, 10, 32)
 	if err != nil {
-		return nil, err
+		return 0, err
 	}
 
-	id := ID(res)
-
-	return &id, nil
+	return ID(res), nil
 }

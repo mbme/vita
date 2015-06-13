@@ -2,12 +2,12 @@ package note
 
 // Info is note description
 type Info struct {
-	ID          *ID         `json:"id"`
-	Type        *Type       `json:"type"`
+	ID          ID          `json:"id"`
+	Type        Type        `json:"type"`
 	Name        string      `json:"name"`
 	Categories  []Category  `json:"categories"`
 	Attachments []*FileInfo `json:"attachments"`
-	Timestamp   *Time       `json:"timestamp"`
+	Timestamp   Time        `json:"timestamp"`
 }
 
 // ToNote converts note info to note

@@ -8,15 +8,20 @@ var delim = regexp.MustCompile("[ ]+")
 // Category is note category (context)
 type Category string
 
-// valid categories are trimmed lower-case strings
-func (c Category) isValid() bool {
+func (c Category) String() string {
+	return string(c)
+}
+
+// IsValid checks if category is valid: trimmed lower-case strings
+func (c Category) IsValid() bool {
 	str := string(c)
 	trimmed := strings.TrimSpace(str)
 	lower := strings.ToLower(str)
 	return str == trimmed && str == lower
 }
 
-func unique(arr []Category) []Category {
+// UniqueCategories drops duplicate categories
+func UniqueCategories(arr []Category) []Category {
 	var result []Category
 	seen := map[Category]int{}
 
@@ -51,7 +56,7 @@ func ParseCategories(raw string) []Category {
 func StringifyCategories(categories []Category) string {
 	categoriesStr := make([]string, len(categories))
 	for i, category := range categories {
-		categoriesStr[i] = string(category)
+		categoriesStr[i] = category.String()
 	}
 
 	return strings.Join(categoriesStr, " ")

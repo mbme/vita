@@ -3,6 +3,7 @@ package storage
 import (
 	"log"
 	"path"
+	"strings"
 
 	"github.com/mbme/vita/go/note"
 )
@@ -37,8 +38,8 @@ func NewFsStorage(basePath string) Storager {
 				}
 				continue
 			}
-			note.Type = &t
-			storage.records[*note.ID] = note
+			note.Type = t
+			storage.records[note.ID] = note
 		}
 
 		// read attachments
@@ -50,9 +51,9 @@ func NewFsStorage(basePath string) Storager {
 				}
 				continue
 			}
-			note, ok := storage.records[*noteID]
+			note, ok := storage.records[noteID]
 			if !ok {
-				log.Printf("attachment for unknown note %v", *noteID)
+				log.Printf("attachment for unknown note %v", noteID)
 				continue
 			}
 
@@ -77,32 +78,56 @@ func (s *fsStorage) ListNotes() []*note.Info {
 	return list
 }
 
-func (s *fsStorage) NoteExists(id *note.ID) bool {
-	_, ok := s.records[*id]
+func (s *fsStorage) NoteExists(id note.ID) bool {
+	_, ok := s.records[id]
 
 	return ok
 }
 
-func (s *fsStorage) AddNote(n *note.Note) error {
-	n.ID = s.nextID()
+func (s *fsStorage) AddNote(noteType note.Type, name string, categories []note.Category) (note.ID, error) {
+	newID := s.nextID()
 
-	fileInfo, err := s.writeNote(n)
+	if !noteType.IsValid() {
+		return note.NotID, errorBadNoteType
+	}
+
+	name = strings.TrimSpace(name)
+	if len(name) == 0 {
+		return note.NotID, errorBadNoteName
+	}
+
+	categories, err := preprocessCategories(categories)
 	if err != nil {
-		return err
+		return note.NotID, err
+	}
+
+	fileInfo, err := s.writeNote((&note.Info{
+		Type:       noteType,
+		ID:         s.nextID(),
+		Name:       name,
+		Categories: categories,
+	}).ToNote())
+
+	if err != nil {
+		return note.NotID, err
 	}
 
 	info, err := readNoteInfo(fileInfo)
 	if err != nil {
-		return err
+		return note.NotID, err
 	}
 
-	s.records[*n.ID] = info
+	s.records[newID] = info
 
-	return nil
+	return newID, nil
 }
 
-func (s *fsStorage) GetNote(id *note.ID) (*note.Note, error) {
-	info, ok := s.records[*id]
+func (s *fsStorage) GetNote(id note.ID) (*note.Note, error) {
+	if id == note.NotID {
+		return nil, errorBadNoteID
+	}
+
+	info, ok := s.records[id]
 
 	if !ok {
 		return nil, errorNoteNotFound
@@ -111,11 +136,32 @@ func (s *fsStorage) GetNote(id *note.ID) (*note.Note, error) {
 	return s.readNote(info)
 }
 
-func (s *fsStorage) UpdateNote(note *note.Note) error {
-	oldInfo, ok := s.records[*note.ID]
+func (s *fsStorage) UpdateNote(id note.ID, name string, data string, categories []note.Category) error {
+	if id == note.NotID {
+		return errorBadNoteID
+	}
+
+	oldInfo, ok := s.records[id]
 	if !ok {
 		return errorNoteNotFound
 	}
+
+	name = strings.TrimSpace(name)
+	if len(name) == 0 {
+		return errorBadNoteName
+	}
+
+	data = strings.TrimSpace(data)
+
+	categories, err := preprocessCategories(categories)
+	if err != nil {
+		return err
+	}
+
+	note := oldInfo.ToNote()
+	note.Name = name
+	note.Data = data
+	note.Categories = categories
 
 	fileInfo, err := s.writeNote(note)
 	if err != nil {
@@ -139,8 +185,12 @@ func (s *fsStorage) UpdateNote(note *note.Note) error {
 	return nil
 }
 
-func (s *fsStorage) RemoveNote(id *note.ID) error {
-	info, ok := s.records[*id]
+func (s *fsStorage) RemoveNote(id note.ID) error {
+	if id == note.NotID {
+		return errorBadNoteID
+	}
+
+	info, ok := s.records[id]
 
 	if !ok {
 		return errorNoteNotFound
@@ -156,13 +206,17 @@ func (s *fsStorage) RemoveNote(id *note.ID) error {
 		return err
 	}
 
-	delete(s.records, *id)
+	delete(s.records, id)
 
 	return nil
 }
 
-func (s *fsStorage) AddAttachment(id *note.ID, fileName string, data []byte) (*note.FileInfo, error) {
-	info, ok := s.records[*id]
+func (s *fsStorage) AddAttachment(id note.ID, fileName string, data []byte) (*note.FileInfo, error) {
+	if id == note.NotID {
+		return nil, errorBadNoteID
+	}
+
+	info, ok := s.records[id]
 
 	if !ok {
 		return nil, errorNoteNotFound
@@ -187,8 +241,12 @@ func (s *fsStorage) AddAttachment(id *note.ID, fileName string, data []byte) (*n
 	return attachmentInfo, nil
 }
 
-func (s *fsStorage) GetAttachment(id *note.ID, fileName string) ([]byte, error) {
-	info, ok := s.records[*id]
+func (s *fsStorage) GetAttachment(id note.ID, fileName string) ([]byte, error) {
+	if id == note.NotID {
+		return nil, errorBadNoteID
+	}
+
+	info, ok := s.records[id]
 
 	if !ok {
 		return nil, errorNoteNotFound
@@ -201,8 +259,12 @@ func (s *fsStorage) GetAttachment(id *note.ID, fileName string) ([]byte, error) 
 	return s.readAttachment(info, fileName)
 }
 
-func (s *fsStorage) RemoveAttachment(id *note.ID, fileName string) error {
-	info, ok := s.records[*id]
+func (s *fsStorage) RemoveAttachment(id note.ID, fileName string) error {
+	if id == note.NotID {
+		return errorBadNoteID
+	}
+
+	info, ok := s.records[id]
 
 	if !ok {
 		return errorNoteNotFound

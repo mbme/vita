@@ -1,4 +1,4 @@
-package main
+package handlers
 
 import (
 	"encoding/json"
@@ -52,7 +52,7 @@ var upgrader = websocket.Upgrader{
 }
 
 //WsHandler websocket connection handler
-func wsHandler(w http.ResponseWriter, r *http.Request) {
+func WsHandler(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
@@ -113,7 +113,8 @@ func writeJSON(w http.ResponseWriter, data any) error {
 	return err
 }
 
-func addFileHandler(w http.ResponseWriter, r *http.Request) {
+// AddFileHandler handles adding attachments
+func AddFileHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
 	idStr := vars["noteId"]
@@ -161,7 +162,8 @@ func addFileHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("file upload for %v -> attached file %v", id, name)
 }
 
-func getFileHandler(w http.ResponseWriter, r *http.Request) {
+// GetFileHandler handles retrieving attachments
+func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
 	idStr := vars["noteId"]
@@ -188,7 +190,8 @@ func getFileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func removeFileHandler(w http.ResponseWriter, r *http.Request) {
+// RemoveFileHandler handles removing attachments
+func RemoveFileHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
 	idStr := vars["noteId"]

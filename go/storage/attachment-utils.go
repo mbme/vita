@@ -14,15 +14,15 @@ import (
 var errorNotAttachment = errors.New("not attachment")
 var attachmentMatcher = regexp.MustCompile("^(\\d+)__([\\p{Cyrillic}\\w]+)$")
 
-func readAttachmentInfo(fileInfo os.FileInfo) (*note.ID, *note.FileInfo, error) {
+func readAttachmentInfo(fileInfo os.FileInfo) (note.ID, *note.FileInfo, error) {
 	values := attachmentMatcher.FindStringSubmatch(fileInfo.Name())
 	if values == nil {
-		return nil, nil, errorNotAttachment
+		return 0, nil, errorNotAttachment
 	}
 
 	id, err := note.ParseID(values[1])
 	if err != nil {
-		return nil, nil, err
+		return 0, nil, err
 	}
 
 	name := values[2]
@@ -37,12 +37,12 @@ func readAttachmentInfo(fileInfo os.FileInfo) (*note.ID, *note.FileInfo, error) 
 	}, nil
 }
 
-func getAttachmentFile(id *note.ID, fileName string) string {
+func getAttachmentFile(id note.ID, fileName string) string {
 	return fmt.Sprintf("%d__%s", id, fileName)
 }
 
 func (s *fsStorage) getAttachmentFilePath(info *note.Info, fileName string) string {
-	return path.Join(s.base, string(*info.Type), getAttachmentFile(info.ID, fileName))
+	return path.Join(s.base, info.Type.String(), getAttachmentFile(info.ID, fileName))
 }
 
 func (s *fsStorage) writeAttachment(info *note.Info, fileName string, data []byte) (os.FileInfo, error) {

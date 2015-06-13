@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/mbme/vita/go/handlers"
 )
 
 func main() {
@@ -15,12 +16,12 @@ func main() {
 
 	r := mux.NewRouter()
 
-	r.HandleFunc("/ws", wsHandler)
+	r.HandleFunc("/ws", handlers.WsHandler)
 
 	notesRouter := r.PathPrefix("/notes").Subrouter()
-	notesRouter.HandleFunc("/{noteId}/attachments", addFileHandler).Methods("POST")
-	notesRouter.HandleFunc("/{noteId}/attachments/{fileId}", getFileHandler).Methods("GET")
-	notesRouter.HandleFunc("/{noteId}/attachments/{fileId}", removeFileHandler).Methods("DELETE")
+	notesRouter.HandleFunc("/{noteId}/attachments", handlers.AddFileHandler).Methods("POST")
+	notesRouter.HandleFunc("/{noteId}/attachments/{fileId}", handlers.GetFileHandler).Methods("GET")
+	notesRouter.HandleFunc("/{noteId}/attachments/{fileId}", handlers.RemoveFileHandler).Methods("DELETE")
 
 	http.Handle("/", &corsServer{r})
 	if err := http.ListenAndServe(":8081", nil); err != nil {

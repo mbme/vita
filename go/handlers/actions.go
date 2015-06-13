@@ -1,4 +1,4 @@
-package main
+package handlers
 
 import (
 	"encoding/json"
@@ -24,13 +24,11 @@ type RequestParams json.RawMessage
 //Possible requests
 const (
 	NotesListRead RequestMethod = "notes-list-read"
-
-	NoteRead   = "note-read"
-	NoteCreate = "note-create"
-	NoteUpdate = "note-update"
-	NoteDelete = "note-delete"
-
-	NoType = ""
+	NoteRead      RequestMethod = "note-read"
+	NoteCreate    RequestMethod = "note-create"
+	NoteUpdate    RequestMethod = "note-update"
+	NoteDelete    RequestMethod = "note-delete"
+	NoType        RequestMethod = ""
 )
 
 var storage = s.NewFsStorage("/tmp/vita")
@@ -52,7 +50,7 @@ var handlers = map[RequestMethod]func(*RequestParams) (any, error){
 			return nil, errorBadParams
 		}
 
-		note, err := storage.GetNote(id)
+		note, err := storage.GetNote(*id)
 		if err != nil {
 			log.Printf("can't find note %s", id)
 			return nil, err
@@ -62,59 +60,32 @@ var handlers = map[RequestMethod]func(*RequestParams) (any, error){
 	},
 
 	NoteCreate: func(params *RequestParams) (any, error) {
-		note := &note.Note{}
-		if err := params.readAs(note); err != nil {
+		dto := &addNoteDTO{}
+		if err := params.readAs(dto); err != nil {
 			log.Printf("error parsing params: %v", err)
 			return nil, errorBadParams
 		}
 
-		errors := note.Validate()
-		if note.ID != nil {
-			errors = append(errors, "id is not nil")
-		}
-
-		if note.Timestamp != nil {
-			errors = append(errors, "timestamp is not nil")
-		}
-
-		if len(errors) > 0 {
-			log.Printf("error parsing params: %v", errors)
-			return errors, errorBadParams
-		}
-
-		if err := storage.AddNote(note); err != nil {
+		id, err := storage.AddNote(dto.Type, dto.Name, dto.Categories)
+		if err != nil {
 			return nil, err
 		}
 
-		return note, nil
+		return storage.GetNote(id)
 	},
 
 	NoteUpdate: func(params *RequestParams) (any, error) {
-		note := &note.Note{}
-		if err := params.readAs(note); err != nil {
+		dto := &updateNoteDTO{}
+		if err := params.readAs(dto); err != nil {
 			log.Printf("error parsing params: %v", err)
 			return nil, errorBadParams
 		}
 
-		errors := note.Validate()
-		if note.ID == nil {
-			errors = append(errors, "missing id")
-		}
-
-		if note.Timestamp != nil {
-			errors = append(errors, "timestamp is not nil")
-		}
-
-		if len(errors) > 0 {
-			log.Printf("error parsing params: %v", errors)
-			return errors, errorBadParams
-		}
-
-		if err := storage.UpdateNote(note); err != nil {
+		if err := storage.UpdateNote(dto.ID, dto.Name, dto.Data, dto.Categories); err != nil {
 			return nil, err
 		}
 
-		return note, nil
+		return storage.GetNote(dto.ID)
 	},
 
 	NoteDelete: func(params *RequestParams) (any, error) {
@@ -129,7 +100,7 @@ var handlers = map[RequestMethod]func(*RequestParams) (any, error){
 			return nil, errorBadParams
 		}
 
-		if err := storage.RemoveNote(id); err != nil {
+		if err := storage.RemoveNote(*id); err != nil {
 			return nil, err
 		}
 
