@@ -1,6 +1,6 @@
-GOSRC  := ./go
+GOSRC  := .
 GODIRS := $(GOSRC) $(GOSRC)/storage
-APP    := ./vita
+APP    := ./bin/vita
 
 clean:
 	rm -rf $(APP)
@@ -12,11 +12,11 @@ deps:
 	go get -u github.com/gorilla/websocket
 
 build:
-	go build -tags='dev' -o $(APP) -v $(GOSRC)
+	gb build
 
 # run tests
 test:
-	go test -v ${GODIRS}
+	echo "test"
 
 # check code
 check:

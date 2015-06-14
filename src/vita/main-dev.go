@@ -1,5 +1,3 @@
-// +build dev
-
 package main
 
 import (
@@ -7,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/mbme/vita/go/handlers"
+	"vita/handlers"
 )
 
 func main() {

@@ -5,7 +5,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/mbme/vita/go/note"
+	"vita/note"
 )
 
 // FS STORAGE

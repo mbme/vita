@@ -10,7 +10,7 @@ import (
 
 	"io/ioutil"
 
-	"github.com/mbme/vita/go/note"
+	"vita/note"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"

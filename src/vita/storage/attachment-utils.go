@@ -8,7 +8,7 @@ import (
 	"path"
 	"regexp"
 
-	"github.com/mbme/vita/go/note"
+	"vita/note"
 )
 
 var errorNotAttachment = errors.New("not attachment")

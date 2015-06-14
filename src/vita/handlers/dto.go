@@ -1,6 +1,6 @@
 package handlers
 
-import "github.com/mbme/vita/go/note"
+import "vita/note"
 
 type addNoteDTO struct {
 	Type       note.Type       `json:"type"`

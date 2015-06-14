@@ -24,7 +24,7 @@ _testmain.go
 *.prof
 
 /.tern-port
-/vita
+/bin/vita
 
 .sass-cache
 node_modules

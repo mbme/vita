@@ -1,7 +1,9 @@
 package storage
 
-import "errors"
-import "github.com/mbme/vita/go/note"
+import (
+	"errors"
+	"vita/note"
+)
 
 var (
 	errorNoteNotFound            = errors.New("note not found")

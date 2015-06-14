@@ -21,8 +21,8 @@ var base = __dirname;
 var src = './webui/';
 var dist = './webui/';
 
-var gosrc = './go';
-var goapp = './vita';
+var gosrc = './src';
+var goapp = './bin/vita';
 
 var port = 8080;
 

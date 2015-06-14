@@ -6,8 +6,8 @@ import (
 
 	"log"
 
-	"github.com/mbme/vita/go/note"
-	s "github.com/mbme/vita/go/storage"
+	"vita/note"
+	s "vita/storage"
 )
 
 var (

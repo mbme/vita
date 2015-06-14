@@ -1,7 +1,9 @@
 package note
 
-import "strings"
-import "regexp"
+import (
+	"regexp"
+	"strings"
+)
 
 var delim = regexp.MustCompile("[ ]+")
 
