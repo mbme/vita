@@ -38,6 +38,10 @@ func NewFsStorage(basePath string) Storager {
 				}
 				continue
 			}
+			if _, ok := storage.records[note.ID]; ok {
+				log.Printf("warn: duplicate note %v: %v", note.ID, note)
+				continue
+			}
 			storage.records[note.ID] = note
 		}
 
