@@ -62,10 +62,13 @@ export let RecordEditView  = Marionette.LayoutView.extend({
         'click .js-close':  'closeRecord'
     },
 
+    initialize() {
+        this.model.getAttachments().on('add remove', this.onNoteChange, this);
+    },
+
     onRender() {
         this.getRegion('preview').show(new Record({model: this.model}));
-        let filesView = new FilesView({model: this.model});
-        this.getRegion('files').show(filesView);
+        this.getRegion('files').show(new FilesView({model: this.model}));
     },
 
     noteChanged: false,
@@ -110,5 +113,9 @@ export let RecordEditView  = Marionette.LayoutView.extend({
             id:   this.model.getId(),
             name: this.model.getName()
         }));
+    },
+
+    onDestroy () {
+        this.model.getAttachments().off('add remove', this.onNoteChange, this);
     }
 });
