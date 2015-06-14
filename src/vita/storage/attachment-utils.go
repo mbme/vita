@@ -8,13 +8,15 @@ import (
 	"path"
 	"regexp"
 
+	"log"
 	"vita/note"
 )
 
 var errorNotAttachment = errors.New("not attachment")
-var attachmentMatcher = regexp.MustCompile("^(\\d+)__([.\\p{Cyrillic}\\w]+)$")
+var attachmentMatcher = regexp.MustCompile("^(\\d+)__(.+)$")
 
 func readAttachmentInfo(fileInfo os.FileInfo) (note.ID, *note.FileInfo, error) {
+	log.Println(fileInfo.Name())
 	values := attachmentMatcher.FindStringSubmatch(fileInfo.Name())
 	if values == nil {
 		return 0, nil, errorNotAttachment
