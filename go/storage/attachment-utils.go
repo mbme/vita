@@ -12,7 +12,7 @@ import (
 )
 
 var errorNotAttachment = errors.New("not attachment")
-var attachmentMatcher = regexp.MustCompile("^(\\d+)__([\\p{Cyrillic}\\w]+)$")
+var attachmentMatcher = regexp.MustCompile("^(\\d+)__([.\\p{Cyrillic}\\w]+)$")
 
 func readAttachmentInfo(fileInfo os.FileInfo) (note.ID, *note.FileInfo, error) {
 	values := attachmentMatcher.FindStringSubmatch(fileInfo.Name())
