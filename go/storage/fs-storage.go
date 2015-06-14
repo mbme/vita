@@ -31,14 +31,13 @@ func NewFsStorage(basePath string) Storager {
 
 		// read notes
 		for _, f := range files {
-			note, err := readNoteInfo(f)
+			note, err := readNoteInfo(t, f)
 			if err != nil {
 				if err != errorNotNote {
 					log.Println(err)
 				}
 				continue
 			}
-			note.Type = t
 			storage.records[note.ID] = note
 		}
 
@@ -112,7 +111,7 @@ func (s *fsStorage) AddNote(noteType note.Type, name string, categories []note.C
 		return note.NotID, err
 	}
 
-	info, err := readNoteInfo(fileInfo)
+	info, err := readNoteInfo(noteType, fileInfo)
 	if err != nil {
 		return note.NotID, err
 	}
@@ -175,7 +174,7 @@ func (s *fsStorage) UpdateNote(id note.ID, name string, data string, categories 
 		}
 	}
 
-	newInfo, err := readNoteInfo(fileInfo)
+	newInfo, err := readNoteInfo(oldInfo.Type, fileInfo)
 	if err != nil {
 		return err
 	}

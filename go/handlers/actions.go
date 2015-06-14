@@ -52,7 +52,7 @@ var handlers = map[RequestMethod]func(*RequestParams) (any, error){
 
 		note, err := storage.GetNote(*id)
 		if err != nil {
-			log.Printf("can't find note %s", id)
+			log.Printf("can't find note %s", *id)
 			return nil, err
 		}
 

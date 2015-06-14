@@ -30,7 +30,7 @@ func preprocessCategories(categories []note.Category) ([]note.Category, error) {
 	return categories, nil
 }
 
-func readNoteInfo(fileInfo os.FileInfo) (*note.Info, error) {
+func readNoteInfo(noteType note.Type, fileInfo os.FileInfo) (*note.Info, error) {
 	values := noteMatcher.FindStringSubmatch(fileInfo.Name())
 	if values == nil {
 		return nil, errorNotNote
@@ -44,6 +44,7 @@ func readNoteInfo(fileInfo os.FileInfo) (*note.Info, error) {
 	categories := note.ParseCategories(values[2])
 
 	return &note.Info{
+		Type:       noteType,
 		ID:         id,
 		Name:       values[3],
 		Timestamp:  note.ParseTime(fileInfo.ModTime()),
