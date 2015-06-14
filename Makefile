@@ -2,6 +2,8 @@ GOSRC  := .
 GODIRS := $(GOSRC) $(GOSRC)/storage
 APP    := ./bin/vita
 
+TEST_BASE := /tmp/vita
+
 clean:
 	rm -rf $(APP)
 	gulp clean
@@ -17,6 +19,12 @@ build:
 # run tests
 test:
 	echo "test"
+
+clear-test-data:
+	rm -rf $(TEST_BASE)
+
+init-test-data:
+	mkdir -p $(TEST_BASE) $(TEST_BASE)/:record $(TEST_BASE)/:contact
 
 # check code
 check:
