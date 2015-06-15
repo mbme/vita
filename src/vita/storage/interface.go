@@ -11,6 +11,7 @@ var (
 	errorBadNoteID               = errors.New("bad note id")
 	errorBadNoteName             = errors.New("bad note name")
 	errorNoCategories            = errors.New("missing categories")
+	errorBadAttachmentName       = errors.New("bad attachment name")
 	errorAttachmentNotFound      = errors.New("attachment not found")
 	errorAttachmentAlreadyExists = errors.New("attachment already exists")
 )

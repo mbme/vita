@@ -225,6 +225,15 @@ func (s *fsStorage) AddAttachment(id note.ID, fileName string, data []byte) (*no
 		return nil, errorNoteNotFound
 	}
 
+	fileName = strings.TrimSpace(fileName)
+	if fileName == "" {
+		return nil, errorBadAttachmentName
+	}
+
+	if len(data) == 0 {
+		log.Printf("warn: attaching empty file %v to note %v", fileName, id)
+	}
+
 	if info.HasAttachment(fileName) {
 		return nil, errorAttachmentAlreadyExists
 	}
@@ -255,6 +264,11 @@ func (s *fsStorage) GetAttachment(id note.ID, fileName string) ([]byte, error) {
 		return nil, errorNoteNotFound
 	}
 
+	fileName = strings.TrimSpace(fileName)
+	if fileName == "" {
+		return nil, errorBadAttachmentName
+	}
+
 	if !info.HasAttachment(fileName) {
 		return nil, errorAttachmentNotFound
 	}
@@ -271,6 +285,11 @@ func (s *fsStorage) RemoveAttachment(id note.ID, fileName string) error {
 
 	if !ok {
 		return errorNoteNotFound
+	}
+
+	fileName = strings.TrimSpace(fileName)
+	if fileName == "" {
+		return errorBadAttachmentName
 	}
 
 	if !info.HasAttachment(fileName) {
