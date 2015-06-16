@@ -1,44 +1,66 @@
-$c-bg-main: #EEEEEE;
-$c-bg: #FFFFFF;
+$c-bg-main: #eee;
+$c-bg: #fff;
+$c-fg: #333;
 $base-font-size: 16px;
 
-$c-note-title: #EE6E73;
-$c-link: #337AB7;
+$c-note-title: #ee6e73;
+$c-link: #337ab7;
 
 $ff-monospace: Menlo, Monaco, Consolas, "Courier New", monospace;
 
 // UTILS
 
 %link {
+    &:link,
+    &:visited,
     &:hover,
-    &:focus,
     &:active {
         text-decoration: none;
-        border-bottom: 1px solid;
+        border-bottom: 1px dotted rgba($c-link, 0.5);
     }
 
-    cursor: pointer;
+    &:hover,
+    &:active {
+        border-bottom: 2px solid rgba($c-link, 0.7);
+    }
+
+    &:focus {
+        outline: thin dotted;
+    }
+
     color: $c-link;
+    cursor: pointer;
 }
 
-@import "./shadows.scss";
-@import "./search-panel/styles.scss";
-@import "./notemap/styles.scss";
+@import './shadows';
+@import './search-panel/styles';
+@import './notemap/styles';
 
-html, body {
+html,
+body {
     font-size: $base-font-size;
+    line-height: 1.4;
 }
 
 body {
-    height: 100%;
-    width: 100%;
-    overflow-y: scroll;
+    background-color: $c-bg-main;
+    color: $c-fg;
 
-    background: $c-bg-main;
+    height: 100%;
+    overflow-y: scroll;
+    width: 100%;
 }
 
 a {
     @extend %link;
+}
+
+.form-control {
+    border-radius: 0;
+}
+
+input.form-control {
+    height: 42px;
 }
 
 .file-size {

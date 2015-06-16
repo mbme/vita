@@ -1,15 +1,15 @@
-@import "./record/styles.scss";
+@import './record/styles';
 
 .NoteMap {
     $w-note: 700px;
-    $p-note: 25px;
 
     .note-add {
+        @include card(1);
+
         position: fixed;
         margin-left: $w-note + 20;
         top: 70px;
 
-        @include card(1);
         border-radius: 50%;
 
         &,
@@ -42,19 +42,13 @@
             top: 0;
         }
 
-        .title {
+        .name {
             margin-top: 15px;
-            padding: 0 $p-note;
             color: $c-note-title;
-        }
-
-        .categories {
-            padding: 0 $p-note;
         }
 
         .data {
             font-size: 1.2rem;
-            padding: 0 $p-note;
         }
     }
 }

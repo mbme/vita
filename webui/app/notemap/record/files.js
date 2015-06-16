@@ -48,6 +48,7 @@ let FileView = Marionette.ItemView.extend({
 });
 
 export default Marionette.CompositeView.extend({
+    className: 'Files',
     template: require('./files.hbs'),
 
     childView: FileView,

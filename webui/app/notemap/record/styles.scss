@@ -1,20 +1,38 @@
+.Record {
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
 .RecordView.is-edit {
+    .active a:focus {
+        outline: none;
+    }
+
     .form-control {
         margin-top: 10px;
+        font-size: 1.2em;
     }
 
-    .data {
-        resize: vertical;
-    }
+    #tab-write {
+        .name {
+            color: $c-fg;
+        }
 
+        .data {
+            resize: vertical;
+        }
+    }
+}
+
+.Files {
     .file-upload {
         margin-top: 15px;
         margin-bottom: 15px;
 
         text-align: center;
         padding: 15px;
-        border: 1px dashed #DDD;
-        background: #FAFAFA;
+        border: 1px dashed #ddd;
+        background: #fafafa;
         color: #444;
 
         .upload-btn {
@@ -22,27 +40,25 @@
         }
     }
 
-    .files {
-        td {
-            vertical-align: middle;
-        }
+    td {
+        vertical-align: middle;
 
-        td.icon {
+        &.icon {
             text-align: center;
         }
 
-        td.file-size {
+        &.file-size {
             text-align: center;
             padding-top: 11px;
         }
 
-        td.ts {
+        &.ts {
             font-size: 0.9em;
             text-align: right;
             width: 150px;
         }
 
-        td.buttons {
+        &.buttons {
             cursor: pointer;
 
             span {
@@ -50,8 +66,9 @@
             }
         }
 
-        tr:hover td.buttons span {
-            visibility: visible;
-        }
+    }
+
+    tr:hover td.buttons span {
+        visibility: visible;
     }
 }
