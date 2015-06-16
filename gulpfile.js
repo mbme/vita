@@ -8,7 +8,6 @@ var webpack = require('webpack');
 
 var gulp = require('gulp');
 var gutil = require('gulp-util');
-var plumber = require('gulp-plumber');
 var gulpWebpack = require('gulp-webpack');
 var size = require('gulp-size');
 var connect = require('gulp-connect');
@@ -22,7 +21,7 @@ var src = './webui/';
 var dist = './webui/';
 
 var gosrc = './src/';
-var goapp = 'bin/vita';
+var goapp = './bin/vita';
 
 var port = 8080;
 
@@ -94,20 +93,27 @@ var webpackConfig = {
 };
 
 function printError(error) {
-    gutil.log(
-        gutil.colors.cyan('Plumber') + gutil.colors.red(' found unhandled error:\n'),
-        error.toString()
-    );
+    gutil.log(gutil.colors.red('found unhandled error:\n'), error.toString());
 }
 
-function suppressError (error) {
-    printError(error);
-    this.emit('end');
+function wrapPipe(taskFn) {
+    return function(done) {
+        var onSuccess = function() {
+            done();
+        };
+        var onError = function(err) {
+            printError(err);
+            done(err);
+        };
+        var outStream = taskFn(onSuccess, onError);
+        if(outStream && typeof outStream.on === 'function') {
+            outStream.on('end', onSuccess);
+        }
+    };
 }
 
-gulp.task('scripts', function taskScripts () {
+gulp.task('scripts', wrapPipe(function taskScripts () {
     return gulp.src(webpackConfig.entry.app)
-        .pipe(plumber({errorHandler: suppressError}))
         .pipe(gulpWebpack(webpackConfig, null, function (err, stats) {
             if (err) {
                 throw err;
@@ -121,11 +127,10 @@ gulp.task('scripts', function taskScripts () {
         .pipe(gulp.dest(dist))
         .pipe(size({ title : 'js' }))
         .pipe(connect.reload());
-});
+}));
 
-gulp.task('styles', function taskStyles () {
+gulp.task('styles', wrapPipe(function taskStyles () {
     return gulp.src(src + 'app/bundle.scss')
-        .pipe(plumber({errorHandler: suppressError}))
         .pipe(sourcemaps.init())
         .pipe(sass())
         .pipe(sourcemaps.write('.'))
@@ -133,7 +138,7 @@ gulp.task('styles', function taskStyles () {
         .pipe(size({title: 'css'}))
         .pipe(filter('**/*.css'))
         .pipe(connect.reload());
-});
+}));
 
 var skelet;
 var killSkelet = function () {
