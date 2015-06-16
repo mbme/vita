@@ -3,7 +3,7 @@
 import Marionette from 'marionette';
 
 import bus from 'base/bus';
-import {RecordView, RecordEditView} from './record/view';
+import {RecordView, RecordEditView} from 'record/view';
 import rgb2hex from 'helpers/rgb2hex';
 
 export default Marionette.LayoutView.extend({
