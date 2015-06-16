@@ -15,7 +15,9 @@ export default Marionette.ItemView.extend({
     },
 
     events: {
-        'click .js-create': 'createNote'
+        'click .js-create':     'createNote',
+        'blur  @ui.name':       'validateName',
+        'blur  @ui.categories': 'validateCategories'
     },
 
     createNote () {
@@ -36,5 +38,14 @@ export default Marionette.ItemView.extend({
             name,
             categories
         });
+    },
+
+    validateName () {
+        this.ui.name.toggleClass('has-error', !this.ui.name.val().trim());
+    },
+
+    validateCategories () {
+        let categories = str2cats(this.ui.categories.val());
+        this.ui.categories.toggleClass('has-error', !categories.length);
     }
 });
