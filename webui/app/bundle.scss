@@ -1,4 +1,4 @@
-$c-bg-main: #eee;
+$c-bg-main: #fcfcfc;
 $c-bg: #fff;
 $c-fg: #333;
 $base-font-size: 16px;
@@ -51,9 +51,13 @@ body {
     width: 100%;
 }
 
+// links
+
 a {
     @extend %link;
 }
+
+// form fields
 
 .form-control {
     border-radius: 0;
@@ -62,6 +66,14 @@ a {
 input.form-control {
     height: 42px;
 }
+
+// modals
+
+.modal-content {
+    border-radius: 0;
+}
+
+// other
 
 .file-size {
     font-family: $ff-monospace;
