@@ -2,12 +2,14 @@
     "name": "deps",
     "private": true,
     "dependencies": {
-        "markdown-it": "*",
-        "moment":      "*",
-        "jquery":      "*",
-        "lodash":      "*",
-        "marionette":  "*",
-        "bootstrap":   "*",
-        "velocity":    "*"
+        "markdown-it":         "*",
+        "moment":              "*",
+        "jquery":              "*",
+        "lodash":              "*",
+        "backbone":            "1.1.2",
+        "marionette":          "*",
+        "backbone-validation": "*",
+        "bootstrap":           "*",
+        "velocity":            "*"
     }
 }

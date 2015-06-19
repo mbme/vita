@@ -2,8 +2,14 @@
     <h4 class="modal-title">Create new note</h4>
 </div>
 <div class="modal-body">
-    <input type="text" class="form-control name" placeholder="Name" autofocus>
-    <input type="text" class="form-control categories" placeholder="Categories">
+    <div class="form-group">
+        <input type="text" data-name='name' class="form-control name" placeholder="Name" autofocus>
+        <div class="control-label"></div>
+    </div>
+    <div class="form-group">
+        <input type="text" data-name='categories' class="form-control categories" placeholder="Categories">
+        <div class="control-label"></div>
+    </div>
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

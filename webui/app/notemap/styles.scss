@@ -56,8 +56,20 @@
     }
 }
 
+.form-group {
+    .control-label {
+        visibility: hidden;
+        height: 1em;
+    }
+
+    &.has-error .control-label {
+        visibility: visible;
+    }
+}
+
 .ModalCreateNote {
-    .categories {
-        margin-top: 10px;
+    .modal-body {
+        padding-top: 20px;
+        padding-bottom: 0;
     }
 }

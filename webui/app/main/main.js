@@ -1,5 +1,6 @@
 'use strict';
 
+import $ from 'jquery';
 import Marionette from 'marionette';
 
 import session from 'base/session';

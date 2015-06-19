@@ -26,10 +26,11 @@ var goapp = './bin/vita';
 var port = 8080;
 
 var moduleAliases = {
-    'underscore': 'lodash/lodash.js',
-    'backbone':   'backbone/backbone.js',
-    'marionette': 'marionette/lib/backbone.marionette.js',
-    'moment':     'moment/moment.js'
+    'underscore':          'lodash/lodash.js',
+    'backbone':            'backbone/backbone.js',
+    'backbone-validation': 'backbone-validation/dist/backbone-validation-amd.js',
+    'marionette':          'marionette/lib/backbone.marionette.js',
+    'moment':              'moment/moment.js'
 };
 
 function objectValues(object) {

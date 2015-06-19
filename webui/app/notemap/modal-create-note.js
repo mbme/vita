@@ -1,13 +1,35 @@
 'use strict';
 
 import Marionette from 'marionette';
+import Backbone from 'backbone';
 
 import bus from 'base/bus';
 import str2cats from 'helpers/str2cats';
+import Watcher from 'helpers/watcher-behavior';
+
+let Model = Backbone.Model.extend({
+    validation: {
+        name: {
+            required: true
+        },
+        categories: {
+            required: true
+        }
+    }
+});
 
 export default Marionette.ItemView.extend({
     className: 'ModalCreateNote',
     template: require('./modal-create-note.hbs'),
+
+    behaviors: {
+        Watcher: {
+            behaviorClass: Watcher,
+            transformers: {
+                categories: str2cats
+            }
+        }
+    },
 
     ui: {
         name:       'input.name',
@@ -15,37 +37,25 @@ export default Marionette.ItemView.extend({
     },
 
     events: {
-        'click .js-create':     'createNote',
-        'blur  @ui.name':       'validateName',
-        'blur  @ui.categories': 'validateCategories'
+        'click .js-create': 'createNote'
+    },
+
+    initialize () {
+        this.model = new Model();
     },
 
     createNote () {
-        let name = this.ui.name.val();
-        if (!name.trim()) {
-            console.error('name must not be empty');
+        if (!this.model.isValid(true)) {
             return false;
         }
 
-        let categories = str2cats(this.ui.categories.val());
-        if (!categories.length) {
-            console.error('categories must not be empty');
-            return false;
-        }
+        let name = this.model.get('name');
+        let categories = this.model.get('categories');
 
         bus.trigger('note:create', {
             type: ':record',
             name,
             categories
         });
-    },
-
-    validateName () {
-        this.ui.name.toggleClass('has-error', !this.ui.name.val().trim());
-    },
-
-    validateCategories () {
-        let categories = str2cats(this.ui.categories.val());
-        this.ui.categories.toggleClass('has-error', !categories.length);
     }
 });
