@@ -3,7 +3,7 @@
 import Marionette from 'marionette';
 import MarkdownIt from 'markdown-it';
 
-import fileAddr from './file-addr';
+import fileAddr from 'attachments/file-addr';
 
 const sep = '!';
 const sepChar = sep.charCodeAt(0);

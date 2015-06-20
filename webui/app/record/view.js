@@ -5,7 +5,7 @@ import Marionette from 'marionette';
 import bus from 'base/bus';
 
 import str2cats from 'helpers/str2cats';
-import FilesView from './files';
+import FilesView from 'attachments/files';
 import ModalDeleteRecord from './modal-delete-record';
 import Record from './record';
 
