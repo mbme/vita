@@ -152,11 +152,23 @@ var killSkelet = function () {
 
 var startSkelet = function () {
     skelet = Proc.spawn(goapp, ['-p', 8081]);
+
     skelet.stdout.on('data', function(chunk) {
-        gutil.log(gutil.colors.green(chunk.toString()));
+        chunk.toString().split('\n').forEach(function (line) {
+            if (!line.trim()) {
+                return;
+            }
+            console.log(gutil.colors.green(line));
+        });
     });
+
     skelet.stderr.on('data', function(chunk) {
-        gutil.log(gutil.colors.red(chunk.toString()));
+        chunk.toString().split('\n').forEach(function (line) {
+            if (!line.trim()) {
+                return;
+            }
+            console.log(gutil.colors.red(line));
+        });
     });
 
     gutil.log('started skelet: PID', skelet.pid);
@@ -175,6 +187,8 @@ process.on("exit", function () {
 
 process.on("uncaughtException", function (err) {
     gutil.log('uncaught exception', err);
+    console.error(err.stack);
+    process.exit(1);
 });
 
 gulp.task('skelet', function taskSkelet() {
