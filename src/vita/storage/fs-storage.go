@@ -178,12 +178,14 @@ func (s *fsStorage) UpdateNote(id note.ID, name string, data string, categories 
 		}
 	}
 
-	newInfo, err := readNoteInfo(oldInfo.Type, fileInfo)
+	newInfo, err := readNoteInfo(note.Type, fileInfo)
 	if err != nil {
 		return err
 	}
 
 	note.Info = newInfo
+
+	s.records[id] = newInfo
 
 	return nil
 }

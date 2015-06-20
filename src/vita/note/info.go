@@ -1,5 +1,9 @@
 package note
 
+import (
+	"fmt"
+)
+
 // Info is note description
 type Info struct {
 	ID          ID          `json:"id"`
@@ -12,8 +16,9 @@ type Info struct {
 
 // ToNote converts note info to note
 func (info *Info) ToNote() *Note {
+	cloned := *info
 	return &Note{
-		info, "",
+		&cloned, "",
 	}
 }
 
@@ -46,4 +51,8 @@ func (info *Info) RemoveAttachment(fileName string) {
 	}
 
 	info.Attachments = append(info.Attachments[:i], info.Attachments[i+1:]...)
+}
+
+func (info *Info) String() string {
+	return fmt.Sprintf("{%v/%v %v %v}", info.Type, info.ID, info.Categories, info.Name)
 }
