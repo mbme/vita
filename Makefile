@@ -24,7 +24,7 @@ clear-test-data:
 	rm -rf $(TEST_BASE)
 
 init-test-data:
-	mkdir -p $(TEST_BASE) $(TEST_BASE)/:record $(TEST_BASE)/:contact
+	mkdir -p $(TEST_BASE)
 
 # check code
 check:

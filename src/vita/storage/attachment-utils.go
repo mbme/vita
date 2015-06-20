@@ -44,7 +44,7 @@ func getAttachmentFile(id note.ID, fileName string) string {
 }
 
 func (s *fsStorage) getAttachmentFilePath(info *note.Info, fileName string) string {
-	return path.Join(s.base, info.Type.String(), getAttachmentFile(info.ID, fileName))
+	return path.Join(s.base, getAttachmentFile(info.ID, fileName))
 }
 
 func (s *fsStorage) writeAttachment(info *note.Info, fileName string, data []byte) (os.FileInfo, error) {

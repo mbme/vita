@@ -12,7 +12,7 @@ import (
 )
 
 var errorNotNote = errors.New("not a note")
-var noteMatcher = regexp.MustCompile("^(\\d+)_\\[([a-zA-Z0-9 \\-]+)\\]_(.+)\\.md$")
+var noteMatcher = regexp.MustCompile("^(\\d+)_(:[a-zA-Z]+)_\\[([a-zA-Z0-9 \\-]+)\\]_(.+)\\.md$")
 
 func preprocessCategories(categories []note.Category) ([]note.Category, error) {
 	categories = note.UniqueCategories(categories)
@@ -30,7 +30,7 @@ func preprocessCategories(categories []note.Category) ([]note.Category, error) {
 	return categories, nil
 }
 
-func readNoteInfo(noteType note.Type, fileInfo os.FileInfo) (*note.Info, error) {
+func readNoteInfo(fileInfo os.FileInfo) (*note.Info, error) {
 	values := noteMatcher.FindStringSubmatch(fileInfo.Name())
 	if values == nil {
 		return nil, errorNotNote
@@ -41,23 +41,33 @@ func readNoteInfo(noteType note.Type, fileInfo os.FileInfo) (*note.Info, error) 
 		return nil, err
 	}
 
-	categories := note.ParseCategories(values[2])
+	noteType, err := note.ParseType(values[2])
+	if err != nil {
+		return nil, err
+	}
+
+	categories, err := note.ParseCategories(values[3])
+	if err != nil {
+		return nil, err
+	}
+
+	name := values[4]
 
 	return &note.Info{
 		Type:       noteType,
 		ID:         id,
-		Name:       values[3],
+		Name:       name,
 		Timestamp:  note.ParseTime(fileInfo.ModTime()),
 		Categories: categories,
 	}, nil
 }
 
 func getNoteFile(info *note.Info) string {
-	return fmt.Sprintf("%d_[%s]_%s.md", info.ID, note.StringifyCategories(info.Categories), info.Name)
+	return fmt.Sprintf("%d_%s_[%s]_%s.md", info.ID, info.Type, note.StringifyCategories(info.Categories), info.Name)
 }
 
 func (s *fsStorage) getNoteFilePath(info *note.Info) string {
-	return path.Join(s.base, info.Type.String(), getNoteFile(info))
+	return path.Join(s.base, getNoteFile(info))
 }
 
 func (s *fsStorage) readNote(info *note.Info) (*note.Note, error) {

@@ -35,12 +35,12 @@ func (t Type) String() string {
 }
 
 // ParseType parse type string
-func ParseType(typeStr string) (*Type, error) {
+func ParseType(typeStr string) (Type, error) {
 	for _, x := range Types {
 		if string(x) == typeStr {
-			return &x, nil
+			return x, nil
 		}
 	}
 
-	return nil, errorBadType
+	return NoType, errorBadType
 }

@@ -2,7 +2,6 @@ package storage
 
 import (
 	"log"
-	"path"
 	"strings"
 
 	"vita/note"
@@ -22,46 +21,43 @@ func NewFsStorage(basePath string) Storager {
 		records: make(map[note.ID]*note.Info),
 	}
 
-	// read all note types
-	for _, t := range note.Types {
-		files, err := listFiles(path.Join(basePath, string(t)), false)
+	files, err := listFiles(basePath, false)
+	if err != nil {
+		panic(err)
+	}
+
+	// read notes
+	for _, f := range files {
+		note, err := readNoteInfo(f)
 		if err != nil {
-			panic(err)
+			if err != errorNotNote {
+				log.Println(err)
+			}
+			continue
+		}
+		if storage.NoteExists(note.ID) {
+			log.Printf("warn: duplicate note %v: %v", note.ID, note)
+			continue
+		}
+		storage.records[note.ID] = note
+	}
+
+	// read attachments
+	for _, f := range files {
+		noteID, attachment, err := readAttachmentInfo(f)
+		if err != nil {
+			if err != errorNotAttachment {
+				log.Println(err)
+			}
+			continue
+		}
+		note, ok := storage.records[noteID]
+		if !ok {
+			log.Printf("attachment for unknown note %v", noteID)
+			continue
 		}
 
-		// read notes
-		for _, f := range files {
-			note, err := readNoteInfo(t, f)
-			if err != nil {
-				if err != errorNotNote {
-					log.Println(err)
-				}
-				continue
-			}
-			if _, ok := storage.records[note.ID]; ok {
-				log.Printf("warn: duplicate note %v: %v", note.ID, note)
-				continue
-			}
-			storage.records[note.ID] = note
-		}
-
-		// read attachments
-		for _, f := range files {
-			noteID, attachment, err := readAttachmentInfo(f)
-			if err != nil {
-				if err != errorNotAttachment {
-					log.Println(err)
-				}
-				continue
-			}
-			note, ok := storage.records[noteID]
-			if !ok {
-				log.Printf("attachment for unknown note %v", noteID)
-				continue
-			}
-
-			note.Attachments = append(note.Attachments, attachment)
-		}
+		note.Attachments = append(note.Attachments, attachment)
 	}
 
 	log.Printf("loaded %d notes", len(storage.records))
@@ -115,7 +111,7 @@ func (s *fsStorage) AddNote(noteType note.Type, name string, categories []note.C
 		return note.NotID, err
 	}
 
-	info, err := readNoteInfo(noteType, fileInfo)
+	info, err := readNoteInfo(fileInfo)
 	if err != nil {
 		return note.NotID, err
 	}
@@ -178,7 +174,7 @@ func (s *fsStorage) UpdateNote(id note.ID, name string, data string, categories 
 		}
 	}
 
-	newInfo, err := readNoteInfo(note.Type, fileInfo)
+	newInfo, err := readNoteInfo(fileInfo)
 	if err != nil {
 		return err
 	}

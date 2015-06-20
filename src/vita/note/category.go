@@ -1,9 +1,12 @@
 package note
 
 import (
+	"errors"
 	"regexp"
 	"strings"
 )
+
+var errorNoCategories = errors.New("no categories")
 
 var delim = regexp.MustCompile("[ ]+")
 
@@ -38,7 +41,7 @@ func UniqueCategories(arr []Category) []Category {
 }
 
 // ParseCategories parses categories string
-func ParseCategories(raw string) []Category {
+func ParseCategories(raw string) ([]Category, error) {
 	rawCategories := delim.Split(raw, -1)
 
 	var categories []Category
@@ -51,7 +54,11 @@ func ParseCategories(raw string) []Category {
 		}
 	}
 
-	return categories
+	if len(categories) == 0 {
+		return nil, errorNoCategories
+	}
+
+	return categories, nil
 }
 
 // StringifyCategories converts categories array into string
