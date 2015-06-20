@@ -1,22 +1,11 @@
 'use strict';
 
 import Marionette from 'marionette';
-import Backbone from 'backbone';
 
 import bus from 'base/bus';
 import str2cats from 'record/str2cats';
 import Watcher from 'helpers/watcher-behavior';
-
-let Model = Backbone.Model.extend({
-    validation: {
-        name: {
-            required: true
-        },
-        categories: {
-            required: true
-        }
-    }
-});
+import {NoteModel} from 'base/models';
 
 export default Marionette.ItemView.extend({
     className: 'ModalCreateNote',
@@ -41,7 +30,7 @@ export default Marionette.ItemView.extend({
     },
 
     initialize () {
-        this.model = new Model();
+        this.model = new NoteModel();
     },
 
     createNote () {

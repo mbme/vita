@@ -33,7 +33,8 @@ export default Marionette.Behavior.extend({
         let name = $el.attr('data-name');
         let value = this.prepareValue(name, $el.val());
 
-        this.view.model.set(name, value, {validate: true});
+        this.view.model.set(name, value);
+        this.view.model.isValid(name);
     },
 
     updateField (attr, error) {

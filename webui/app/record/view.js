@@ -3,11 +3,12 @@
 import Marionette from 'marionette';
 
 import bus from 'base/bus';
+import str2cats from './str2cats';
+import Watcher from 'helpers/watcher-behavior';
 
 import FilesView from 'attachments/files';
 import ModalDeleteRecord from './modal-delete-record';
 import Record from './record';
-import str2cats from './str2cats';
 
 export let RecordView = Marionette.LayoutView.extend({
     className: 'RecordView',
@@ -38,23 +39,27 @@ export let RecordView = Marionette.LayoutView.extend({
 
 export let RecordEditView  = Marionette.LayoutView.extend({
     className: 'RecordView is-edit',
-
     template: require('./view-edit.hbs'),
+
+    behaviors: {
+        Watcher: {
+            behaviorClass: Watcher,
+            transformers: {
+                categories: str2cats
+            }
+        }
+    },
 
     regions: {
         'preview': '#tab-preview',
         'files':   '#tab-files'
     },
 
-    ui: {
-        name:       'input.name',
-        categories: 'input.categories',
-        data:       'textarea.data'
+    modelEvents: {
+        'change': 'onNoteChange'
     },
 
     events: {
-        'change @ui.name, @ui.categories, @ui.data': 'onNoteChange',
-
         'click .js-preview': 'updatePreview',
 
         'click .js-save':   'saveRecord',
@@ -76,43 +81,27 @@ export let RecordEditView  = Marionette.LayoutView.extend({
         this.noteChanged = true;
     },
 
-    syncModel () {
-        if (!this.noteChanged) {
-            console.debug('model: nothing changed');
-            return false;
-        }
-        this.noteChanged = false;
-
-        let name = this.ui.name.val();
-        let categories = str2cats(this.ui.categories.val());
-        let data = this.ui.data.val();
-        this.model.set({
-            name, categories, data
-        });
-
-        return true;
-    },
-
     updatePreview () {
-        if (this.syncModel()) {
+        if (this.noteChanged) {
             this.getChildView('preview').render();
+            this.noteChanged = false;
         }
     },
 
     closeRecord () {
+        // TODO check if there are uncommited changes
         bus.trigger('note:close', this.model.getId());
     },
 
     saveRecord () {
-        this.syncModel();
+        if (!this.model.isValid(true)) {
+            return false;
+        }
         bus.trigger('note:save', this.model.getId());
     },
 
     deleteRecord () {
-        bus.trigger('modal:open', new ModalDeleteRecord({
-            id:   this.model.getId(),
-            name: this.model.getName()
-        }));
+        bus.trigger('modal:open', new ModalDeleteRecord({model: this.model}));
     },
 
     onDestroy () {

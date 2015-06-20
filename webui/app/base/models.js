@@ -25,18 +25,31 @@ let FilesCollection = Backbone.Collection.extend({
 export let NoteModel = Backbone.Model.extend({
     defaults: {
         id: null,
-        name: '',
         type: '',
+
+        name: '',
+        categories: '',
         data: '',
-        tsCreated: null,
-        tsUpdated: null,
-        categories: [],
+
+        timestamp: null,
         attachments: null,
 
         edit: false
     },
 
+    validation: {
+        name: {
+            required: true
+        },
+        categories: {
+            required: true,
+            msg: 'At least 1 category must be specified'
+        }
+    },
+
     constructor (attrs, opts) {
+        attrs = attrs || {};
+
         // put attachments array into collection
         attrs.attachments = new FilesCollection(attrs.attachments);
         Backbone.Model.call(this, attrs, opts);

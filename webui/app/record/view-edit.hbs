@@ -24,14 +24,19 @@
 
 <div class="tab-content">
     <div id="tab-write" class="tab-pane active">
-        <input type="text"
-               class="form-control name"
-               placeholder="Name"
-               value="{{name}}" >
-        <input type="text" class="form-control categories"
-               placeholder="Categories"
-               value="{{cats2str categories}}" >
-        <textarea class="form-control data" placeholder="Data" rows=10>{{data}}</textarea>
+        <div class="form-group">
+            <input type="text" data-name="name" class="form-control"
+                placeholder="Name" value="{{name}}" >
+            <div class="error-label">&nbsp;</div>
+        </div>
+
+        <div class="form-group">
+            <input type="text" data-name="categories" class="form-control"
+                placeholder="Categories" value="{{cats2str categories}}" >
+            <div class="error-label">&nbsp;</div>
+        </div>
+
+        <textarea data-name="data" class="form-control" placeholder="Data" rows=10>{{data}}</textarea>
     </div>
 
     <div id="tab-preview" class="tab-pane"></div>
