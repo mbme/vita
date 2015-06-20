@@ -131,14 +131,14 @@ func AddFileHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	file, handler, err := r.FormFile("file")
+	file, _, err := r.FormFile("file")
 	if err != nil {
 		log.Printf("file upload for %v -> form parse error: %v", id, err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	name := handler.Filename
+	name := r.FormValue("name")
 
 	data, err := ioutil.ReadAll(file)
 	if err != nil {

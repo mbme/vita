@@ -41,6 +41,6 @@ export default Marionette.Behavior.extend({
 
         $el.toggleClass('has-error', !!error);
 
-        $el.find('.control-label').html(error);
+        $el.find('.error-label').html(error);
     }
 });

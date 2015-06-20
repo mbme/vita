@@ -79,6 +79,17 @@ input.form-control {
 
 // form errors
 
+.form-group {
+    .error-label {
+        visibility: hidden;
+        color: $c-error;
+    }
+
+    &.has-error .error-label {
+        visibility: visible;
+    }
+}
+
 input[type='text'].has-error {
     border: 1px solid $c-error;
 

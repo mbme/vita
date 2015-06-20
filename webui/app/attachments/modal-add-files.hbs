@@ -1,8 +1,22 @@
 <div class="modal-header">
     <h4 class="modal-title">Upload file</h4>
 </div>
-<div class="modal-body">
-    <b>{{name}}</b> <span class="file-size">{{byte-size size}}</span>
+<div class="modal-body form-horizontal">
+    <div class="form-group">
+        <div class="row">
+            <label class="control-label col-sm-3" for="">File Name:</label>
+            <div class="col-sm-8">
+                <input type="text" data-name="name" class="form-control"
+                    placeholder="File name" value="{{name}}" autofocus>
+            </div>
+        </div>
+        <div class="error-label">&nbsp;</div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-sm-3" for="">Size:</label>
+        <span class="file-size col-sm-8">{{byte-size size}}</span>
+    </div>
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

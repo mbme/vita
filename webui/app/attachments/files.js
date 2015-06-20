@@ -99,8 +99,10 @@ export default Marionette.CompositeView.extend({
         bus.trigger('modal:open', modal);
     },
 
-    uploadFile (file) {
+    uploadFile (name, file) {
         let data = new FormData();
+
+        data.append('name', name);
         data.append('file', file);
 
         let id = this.model.getId();
@@ -114,11 +116,11 @@ export default Marionette.CompositeView.extend({
             processData: false,
             data: data,
             success: (resp) => {
-                console.log('note %s attached file %s', id, file.name);
+                console.log('note %s attached file %s', id, name);
                 this.collection.add(resp);
             },
             error (_, err, description) {
-                console.error('note %s: failed to attach file %s: %s %s', id, file.name, err, description);
+                console.error('note %s: failed to attach file %s: %s %s', id, name, err, description);
             }
         });
     }
