@@ -4,10 +4,10 @@ import Marionette from 'marionette';
 
 import bus from 'base/bus';
 
-import str2cats from 'helpers/str2cats';
 import FilesView from 'attachments/files';
 import ModalDeleteRecord from './modal-delete-record';
 import Record from './record';
+import str2cats from './str2cats';
 
 export let RecordView = Marionette.LayoutView.extend({
     className: 'RecordView',

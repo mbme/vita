@@ -4,7 +4,7 @@ import Marionette from 'marionette';
 import Backbone from 'backbone';
 
 import bus from 'base/bus';
-import str2cats from 'helpers/str2cats';
+import str2cats from 'record/str2cats';
 import Watcher from 'helpers/watcher-behavior';
 
 let Model = Backbone.Model.extend({
