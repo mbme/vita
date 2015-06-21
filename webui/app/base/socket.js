@@ -1,5 +1,7 @@
 'use strict';
 
+import RSVP from 'rsvp';
+
 let requestId = 0;
 
 export default class Socket {
@@ -26,8 +28,8 @@ export default class Socket {
 
             delete this._requests[msg.id];
         };
-        return new Promise(resolve =>
-                           this.socket.onopen = resolve);
+        return new RSVP.Promise(resolve =>
+                                this.socket.onopen = resolve);
     }
 
     send (method, params) {
@@ -37,7 +39,7 @@ export default class Socket {
             method: method,
             params: params
         }));
-        return new Promise((resolve, reject) => {
+        return new RSVP.Promise((resolve, reject) => {
             this._requests[id] = {
                 resolve: resolve,
                 reject: reject
