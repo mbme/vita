@@ -6,7 +6,6 @@ import Radio from 'radio';
 
 import session from 'base/session';
 import ModalAddFiles from './modal-add-files';
-import ModalDeleteFile from './modal-delete-file';
 
 let modalsChannel = Radio.channel('modals');
 
@@ -25,10 +24,11 @@ let FileView = Marionette.ItemView.extend({
     },
 
     showRemoveFileDialog () {
-        let modal = new ModalDeleteFile({name: this.model.getName()});
-        modal.on('file:delete', this.deleteFile, this);
-
-        modalsChannel.trigger('modal:open', modal);
+        modalsChannel.request('confirmation', {
+            title: 'Delete file',
+            body: `Do you really want to delete file <b>${this.model.getName()}</b>?`,
+            'accept-text': 'Delete'
+        }).then(() => this.deleteFile());
     },
 
     deleteFile () {

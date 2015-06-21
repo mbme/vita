@@ -31,7 +31,8 @@ var moduleAliases = {
     'backbone-validation': 'backbone-validation/dist/backbone-validation-amd.js',
     'marionette':          'marionette/lib/backbone.marionette.js',
     'radio':               'backbone.radio/build/backbone.radio.js',
-    'moment':              'moment/moment.js'
+    'moment':              'moment/moment.js',
+    'rsvp':                'rsvp/rsvp.js'
 };
 
 function objectValues(object) {

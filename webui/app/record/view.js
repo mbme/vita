@@ -7,10 +7,10 @@ import str2cats from './str2cats';
 import Watcher from 'helpers/watcher-behavior';
 
 import FilesView from 'attachments/files';
-import ModalDeleteRecord from './modal-delete-record';
 import Record from './record';
 
 let workspaceChannel = Radio.channel('workspace');
+let modalsChannel = Radio.channel('modals');
 
 export let RecordView = Marionette.LayoutView.extend({
     className: 'RecordView',
@@ -70,7 +70,7 @@ export let RecordEditView  = Marionette.LayoutView.extend({
     },
 
     initialize() {
-        this.model.getAttachments().on('add remove', this.onNoteChange, this);
+        this.listenTo(this.model.getAttachments(), 'add remove', this.onNoteChange);
     },
 
     onRender() {
@@ -92,10 +92,14 @@ export let RecordEditView  = Marionette.LayoutView.extend({
 
     closeRecord () {
         if (this.model.hasChanges()) {
-
+            modalsChannel.request('confirmation', {
+                title: 'Close record',
+                body: `There are unsaved changes. Do you really want to close record <b>${this.model.getName()}</b>?`,
+                'accept-text': 'Close'
+            }).then(() => workspaceChannel.trigger('note:close', this.model.getId()));
+        } else {
+            workspaceChannel.trigger('note:close', this.model.getId());
         }
-        // TODO check if there are uncommited changes
-        workspaceChannel.trigger('note:close', this.model.getId());
     },
 
     saveRecord () {
@@ -106,10 +110,10 @@ export let RecordEditView  = Marionette.LayoutView.extend({
     },
 
     deleteRecord () {
-        workspaceChannel.trigger('modal:open', new ModalDeleteRecord({model: this.model}));
-    },
-
-    onDestroy () {
-        this.model.getAttachments().off('add remove', this.onNoteChange, this);
+        modalsChannel.request('confirmation', {
+            title: 'Delete record',
+            body: `Do you really want to delete record <b>${this.model.getName()}</b>?`,
+            'accept-text': 'Delete'
+        }).then(() => workspaceChannel.trigger('note:delete', this.model.getId()));
     }
 });

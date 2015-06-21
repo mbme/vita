@@ -54,7 +54,7 @@ export default Marionette.LayoutView.extend({
     },
 
     updateView () {
-        let View = this.model.get('edit') ? RecordEditView : RecordView;
+        let View = this.model.isEdited() ? RecordEditView : RecordView;
         this.getRegion('content').show(new View({model: this.model}));
     }
 });

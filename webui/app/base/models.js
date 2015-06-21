@@ -22,6 +22,7 @@ let FilesCollection = Backbone.Collection.extend({
     model: FileModel
 });
 
+const IGNORED_ATTRS = ['edit', 'visible'];
 export let NoteModel = Backbone.Model.extend({
     defaults: {
         id: null,
@@ -34,7 +35,8 @@ export let NoteModel = Backbone.Model.extend({
         timestamp: null,
         attachments: null,
 
-        edit: false
+        edit: false,
+        visible: false
     },
 
     validation: {
@@ -88,7 +90,12 @@ export let NoteModel = Backbone.Model.extend({
         if (this.backup) {
             return;
         }
-        this.backup = this.attributes;
+
+        let changedAttrs = _.difference(_.keys(this.changed), IGNORED_ATTRS);
+
+        if (changedAttrs.length) {
+            this.backup = this.attributes;
+        }
     },
 
     commitAttributes () {

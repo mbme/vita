@@ -7,7 +7,7 @@ import session from 'base/session';
 
 import SearchPanel from 'search-panel/view';
 import NoteMapView from 'notemap/view';
-import ModalsView from './modals';
+import ModalsView from 'modals/view';
 
 
 let app = new Marionette.Application();
