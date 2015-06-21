@@ -1,8 +1,9 @@
 'use strict';
 
 import Marionette from 'marionette';
+import Radio from 'radio';
 
-import bus from 'base/bus';
+let modalsChannel = Radio.channel('modals');
 
 import NoteView from './note';
 import ModalCreateNote from './modal-create-note';
@@ -21,6 +22,6 @@ export default Marionette.CompositeView.extend({
 
     createNote () {
         console.log('create new note');
-        bus.trigger('modal:open', new ModalCreateNote());
+        modalsChannel.trigger('modal:open', new ModalCreateNote());
     }
 });

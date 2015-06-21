@@ -8,6 +8,7 @@
         "lodash":              "*",
         "backbone":            "1.1.2",
         "marionette":          "*",
+        "backbone.radio":      "*",
         "backbone-validation": "*",
         "bootstrap":           "*",
         "velocity":            "*"

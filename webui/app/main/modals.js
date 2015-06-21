@@ -2,8 +2,9 @@
 
 import Marionette from 'marionette';
 import _ from 'underscore';
+import Radio from 'radio';
 
-import bus from 'base/bus';
+let modalsChannel = Radio.channel('modals');
 
 const MODAL_OPTIONS = {
     backdrop: 'static',
@@ -30,7 +31,7 @@ export default Marionette.LayoutView.extend({
     },
 
     initialize () {
-        bus.on('modal:open', this.openModal, this);
+        this.listenTo(modalsChannel, 'modal:open', this.openModal);
     },
 
     openModal (modalView) {
@@ -60,9 +61,5 @@ export default Marionette.LayoutView.extend({
 
     cleanup () {
         this.getRegion('dialog').empty();
-    },
-
-    onDestroy () {
-        bus.off('modal:open', this.openModal, this);
     }
 });

@@ -3,8 +3,10 @@
 import _ from 'underscore';
 import Backbone from 'backbone';
 import Marionette from 'marionette';
+import Radio from 'radio';
 
-import bus from 'base/bus';
+let workspaceChannel = Radio.channel('workspace');
+
 import search from 'helpers/search';
 
 const FILTER_DELAY_MS = 350;
@@ -34,7 +36,7 @@ let NoteInfo = Marionette.ItemView.extend({
     },
 
     onClick () {
-        bus.trigger('note:open', this.model.getId());
+        workspaceChannel.trigger('note:open', this.model.getId());
     }
 });
 

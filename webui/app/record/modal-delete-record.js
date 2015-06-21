@@ -1,8 +1,9 @@
 'use strict';
 
 import Marionette from 'marionette';
+import Radio from 'radio';
 
-import bus from 'base/bus';
+let workspaceChannel = Radio.channel('workspace');
 
 export default Marionette.ItemView.extend({
     className: 'ModalDeleteRecord',
@@ -13,6 +14,6 @@ export default Marionette.ItemView.extend({
     },
 
     deleteRecord () {
-        bus.trigger('note:delete', this.model.getId());
+        workspaceChannel.trigger('note:delete', this.model.getId());
     }
 });

@@ -1,10 +1,12 @@
 'use strict';
 
 import Marionette from 'marionette';
+import Radio from 'radio';
 
-import bus from 'base/bus';
 import {RecordView, RecordEditView} from 'record/view';
 import rgb2hex from 'helpers/rgb2hex';
+
+let workspaceChannel = Radio.channel('workspace');
 
 export default Marionette.LayoutView.extend({
     tagName: 'li',
@@ -24,7 +26,7 @@ export default Marionette.LayoutView.extend({
 
         this.highlightNote();
 
-        bus.on('note:open', this.maybeHighlight, this);
+        this.listenTo(workspaceChannel, 'note:open', this.maybeHighlight);
     },
 
     maybeHighlight (id) {
@@ -54,9 +56,5 @@ export default Marionette.LayoutView.extend({
     updateView () {
         let View = this.model.get('edit') ? RecordEditView : RecordView;
         this.getRegion('content').show(new View({model: this.model}));
-    },
-
-    onDestroy () {
-        bus.off('note:open', this.maybeHighlight, this);
     }
 });

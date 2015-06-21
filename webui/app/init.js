@@ -1,7 +1,10 @@
 'use strict';
 
+import 'base/radio.shim';
+
+import Radio from 'radio';
+
 import session from 'base/session';
-import bus from 'base/bus';
 import Socket from 'base/socket';
 import NotesManager from 'base/notes-manager';
 
@@ -10,6 +13,8 @@ import app from 'main/main';
 let socket = new Socket(session.config.socketAddr);
 let notesManager = new NotesManager(session.notes, session.openNotes);
 
+let workspaceChannel = Radio.channel('workspace');
+
 function loadNotesList () {
     socket.getNotesInfoList().then(function (result) {
         console.log('received list of %s notes', result.length);
@@ -17,7 +22,7 @@ function loadNotesList () {
     });
 }
 
-bus.on('note:open', function (id, edit) {
+workspaceChannel.on('note:open', function (id, edit) {
     if (notesManager.isNoteOpen(id)) {
         console.log('note %s already open', id);
     } else {
@@ -28,7 +33,7 @@ bus.on('note:open', function (id, edit) {
     }
 });
 
-bus.on('note:edit', function (id) {
+workspaceChannel.on('note:edit', function (id) {
     let note = notesManager.getOpenNote(id);
 
     if (!note) {
@@ -40,7 +45,7 @@ bus.on('note:edit', function (id) {
     note.edit(true);
 });
 
-bus.on('note:close', function (id) {
+workspaceChannel.on('note:close', function (id) {
     if (!notesManager.isNoteOpen(id)) {
         console.error('cannot close note %s: not open', id);
         return;
@@ -50,7 +55,7 @@ bus.on('note:close', function (id) {
     notesManager.closeNote(id);
 });
 
-bus.on('note:create', function (data) {
+workspaceChannel.on('note:create', function (data) {
     socket.createNote(data).then(function (result) {
 
         loadNotesList();
@@ -58,7 +63,7 @@ bus.on('note:create', function (data) {
     });
 });
 
-bus.on('note:save', function (id) {
+workspaceChannel.on('note:save', function (id) {
     let note = notesManager.getOpenNote(id);
 
     if (!note) {
@@ -76,7 +81,7 @@ bus.on('note:save', function (id) {
     });
 });
 
-bus.on('note:delete', function (id) {
+workspaceChannel.on('note:delete', function (id) {
     if (!notesManager.isNoteOpen(id)) {
         console.error('cannot delete note %s: not open', id);
         return;
@@ -88,6 +93,8 @@ bus.on('note:delete', function (id) {
         notesManager.closeNote(id);
     });
 });
+
+// INIT Application
 
 socket.connect().then(function () {
     console.log('websocket: connected');

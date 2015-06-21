@@ -98,6 +98,10 @@ export let NoteModel = Backbone.Model.extend({
     rollbackAttributes () {
         this.set(this.backup);
         delete this.backup;
+    },
+
+    hasChanges () {
+        return !!this.backup;
     }
 });
 

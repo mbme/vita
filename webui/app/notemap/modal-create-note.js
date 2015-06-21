@@ -1,11 +1,13 @@
 'use strict';
 
 import Marionette from 'marionette';
+import Radio from 'radio';
 
-import bus from 'base/bus';
 import str2cats from 'record/str2cats';
 import Watcher from 'helpers/watcher-behavior';
 import {NoteModel} from 'base/models';
+
+let workspaceChannel = Radio.channel('workspace');
 
 export default Marionette.ItemView.extend({
     className: 'ModalCreateNote',
@@ -41,7 +43,7 @@ export default Marionette.ItemView.extend({
         let name = this.model.get('name');
         let categories = this.model.get('categories');
 
-        bus.trigger('note:create', {
+        workspaceChannel.trigger('note:create', {
             type: ':record',
             name,
             categories

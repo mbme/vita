@@ -30,6 +30,7 @@ var moduleAliases = {
     'backbone':            'backbone/backbone.js',
     'backbone-validation': 'backbone-validation/dist/backbone-validation-amd.js',
     'marionette':          'marionette/lib/backbone.marionette.js',
+    'radio':               'backbone.radio/build/backbone.radio.js',
     'moment':              'moment/moment.js'
 };
 

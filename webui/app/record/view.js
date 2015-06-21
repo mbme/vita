@@ -1,14 +1,16 @@
 'use strict';
 
 import Marionette from 'marionette';
+import Radio from 'radio';
 
-import bus from 'base/bus';
 import str2cats from './str2cats';
 import Watcher from 'helpers/watcher-behavior';
 
 import FilesView from 'attachments/files';
 import ModalDeleteRecord from './modal-delete-record';
 import Record from './record';
+
+let workspaceChannel = Radio.channel('workspace');
 
 export let RecordView = Marionette.LayoutView.extend({
     className: 'RecordView',
@@ -29,11 +31,11 @@ export let RecordView = Marionette.LayoutView.extend({
     },
 
     editRecord () {
-        bus.trigger('note:edit', this.model.getId());
+        workspaceChannel.trigger('note:edit', this.model.getId());
     },
 
     closeRecord () {
-        bus.trigger('note:close', this.model.getId());
+        workspaceChannel.trigger('note:close', this.model.getId());
     }
 });
 
@@ -89,19 +91,22 @@ export let RecordEditView  = Marionette.LayoutView.extend({
     },
 
     closeRecord () {
+        if (this.model.hasChanges()) {
+
+        }
         // TODO check if there are uncommited changes
-        bus.trigger('note:close', this.model.getId());
+        workspaceChannel.trigger('note:close', this.model.getId());
     },
 
     saveRecord () {
         if (!this.model.isValid(true)) {
             return false;
         }
-        bus.trigger('note:save', this.model.getId());
+        workspaceChannel.trigger('note:save', this.model.getId());
     },
 
     deleteRecord () {
-        bus.trigger('modal:open', new ModalDeleteRecord({model: this.model}));
+        workspaceChannel.trigger('modal:open', new ModalDeleteRecord({model: this.model}));
     },
 
     onDestroy () {
