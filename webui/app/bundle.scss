@@ -34,10 +34,10 @@ $ff-monospace: Menlo, Monaco, Consolas, "Courier New", monospace;
     cursor: pointer;
 }
 
-@import './shadows';
+@import './styles/shadows';
 @import './search-panel/styles';
 @import './attachments/styles';
-@import './notemap/styles';
+@import './board/styles';
 @import './record/styles';
 
 html,

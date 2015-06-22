@@ -1,13 +1,13 @@
 'use strict';
 
-import Marionette from 'marionette';
 import $ from 'jquery';
 import Radio from 'radio';
+import Marionette from 'marionette';
 
 import session from 'base/session';
 import ModalAddFiles from './modal-add-files';
 
-let modalsChannel = Radio.channel('modals');
+let modalsChan = Radio.channel('modals');
 
 let FileView = Marionette.ItemView.extend({
     tagName: 'tr',
@@ -24,7 +24,7 @@ let FileView = Marionette.ItemView.extend({
     },
 
     showRemoveFileDialog () {
-        modalsChannel.request('confirmation', {
+        modalsChan.request('confirmation', {
             title: 'Delete file',
             body: `Do you really want to delete file <b>${this.model.getName()}</b>?`,
             'accept-text': 'Delete'
@@ -99,7 +99,7 @@ export default Marionette.CompositeView.extend({
         let modal = new ModalAddFiles({file:file});
         modal.on('file:upload', this.uploadFile, this);
 
-        modalsChannel.trigger('modal:open', modal);
+        modalsChan.trigger('modal:open', modal);
     },
 
     uploadFile (name, file) {

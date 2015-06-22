@@ -1,6 +1,6 @@
 'use strict';
 
-import {NotesCollection, OpenNotesCollection} from 'base/models';
+import Socket from 'base/socket';
 
 let session = {
     config: {
@@ -11,10 +11,9 @@ let session = {
     getServerAddress (addr) {
         return this.config.serverAddr + addr;
     },
-
-    notes: new NotesCollection(),
-    openNotes: new OpenNotesCollection()
 };
+
+session.socket = new Socket(session.config.socketAddr);
 
 window.session = session;
 

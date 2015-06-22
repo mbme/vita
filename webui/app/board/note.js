@@ -6,8 +6,6 @@ import Radio from 'radio';
 import {RecordView, RecordEditView} from 'record/view';
 import rgb2hex from 'helpers/rgb2hex';
 
-let workspaceChannel = Radio.channel('workspace');
-
 export default Marionette.LayoutView.extend({
     tagName: 'li',
     className: 'Note',
@@ -15,7 +13,8 @@ export default Marionette.LayoutView.extend({
     template: false,
 
     modelEvents: {
-        'change:edit': 'updateView'
+        'change:edit': 'updateView',
+        'note:selected': 'highlightNote'
     },
 
     onShow () {
@@ -23,16 +22,6 @@ export default Marionette.LayoutView.extend({
             el: this.$el
         });
         this.updateView();
-
-        this.highlightNote();
-
-        this.listenTo(workspaceChannel, 'note:open', this.maybeHighlight);
-    },
-
-    maybeHighlight (id) {
-        if (id === this.model.getId()) {
-            this.highlightNote();
-        }
     },
 
     highlightNote () {

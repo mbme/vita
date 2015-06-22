@@ -5,11 +5,11 @@ import Backbone from 'backbone';
 import Marionette from 'marionette';
 import Radio from 'radio';
 
-let workspaceChannel = Radio.channel('workspace');
-
 import search from 'helpers/search';
 
 const FILTER_DELAY_MS = 350;
+
+let searchChan = Radio.channel('search');
 
 let NoteInfo = Marionette.ItemView.extend({
     tagName: 'li',
@@ -36,7 +36,7 @@ let NoteInfo = Marionette.ItemView.extend({
     },
 
     onClick () {
-        workspaceChannel.trigger('note:open', this.model.getId());
+        searchChan.trigger('note:selected', this.model.getId());
     }
 });
 

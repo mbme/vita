@@ -9,8 +9,8 @@ import Watcher from 'helpers/watcher-behavior';
 import FilesView from 'attachments/files';
 import Record from './record';
 
-let workspaceChannel = Radio.channel('workspace');
-let modalsChannel = Radio.channel('modals');
+let boardChan = Radio.channel('board');
+let modalsChan = Radio.channel('modals');
 
 export let RecordView = Marionette.LayoutView.extend({
     className: 'RecordView',
@@ -31,11 +31,11 @@ export let RecordView = Marionette.LayoutView.extend({
     },
 
     editRecord () {
-        workspaceChannel.trigger('note:edit', this.model.getId());
+        boardChan.trigger('note:edit', this.model.getId());
     },
 
     closeRecord () {
-        workspaceChannel.trigger('note:close', this.model.getId());
+        boardChan.trigger('note:close', this.model.getId());
     }
 });
 
@@ -92,13 +92,13 @@ export let RecordEditView  = Marionette.LayoutView.extend({
 
     closeRecord () {
         if (this.model.hasChanges()) {
-            modalsChannel.request('confirmation', {
+            modalsChan.request('confirmation', {
                 title: 'Close record',
                 body: `There are unsaved changes. Do you really want to close record <b>${this.model.getName()}</b>?`,
                 'accept-text': 'Close'
-            }).then(() => workspaceChannel.trigger('note:close', this.model.getId()));
+            }).then(() => boardChan.trigger('note:close', this.model.getId()));
         } else {
-            workspaceChannel.trigger('note:close', this.model.getId());
+            boardChan.trigger('note:close', this.model.getId());
         }
     },
 
@@ -106,14 +106,14 @@ export let RecordEditView  = Marionette.LayoutView.extend({
         if (!this.model.isValid(true)) {
             return false;
         }
-        workspaceChannel.trigger('note:save', this.model.getId());
+        boardChan.trigger('note:save', this.model.getId());
     },
 
     deleteRecord () {
-        modalsChannel.request('confirmation', {
+        modalsChan.request('confirmation', {
             title: 'Delete record',
             body: `Do you really want to delete record <b>${this.model.getName()}</b>?`,
             'accept-text': 'Delete'
-        }).then(() => workspaceChannel.trigger('note:delete', this.model.getId()));
+        }).then(() => boardChan.trigger('note:delete', this.model.getId()));
     }
 });

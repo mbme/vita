@@ -1,13 +1,13 @@
 'use strict';
 
 import _ from 'underscore';
+import RSVP from 'rsvp';
 import Marionette from 'marionette';
 import Radio from 'radio';
-import RSVP from 'rsvp';
 
 import {Model as ConfirmationModel, View as ConfirmationView} from './confirmation';
 
-let modalsChannel = Radio.channel('modals');
+let modalsChan = Radio.channel('modals');
 
 const MODAL_OPTIONS = {
     backdrop: 'static',
@@ -34,8 +34,8 @@ export default Marionette.LayoutView.extend({
     },
 
     initialize () {
-        this.listenTo(modalsChannel, 'modal:open', this.openModal);
-        modalsChannel.reply('confirmation', this.showConfirmation, this);
+        this.listenTo(modalsChan, 'modal:open', this.openModal);
+        modalsChan.reply('confirmation', this.showConfirmation, this);
     },
 
     showConfirmation (config) {

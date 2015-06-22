@@ -3,15 +3,15 @@
 import Marionette from 'marionette';
 import Radio from 'radio';
 
-let modalsChannel = Radio.channel('modals');
+let modalsChan = Radio.channel('modals');
 
 import NoteView from './note';
 import ModalCreateNote from './modal-create-note';
 
 export default Marionette.CompositeView.extend({
-    className: 'NoteMap',
+    className: 'Board',
 
-    template: require('./view.hbs'),
+    template: require('./board.hbs'),
 
     childView: NoteView,
     childViewContainer: 'ul.notes',
@@ -22,6 +22,6 @@ export default Marionette.CompositeView.extend({
 
     createNote () {
         console.log('create new note');
-        modalsChannel.trigger('modal:open', new ModalCreateNote());
+        modalsChan.trigger('modal:open', new ModalCreateNote());
     }
 });
