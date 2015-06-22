@@ -1,13 +1,34 @@
 'use strict';
 
 import _ from 'underscore';
+import Backbone from 'backbone';
 
 import session from 'base/session';
-import {NoteModel, NotesCollection, OpenNotesCollection} from 'base/models';
+import {NoteModel} from 'base/models';
 import {successfullPromise} from 'helpers/utils';
 
+let NotesCollection = Backbone.Collection.extend({
+    model: NoteModel,
+    comparator (m1, m2) {
+        let n1 = m1.getName().toLowerCase();
+        let n2 = m2.getName().toLowerCase();
+
+        if (n1 > n2) {
+            return 1;
+        } else if (n1 < n2) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+});
+
+let OpenNotesCollection = Backbone.Collection.extend({
+    model: NoteModel
+});
+
 let Storage = {
-    notes: new NotesCollection(),
+    notes:     new NotesCollection(),
     openNotes: new OpenNotesCollection(),
 
     loadNotesList () {
@@ -81,14 +102,22 @@ let Storage = {
             return;
         }
 
+        if (!note.hasChanges()) {
+            console.log('saving note %s: not changed', id);
+            note.edit(false);
+            return;
+        }
+
         console.log('saving note %s', id);
         session.socket.updateNote(note.toPublicJSON()).then((result) => {
             this.loadNotesList();
 
+            delete result.attachments;
             note.set(result);
-            note.edit(false);
-            note.commitAttributes();
 
+            note.edit(false);
+
+            note.commitAttributes();
         }, function (err) {
             console.error('cannot save note %s: %s', id, err);
         });
