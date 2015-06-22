@@ -23,6 +23,7 @@ let FilesCollection = Backbone.Collection.extend({
 });
 
 const IGNORED_ATTRS = ['edit', 'visible'];
+const CATEGORY_REGEX = /^[a-zA-Z0-9]+$/g;
 export let NoteModel = Backbone.Model.extend({
     defaults: {
         id: null,
@@ -43,10 +44,27 @@ export let NoteModel = Backbone.Model.extend({
         name: {
             required: true
         },
-        categories: {
+        categories: [{
             required: true,
             msg: 'At least 1 category must be specified'
-        }
+        }, {
+            fn: function (categories) {
+                let seen = [];
+                for (var category of categories) {
+                    if (!category.match(CATEGORY_REGEX)) {
+                        return `Invalid category "${category}"`;
+                    }
+
+                    let str = category.toLowerCase();
+
+                    if (seen.indexOf(str) > -1) {
+                        return `Duplicate category "${category}"`;
+                    }
+
+                    seen.push(str);
+                }
+            }
+        }]
     },
 
     constructor (attrs, opts) {

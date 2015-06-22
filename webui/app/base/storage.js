@@ -82,9 +82,10 @@ let Storage = {
         }
 
         console.log('saving note %s', id);
-        session.socket.updateNote(note.toPublicJSON()).then(() => {
+        session.socket.updateNote(note.toPublicJSON()).then((result) => {
             this.loadNotesList();
 
+            note.set(result);
             note.edit(false);
             note.commitAttributes();
 

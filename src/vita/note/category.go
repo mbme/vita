@@ -8,7 +8,8 @@ import (
 
 var errorNoCategories = errors.New("no categories")
 
-var delim = regexp.MustCompile("[ ]+")
+var delim = regexp.MustCompile("[ ,]+")
+var categoryMatcher = regexp.MustCompile("^[a-zA-Z0-9]+$")
 
 // Category is note category (context)
 type Category string
@@ -17,23 +18,22 @@ func (c Category) String() string {
 	return string(c)
 }
 
-// IsValid checks if category is valid: trimmed lower-case strings
+// IsValid checks if category is valid
 func (c Category) IsValid() bool {
-	str := string(c)
-	trimmed := strings.TrimSpace(str)
-	lower := strings.ToLower(str)
-	return str == trimmed && str == lower
+	return categoryMatcher.MatchString(string(c))
 }
 
 // UniqueCategories drops duplicate categories
 func UniqueCategories(arr []Category) []Category {
 	var result []Category
-	seen := map[Category]int{}
+	seen := map[string]int{}
 
 	for _, category := range arr {
-		if _, ok := seen[category]; !ok {
+		// categories are case insensitive
+		categoryStr := strings.ToLower(string(category))
+		if _, ok := seen[categoryStr]; !ok {
 			result = append(result, category)
-			seen[category] = 1
+			seen[categoryStr] = 1
 		}
 	}
 
