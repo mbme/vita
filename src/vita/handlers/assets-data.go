@@ -1,20 +1,18 @@
-// +build prod
-
-package main
+package handlers
 
 import (
 	"bytes"
 	"compress/gzip"
 	"fmt"
 	"io"
-	"reflect"
-	"strings"
-	"unsafe"
-	"os"
-	"time"
 	"io/ioutil"
+	"os"
 	"path"
 	"path/filepath"
+	"reflect"
+	"strings"
+	"time"
+	"unsafe"
 )
 
 func bindata_read(data, name string) ([]byte, error) {
@@ -48,9 +46,9 @@ type asset struct {
 }
 
 type bindata_file_info struct {
-	name string
-	size int64
-	mode os.FileMode
+	name    string
+	size    int64
+	mode    os.FileMode
 	modTime time.Time
 }
 
@@ -89,7 +87,7 @@ func app_js() (*asset, error) {
 	}
 
 	info := bindata_file_info{name: "app.js", size: 474770, mode: os.FileMode(420), modTime: time.Unix(1426792793, 0)}
-	a := &asset{bytes: bytes, info:  info}
+	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
 
@@ -109,7 +107,7 @@ func ionicons_ionicons_woff() (*asset, error) {
 	}
 
 	info := bindata_file_info{name: "ionicons/ionicons.woff", size: 67904, mode: os.FileMode(420), modTime: time.Unix(1426792787, 0)}
-	a := &asset{bytes: bytes, info:  info}
+	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
 
@@ -129,7 +127,7 @@ func main_css() (*asset, error) {
 	}
 
 	info := bindata_file_info{name: "main.css", size: 79786, mode: os.FileMode(420), modTime: time.Unix(1426792819, 0)}
-	a := &asset{bytes: bytes, info:  info}
+	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
 
@@ -149,7 +147,7 @@ func open_sans_bold_opensans_bold_woff() (*asset, error) {
 	}
 
 	info := bindata_file_info{name: "open-sans/Bold/OpenSans-Bold.woff", size: 63564, mode: os.FileMode(420), modTime: time.Unix(1426792787, 0)}
-	a := &asset{bytes: bytes, info:  info}
+	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
 
@@ -169,7 +167,7 @@ func open_sans_bolditalic_opensans_bolditalic_woff() (*asset, error) {
 	}
 
 	info := bindata_file_info{name: "open-sans/BoldItalic/OpenSans-BoldItalic.woff", size: 73624, mode: os.FileMode(420), modTime: time.Unix(1426792787, 0)}
-	a := &asset{bytes: bytes, info:  info}
+	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
 
@@ -189,7 +187,7 @@ func open_sans_extrabold_opensans_extrabold_woff() (*asset, error) {
 	}
 
 	info := bindata_file_info{name: "open-sans/ExtraBold/OpenSans-ExtraBold.woff", size: 69932, mode: os.FileMode(420), modTime: time.Unix(1426792787, 0)}
-	a := &asset{bytes: bytes, info:  info}
+	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
 
@@ -209,7 +207,7 @@ func open_sans_extrabolditalic_opensans_extrabolditalic_woff() (*asset, error) {
 	}
 
 	info := bindata_file_info{name: "open-sans/ExtraBoldItalic/OpenSans-ExtraBoldItalic.woff", size: 71720, mode: os.FileMode(420), modTime: time.Unix(1426792787, 0)}
-	a := &asset{bytes: bytes, info:  info}
+	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
 
@@ -229,7 +227,7 @@ func open_sans_italic_opensans_italic_woff() (*asset, error) {
 	}
 
 	info := bindata_file_info{name: "open-sans/Italic/OpenSans-Italic.woff", size: 76104, mode: os.FileMode(420), modTime: time.Unix(1426792787, 0)}
-	a := &asset{bytes: bytes, info:  info}
+	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
 
@@ -249,7 +247,7 @@ func open_sans_light_opensans_light_woff() (*asset, error) {
 	}
 
 	info := bindata_file_info{name: "open-sans/Light/OpenSans-Light.woff", size: 62844, mode: os.FileMode(420), modTime: time.Unix(1426792787, 0)}
-	a := &asset{bytes: bytes, info:  info}
+	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
 
@@ -269,7 +267,7 @@ func open_sans_lightitalic_opensans_lightitalic_woff() (*asset, error) {
 	}
 
 	info := bindata_file_info{name: "open-sans/LightItalic/OpenSans-LightItalic.woff", size: 76408, mode: os.FileMode(420), modTime: time.Unix(1426792787, 0)}
-	a := &asset{bytes: bytes, info:  info}
+	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
 
@@ -289,7 +287,7 @@ func open_sans_regular_opensans_regular_woff() (*asset, error) {
 	}
 
 	info := bindata_file_info{name: "open-sans/Regular/OpenSans-Regular.woff", size: 63712, mode: os.FileMode(420), modTime: time.Unix(1426792787, 0)}
-	a := &asset{bytes: bytes, info:  info}
+	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
 
@@ -309,7 +307,7 @@ func open_sans_semibold_opensans_semibold_woff() (*asset, error) {
 	}
 
 	info := bindata_file_info{name: "open-sans/Semibold/OpenSans-Semibold.woff", size: 69888, mode: os.FileMode(420), modTime: time.Unix(1426792787, 0)}
-	a := &asset{bytes: bytes, info:  info}
+	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
 
@@ -329,7 +327,7 @@ func open_sans_semibolditalic_opensans_semibolditalic_woff() (*asset, error) {
 	}
 
 	info := bindata_file_info{name: "open-sans/SemiboldItalic/OpenSans-SemiboldItalic.woff", size: 75620, mode: os.FileMode(420), modTime: time.Unix(1426792787, 0)}
-	a := &asset{bytes: bytes, info:  info}
+	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
 
@@ -352,7 +350,7 @@ func Asset(name string) ([]byte, error) {
 // It simplifies safe initialization of global variables.
 func MustAsset(name string) []byte {
 	a, err := Asset(name)
-	if (err != nil) {
+	if err != nil {
 		panic("asset: Asset(" + name + "): " + err.Error())
 	}
 
@@ -385,19 +383,19 @@ func AssetNames() []string {
 
 // _bindata is a table, holding each asset generator, mapped to its name.
 var _bindata = map[string]func() (*asset, error){
-	"app.js": app_js,
-	"ionicons/ionicons.woff": ionicons_ionicons_woff,
-	"main.css": main_css,
-	"open-sans/Bold/OpenSans-Bold.woff": open_sans_bold_opensans_bold_woff,
-	"open-sans/BoldItalic/OpenSans-BoldItalic.woff": open_sans_bolditalic_opensans_bolditalic_woff,
-	"open-sans/ExtraBold/OpenSans-ExtraBold.woff": open_sans_extrabold_opensans_extrabold_woff,
+	"app.js":                                                  app_js,
+	"ionicons/ionicons.woff":                                  ionicons_ionicons_woff,
+	"main.css":                                                main_css,
+	"open-sans/Bold/OpenSans-Bold.woff":                       open_sans_bold_opensans_bold_woff,
+	"open-sans/BoldItalic/OpenSans-BoldItalic.woff":           open_sans_bolditalic_opensans_bolditalic_woff,
+	"open-sans/ExtraBold/OpenSans-ExtraBold.woff":             open_sans_extrabold_opensans_extrabold_woff,
 	"open-sans/ExtraBoldItalic/OpenSans-ExtraBoldItalic.woff": open_sans_extrabolditalic_opensans_extrabolditalic_woff,
-	"open-sans/Italic/OpenSans-Italic.woff": open_sans_italic_opensans_italic_woff,
-	"open-sans/Light/OpenSans-Light.woff": open_sans_light_opensans_light_woff,
-	"open-sans/LightItalic/OpenSans-LightItalic.woff": open_sans_lightitalic_opensans_lightitalic_woff,
-	"open-sans/Regular/OpenSans-Regular.woff": open_sans_regular_opensans_regular_woff,
-	"open-sans/Semibold/OpenSans-Semibold.woff": open_sans_semibold_opensans_semibold_woff,
-	"open-sans/SemiboldItalic/OpenSans-SemiboldItalic.woff": open_sans_semibolditalic_opensans_semibolditalic_woff,
+	"open-sans/Italic/OpenSans-Italic.woff":                   open_sans_italic_opensans_italic_woff,
+	"open-sans/Light/OpenSans-Light.woff":                     open_sans_light_opensans_light_woff,
+	"open-sans/LightItalic/OpenSans-LightItalic.woff":         open_sans_lightitalic_opensans_lightitalic_woff,
+	"open-sans/Regular/OpenSans-Regular.woff":                 open_sans_regular_opensans_regular_woff,
+	"open-sans/Semibold/OpenSans-Semibold.woff":               open_sans_semibold_opensans_semibold_woff,
+	"open-sans/SemiboldItalic/OpenSans-SemiboldItalic.woff":   open_sans_semibolditalic_opensans_semibolditalic_woff,
 }
 
 // AssetDir returns the file names below a certain
@@ -436,105 +434,92 @@ func AssetDir(name string) ([]string, error) {
 }
 
 type _bintree_t struct {
-	Func func() (*asset, error)
+	Func     func() (*asset, error)
 	Children map[string]*_bintree_t
 }
+
 var _bintree = &_bintree_t{nil, map[string]*_bintree_t{
-	"app.js": &_bintree_t{app_js, map[string]*_bintree_t{
-	}},
+	"app.js": &_bintree_t{app_js, map[string]*_bintree_t{}},
 	"ionicons": &_bintree_t{nil, map[string]*_bintree_t{
-		"ionicons.woff": &_bintree_t{ionicons_ionicons_woff, map[string]*_bintree_t{
-		}},
+		"ionicons.woff": &_bintree_t{ionicons_ionicons_woff, map[string]*_bintree_t{}},
 	}},
-	"main.css": &_bintree_t{main_css, map[string]*_bintree_t{
-	}},
+	"main.css": &_bintree_t{main_css, map[string]*_bintree_t{}},
 	"open-sans": &_bintree_t{nil, map[string]*_bintree_t{
 		"Bold": &_bintree_t{nil, map[string]*_bintree_t{
-			"OpenSans-Bold.woff": &_bintree_t{open_sans_bold_opensans_bold_woff, map[string]*_bintree_t{
-			}},
+			"OpenSans-Bold.woff": &_bintree_t{open_sans_bold_opensans_bold_woff, map[string]*_bintree_t{}},
 		}},
 		"BoldItalic": &_bintree_t{nil, map[string]*_bintree_t{
-			"OpenSans-BoldItalic.woff": &_bintree_t{open_sans_bolditalic_opensans_bolditalic_woff, map[string]*_bintree_t{
-			}},
+			"OpenSans-BoldItalic.woff": &_bintree_t{open_sans_bolditalic_opensans_bolditalic_woff, map[string]*_bintree_t{}},
 		}},
 		"ExtraBold": &_bintree_t{nil, map[string]*_bintree_t{
-			"OpenSans-ExtraBold.woff": &_bintree_t{open_sans_extrabold_opensans_extrabold_woff, map[string]*_bintree_t{
-			}},
+			"OpenSans-ExtraBold.woff": &_bintree_t{open_sans_extrabold_opensans_extrabold_woff, map[string]*_bintree_t{}},
 		}},
 		"ExtraBoldItalic": &_bintree_t{nil, map[string]*_bintree_t{
-			"OpenSans-ExtraBoldItalic.woff": &_bintree_t{open_sans_extrabolditalic_opensans_extrabolditalic_woff, map[string]*_bintree_t{
-			}},
+			"OpenSans-ExtraBoldItalic.woff": &_bintree_t{open_sans_extrabolditalic_opensans_extrabolditalic_woff, map[string]*_bintree_t{}},
 		}},
 		"Italic": &_bintree_t{nil, map[string]*_bintree_t{
-			"OpenSans-Italic.woff": &_bintree_t{open_sans_italic_opensans_italic_woff, map[string]*_bintree_t{
-			}},
+			"OpenSans-Italic.woff": &_bintree_t{open_sans_italic_opensans_italic_woff, map[string]*_bintree_t{}},
 		}},
 		"Light": &_bintree_t{nil, map[string]*_bintree_t{
-			"OpenSans-Light.woff": &_bintree_t{open_sans_light_opensans_light_woff, map[string]*_bintree_t{
-			}},
+			"OpenSans-Light.woff": &_bintree_t{open_sans_light_opensans_light_woff, map[string]*_bintree_t{}},
 		}},
 		"LightItalic": &_bintree_t{nil, map[string]*_bintree_t{
-			"OpenSans-LightItalic.woff": &_bintree_t{open_sans_lightitalic_opensans_lightitalic_woff, map[string]*_bintree_t{
-			}},
+			"OpenSans-LightItalic.woff": &_bintree_t{open_sans_lightitalic_opensans_lightitalic_woff, map[string]*_bintree_t{}},
 		}},
 		"Regular": &_bintree_t{nil, map[string]*_bintree_t{
-			"OpenSans-Regular.woff": &_bintree_t{open_sans_regular_opensans_regular_woff, map[string]*_bintree_t{
-			}},
+			"OpenSans-Regular.woff": &_bintree_t{open_sans_regular_opensans_regular_woff, map[string]*_bintree_t{}},
 		}},
 		"Semibold": &_bintree_t{nil, map[string]*_bintree_t{
-			"OpenSans-Semibold.woff": &_bintree_t{open_sans_semibold_opensans_semibold_woff, map[string]*_bintree_t{
-			}},
+			"OpenSans-Semibold.woff": &_bintree_t{open_sans_semibold_opensans_semibold_woff, map[string]*_bintree_t{}},
 		}},
 		"SemiboldItalic": &_bintree_t{nil, map[string]*_bintree_t{
-			"OpenSans-SemiboldItalic.woff": &_bintree_t{open_sans_semibolditalic_opensans_semibolditalic_woff, map[string]*_bintree_t{
-			}},
+			"OpenSans-SemiboldItalic.woff": &_bintree_t{open_sans_semibolditalic_opensans_semibolditalic_woff, map[string]*_bintree_t{}},
 		}},
 	}},
 }}
 
 // Restore an asset under the given directory
 func RestoreAsset(dir, name string) error {
-        data, err := Asset(name)
-        if err != nil {
-                return err
-        }
-        info, err := AssetInfo(name)
-        if err != nil {
-                return err
-        }
-        err = os.MkdirAll(_filePath(dir, path.Dir(name)), os.FileMode(0755))
-        if err != nil {
-                return err
-        }
-        err = ioutil.WriteFile(_filePath(dir, name), data, info.Mode())
-        if err != nil {
-                return err
-        }
-        err = os.Chtimes(_filePath(dir, name), info.ModTime(), info.ModTime())
-        if err != nil {
-                return err
-        }
-        return nil
+	data, err := Asset(name)
+	if err != nil {
+		return err
+	}
+	info, err := AssetInfo(name)
+	if err != nil {
+		return err
+	}
+	err = os.MkdirAll(_filePath(dir, path.Dir(name)), os.FileMode(0755))
+	if err != nil {
+		return err
+	}
+	err = ioutil.WriteFile(_filePath(dir, name), data, info.Mode())
+	if err != nil {
+		return err
+	}
+	err = os.Chtimes(_filePath(dir, name), info.ModTime(), info.ModTime())
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // Restore assets under the given directory recursively
 func RestoreAssets(dir, name string) error {
-        children, err := AssetDir(name)
-        if err != nil { // File
-                return RestoreAsset(dir, name)
-        } else { // Dir
-                for _, child := range children {
-                        err = RestoreAssets(dir, path.Join(name, child))
-                        if err != nil {
-                                return err
-                        }
-                }
-        }
-        return nil
+	children, err := AssetDir(name)
+	if err != nil { // File
+		return RestoreAsset(dir, name)
+	} else { // Dir
+		for _, child := range children {
+			err = RestoreAssets(dir, path.Join(name, child))
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }
 
 func _filePath(dir, name string) string {
-        cannonicalName := strings.Replace(name, "\\", "/", -1)
-        return filepath.Join(append([]string{dir}, strings.Split(cannonicalName, "/")...)...)
+	cannonicalName := strings.Replace(name, "\\", "/", -1)
+	return filepath.Join(append([]string{dir}, strings.Split(cannonicalName, "/")...)...)
 }
-

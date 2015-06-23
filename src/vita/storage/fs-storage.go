@@ -23,7 +23,7 @@ func NewFsStorage(basePath string) Storager {
 
 	files, err := listFiles(basePath, false)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	// read notes

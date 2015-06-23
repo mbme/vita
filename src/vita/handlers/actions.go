@@ -31,11 +31,12 @@ const (
 	NoType        RequestMethod = ""
 )
 
-var storage = s.NewFsStorage("/tmp/vita")
+// Storage which should be used by handlers
+var Storage s.Storager
 
 var handlers = map[RequestMethod]func(*RequestParams) (any, error){
 	NotesListRead: func(_ *RequestParams) (any, error) {
-		return storage.ListNotes(), nil
+		return Storage.ListNotes(), nil
 	},
 
 	NoteRead: func(params *RequestParams) (any, error) {
@@ -50,9 +51,9 @@ var handlers = map[RequestMethod]func(*RequestParams) (any, error){
 			return nil, errorBadParams
 		}
 
-		note, err := storage.GetNote(*id)
+		note, err := Storage.GetNote(*id)
 		if err != nil {
-			log.Printf("can't find note %s", *id)
+			log.Printf("can't find note %v", id)
 			return nil, err
 		}
 
@@ -66,12 +67,12 @@ var handlers = map[RequestMethod]func(*RequestParams) (any, error){
 			return nil, errorBadParams
 		}
 
-		id, err := storage.AddNote(dto.Type, dto.Name, dto.Categories)
+		id, err := Storage.AddNote(dto.Type, dto.Name, dto.Categories)
 		if err != nil {
 			return nil, err
 		}
 
-		return storage.GetNote(id)
+		return Storage.GetNote(id)
 	},
 
 	NoteUpdate: func(params *RequestParams) (any, error) {
@@ -81,11 +82,11 @@ var handlers = map[RequestMethod]func(*RequestParams) (any, error){
 			return nil, errorBadParams
 		}
 
-		if err := storage.UpdateNote(dto.ID, dto.Name, dto.Data, dto.Categories); err != nil {
+		if err := Storage.UpdateNote(dto.ID, dto.Name, dto.Data, dto.Categories); err != nil {
 			return nil, err
 		}
 
-		return storage.GetNote(dto.ID)
+		return Storage.GetNote(dto.ID)
 	},
 
 	NoteDelete: func(params *RequestParams) (any, error) {
@@ -100,7 +101,7 @@ var handlers = map[RequestMethod]func(*RequestParams) (any, error){
 			return nil, errorBadParams
 		}
 
-		if err := storage.RemoveNote(*id); err != nil {
+		if err := Storage.RemoveNote(*id); err != nil {
 			return nil, err
 		}
 

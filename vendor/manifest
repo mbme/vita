@@ -18,6 +18,12 @@
 			"repository": "https://github.com/gorilla/context",
 			"revision": "215affda49addc4c8ef7e2534915df2c8c35c6cd",
 			"branch": "master"
+		},
+		{
+			"importpath": "github.com/codegangsta/cli",
+			"repository": "https://github.com/codegangsta/cli",
+			"revision": "ad480243a8a6cda30acf7cd999ea3e5142154fde",
+			"branch": "master"
 		}
 	]
 }
