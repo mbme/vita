@@ -23,7 +23,7 @@ func NewFsStorage(basePath string) Storager {
 	}
 
 	for _, noteType := range note.Types {
-		files, err := listFiles(path.Join(noteType.String(), basePath), false)
+		files, err := listFiles(path.Join(basePath, noteType.String()), false)
 		if err != nil {
 			log.Fatal(err)
 		}

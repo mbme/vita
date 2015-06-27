@@ -153,7 +153,7 @@ var killSkelet = function () {
 };
 
 var startSkelet = function () {
-    skelet = Proc.spawn(goapp, ['-p', 8081]);
+    skelet = Proc.spawn(goapp, ['-p', 8081, '--root', '/tmp/vita']);
 
     skelet.stdout.on('data', function(chunk) {
         chunk.toString().split('\n').forEach(function (line) {

@@ -62,7 +62,7 @@ function attachment(state, silent) {
 
     let token = state.push('attachment_open', 'a', 1);
     token.markup  = sep;
-    token.attrPush(['href', fileAddr(currentRecord.id, fileName)]);
+    token.attrPush(['href', fileAddr(currentRecord.key, fileName)]);
 
     token = state.push('text', '', 0);
     token.content = fileName;

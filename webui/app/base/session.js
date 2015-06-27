@@ -15,6 +15,4 @@ let session = {
 
 session.socket = new Socket(session.config.socketAddr);
 
-window.session = session;
-
 export default session;

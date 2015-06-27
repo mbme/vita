@@ -25,7 +25,7 @@ func NewKey(noteType Type, id ID) Key {
 }
 
 func (key Key) String() string {
-	return fmt.Sprintf("%s/%v", key.Type, key.ID)
+	return fmt.Sprintf("%s/%d", key.Type, key.ID)
 }
 
 // ParseKeyID creates key from Type and id string

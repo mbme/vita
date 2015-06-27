@@ -42,6 +42,11 @@ app.on('start', function () {
 session.socket.connect().then(function () {
     console.log('websocket: connected');
 
+    window.vita = {
+        session,
+        Storage
+    };
+
     Storage.loadNotesList();
     app.start();
 

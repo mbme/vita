@@ -5,7 +5,7 @@ import Backbone from 'backbone';
 
 import session from 'base/session';
 import {NoteModel} from 'base/models';
-import {successfullPromise} from 'helpers/utils';
+import {successfullPromise, failedPromise} from 'helpers/utils';
 
 let NotesCollection = Backbone.Collection.extend({
     model: NoteModel,
@@ -24,7 +24,11 @@ let NotesCollection = Backbone.Collection.extend({
 });
 
 let OpenNotesCollection = Backbone.Collection.extend({
-    model: NoteModel
+    model: NoteModel,
+
+    addNote (note) {
+        this.add(note, { at: 0 });
+    }
 });
 
 let Storage = {
@@ -32,7 +36,7 @@ let Storage = {
     openNotes: new OpenNotesCollection(),
 
     loadNotesList () {
-        session.socket.getNotesInfoList().then((result) => {
+        return session.socket.getNotesInfoList().then((result) => {
             console.log('received list of %s notes', result.length);
             this.notes.reset(result);
         });
@@ -40,6 +44,10 @@ let Storage = {
 
     isNoteOpen (id) {
         return Boolean(this.openNotes.get(id));
+    },
+
+    getNoteInfo (id) {
+        return this.notes.get(id);
     },
 
     getOpenNote (id) {
@@ -51,7 +59,14 @@ let Storage = {
         if (note) {
             return successfullPromise(note);
         }
-        return session.socket.getNote(id).then((result) => {
+
+        let info = this.getNoteInfo(id);
+        if (!info) {
+            console.error('unknown note %s', id);
+            return failedPromise();
+        }
+
+        return session.socket.getNote(info.getKey()).then((result) => {
             console.log('open note %s', id);
 
             let note = new NoteModel(result);
@@ -59,7 +74,7 @@ let Storage = {
                 note.edit(true);
             }
 
-            this.openNotes.add(note, { at: 0 });
+            this.openNotes.addNote(note);
 
             return note;
         });
@@ -67,8 +82,12 @@ let Storage = {
 
     createNote (data) {
         session.socket.createNote(data).then((result) =>  {
+            let note = new NoteModel(result);
+            console.log('open note %s', note.getId());
+
+            this.openNotes.addNote(note);
+
             this.loadNotesList();
-            this.openNote(result, true);
         });
     },
 
@@ -129,8 +148,14 @@ let Storage = {
             return;
         }
 
+        let info = this.getNoteInfo(id);
+        if (!info) {
+            console.error('unknown note %s', id);
+            return;
+        }
+
         console.log('delete note %s', id);
-        session.socket.deleteNote(id).then(() => {
+        session.socket.deleteNote(info.getKey()).then(() => {
             this.loadNotesList();
             this.closeNote(id);
         });

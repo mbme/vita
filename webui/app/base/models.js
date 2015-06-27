@@ -27,7 +27,7 @@ const CATEGORY_REGEX = /^[a-zA-Z0-9]+$/g;
 export let NoteModel = Backbone.Model.extend({
     defaults: {
         id: null,
-        type: '',
+        key: {},
 
         name: '',
         categories: '',
@@ -72,6 +72,11 @@ export let NoteModel = Backbone.Model.extend({
 
         // put attachments array into collection
         attrs.attachments = new FilesCollection(attrs.attachments);
+
+        if (attrs.key) {
+            attrs.id = `${attrs.key.type}/${attrs.key.id}`;
+        }
+
         Backbone.Model.call(this, attrs, opts);
 
         this.on('change', this.backupAttributes, this);
@@ -85,6 +90,10 @@ export let NoteModel = Backbone.Model.extend({
         return this.get('id');
     },
 
+    getKey () {
+        return this.get('key');
+    },
+
     getAttachments () {
         return this.get('attachments');
     },
@@ -92,7 +101,7 @@ export let NoteModel = Backbone.Model.extend({
     toPublicJSON () {
         return _.pick(
             this.toJSON(),
-            ['id', 'name', 'type', 'data', 'categories']
+            ['key', 'name', 'data', 'categories']
         );
     },
 

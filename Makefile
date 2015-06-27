@@ -32,4 +32,4 @@ check:
 	golint $(GOSRC)
 
 run: build
-	$(APP)
+	$(APP) -p 8081 --root /tmp/vita

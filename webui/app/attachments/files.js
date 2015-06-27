@@ -15,12 +15,16 @@ let FileView = Marionette.ItemView.extend({
 
     templateHelpers () {
         return {
-            noteId: this.options.noteId
+            key: this.note.getKey()
         };
     },
 
     events: {
         'click .buttons span': 'showRemoveFileDialog'
+    },
+
+    initialize (options) {
+        this.note = options.note;
     },
 
     showRemoveFileDialog () {
@@ -32,11 +36,12 @@ let FileView = Marionette.ItemView.extend({
     },
 
     deleteFile () {
-        let id = this.options.noteId;
+        let id = this.note.getId();
+        let key = this.note.getKey();
         let fileName = this.model.getName();
         $.ajax({
             type: 'DELETE',
-            url: session.getServerAddress(`/notes/${id}/attachments/${fileName}`),
+            url: session.getServerAddress(`/notes/${key.type}/${key.id}/attachments/${fileName}`),
             crossDomain: true,
             success: () => {
                 console.log('note %s: removed attachment %s', id, fileName);
@@ -58,7 +63,7 @@ export default Marionette.CompositeView.extend({
 
     childViewOptions () {
         return {
-            noteId: this.model.getId()
+            note: this.model
         };
     },
 
@@ -109,9 +114,10 @@ export default Marionette.CompositeView.extend({
         data.append('file', file);
 
         let id = this.model.getId();
+        let key = this.model.getKey();
         $.ajax({
             type: 'POST',
-            url: session.getServerAddress(`/notes/${id}/attachments`),
+            url: session.getServerAddress(`/notes/${key.type}/${key.id}/attachments`),
             crossDomain: true,
             dataType: 'json',
             cache: 'false',
