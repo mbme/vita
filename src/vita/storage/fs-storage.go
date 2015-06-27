@@ -4,15 +4,38 @@ import (
 	"log"
 	"strings"
 
+	"os"
 	"path"
 	"vita/note"
 )
+
+const filePerm = 0644
+const dirPerm = 0755
 
 // FS STORAGE
 
 type fsStorage struct {
 	base    string
 	records map[note.Key]*note.Info
+}
+
+// InitFsStorageDirs creates require directories for vita FS storage
+func InitFsStorageDirs(basePath string, createParents bool) error {
+	for _, noteType := range note.Types {
+		dir := path.Join(basePath, noteType.String())
+		var err error
+		if createParents {
+			err = os.MkdirAll(dir, dirPerm)
+		} else {
+			err = os.Mkdir(dir, dirPerm)
+		}
+
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 // NewFsStorage create new Storager backed with file system

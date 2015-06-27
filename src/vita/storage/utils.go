@@ -22,7 +22,7 @@ func listFiles(path string, dirs bool) ([]os.FileInfo, error) {
 }
 
 func writeFile(path string, data []byte) (os.FileInfo, error) {
-	if err := ioutil.WriteFile(path, data, 0644); err != nil {
+	if err := ioutil.WriteFile(path, data, filePerm); err != nil {
 		return nil, err
 	}
 
