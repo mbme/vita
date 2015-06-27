@@ -1,7 +1,6 @@
 'use strict';
 
 import Marionette from 'marionette';
-import Radio from 'radio';
 
 import {RecordView, RecordEditView} from 'record/view';
 import rgb2hex from 'helpers/rgb2hex';
@@ -18,6 +17,7 @@ export default Marionette.LayoutView.extend({
     },
 
     onShow () {
+        this.color = rgb2hex(this.$el.css('background-color'));
         this.addRegion('content', {
             el: this.$el
         });
@@ -25,14 +25,12 @@ export default Marionette.LayoutView.extend({
     },
 
     highlightNote () {
-        let color = rgb2hex(this.$el.css('background-color'));
-
         $.Velocity.RunSequence([
             { e: this.$el,
               p: {backgroundColor: '#FFFF66'},
               o: {duration: 100}},
             { e: this.$el,
-              p: {backgroundColor: color},
+              p: {backgroundColor: this.color},
               o: {duration: 500}}
         ]);
 
