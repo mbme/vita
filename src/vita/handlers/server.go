@@ -16,9 +16,9 @@ func init() {
 	router.HandleFunc("/ws", WsHandler)
 
 	notesRouter := router.PathPrefix("/notes").Subrouter()
-	notesRouter.HandleFunc("/{noteId}/attachments", AddFileHandler).Methods("POST")
-	notesRouter.HandleFunc("/{noteId}/attachments/{fileId}", GetFileHandler).Methods("GET")
-	notesRouter.HandleFunc("/{noteId}/attachments/{fileId}", RemoveFileHandler).Methods("DELETE")
+	notesRouter.HandleFunc("/{type}/{id}/attachments", AddFileHandler).Methods("POST")
+	notesRouter.HandleFunc("/{type}/{id}/attachments/{fileId}", GetFileHandler).Methods("GET")
+	notesRouter.HandleFunc("/{type}/{id}/attachments/{fileId}", RemoveFileHandler).Methods("DELETE")
 
 	Server = &CorsServer{router}
 }

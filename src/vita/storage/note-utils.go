@@ -12,7 +12,7 @@ import (
 )
 
 var errorNotNote = errors.New("not a note")
-var noteMatcher = regexp.MustCompile("^(\\d+)_(:[a-zA-Z]+)_\\[([a-zA-Z0-9 \\-]+)\\]_(.+)\\.md$")
+var noteMatcher = regexp.MustCompile("^(\\d+)_\\[([a-zA-Z0-9 \\-]+)\\]_(.+)\\.md$")
 
 func preprocessCategories(categories []note.Category) ([]note.Category, error) {
 	categories = note.UniqueCategories(categories)
@@ -30,32 +30,26 @@ func preprocessCategories(categories []note.Category) ([]note.Category, error) {
 	return categories, nil
 }
 
-func readNoteInfo(fileInfo os.FileInfo) (*note.Info, error) {
+func readNoteInfo(noteType note.Type, fileInfo os.FileInfo) (*note.Info, error) {
 	values := noteMatcher.FindStringSubmatch(fileInfo.Name())
 	if values == nil {
 		return nil, errorNotNote
 	}
 
-	id, err := note.ParseID(values[1])
+	key, err := note.ParseKeyID(noteType, values[1])
 	if err != nil {
 		return nil, err
 	}
 
-	noteType, err := note.ParseType(values[2])
+	categories, err := note.ParseCategories(values[2])
 	if err != nil {
 		return nil, err
 	}
 
-	categories, err := note.ParseCategories(values[3])
-	if err != nil {
-		return nil, err
-	}
-
-	name := values[4]
+	name := values[3]
 
 	return &note.Info{
-		Type:       noteType,
-		ID:         id,
+		Key:        key,
 		Name:       name,
 		Timestamp:  note.ParseTime(fileInfo.ModTime()),
 		Categories: categories,
@@ -63,11 +57,11 @@ func readNoteInfo(fileInfo os.FileInfo) (*note.Info, error) {
 }
 
 func getNoteFile(info *note.Info) string {
-	return fmt.Sprintf("%d_%s_[%s]_%s.md", info.ID, info.Type, note.StringifyCategories(info.Categories), info.Name)
+	return fmt.Sprintf("%d_[%s]_%s.md", info.Key.ID, note.StringifyCategories(info.Categories), info.Name)
 }
 
 func (s *fsStorage) getNoteFilePath(info *note.Info) string {
-	return path.Join(s.base, getNoteFile(info))
+	return path.Join(s.base, info.Key.Type.String(), getNoteFile(info))
 }
 
 func (s *fsStorage) readNote(info *note.Info) (*note.Note, error) {
@@ -96,14 +90,14 @@ func (s *fsStorage) removeNote(info *note.Info) error {
 	return os.Remove(path)
 }
 
-func (s *fsStorage) nextID() note.ID {
-	maxID := note.ID(0)
+func (s *fsStorage) nextKey(noteType note.Type) note.Key {
+	var maxID note.ID
 
-	for id := range s.records {
-		if id > maxID {
-			maxID = id
+	for key := range s.records {
+		if key.ID > maxID {
+			maxID = key.ID
 		}
 	}
 
-	return maxID + 1
+	return note.NewKey(noteType, maxID+1)
 }

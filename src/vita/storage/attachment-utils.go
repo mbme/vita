@@ -15,22 +15,22 @@ import (
 var errorNotAttachment = errors.New("not attachment")
 var attachmentMatcher = regexp.MustCompile("^(\\d+)__(.+)$")
 
-func readAttachmentInfo(fileInfo os.FileInfo) (note.ID, *note.FileInfo, error) {
+func readAttachmentInfo(noteType note.Type, fileInfo os.FileInfo) (note.Key, *note.FileInfo, error) {
 	log.Println(fileInfo.Name())
 	values := attachmentMatcher.FindStringSubmatch(fileInfo.Name())
 	if values == nil {
-		return 0, nil, errorNotAttachment
+		return note.NoKey, nil, errorNotAttachment
 	}
 
-	id, err := note.ParseID(values[1])
+	key, err := note.ParseKeyID(noteType, values[1])
 	if err != nil {
-		return 0, nil, err
+		return note.NoKey, nil, err
 	}
 
 	name := values[2]
 	mime := note.GetMimeType(name)
 
-	return id, &note.FileInfo{
+	return key, &note.FileInfo{
 		Name:      name,
 		Timestamp: note.ParseTime(fileInfo.ModTime()),
 		Size:      fileInfo.Size(),
@@ -39,12 +39,12 @@ func readAttachmentInfo(fileInfo os.FileInfo) (note.ID, *note.FileInfo, error) {
 	}, nil
 }
 
-func getAttachmentFile(id note.ID, fileName string) string {
-	return fmt.Sprintf("%d__%s", id, fileName)
+func getAttachmentFile(key note.Key, fileName string) string {
+	return fmt.Sprintf("%d__%s", key.ID, fileName)
 }
 
 func (s *fsStorage) getAttachmentFilePath(info *note.Info, fileName string) string {
-	return path.Join(s.base, getAttachmentFile(info.ID, fileName))
+	return path.Join(s.base, info.Key.Type.String(), getAttachmentFile(info.Key, fileName))
 }
 
 func (s *fsStorage) writeAttachment(info *note.Info, fileName string, data []byte) (os.FileInfo, error) {

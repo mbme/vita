@@ -9,14 +9,13 @@ type Note struct {
 }
 
 func (n *Note) String() string {
-	return fmt.Sprintf("%v%v/%s %v", &n.ID, &n.Type, n.Name, n.Categories)
+	return fmt.Sprintf("{%v %s %v}", &n.Key, n.Name, n.Categories)
 }
 
 // ToInfo converts note to info
 func (n *Note) ToInfo() *Info {
 	return &Info{
-		ID:          n.ID,
-		Type:        n.Type,
+		Key:         n.Key,
 		Name:        n.Name,
 		Categories:  n.Categories,
 		Attachments: n.Attachments,

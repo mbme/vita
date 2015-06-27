@@ -9,7 +9,7 @@ type addNoteDTO struct {
 }
 
 type updateNoteDTO struct {
-	ID         note.ID         `json:"id"`
+	Key        note.Key        `json:"id"`
 	Name       string          `json:"name"`
 	Data       string          `json:"data"`
 	Categories []note.Category `json:"categories"`

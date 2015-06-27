@@ -40,72 +40,56 @@ var handlers = map[RequestMethod]func(*RequestParams) (any, error){
 	},
 
 	NoteRead: func(params *RequestParams) (any, error) {
-		id := new(note.ID)
-		if err := params.readAs(id); err != nil {
-			log.Printf("error parsing params: %v", err)
+		var key note.Key
+		if err := params.readAs(&key); err != nil {
+			log.Printf("error parsing key: %v", err)
 			return nil, errorBadParams
 		}
 
-		if id == nil {
-			log.Println("error parsing params: can't parse id")
-			return nil, errorBadParams
-		}
-
-		note, err := Storage.GetNote(*id)
-		if err != nil {
-			log.Printf("can't find note %v", id)
-			return nil, err
-		}
-
-		return note, nil
+		return Storage.GetNote(key)
 	},
 
 	NoteCreate: func(params *RequestParams) (any, error) {
-		dto := &addNoteDTO{}
-		if err := params.readAs(dto); err != nil {
+		var dto addNoteDTO
+		if err := params.readAs(&dto); err != nil {
 			log.Printf("error parsing params: %v", err)
 			return nil, errorBadParams
 		}
 
-		id, err := Storage.AddNote(dto.Type, dto.Name, dto.Categories)
+		key, err := Storage.AddNote(dto.Type, dto.Name, dto.Categories)
 		if err != nil {
 			return nil, err
 		}
 
-		return Storage.GetNote(id)
+		return Storage.GetNote(key)
 	},
 
 	NoteUpdate: func(params *RequestParams) (any, error) {
-		dto := &updateNoteDTO{}
-		if err := params.readAs(dto); err != nil {
+		var dto updateNoteDTO
+		if err := params.readAs(&dto); err != nil {
 			log.Printf("error parsing params: %v", err)
 			return nil, errorBadParams
 		}
 
-		if err := Storage.UpdateNote(dto.ID, dto.Name, dto.Data, dto.Categories); err != nil {
+		if err := Storage.UpdateNote(dto.Key, dto.Name, dto.Data, dto.Categories); err != nil {
 			return nil, err
 		}
 
-		return Storage.GetNote(dto.ID)
+		return Storage.GetNote(dto.Key)
 	},
 
 	NoteDelete: func(params *RequestParams) (any, error) {
-		id := new(note.ID)
-		if err := params.readAs(id); err != nil {
-			log.Printf("error parsing params: %v", err)
+		var key note.Key
+		if err := params.readAs(&key); err != nil {
+			log.Printf("error parsing key: %v", err)
 			return nil, errorBadParams
 		}
 
-		if id == nil {
-			log.Println("error parsing params: can't parse id")
-			return nil, errorBadParams
-		}
-
-		if err := Storage.RemoveNote(*id); err != nil {
+		if err := Storage.RemoveNote(key); err != nil {
 			return nil, err
 		}
 
-		return id, nil
+		return key, nil
 	},
 }
 

@@ -34,23 +34,31 @@ func writeJSON(w http.ResponseWriter, data any) error {
 func AddFileHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
-	idStr := vars["noteId"]
-	id, err := note.ParseID(idStr)
-	if err != nil || !Storage.NoteExists(id) {
-		log.Printf("file upload: unknown note %v", idStr)
+	typeStr := vars["type"]
+	idStr := vars["id"]
+
+	key, err := note.ParseKey(typeStr, idStr)
+	if err != nil {
+		log.Printf("error parsing key: %v", err)
+		http.Error(w, "error parsing key", http.StatusBadRequest)
+		return
+	}
+
+	if !Storage.NoteExists(key) {
+		log.Printf("file upload: unknown note %v", key)
 		http.Error(w, "unknown note", http.StatusBadRequest)
 		return
 	}
 
 	if err := r.ParseMultipartForm(10 * 1024 * 1024); err != nil {
-		log.Printf("file upload for %v -> parse error: %v", id, err)
+		log.Printf("file upload for %v -> parse error: %v", key, err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	file, _, err := r.FormFile("file")
 	if err != nil {
-		log.Printf("file upload for %v -> form parse error: %v", id, err)
+		log.Printf("file upload for %v -> form parse error: %v", key, err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -59,43 +67,51 @@ func AddFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	data, err := ioutil.ReadAll(file)
 	if err != nil {
-		log.Printf("file upload for %v -> file read error: %v", id, err)
+		log.Printf("file upload for %v -> file read error: %v", key, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	info, err := Storage.AddAttachment(id, name, data)
+	info, err := Storage.AddAttachment(key, name, data)
 	if err != nil {
-		log.Printf("file upload for %v -> attaching error: %v", id, err)
+		log.Printf("file upload for %v -> attaching error: %v", key, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	if writeJSON(w, info) != nil {
-		log.Printf("file upload for %v -> response error: %v", id, err)
+		log.Printf("file upload for %v -> response error: %v", key, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
-	log.Printf("file upload for %v -> attached file %v", id, name)
+	log.Printf("file upload for %v -> attached file %v", key, name)
 }
 
 // GetFileHandler handles retrieving attachments
 func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
-	idStr := vars["noteId"]
-	id, err := note.ParseID(idStr)
-	if err != nil || !Storage.NoteExists(id) {
-		log.Printf("file read: unknown note %v", idStr)
+	typeStr := vars["type"]
+	idStr := vars["id"]
+
+	key, err := note.ParseKey(typeStr, idStr)
+	if err != nil {
+		log.Printf("error parsing key: %v", err)
+		http.Error(w, "error parsing key", http.StatusBadRequest)
+		return
+	}
+
+	if !Storage.NoteExists(key) {
+		log.Printf("file upload: unknown note %v", key)
 		http.Error(w, "unknown note", http.StatusBadRequest)
 		return
 	}
 
 	fileID := vars["fileId"]
 
-	data, err := Storage.GetAttachment(id, fileID)
+	data, err := Storage.GetAttachment(key, fileID)
 	if err != nil {
-		log.Printf("file read for %v -> read error: %v", id, err)
+		log.Printf("file read for %v -> read error: %v", key, err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -103,7 +119,7 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 	_, err = w.Write(data)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-		log.Printf("file read for %v -> write error: %v", id, err)
+		log.Printf("file read for %v -> write error: %v", key, err)
 	}
 }
 
@@ -111,24 +127,32 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 func RemoveFileHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
-	idStr := vars["noteId"]
-	id, err := note.ParseID(idStr)
-	if err != nil || !Storage.NoteExists(id) {
-		log.Printf("file remove: unknown note %v", idStr)
+	typeStr := vars["type"]
+	idStr := vars["id"]
+
+	key, err := note.ParseKey(typeStr, idStr)
+	if err != nil {
+		log.Printf("error parsing key: %v", err)
+		http.Error(w, "error parsing key", http.StatusBadRequest)
+		return
+	}
+
+	if !Storage.NoteExists(key) {
+		log.Printf("file upload: unknown note %v", key)
 		http.Error(w, "unknown note", http.StatusBadRequest)
 		return
 	}
 
 	fileID := vars["fileId"]
 
-	err = Storage.RemoveAttachment(id, fileID)
+	err = Storage.RemoveAttachment(key, fileID)
 	if err != nil {
-		log.Printf("file remove for %v -> remove error: %v", id, err)
+		log.Printf("file remove for %v -> remove error: %v", key, err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	log.Printf("note %v: removed attachment %v", id, fileID)
+	log.Printf("note %v: removed attachment %v", key, fileID)
 }
 
 // AssetsHandler serves file assets

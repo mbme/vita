@@ -1,19 +1,25 @@
 package note
 
-import "strconv"
+import (
+	"strconv"
+)
 
-// ID is id of note
+// ID is id of the note
 type ID uint32
 
-// NotID means missing or wrong id
-const NotID ID = 0
+// NotID symbols wrong or missing id
+const NoID ID = 0
 
-// ParseID parse id from string
+func (id ID) String() string {
+	return string(id)
+}
+
+// ParseID parses note id string
 func ParseID(idStr string) (ID, error) {
-	res, err := strconv.ParseUint(idStr, 10, 32)
+	id, err := strconv.ParseUint(idStr, 10, 32)
 	if err != nil {
-		return 0, err
+		return NoID, err
 	}
 
-	return ID(res), nil
+	return ID(id), nil
 }
