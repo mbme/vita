@@ -19,13 +19,14 @@ var filter = require('gulp-filter');
 var base = __dirname;
 var src = './webui/';
 var dist = './webui/';
+var target = './target/';
 
 var gosrc = './src/';
 var goapp = './bin/vita';
 
 var port = 8080;
 
-var moduleAliases = {
+var devModuleAliases = {
     'underscore':          'lodash/lodash.js',
     'backbone':            'backbone/backbone.js',
     'backbone-validation': 'backbone-validation/dist/backbone-validation-amd.js',
@@ -41,13 +42,13 @@ function objectValues(object) {
     });
 }
 
-var webpackConfig = {
+var devWebpackConfig = {
     debug : true,
     devtool : 'source-map',
 
     entry: {
         app: src + 'app/init.js',
-        vendor: objectValues(moduleAliases).map(function (path) {
+        vendor: objectValues(devModuleAliases).map(function (path) {
             return src + 'vendor/' + path;
         })
     },
@@ -65,7 +66,7 @@ var webpackConfig = {
     resolve: {
         root: path.join(base, src, 'app'),
         modulesDirectories: ['vendor', 'node_modules'],
-        alias: moduleAliases
+        alias: devModuleAliases
     },
 
     module : {
@@ -95,6 +96,70 @@ var webpackConfig = {
     ]
 };
 
+var prodModuleAliases = {
+    'underscore':          'lodash/lodash.min.js',
+    'backbone':            'backbone/backbone.js',
+    'backbone-validation': 'backbone-validation/dist/backbone-validation-amd-min.js',
+    'marionette':          'marionette/lib/backbone.marionette.min.js',
+    'radio':               'backbone.radio/build/backbone.radio.min.js',
+    'moment':              'moment/min/moment.min.js',
+    'rsvp':                'rsvp/rsvp.min.js'
+};
+
+var prodWebpackConfig = {
+    debug : false,
+
+    entry: {
+        app: src + 'app/init.js',
+        vendor: objectValues(prodModuleAliases).map(function (path) {
+            return src + 'vendor/' + path;
+        })
+    },
+
+    output: {
+        path: base,
+        filename: 'bundle.js'
+    },
+
+    externals: {
+        'jquery': 'jQuery',
+        'markdown-it': 'markdownit'
+    },
+
+    resolve: {
+        root: path.join(base, src, 'app'),
+        modulesDirectories: ['vendor', 'node_modules'],
+        alias: prodModuleAliases
+    },
+
+    module : {
+        loaders : [
+            { test: /\.js?$/, include: /app/, loader: 'babel-loader',
+              query: {
+                  "stage": 0,
+                  "loose": true,
+                  "blacklist": [
+                      "es6.tailCall"
+                  ],
+                  "optional": [
+                      "runtime"
+                  ]
+              }},
+            { test: /\.hbs$/, loader: 'handlebars-loader',
+              query: {
+                  helperDirs: [path.join(base, src, 'app/helpers'),
+                               path.join(base, src, 'app/partials')]
+              }}
+        ]
+    },
+
+    plugins: [
+        new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.bundle.js"),
+        new webpack.optimize.DedupePlugin()
+    ]
+};
+
+
 function printError(error) {
     gutil.log(gutil.colors.red('found unhandled error:\n'), error.toString());
 }
@@ -116,8 +181,8 @@ function wrapPipe(taskFn) {
 }
 
 gulp.task('scripts', wrapPipe(function taskScripts () {
-    return gulp.src(webpackConfig.entry.app)
-        .pipe(gulpWebpack(webpackConfig, null, function (err, stats) {
+    return gulp.src(devWebpackConfig.entry.app)
+        .pipe(gulpWebpack(devWebpackConfig, null, function (err, stats) {
             if (err) {
                 throw err;
             }
@@ -131,6 +196,22 @@ gulp.task('scripts', wrapPipe(function taskScripts () {
         .pipe(size({ title : 'js' }))
         .pipe(connect.reload());
 }));
+
+gulp.task('prodScripts', function taskProdScripts () {
+    return gulp.src(prodWebpackConfig.entry.app)
+        .pipe(gulpWebpack(prodWebpackConfig, null, function (err, stats) {
+            if (err) {
+                throw err;
+            }
+
+            var errors = stats.compilation.errors;
+            if (errors.length) {
+                throw errors;
+            }
+        }))
+        .pipe(gulp.dest(target))
+        .pipe(size({ title : 'js' }));
+});
 
 gulp.task('styles', wrapPipe(function taskStyles () {
     return gulp.src(src + 'app/bundle.scss')
