@@ -154,27 +154,3 @@ func RemoveFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("note %v: removed attachment %v", key, fileID)
 }
-
-// AssetsHandler serves file assets
-func AssetsHandler(w http.ResponseWriter, req *http.Request) {
-	path := req.URL.Path
-
-	if path == "/" {
-		path = "/index.html"
-	}
-
-	// drop leading slash
-	path = path[1:]
-
-	data, err := Asset(path)
-
-	if err != nil {
-		log.Println("GET", path, " 404 NOT FOUND")
-		http.NotFound(w, req)
-		return
-	}
-
-	if _, err := w.Write(data); err != nil {
-		log.Println("GET", path, " 500 INTERNAL SERVER ERROR")
-	}
-}
