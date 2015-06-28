@@ -8,9 +8,14 @@ import (
 
 	"vita/handlers"
 
+	"fmt"
 	"github.com/codegangsta/cli"
+	"time"
 	"vita/storage"
 )
+
+// gitTag contains version information auto-inserted on build
+var gitTag string
 
 func configureLogger() {
 	// use stdout instead of stderr
@@ -48,6 +53,7 @@ func main() {
 
 	app := cli.NewApp()
 	app.Name = "vita"
+	app.Version = fmt.Sprintf("%s (%s)", gitTag, app.Compiled.Format(time.RFC1123Z))
 
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
@@ -68,6 +74,7 @@ func main() {
 		},
 		Action: func(c *cli.Context) {
 			rootDir := getRootDir(c)
+			log.Printf("%v", app.Compiled)
 
 			port := c.String("port")
 			log.Printf("listening on port %v", port)
