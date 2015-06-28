@@ -4,6 +4,7 @@ import (
 	"log"
 	"strings"
 
+	"fmt"
 	"os"
 	"path"
 	"vita/note"
@@ -187,26 +188,19 @@ func (s *fsStorage) UpdateNote(key note.Key, name string, data string, categorie
 	note.Data = data
 	note.Categories = categories
 
-	fileInfo, err := s.writeNote(note)
-	if err != nil {
+	if _, err := s.writeNote(note); err != nil {
 		return err
 	}
 
-	// we should remove old file if title changed
+	// we should remove old file if file name changed
 	if getNoteFile(oldInfo) != getNoteFile(note.ToInfo()) {
 		if err := s.removeNote(oldInfo); err != nil {
 			log.Printf("warn: cannot remove old note %v file %v", oldInfo, err)
 		}
 	}
 
-	newInfo, err := readNoteInfo(key.Type, fileInfo)
-	if err != nil {
-		return err
-	}
-
-	note.Info = newInfo
-
-	s.records[key] = newInfo
+	oldInfo.Name = name
+	oldInfo.Categories = categories
 
 	return nil
 }
@@ -285,11 +279,6 @@ func (s *fsStorage) GetAttachment(key note.Key, fileName string) ([]byte, error)
 	info, ok := s.records[key]
 	if !ok {
 		return nil, errorNoteNotFound
-	}
-
-	fileName = strings.TrimSpace(fileName)
-	if fileName == "" {
-		return nil, errorBadAttachmentName
 	}
 
 	if !info.HasAttachment(fileName) {
