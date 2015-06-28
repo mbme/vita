@@ -19,7 +19,7 @@ build:
 
 .PHONY: run
 run:
-	$(APP) --root /tmp/vita run -p 8081
+	$(APP) run -p 8081 /tmp/vita
 
 
 .PHONY: generate-resources
@@ -58,7 +58,7 @@ clear-test-data:
 
 .PHONY: init-test-data
 init-test-data:
-	$(APP) --root /tmp/vita init --parents
+	$(APP) init --parents /tmp/vita
 
 # check code
 .PHONY: check
@@ -70,6 +70,7 @@ check:
 .PHONY: deps
 deps:
 	go get -u github.com/codegangsta/cli
+
 	go get -u github.com/gorilla/context
 	go get -u github.com/gorilla/mux
 	go get -u github.com/gorilla/websocket

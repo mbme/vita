@@ -38,7 +38,7 @@ func listenSignals() {
 }
 
 func getRootDir(c *cli.Context) string {
-	var rootDir = c.GlobalString("root")
+	var rootDir = c.Args().First()
 	if rootDir == "" {
 		log.Fatalf("root dir must be specified")
 	}
@@ -54,13 +54,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "vita"
 	app.Version = fmt.Sprintf("%s (%s)", gitTag, app.Compiled.Format(time.RFC1123Z))
-
-	app.Flags = []cli.Flag{
-		cli.StringFlag{
-			Name:  "root",
-			Usage: "path to directory with vita files",
-		},
-	}
+	app.Usage = "run or manage wiki"
 
 	app.Commands = []cli.Command{{
 		Name:  "run",
@@ -74,7 +68,6 @@ func main() {
 		},
 		Action: func(c *cli.Context) {
 			rootDir := getRootDir(c)
-			log.Printf("%v", app.Compiled)
 
 			port := c.String("port")
 			log.Printf("listening on port %v", port)
