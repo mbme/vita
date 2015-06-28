@@ -4,7 +4,6 @@ import (
 	"log"
 	"strings"
 
-	"fmt"
 	"os"
 	"path"
 	"vita/note"
@@ -40,7 +39,7 @@ func InitFsStorageDirs(basePath string, createParents bool) error {
 }
 
 // NewFsStorage create new Storager backed with file system
-func NewFsStorage(basePath string) Storager {
+func NewFsStorage(basePath string) (Storager, error) {
 	storage := &fsStorage{
 		base:    basePath,
 		records: make(map[note.Key]*note.Info),
@@ -49,7 +48,7 @@ func NewFsStorage(basePath string) Storager {
 	for _, noteType := range note.Types {
 		files, err := listFiles(path.Join(basePath, noteType.String()), false)
 		if err != nil {
-			log.Fatal(err)
+			return nil, err
 		}
 
 		// read notes
@@ -89,7 +88,7 @@ func NewFsStorage(basePath string) Storager {
 
 	log.Printf("loaded %d notes", len(storage.records))
 
-	return storage
+	return storage, nil
 }
 
 func (s *fsStorage) ListNotes() []*note.Info {

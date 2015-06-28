@@ -72,11 +72,16 @@ func main() {
 			port := c.String("port")
 			log.Printf("listening on port %v", port)
 
-			handlers.Storage = storage.NewFsStorage(rootDir)
+			storage, err := storage.NewFsStorage(rootDir)
+			if err != nil {
+				log.Fatalf("cannot init storage: %v", err)
+			}
+
+			handlers.Storage = storage
 
 			http.Handle("/", handlers.Server)
 			if err := http.ListenAndServe(":"+port, nil); err != nil {
-				log.Fatal(err)
+				log.Fatalf("cannot start server: %v", err)
 			}
 		},
 	}, {
