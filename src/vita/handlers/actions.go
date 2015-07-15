@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 
-	"log"
+	"vita/log"
 
 	"vita/note"
 	s "vita/storage"
@@ -42,7 +42,7 @@ var handlers = map[RequestMethod]func(*RequestParams) (any, error){
 	NoteRead: func(params *RequestParams) (any, error) {
 		var key note.Key
 		if err := params.readAs(&key); err != nil {
-			log.Printf("error parsing key: %v", err)
+			log.Errorf("cannot parse key: %v", err)
 			return nil, errorBadParams
 		}
 
@@ -52,7 +52,7 @@ var handlers = map[RequestMethod]func(*RequestParams) (any, error){
 	NoteCreate: func(params *RequestParams) (any, error) {
 		var dto addNoteDTO
 		if err := params.readAs(&dto); err != nil {
-			log.Printf("error parsing params: %v", err)
+			log.Errorf("cannot parse params: %v", err)
 			return nil, errorBadParams
 		}
 
@@ -67,7 +67,7 @@ var handlers = map[RequestMethod]func(*RequestParams) (any, error){
 	NoteUpdate: func(params *RequestParams) (any, error) {
 		var dto updateNoteDTO
 		if err := params.readAs(&dto); err != nil {
-			log.Printf("error parsing params: %v", err)
+			log.Errorf("cannot parse params: %v", err)
 			return nil, errorBadParams
 		}
 
@@ -81,7 +81,7 @@ var handlers = map[RequestMethod]func(*RequestParams) (any, error){
 	NoteDelete: func(params *RequestParams) (any, error) {
 		var key note.Key
 		if err := params.readAs(&key); err != nil {
-			log.Printf("error parsing key: %v", err)
+			log.Errorf("cannot parse key: %v", err)
 			return nil, errorBadParams
 		}
 

@@ -1,12 +1,12 @@
 package main
 
 import (
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
 
 	"vita/handlers"
+	"vita/log"
 
 	"fmt"
 	"github.com/codegangsta/cli"
@@ -17,12 +17,6 @@ import (
 // gitTag contains version information auto-inserted on build
 var gitTag string
 
-func configureLogger() {
-	// use stdout instead of stderr
-	log.SetOutput(os.Stdout)
-	log.SetFlags(log.Ltime)
-}
-
 func listenSignals() {
 	// handle SigInt
 	done := make(chan os.Signal, 1)
@@ -32,7 +26,7 @@ func listenSignals() {
 	// When a signal is received simply exit the program
 	go func() {
 		<-done
-		log.Printf("received SIGINT, closing")
+		log.Info("received SIGINT, closing")
 		os.Exit(0)
 	}()
 }
@@ -40,15 +34,15 @@ func listenSignals() {
 func getRootDir(c *cli.Context) string {
 	var rootDir = c.Args().First()
 	if rootDir == "" {
-		log.Fatalf("root dir must be specified")
+		log.Fatal("root dir must be specified")
+		os.Exit(1)
 	}
-	log.Printf("root dir: %s", rootDir)
+	log.Infof("root dir: %s", rootDir)
 
 	return rootDir
 }
 
 func main() {
-	configureLogger()
 	listenSignals()
 
 	app := cli.NewApp()
@@ -70,11 +64,12 @@ func main() {
 			rootDir := getRootDir(c)
 
 			port := c.String("port")
-			log.Printf("listening on port %v", port)
+			log.Infof("listening on port %v", port)
 
 			storage, err := storage.NewFsStorage(rootDir)
 			if err != nil {
 				log.Fatalf("cannot init storage: %v", err)
+				os.Exit(1)
 			}
 
 			handlers.Storage = storage
@@ -82,6 +77,7 @@ func main() {
 			http.Handle("/", handlers.Server)
 			if err := http.ListenAndServe(":"+port, nil); err != nil {
 				log.Fatalf("cannot start server: %v", err)
+				os.Exit(1)
 			}
 		},
 	}, {
@@ -98,19 +94,21 @@ func main() {
 
 			createParents := c.Bool("parents")
 			if createParents {
-				log.Println("would create parent directories if required")
+				log.Info("would create parent directories if required")
 			}
 
 			err := storage.InitFsStorageDirs(rootDir, createParents)
 			if err == nil {
-				log.Println("Done!")
+				log.Info("Done!")
 			} else {
-				log.Fatal(err)
+				log.Fatalf("failed to init storage: %v", err)
+				os.Exit(1)
 			}
 		},
 	}}
 
 	if err := app.Run(os.Args); err != nil {
-		log.Fatal(err)
+		log.Fatalf("error running server: %v", err)
+		os.Exit(1)
 	}
 }

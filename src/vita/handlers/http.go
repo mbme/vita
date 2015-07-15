@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
+	"vita/log"
 
 	"io/ioutil"
 
@@ -39,26 +39,26 @@ func AddFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	key, err := note.ParseKey(typeStr, idStr)
 	if err != nil {
-		log.Printf("error parsing key: %v", err)
+		log.Errorf("error parsing key: %v", err)
 		http.Error(w, "error parsing key", http.StatusBadRequest)
 		return
 	}
 
 	if !Storage.NoteExists(key) {
-		log.Printf("file upload: unknown note %v", key)
+		log.Errorf("file upload: unknown note %v", key)
 		http.Error(w, "unknown note", http.StatusBadRequest)
 		return
 	}
 
 	if err := r.ParseMultipartForm(10 * 1024 * 1024); err != nil {
-		log.Printf("file upload for %v -> parse error: %v", key, err)
+		log.Errorf("file upload for %v -> parse error: %v", key, err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	file, _, err := r.FormFile("file")
 	if err != nil {
-		log.Printf("file upload for %v -> form parse error: %v", key, err)
+		log.Errorf("file upload for %v -> form parse error: %v", key, err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -67,24 +67,24 @@ func AddFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	data, err := ioutil.ReadAll(file)
 	if err != nil {
-		log.Printf("file upload for %v -> file read error: %v", key, err)
+		log.Errorf("file upload for %v -> file read error: %v", key, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	info, err := Storage.AddAttachment(key, name, data)
 	if err != nil {
-		log.Printf("file upload for %v -> attaching error: %v", key, err)
+		log.Errorf("file upload for %v -> attaching error: %v", key, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	if writeJSON(w, info) != nil {
-		log.Printf("file upload for %v -> response error: %v", key, err)
+		log.Errorf("file upload for %v -> response error: %v", key, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
-	log.Printf("file upload for %v -> attached file %v", key, name)
+	log.Infof("file upload for %v -> attached file %v", key, name)
 }
 
 // GetFileHandler handles retrieving attachments
@@ -96,13 +96,13 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	key, err := note.ParseKey(typeStr, idStr)
 	if err != nil {
-		log.Printf("error parsing key: %v", err)
+		log.Errorf("error parsing key: %v", err)
 		http.Error(w, "error parsing key", http.StatusBadRequest)
 		return
 	}
 
 	if !Storage.NoteExists(key) {
-		log.Printf("file upload: unknown note %v", key)
+		log.Errorf("file upload: unknown note %v", key)
 		http.Error(w, "unknown note", http.StatusBadRequest)
 		return
 	}
@@ -111,15 +111,15 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	data, err := Storage.GetAttachment(key, fileID)
 	if err != nil {
-		log.Printf("file read for %v -> read error: %v", key, err)
+		log.Errorf("file read for %v -> read error: %v", key, err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	_, err = w.Write(data)
 	if err != nil {
+		log.Errorf("file read for %v -> write error: %v", key, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-		log.Printf("file read for %v -> write error: %v", key, err)
 	}
 }
 
@@ -132,13 +132,13 @@ func RemoveFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	key, err := note.ParseKey(typeStr, idStr)
 	if err != nil {
-		log.Printf("error parsing key: %v", err)
+		log.Errorf("error parsing key: %v", err)
 		http.Error(w, "error parsing key", http.StatusBadRequest)
 		return
 	}
 
 	if !Storage.NoteExists(key) {
-		log.Printf("file upload: unknown note %v", key)
+		log.Errorf("file upload: unknown note %v", key)
 		http.Error(w, "unknown note", http.StatusBadRequest)
 		return
 	}
@@ -147,10 +147,10 @@ func RemoveFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	err = Storage.RemoveAttachment(key, fileID)
 	if err != nil {
-		log.Printf("file remove for %v -> remove error: %v", key, err)
+		log.Errorf("file remove for %v -> remove error: %v", key, err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	log.Printf("note %v: removed attachment %v", key, fileID)
+	log.Infof("note %v: removed attachment %v", key, fileID)
 }

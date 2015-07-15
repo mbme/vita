@@ -1,8 +1,8 @@
 package storage
 
 import (
-	"log"
 	"strings"
+	"vita/log"
 
 	"os"
 	"path"
@@ -56,12 +56,12 @@ func NewFsStorage(basePath string) (Storager, error) {
 			note, err := readNoteInfo(noteType, f)
 			if err != nil {
 				if err != errorNotNote {
-					log.Println(err)
+					log.Errorf("%v", err)
 				}
 				continue
 			}
 			if storage.NoteExists(note.Key) {
-				log.Printf("warn: duplicate note %v: %v", note.Key, note)
+				log.Warnf("duplicate note %v: %v", note.Key, note)
 				continue
 			}
 			storage.records[note.Key] = note
@@ -72,13 +72,13 @@ func NewFsStorage(basePath string) (Storager, error) {
 			noteID, attachment, err := readAttachmentInfo(noteType, f)
 			if err != nil {
 				if err != errorNotAttachment {
-					log.Println(err)
+					log.Error(err)
 				}
 				continue
 			}
 			note, ok := storage.records[noteID]
 			if !ok {
-				log.Printf("warn: attachment for unknown note %v", noteID)
+				log.Warnf("attachment for unknown note %v", noteID)
 				continue
 			}
 
@@ -86,7 +86,7 @@ func NewFsStorage(basePath string) (Storager, error) {
 		}
 	}
 
-	log.Printf("loaded %d notes", len(storage.records))
+	log.Infof("loaded %d notes", len(storage.records))
 
 	return storage, nil
 }
@@ -194,7 +194,7 @@ func (s *fsStorage) UpdateNote(key note.Key, name string, data string, categorie
 	// we should remove old file if file name changed
 	if getNoteFile(oldInfo) != getNoteFile(note.ToInfo()) {
 		if err := s.removeNote(oldInfo); err != nil {
-			log.Printf("warn: cannot remove old note %v file %v", oldInfo, err)
+			log.Warnf("cannot remove old note %v file %v", oldInfo, err)
 		}
 	}
 
@@ -217,7 +217,7 @@ func (s *fsStorage) RemoveNote(key note.Key) error {
 
 	for _, attachment := range info.Attachments {
 		if err := s.RemoveAttachment(key, attachment.Name); err != nil {
-			log.Printf("error while removing note %v attachment %v: %v", key, attachment, err)
+			log.Errorf("error while removing note %v attachment %v: %v", key, attachment, err)
 		}
 	}
 
@@ -247,7 +247,7 @@ func (s *fsStorage) AddAttachment(key note.Key, fileName string, data []byte) (*
 	}
 
 	if len(data) == 0 {
-		log.Printf("warn: attaching empty file %v to note %v", fileName, key)
+		log.Warnf("attaching empty file %v to note %v", fileName, key)
 	}
 
 	if info.HasAttachment(fileName) {

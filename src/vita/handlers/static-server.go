@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"log"
 	"net/http"
+	"vita/log"
 	"vita/note"
 )
 
@@ -17,7 +17,7 @@ func (s *StaticServer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 	data, err := Asset(path)
 	if err != nil {
-		log.Printf("GET %s -> NOT FOUND", path)
+		log.Errorf("GET %s -> NOT FOUND", path)
 		http.NotFound(w, req)
 		return
 	}
@@ -26,6 +26,6 @@ func (s *StaticServer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", mime)
 
 	if _, err := w.Write(data); err != nil {
-		log.Printf("GET %s -> err: INTERNAL SERVER ERROR %v", path, err)
+		log.Errorf("GET %s -> err: INTERNAL SERVER ERROR %v", path, err)
 	}
 }
