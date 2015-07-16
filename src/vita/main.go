@@ -10,62 +10,76 @@ import (
 
 	"fmt"
 	"github.com/codegangsta/cli"
+	"strconv"
 	"time"
 	"vita/storage"
 )
 
+const defaultConfigFile = "~/.config/vita.json"
+
 // gitTag contains version information auto-inserted on build
 var gitTag string
 
-func listenSignals() {
-	// handle SigInt
-	done := make(chan os.Signal, 1)
-	signal.Notify(done, os.Interrupt)
-
-	// Fire off a goroutine to loop until that channel receives a signal.
-	// When a signal is received simply exit the program
-	go func() {
-		<-done
-		log.Info("\nreceived SIGINT, closing")
-		os.Exit(0)
-	}()
-}
-
-func getRootDir(c *cli.Context) string {
-	var rootDir = c.Args().First()
-	if rootDir == "" {
-		log.Fatal("root dir must be specified")
-		os.Exit(1)
-	}
-	log.Infof("root dir: %s", rootDir)
-
-	return rootDir
-}
-
-func handleGlobalOpts(c *cli.Context) {
-	verbose := c.GlobalBool("debug")
-	log.Verbose = verbose
-
-	if verbose {
-		log.Info("logger: verbose mode")
-	}
-}
-
 func main() {
 	listenSignals()
+
+	var conf Config
 
 	app := cli.NewApp()
 	app.Name = "vita"
 	app.Version = fmt.Sprintf("%s (%s)", gitTag, app.Compiled.Format(time.RFC1123Z))
 	app.Usage = "run or manage wiki"
 
+	// GLOBAL FLAGS
 	app.Flags = []cli.Flag{
 		cli.BoolFlag{
 			Name:  "debug,d",
 			Usage: "show more logs",
 		},
+		cli.StringFlag{
+			Name:  "config",
+			Usage: "alternative config file (default is in " + defaultConfigFile + ")",
+		},
 	}
 
+	// PARSE CONFIG / GLOBAL OPTS
+	setupConfig := func(c *cli.Context) (err error) {
+		if c.GlobalIsSet("config") {
+			conf, err = readConfigFile(c.GlobalString("config"))
+
+			if err != nil {
+				return log.Fatalf("cannot read config file: %v", err)
+			}
+		} else {
+			conf, err = readConfigFile(defaultConfigFile)
+			if err != nil {
+				if os.IsNotExist(err) {
+					log.Debugf("config file does not exist")
+				} else {
+					return log.Fatalf("cannot read config file: %v", err)
+				}
+			}
+		}
+
+		if c.GlobalIsSet("debug") {
+			log.Verbose = c.GlobalBool("debug")
+		}
+		if log.Verbose {
+			log.Info("logger: verbose mode")
+		}
+
+		if c.Args().Present() {
+			conf.RootDir = c.Args().First()
+		}
+		if conf.RootDir == "" {
+			return log.Fatal("root dir must be specified")
+		}
+		log.Infof("root dir: %s", conf.RootDir)
+
+		return nil
+	}
+
+	// SUBCOMMANDS
 	app.Commands = []cli.Command{{
 		Name:  "run",
 		Usage: "run vita server",
@@ -76,15 +90,19 @@ func main() {
 				Usage: "port to listen on",
 			},
 		},
+		Before: setupConfig,
 		Action: func(c *cli.Context) {
-			handleGlobalOpts(c)
+			port, err := strconv.ParseUint(c.String("port"), 10, 16)
+			if err != nil {
+				log.Fatalf("wrong port: %v", port)
+				os.Exit(1)
+			}
+			if c.IsSet("port") || conf.Port == 0 {
+				conf.Port = uint16(port)
+			}
+			log.Infof("listening on port %v", conf.Port)
 
-			rootDir := getRootDir(c)
-
-			port := c.String("port")
-			log.Infof("listening on port %v", port)
-
-			storage, err := storage.NewFsStorage(rootDir)
+			storage, err := storage.NewFsStorage(conf.RootDir)
 			if err != nil {
 				log.Fatalf("cannot init storage: %v", err)
 				os.Exit(1)
@@ -93,7 +111,7 @@ func main() {
 			handlers.Storage = storage
 
 			http.Handle("/", handlers.Server)
-			if err := http.ListenAndServe(":"+port, nil); err != nil {
+			if err := http.ListenAndServe(fmt.Sprintf(":%v", conf.Port), nil); err != nil {
 				log.Fatalf("cannot start server: %v", err)
 				os.Exit(1)
 			}
@@ -107,17 +125,14 @@ func main() {
 				Usage: "create parent directories if required",
 			},
 		},
+		Before: setupConfig,
 		Action: func(c *cli.Context) {
-			handleGlobalOpts(c)
-
-			rootDir := getRootDir(c)
-
 			createParents := c.Bool("parents")
 			if createParents {
 				log.Info("would create parent directories if required")
 			}
 
-			err := storage.InitFsStorageDirs(rootDir, createParents)
+			err := storage.InitFsStorageDirs(conf.RootDir, createParents)
 			if err == nil {
 				log.Info("Done!")
 			} else {
@@ -131,4 +146,18 @@ func main() {
 		log.Fatalf("error running server: %v", err)
 		os.Exit(1)
 	}
+}
+
+func listenSignals() {
+	// handle SigInt
+	done := make(chan os.Signal, 1)
+	signal.Notify(done, os.Interrupt)
+
+	// Fire off a goroutine to loop until that channel receives a signal.
+	// When a signal is received simply exit the program
+	go func() {
+		<-done
+		log.Info("\nreceived SIGINT, closing")
+		os.Exit(0)
+	}()
 }

@@ -1,6 +1,7 @@
 package log
 
 import (
+	"errors"
 	"fmt"
 	"time"
 )
@@ -50,11 +51,13 @@ func Errorf(pattern string, args ...interface{}) {
 }
 
 // Fatal allows to log fatal message
-func Fatal(msg string) {
+func Fatal(msg string) error {
 	print("FATAL: " + msg)
+
+	return errors.New(msg)
 }
 
 // Fatalf allows to log fatal message
-func Fatalf(pattern string, args ...interface{}) {
-	Fatal(fmt.Sprintf(pattern, args...))
+func Fatalf(pattern string, args ...interface{}) error {
+	return Fatal(fmt.Sprintf(pattern, args...))
 }

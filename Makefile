@@ -1,9 +1,12 @@
+ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+
 GOSRC  := ./src/vita
 APP    := ./bin/vita
 TARGET := ./target
 WEBUI  := ./webui
 
-TEST_BASE := /tmp/vita
+DEVEL_BASE := /tmp/vita
+DEVEL_CONFIG := $(ROOT_DIR)/develConfig.json
 
 
 .PHONY: clean
@@ -15,11 +18,6 @@ clean:
 .PHONY: build
 build:
 	gb build -ldflags "-X main.gitTag $(shell git describe --tags --long --always)"
-
-
-.PHONY: run
-run:
-	$(APP) --debug run -p 8081 /tmp/vita
 
 
 .PHONY: generate-resources
@@ -52,13 +50,19 @@ release: clean generate-resources bundle-resources build
 
 
 # for development
+
 .PHONY: clear-test-data
 clear-test-data:
-	rm -rf $(TEST_BASE)
+	rm -rf $(DEVEL_BASE)
 
 .PHONY: init-test-data
 init-test-data:
-	$(APP) init --parents /tmp/vita
+	$(APP) --config $(DEVEL_CONFIG) init --parents
+
+
+.PHONY: run
+run:
+	$(APP) --config $(DEVEL_CONFIG) run
 
 # check code
 .PHONY: check
