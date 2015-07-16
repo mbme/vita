@@ -19,7 +19,7 @@ build:
 
 .PHONY: run
 run:
-	$(APP) run -p 8081 /tmp/vita
+	$(APP) --debug run -p 8081 /tmp/vita
 
 
 .PHONY: generate-resources

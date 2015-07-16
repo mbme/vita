@@ -26,7 +26,7 @@ func listenSignals() {
 	// When a signal is received simply exit the program
 	go func() {
 		<-done
-		log.Info("received SIGINT, closing")
+		log.Info("\nreceived SIGINT, closing")
 		os.Exit(0)
 	}()
 }
@@ -42,6 +42,15 @@ func getRootDir(c *cli.Context) string {
 	return rootDir
 }
 
+func handleGlobalOpts(c *cli.Context) {
+	verbose := c.GlobalBool("debug")
+	log.Verbose = verbose
+
+	if verbose {
+		log.Info("logger: verbose mode")
+	}
+}
+
 func main() {
 	listenSignals()
 
@@ -49,6 +58,13 @@ func main() {
 	app.Name = "vita"
 	app.Version = fmt.Sprintf("%s (%s)", gitTag, app.Compiled.Format(time.RFC1123Z))
 	app.Usage = "run or manage wiki"
+
+	app.Flags = []cli.Flag{
+		cli.BoolFlag{
+			Name:  "debug,d",
+			Usage: "show more logs",
+		},
+	}
 
 	app.Commands = []cli.Command{{
 		Name:  "run",
@@ -61,6 +77,8 @@ func main() {
 			},
 		},
 		Action: func(c *cli.Context) {
+			handleGlobalOpts(c)
+
 			rootDir := getRootDir(c)
 
 			port := c.String("port")
@@ -90,6 +108,8 @@ func main() {
 			},
 		},
 		Action: func(c *cli.Context) {
+			handleGlobalOpts(c)
+
 			rootDir := getRootDir(c)
 
 			createParents := c.Bool("parents")

@@ -5,6 +5,9 @@ import (
 	"time"
 )
 
+// Verbose should be true to show debug logs
+var Verbose bool
+
 func ts() string {
 	return time.Now().Format(time.Stamp)
 }
@@ -15,6 +18,9 @@ func print(msg string) {
 
 // Debugf allows to log debug message
 func Debugf(pattern string, args ...interface{}) {
+	if !Verbose {
+		return
+	}
 	print(ts() + " " + fmt.Sprintf(pattern, args...))
 }
 
