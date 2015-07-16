@@ -69,11 +69,7 @@ check:
 # install project deps
 .PHONY: deps
 deps:
-	go get -u github.com/codegangsta/cli
-
-	go get -u github.com/gorilla/context
-	go get -u github.com/gorilla/mux
-	go get -u github.com/gorilla/websocket
+	gb vendor update --all
 
 # install dev deps
 .PHONY: dev-deps
