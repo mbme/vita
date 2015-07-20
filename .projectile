@@ -1,15 +1,6 @@
--/dev/node_modules
-
--/vendor/Materialize
--/vendor/jquery
--/vendor/react
--/vendor/bourbon
--/vendor/ionicons
--/vendor/animate.css-scss
--/vendor/open-sans
--/vendor/markdown-it
--/vendor/normalize-scss
--/vendor/moment
+-/node_modules
 
 -/target
--/dist
+-/vendor
+-/webui/vendor
+-/bin/vita

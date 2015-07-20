@@ -2,13 +2,16 @@
     "name": "deps",
     "private": true,
     "dependencies": {
-        "bourbon": "*",
-        "ionicons": "*",
-        "markdown-it": "*",
-        "react": "*",
-        "normalize-scss": "*",
-        "animate.css-scss": "geoffgraham/animate.scss",
-        "moment": "*",
-        "open-sans-fontface": "*"
+        "markdown-it":         "*",
+        "moment":              "*",
+        "jquery":              "*",
+        "lodash":              "*",
+        "backbone":            "1.1.2",
+        "marionette":          "*",
+        "backbone.radio":      "*",
+        "backbone-validation": "*",
+        "bootstrap":           "*",
+        "velocity":            "*",
+        "rsvp":                "*"
     }
 }

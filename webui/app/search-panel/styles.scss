@@ -1,0 +1,20 @@
+.SearchPanel {
+    padding-top: 10px;
+
+    .items-list {
+        padding-top: 5px;
+    }
+
+    .NoteInfo {
+        list-style: none;
+        cursor: pointer;
+
+        &.is-hidden {
+            display: none;
+        }
+
+        &:hover {
+            background: #F5F5F5;
+        }
+    }
+}

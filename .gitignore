@@ -23,9 +23,11 @@ _testmain.go
 *.test
 *.prof
 
-/dist
-/target
 /.tern-port
+/bin/vita
+
+/target
 
 .sass-cache
-/styles/main.css*
+node_modules
+/webui/*bundle.*
