@@ -6,6 +6,7 @@ TARGET := ./target
 WEBUI  := ./webui
 
 DEVEL_BASE := /tmp/vita
+TEST_DATA := ./test_data
 DEVEL_CONFIG := $(ROOT_DIR)/develConfig.json
 
 
@@ -58,6 +59,7 @@ clear-test-data:
 .PHONY: init-test-data
 init-test-data:
 	$(APP) --config $(DEVEL_CONFIG) init --parents
+	cp -r $(TEST_DATA)/* $(DEVEL_BASE)
 
 
 .PHONY: run
