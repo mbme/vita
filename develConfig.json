@@ -1,0 +1,5 @@
+{
+    "root_dir": "/tmp/vita",
+    "debug": true,
+    "port": 8081
+}

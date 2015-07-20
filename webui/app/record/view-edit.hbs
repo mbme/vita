@@ -1,0 +1,44 @@
+<div class="toolbar btn-group">
+    <button class="btn btn-default js-save" type="button">
+        {{> icon type="ok"}}
+    </button>
+    <button class="btn btn-default js-delete" type="button">
+        {{> icon type="trash"}}
+    </button>
+    <button class="btn btn-default js-close" type="button">
+        {{> icon type="remove"}}
+    </button>
+</div>
+
+<ul class="nav nav-tabs">
+    <li class="active">
+        <a href="#tab-write" class="js-write" data-toggle="tab">Write</a>
+    </li>
+    <li>
+        <a href="#tab-preview" class="js-preview" data-toggle="tab">Preview</a>
+    </li>
+    <li>
+        <a href="#tab-files" class="js-files" data-toggle="tab">Files</a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <div id="tab-write" class="tab-pane active">
+        <div class="form-group">
+            <input type="text" data-name="name" class="form-control"
+                placeholder="Name" value="{{name}}" >
+            <div class="error-label">&nbsp;</div>
+        </div>
+
+        <div class="form-group">
+            <input type="text" data-name="categories" class="form-control"
+                placeholder="Categories" value="{{cats2str categories}}" >
+            <div class="error-label">&nbsp;</div>
+        </div>
+
+        <textarea data-name="data" class="form-control" placeholder="Data" rows=10>{{data}}</textarea>
+    </div>
+
+    <div id="tab-preview" class="tab-pane"></div>
+    <div id="tab-files" class="tab-pane"></div>
+</div>

@@ -1,65 +1,84 @@
-BASE := .
+ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
-GOSRC  := $(BASE)/go
-GODIRS := $(GOSRC) $(GOSRC)/storage
-TARGET := $(BASE)/target
-APP    := $(TARGET)/vita
+GOSRC  := ./src/vita
+APP    := ./bin/vita
+TARGET := ./target
+WEBUI  := ./webui
 
-VENDOR := $(BASE)/vendor
+DEVEL_BASE := /tmp/vita
+TEST_DATA := ./test_data
+DEVEL_CONFIG := $(ROOT_DIR)/develConfig.json
 
-STYLES := $(BASE)/styles
 
-DIST := $(BASE)/dist
-DIST_DEV := $(TARGET)
-
+.PHONY: clean
 clean:
-	rm -rf $(TARGET)
+	rm -rf $(APP) $(TARGET)
+	gulp clean
 
-clean-cljs:
-	rm -rf $(DIST_DEV)/app*
 
-# install project deps
-deps:
-	go get -u github.com/codegangsta/cli
-	go get -u github.com/gorilla/websocket
-
+.PHONY: build
 build:
-	go build -tags='dev' -o $(APP) -v $(GOSRC)
+	gb build -ldflags "-X main.gitTag $(shell git describe --tags --long --always)"
 
-build-cljs:
-	lein cljsbuild once dev
 
-# run tests
-test:
-	go test -v ${GODIRS}
+.PHONY: generate-resources
+generate-resources:
+	mkdir -p $(TARGET)/css
+
+	cp $(WEBUI)/vendor/jquery/dist/jquery.min.js           $(TARGET)/
+	cp $(WEBUI)/vendor/velocity/velocity.min.js            $(TARGET)/
+	cp $(WEBUI)/vendor/velocity/velocity.ui.min.js         $(TARGET)/
+	cp $(WEBUI)/vendor/markdown-it/dist/markdown-it.min.js $(TARGET)/
+
+	cp $(WEBUI)/vendor/bootstrap/dist/js/bootstrap.min.js  $(TARGET)/
+	cp $(WEBUI)/vendor/bootstrap/dist/css/bootstrap.min.css  $(TARGET)/css/
+	cp -r $(WEBUI)/vendor/bootstrap/dist/fonts  $(TARGET)
+
+	gulp styles prodScripts
+	cp $(WEBUI)/bundle.css       $(TARGET)/css/
+
+	cp $(WEBUI)/favicon.ico     $(TARGET)/
+	cp $(WEBUI)/prod-index.html $(TARGET)/index.html
+
+
+.PHONY: bundle-resources
+bundle-resources:
+	go-bindata -nomemcopy -pkg "handlers" -prefix "$(TARGET)" -o $(GOSRC)/handlers/static-data.go $(TARGET)/...
+
+
+.PHONY: release
+release: clean generate-resources bundle-resources build
+
+
+# for development
+
+.PHONY: clear-test-data
+clear-test-data:
+	rm -rf $(DEVEL_BASE)
+
+.PHONY: init-test-data
+init-test-data:
+	$(APP) --config $(DEVEL_CONFIG) init --parents
+	cp -r $(TEST_DATA)/* $(DEVEL_BASE)
+
+
+.PHONY: run
+run:
+	$(APP) --config $(DEVEL_CONFIG) run
 
 # check code
+.PHONY: check
 check:
 	go vet $(GOSRC)
 	golint $(GOSRC)
 
-run: build
-	$(APP)
+# install project deps
+.PHONY: deps
+deps:
+	gb vendor update --all
 
-serv:
-	$(BASE)/dev/watch -d $(GOSRC) -f "\.go$$" -b 'make build' -r $(APP)
-
-serv-cljs:
-	lein cljsbuild auto dev
-
-prod: clean
-	mkdir $(DIST)
-
-	cp -r $(VENDOR)/open-sans-fontface/fonts $(DIST)/open-sans
-	cp -r $(VENDOR)/ionicons/fonts $(DIST)/ionicons
-	# remove all other ttf/otf/svg fonts
-	find $(DIST) -type f ! -name "*.woff" -delete
-
-	lein cljsbuild once
-	scss -t compressed --sourcemap=none $(STYLES)/main.scss $(DIST)/main.css
-
-	# generate go source file with all the resources
-	go-bindata -o go/resources-prod.go -tags="prod" -nomemcopy -prefix "dist" dist/...
-	go build -tags='prod' -o $(APP) -v $(GOSRC)
-
-.PHONY: clean clean-cljs deps build build-cljs test check run serv serv-cljs prod
+# install dev deps
+.PHONY: dev-deps
+dev-deps:
+	go get -u github.com/constabulary/gb/...
+	go get -u github.com/jteeuwen/go-bindata/...

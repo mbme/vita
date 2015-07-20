@@ -1,0 +1,64 @@
+
+.Board {
+    $w-note: 700px;
+
+    .note-add {
+        @include card(1);
+
+        position: fixed;
+        margin-left: $w-note + 20;
+        top: 70px;
+
+        border-radius: 50%;
+
+        &,
+        &:focus,
+        &:hover,
+        &:active {
+            outline: none;
+        }
+
+        span {
+            margin: 2px 0 0 2px;
+        }
+    }
+
+    .notes {
+        padding-left: 0;
+    }
+
+    .Note {
+        @include card(1);
+
+        list-style: none;
+        position: relative;
+
+        width: $w-note;
+        background: $c-bg;
+
+        margin-top: 25px;
+        padding: 10px;
+
+        .toolbar {
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+
+        .name {
+            margin-top: 15px;
+            color: $c-note-title;
+        }
+
+        .data {
+            font-size: 1.2rem;
+        }
+    }
+}
+
+.ModalCreateNote {
+    .modal-body {
+        padding-top: 20px;
+        padding-bottom: 0;
+    }
+}
