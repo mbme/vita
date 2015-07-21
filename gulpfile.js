@@ -22,7 +22,6 @@ var dist = './webui/';
 var target = './target/';
 
 var gosrc = './src/';
-var goapp = './bin/vita';
 
 var port = 8080;
 
@@ -128,8 +127,6 @@ var prodWebpackConfig = {
 
     resolve: {
         root: path.join(base, src, 'app'),
-        modulesDirectories: ['vendor', 'node_modules'],
-        alias: prodModuleAliases
     },
 
     module : {
@@ -234,7 +231,7 @@ var killSkelet = function () {
 };
 
 var startSkelet = function () {
-    skelet = Proc.spawn(goapp, ['--root', '/tmp/vita', 'run', '-p', 8081]);
+    skelet = Proc.spawn("make", ["run"]);
 
     skelet.stdout.on('data', function(chunk) {
         chunk.toString().split('\n').forEach(function (line) {
@@ -311,8 +308,7 @@ gulp.task('serve', function taskServ() {
 });
 
 gulp.task('clean', function tasksClean (cb) {
-    del([goapp,
-         dist + 'vendor.bundle.js',
+    del([dist + 'vendor.bundle.js',
          dist + 'vendor.bundle.js.map',
          dist + 'bundle.js',
          dist + 'bundle.js.map',
