@@ -6,11 +6,9 @@ var del = require('del');
 
 var gulp = require('gulp');
 var gutil = require('gulp-util');
-var size = require('gulp-size');
 var connect = require('gulp-connect');
 var sass = require('gulp-sass');
 var sourcemaps = require('gulp-sourcemaps');
-var filter = require('gulp-filter');
 
 var webpack = require('webpack');
 var webpackConfig = require('./webpack.config.js');
@@ -69,8 +67,6 @@ gulp.task('styles', wrapPipe(function taskStyles () {
         .pipe(sass())
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(dist))
-        .pipe(size({title: 'css'}))
-        .pipe(filter('**/*.css'))
         .pipe(connect.reload());
 }));
 
