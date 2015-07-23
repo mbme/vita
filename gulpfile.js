@@ -1,165 +1,26 @@
 'use strict';
 
-var path = require('path');
 var Proc = require('child_process');
 
 var del = require('del');
-var webpack = require('webpack');
 
 var gulp = require('gulp');
 var gutil = require('gulp-util');
-var gulpWebpack = require('gulp-webpack');
 var size = require('gulp-size');
 var connect = require('gulp-connect');
 var sass = require('gulp-sass');
 var sourcemaps = require('gulp-sourcemaps');
 var filter = require('gulp-filter');
 
+var webpack = require('webpack');
+var webpackConfig = require('./webpack.config.js');
 
-var base = __dirname;
 var src = './webui/';
 var dist = './webui/';
-var target = './target/';
 
 var gosrc = './src/';
 
 var port = 8080;
-
-var devModuleAliases = {
-    'underscore':          'lodash/lodash.js',
-    'backbone':            'backbone/backbone.js',
-    'backbone-validation': 'backbone-validation/dist/backbone-validation-amd.js',
-    'marionette':          'marionette/lib/backbone.marionette.js',
-    'radio':               'backbone.radio/build/backbone.radio.js',
-    'moment':              'moment/moment.js',
-    'rsvp':                'rsvp/rsvp.js'
-};
-
-function objectValues(object) {
-    return Object.keys(object).map(function (key) {
-        return object[key];
-    });
-}
-
-var devWebpackConfig = {
-    debug : true,
-    devtool : 'source-map',
-
-    entry: {
-        app: src + 'app/init.js',
-        vendor: objectValues(devModuleAliases).map(function (path) {
-            return src + 'vendor/' + path;
-        })
-    },
-
-    output: {
-        path: base,
-        filename: 'bundle.js'
-    },
-
-    externals: {
-        'jquery': 'jQuery',
-        'markdown-it': 'markdownit'
-    },
-
-    resolve: {
-        root: path.join(base, src, 'app'),
-        modulesDirectories: ['vendor', 'node_modules'],
-        alias: devModuleAliases
-    },
-
-    module : {
-        loaders : [
-            { test: /\.js?$/, include: /app/, loader: 'babel-loader',
-              query: {
-                  "stage": 0,
-                  "loose": true,
-                  "blacklist": [
-                      "es6.tailCall"
-                  ],
-                  "optional": [
-                      "runtime"
-                  ]
-              }},
-            { test: /\.hbs$/, loader: 'handlebars-loader',
-              query: {
-                  helperDirs: [path.join(base, src, 'app/helpers'),
-                               path.join(base, src, 'app/partials')]
-              }}
-        ]
-    },
-
-    plugins: [
-        new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.bundle.js"),
-        new webpack.optimize.DedupePlugin()
-    ]
-};
-
-var prodModuleAliases = {
-    'underscore':          'lodash/lodash.min.js',
-    'backbone':            'backbone/backbone.js',
-    'backbone-validation': 'backbone-validation/dist/backbone-validation-amd-min.js',
-    'marionette':          'marionette/lib/backbone.marionette.min.js',
-    'radio':               'backbone.radio/build/backbone.radio.min.js',
-    'moment':              'moment/min/moment.min.js',
-    'rsvp':                'rsvp/rsvp.min.js'
-};
-
-var prodWebpackConfig = {
-    debug : false,
-
-    entry: {
-        app: src + 'app/init.js',
-        vendor: objectValues(prodModuleAliases).map(function (path) {
-            return src + 'vendor/' + path;
-        })
-    },
-
-    output: {
-        path: base,
-        filename: 'bundle.js'
-    },
-
-    externals: {
-        'jquery': 'jQuery',
-        'markdown-it': 'markdownit'
-    },
-
-    resolve: {
-        root: path.join(base, src, 'app'),
-    },
-
-    module : {
-        loaders : [
-            { test: /\.js?$/, include: /app/, loader: 'babel-loader',
-              query: {
-                  "stage": 0,
-                  "loose": true,
-                  "blacklist": [
-                      "es6.tailCall"
-                  ],
-                  "optional": [
-                      "runtime"
-                  ]
-              }},
-            { test: /\.hbs$/, loader: 'handlebars-loader',
-              query: {
-                  helperDirs: [path.join(base, src, 'app/helpers'),
-                               path.join(base, src, 'app/partials')]
-              }}
-        ]
-    },
-
-    plugins: [
-        new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.bundle.js"),
-        new webpack.optimize.DedupePlugin()
-    ]
-};
-
-
-function printError(error) {
-    gutil.log(gutil.colors.red('found unhandled error:\n'), error.toString());
-}
 
 function wrapPipe(taskFn) {
     return function(done) {
@@ -167,7 +28,7 @@ function wrapPipe(taskFn) {
             done();
         };
         var onError = function(err) {
-            printError(err);
+            gutil.log(gutil.colors.red('found unhandled error:\n'), err.toString());
             done(err);
         };
         var outStream = taskFn(onSuccess, onError);
@@ -177,37 +38,29 @@ function wrapPipe(taskFn) {
     };
 }
 
-gulp.task('scripts', wrapPipe(function taskScripts () {
-    return gulp.src(devWebpackConfig.entry.app)
-        .pipe(gulpWebpack(devWebpackConfig, null, function (err, stats) {
-            if (err) {
-                throw err;
-            }
+gulp.task('scripts', function taskScripts (callback) {
+    webpack(webpackConfig.dev, function(err, stats) {
+        if (err) {
+            throw new gutil.PluginError("webpack", err);
+        }
+        gutil.log("[webpack]", stats.toString({
+            colors: true
+        }));
+        connect.reload();
+        callback();
+    });
+});
 
-            var errors = stats.compilation.errors;
-            if (errors.length) {
-                throw errors;
-            }
-        }))
-        .pipe(gulp.dest(dist))
-        .pipe(size({ title : 'js' }))
-        .pipe(connect.reload());
-}));
-
-gulp.task('prodScripts', function taskProdScripts () {
-    return gulp.src(prodWebpackConfig.entry.app)
-        .pipe(gulpWebpack(prodWebpackConfig, null, function (err, stats) {
-            if (err) {
-                throw err;
-            }
-
-            var errors = stats.compilation.errors;
-            if (errors.length) {
-                throw errors;
-            }
-        }))
-        .pipe(gulp.dest(target))
-        .pipe(size({ title : 'js' }));
+gulp.task('prodScripts', function taskProdScripts (callback) {
+    webpack(webpackConfig.prod, function(err, stats) {
+        if (err) {
+            throw new gutil.PluginError("webpack", err);
+        }
+        gutil.log("[webpack]", stats.toString({
+            colors: true
+        }));
+        callback();
+    });
 });
 
 gulp.task('styles', wrapPipe(function taskStyles () {
@@ -223,11 +76,13 @@ gulp.task('styles', wrapPipe(function taskStyles () {
 
 var skelet;
 var killSkelet = function () {
-    if (skelet) {
-        skelet.kill("SIGINT");
-        gutil.log('killed skelet');
-        skelet = null;
+    if (!skelet) {
+        return;
     }
+
+    skelet.kill("SIGINT");
+    gutil.log('killed skelet');
+    skelet = null;
 };
 
 var startSkelet = function () {
@@ -263,12 +118,6 @@ process.on("SIGINT", function () {
 process.on("exit", function () {
     gutil.log('exit, closing');
     killSkelet();
-});
-
-process.on("uncaughtException", function (err) {
-    gutil.log('uncaught exception', err);
-    console.error(err.stack);
-    process.exit(1);
 });
 
 gulp.task('skelet', function taskSkelet() {
@@ -317,7 +166,7 @@ gulp.task('clean', function tasksClean (cb) {
 });
 
 gulp.task('build', ['clean'], function taskBuild (){
-    gulp.start(['scripts', 'styles']);
+    return gulp.start(['scripts', 'styles']);
 });
 
 gulp.task('default', ['build', 'serve', 'skelet', 'watch']);

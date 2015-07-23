@@ -27,7 +27,6 @@
     "gulp-size": "^1.2.1",
     "gulp-sourcemaps": "^1.5.2",
     "gulp-util": "^3.0.4",
-    "gulp-webpack": "^1.4.0",
     "handlebars": "^3.0.3",
     "handlebars-loader": "^1.0.2",
     "node-libs-browser": "^0.5.0",
