@@ -5,6 +5,8 @@ import RSVP from 'rsvp';
 import Marionette from 'marionette';
 import Radio from 'radio';
 
+import {autofocus} from 'helpers/utils';
+
 import {Model as ConfirmationModel, View as ConfirmationView} from './confirmation';
 
 let modalsChan = Radio.channel('modals');
@@ -64,7 +66,7 @@ export default Marionette.LayoutView.extend({
 
     onModalShown () {
         let view = this.getChildView('dialog');
-        view.$('[autofocus]:first').focus();
+        autofocus(view.$el);
         view.trigger('modal:shown');
     },
 

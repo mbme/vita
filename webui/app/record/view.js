@@ -5,6 +5,7 @@ import Radio from 'radio';
 
 import str2cats from './str2cats';
 import Watcher from 'helpers/watcher-behavior';
+import {autofocus} from 'helpers/utils';
 
 import FilesView from 'attachments/files';
 import Record from './record';
@@ -76,6 +77,10 @@ export let RecordEditView  = Marionette.LayoutView.extend({
     onRender() {
         this.getRegion('preview').show(new Record({model: this.model}));
         this.getRegion('files').show(new FilesView({model: this.model}));
+    },
+
+    onShow () {
+        autofocus(this.$el);
     },
 
     noteChanged: false,
