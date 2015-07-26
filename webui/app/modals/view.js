@@ -63,7 +63,9 @@ export default Marionette.LayoutView.extend({
     },
 
     onModalShown () {
-        this.getChildView('dialog').trigger('modal:shown');
+        let view = this.getChildView('dialog');
+        view.$('[autofocus]:first').focus();
+        view.trigger('modal:shown');
     },
 
     closeModal () {

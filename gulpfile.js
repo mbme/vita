@@ -44,7 +44,7 @@ gulp.task('scripts', function taskScripts (callback) {
         gutil.log("[webpack]", stats.toString({
             colors: true
         }));
-        connect.reload();
+        gulp.src(src + '*.js').pipe(connect.reload());
         callback();
     });
 });
