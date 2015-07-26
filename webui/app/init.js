@@ -1,8 +1,8 @@
 'use strict';
 
-import 'base/radio.shim';
-
 import $ from 'jquery';
+var _ = require('underscore');
+
 import Radio from 'radio';
 import Marionette from 'marionette';
 
@@ -12,6 +12,13 @@ import Storage from 'base/storage';
 import SearchPanel from 'search-panel/view';
 import BoardView from 'board/board';
 import ModalsView from 'modals/view';
+
+
+// use backbone.radio instead of backbone.wreqr
+Marionette.Application.prototype._initChannel = function () {
+    this.channelName = _.result(this, 'channelName') || 'global';
+    this.channel = _.result(this, 'channel') || Radio.channel(this.channelName);
+};
 
 
 let app = new Marionette.Application();
