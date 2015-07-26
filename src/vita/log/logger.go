@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -15,10 +16,16 @@ func ts() string {
 }
 
 func print(msg string) {
+	if !strings.HasSuffix(msg, "\n") {
+		msg += "\n"
+	}
 	os.Stdout.WriteString(msg)
 }
 
 func printErr(msg string) {
+	if !strings.HasSuffix(msg, "\n") {
+		msg += "\n"
+	}
 	os.Stderr.WriteString(msg)
 }
 
