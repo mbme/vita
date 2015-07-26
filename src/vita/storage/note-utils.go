@@ -9,6 +9,7 @@ import (
 	"regexp"
 
 	"vita/note"
+	"vita/utils"
 )
 
 var errorNotNote = errors.New("not a note")
@@ -81,7 +82,7 @@ func (s *fsStorage) readNote(info *note.Info) (*note.Note, error) {
 func (s *fsStorage) writeNote(n *note.Note) (os.FileInfo, error) {
 	path := s.getNoteFilePath(n.ToInfo())
 
-	return writeFile(path, []byte(n.Data))
+	return utils.WriteFile(path, []byte(n.Data), filePerm)
 }
 
 func (s *fsStorage) removeNote(info *note.Info) error {

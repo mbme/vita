@@ -9,6 +9,7 @@ import (
 	"regexp"
 
 	"vita/note"
+	"vita/utils"
 )
 
 var errorNotAttachment = errors.New("not attachment")
@@ -48,7 +49,7 @@ func (s *fsStorage) getAttachmentFilePath(info *note.Info, fileName string) stri
 func (s *fsStorage) writeAttachment(info *note.Info, fileName string, data []byte) (os.FileInfo, error) {
 	path := s.getAttachmentFilePath(info, fileName)
 
-	return writeFile(path, data)
+	return utils.WriteFile(path, data, filePerm)
 }
 
 func (s *fsStorage) readAttachment(info *note.Info, fileName string) ([]byte, error) {

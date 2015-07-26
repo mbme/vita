@@ -125,7 +125,8 @@ gulp.task('skelet', function taskSkelet() {
 
         killSkelet();
         startSkelet();
-        connect.reload();
+
+        gulp.src(src + '*.js').pipe(connect.reload());
     });
 });
 
