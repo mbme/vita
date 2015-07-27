@@ -7,8 +7,6 @@ var del = require('del');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var connect = require('gulp-connect');
-var sass = require('gulp-sass');
-var sourcemaps = require('gulp-sourcemaps');
 
 var webpack = require('webpack');
 var webpackConfig = require('./webpack.config.js');
@@ -20,22 +18,6 @@ var gosrc = './src/';
 
 var port = 8080;
 
-function wrapPipe(taskFn) {
-    return function(done) {
-        var onSuccess = function() {
-            done();
-        };
-        var onError = function(err) {
-            gutil.log(gutil.colors.red('found unhandled error:\n'), err.toString());
-            done(err);
-        };
-        var outStream = taskFn(onSuccess, onError);
-        if(outStream && typeof outStream.on === 'function') {
-            outStream.on('end', onSuccess);
-        }
-    };
-}
-
 gulp.task('scripts', function taskScripts (callback) {
     webpack(webpackConfig.dev, function(err, stats) {
         if (err) {
@@ -44,7 +26,7 @@ gulp.task('scripts', function taskScripts (callback) {
         gutil.log("[webpack]", stats.toString({
             colors: true
         }));
-        gulp.src(src + '*.js').pipe(connect.reload());
+        gulp.src(src + 'bundle.js').pipe(connect.reload());
         callback();
     });
 });
@@ -60,15 +42,6 @@ gulp.task('prodScripts', function taskProdScripts (callback) {
         callback();
     });
 });
-
-gulp.task('styles', wrapPipe(function taskStyles () {
-    return gulp.src(src + 'app/bundle.scss')
-        .pipe(sourcemaps.init())
-        .pipe(sass())
-        .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest(dist))
-        .pipe(connect.reload());
-}));
 
 var skelet;
 var killSkelet = function () {
@@ -126,18 +99,17 @@ gulp.task('skelet', function taskSkelet() {
         killSkelet();
         startSkelet();
 
-        gulp.src(src + '*.js').pipe(connect.reload());
+        gulp.src(src + 'bundle.js').pipe(connect.reload());
     });
 });
 
 gulp.task('watch', function taskWatch () {
     gulp.watch(
-        [src + 'app/**/*.js', src + 'app/**/*.hbs'],{
-            readDelay: 5*1000
-        }, ['scripts']);
-    gulp.watch(src + 'app/**/*.scss', {
-        readDelay: 5*1000
-    }, ['styles']);
+        [src + 'app/**/*.js',
+         src + 'app/**/*.hbs',
+         src + 'app/**/*.scss'],{
+             readDelay: 5*1000
+         }, ['scripts']);
     gulp.watch(gosrc + '**/*.go', {
         readDelay: 5*1000
     }, ['skelet']);
@@ -154,16 +126,11 @@ gulp.task('serve', function taskServ() {
 });
 
 gulp.task('clean', function tasksClean (cb) {
-    del([dist + 'vendor.bundle.js',
-         dist + 'vendor.bundle.js.map',
-         dist + 'bundle.js',
-         dist + 'bundle.js.map',
-         dist + 'bundle.css',
-         dist + 'bundle.css.map'], cb);
+    del([dist + '*.bundle.*'], cb);
 });
 
 gulp.task('build', ['clean'], function taskBuild (){
-    return gulp.start(['scripts', 'styles']);
+    return gulp.start(['scripts']);
 });
 
 gulp.task('default', ['build', 'serve', 'skelet', 'watch']);

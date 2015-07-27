@@ -23,19 +23,7 @@ build:
 
 .PHONY: generate-resources
 generate-resources:
-	mkdir -p $(TARGET)/css
-
-	cp $(WEBUI)/vendor/jquery/dist/jquery.min.js           $(TARGET)/
-	cp $(WEBUI)/vendor/velocity/velocity.min.js            $(TARGET)/
-	cp $(WEBUI)/vendor/velocity/velocity.ui.min.js         $(TARGET)/
-	cp $(WEBUI)/vendor/markdown-it/dist/markdown-it.min.js $(TARGET)/
-
-	cp $(WEBUI)/vendor/bootstrap/dist/js/bootstrap.min.js  $(TARGET)/
-	cp $(WEBUI)/vendor/bootstrap/dist/css/bootstrap.min.css  $(TARGET)/css/
-	cp -r $(WEBUI)/vendor/bootstrap/dist/fonts  $(TARGET)
-
-	gulp styles prodScripts
-	cp $(WEBUI)/bundle.css       $(TARGET)/css/
+	gulp prodScripts
 
 	cp $(WEBUI)/favicon.ico     $(TARGET)/
 	cp $(WEBUI)/prod-index.html $(TARGET)/index.html
