@@ -88,7 +88,7 @@ func appBundleCss() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "app.bundle.css", size: 2773, mode: os.FileMode(420), modTime: time.Unix(1438023286, 0)}
+	info := bindataFileInfo{name: "app.bundle.css", size: 2773, mode: os.FileMode(420), modTime: time.Unix(1438100732, 0)}
 	a := &asset{bytes: bytes, info:  info}
 	return a, nil
 }
@@ -108,7 +108,7 @@ func appBundleJs() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "app.bundle.js", size: 46503, mode: os.FileMode(420), modTime: time.Unix(1438023286, 0)}
+	info := bindataFileInfo{name: "app.bundle.js", size: 46503, mode: os.FileMode(420), modTime: time.Unix(1438100732, 0)}
 	a := &asset{bytes: bytes, info:  info}
 	return a, nil
 }
@@ -128,7 +128,7 @@ func faviconIco() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "favicon.ico", size: 4286, mode: os.FileMode(420), modTime: time.Unix(1438023287, 0)}
+	info := bindataFileInfo{name: "favicon.ico", size: 4286, mode: os.FileMode(420), modTime: time.Unix(1438100732, 0)}
 	a := &asset{bytes: bytes, info:  info}
 	return a, nil
 }
@@ -148,7 +148,7 @@ func indexHtml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "index.html", size: 804, mode: os.FileMode(420), modTime: time.Unix(1438023287, 0)}
+	info := bindataFileInfo{name: "index.html", size: 804, mode: os.FileMode(420), modTime: time.Unix(1438100732, 0)}
 	a := &asset{bytes: bytes, info:  info}
 	return a, nil
 }
@@ -168,7 +168,7 @@ func vendorBundleCss() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "vendor.bundle.css", size: 435901, mode: os.FileMode(420), modTime: time.Unix(1438023286, 0)}
+	info := bindataFileInfo{name: "vendor.bundle.css", size: 435901, mode: os.FileMode(420), modTime: time.Unix(1438100732, 0)}
 	a := &asset{bytes: bytes, info:  info}
 	return a, nil
 }
@@ -188,7 +188,7 @@ func vendorBundleJs() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "vendor.bundle.js", size: 441035, mode: os.FileMode(420), modTime: time.Unix(1438023286, 0)}
+	info := bindataFileInfo{name: "vendor.bundle.js", size: 441035, mode: os.FileMode(420), modTime: time.Unix(1438100732, 0)}
 	a := &asset{bytes: bytes, info:  info}
 	return a, nil
 }
