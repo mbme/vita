@@ -22,7 +22,7 @@ var newConfig = function (dist, libs, noParseLibs) {
         },
 
         output: {
-            path: dist,
+            path: path.resolve(dist),
             filename: 'app.bundle.js'
         },
 

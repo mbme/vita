@@ -1,37 +1,42 @@
 'use strict';
 
 var Proc = require('child_process');
-
 var del = require('del');
 
 var gulp = require('gulp');
 var gutil = require('gulp-util');
-var connect = require('gulp-connect');
 
 var webpack = require('webpack');
+var WebpackDevServer = require('webpack-dev-server');
 var webpackConfig = require('./webpack.config.js');
 
-var src = './webui/';
 var dist = './webui/';
-
 var gosrc = './src/';
-
 var port = 8080;
 
-gulp.task('scripts', function taskScripts (callback) {
-    webpack(webpackConfig.dev, function(err, stats) {
-        if (err) {
-            throw new gutil.PluginError("webpack", err);
+gulp.task('default', ['watch-skelet', 'webpack-dev-server']);
+
+gulp.task('clean', function tasksClean (cb) {
+    del([dist + '*.bundle.*'], cb);
+});
+
+gulp.task('webpack-dev-server', ['clean'], function (cb) {
+    new WebpackDevServer(webpack(webpackConfig.dev), {
+        contentBase: dist,
+        publicPath: '/',
+        stats: { colors: true },
+        watchOptions: {
+            aggregateTimeout: 4000
         }
-        gutil.log("[webpack]", stats.toString({
-            colors: true
-        }));
-        gulp.src(src + 'bundle.js').pipe(connect.reload());
-        callback();
+    }).listen(port, "localhost", function (err) {
+        if (err) {
+            throw new gutil.PluginError("webpack-dev-server", err);
+        }
+        cb();
     });
 });
 
-gulp.task('prodScripts', function taskProdScripts (callback) {
+gulp.task('scripts:prod', function taskProdScripts (callback) {
     webpack(webpackConfig.prod, function(err, stats) {
         if (err) {
             throw new gutil.PluginError("webpack", err);
@@ -81,7 +86,7 @@ var startSkelet = function () {
 // handle Ctrl-C
 process.on("SIGINT", function () {
     gutil.log('got a SIGINT, closing');
-    killSkelet();
+    process.exit();
 });
 
 process.on("exit", function () {
@@ -98,39 +103,11 @@ gulp.task('skelet', function taskSkelet() {
 
         killSkelet();
         startSkelet();
-
-        gulp.src(src + 'bundle.js').pipe(connect.reload());
     });
 });
 
-gulp.task('watch', function taskWatch () {
-    gulp.watch(
-        [src + 'app/**/*.js',
-         src + 'app/**/*.hbs',
-         src + 'app/**/*.scss'],{
-             readDelay: 5*1000
-         }, ['scripts']);
+gulp.task('watch-skelet', ['skelet'], function taskWatch () {
     gulp.watch(gosrc + '**/*.go', {
         readDelay: 5*1000
     }, ['skelet']);
 });
-
-gulp.task('serve', function taskServ() {
-    connect.server({
-        root: dist,
-        port: port,
-        livereload: {
-            port: 35728
-        }
-    });
-});
-
-gulp.task('clean', function tasksClean (cb) {
-    del([dist + '*.bundle.*'], cb);
-});
-
-gulp.task('build', ['clean'], function taskBuild (){
-    return gulp.start(['scripts']);
-});
-
-gulp.task('default', ['build', 'serve', 'skelet', 'watch']);
