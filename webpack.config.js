@@ -57,10 +57,10 @@ var newConfig = function (dist, libs, noParseLibs) {
 
         plugins: [
             new webpack.ProvidePlugin({
-                $: "jquery",
-                jQuery: "jquery",
+                $:               "jquery",
+                jQuery:          "jquery",
                 "window.jQuery": "jquery",
-                "root.jQuery": "jquery"
+                "root.jQuery":   "jquery"
             }),
             new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.bundle.js"),
             new ExtractTextPlugin("[name].bundle.css")
@@ -92,8 +92,7 @@ var libs = {
     'jquery':              'jquery/dist/jquery.js',
     'velocity':            'velocity/velocity.js',
     'velocity.ui':         'velocity/velocity.ui.js',
-    'bootstrap':           'bootstrap-sass/assets/javascripts/bootstrap.js',
-    'bootstrap-sass':      'bootstrap-sass'
+    'bootstrap':           'bootstrap-sass/assets/javascripts/bootstrap.js'
 };
 var noParseLibs = ['markdown-it', 'moment'];
 
