@@ -1,6 +1,6 @@
 'use strict';
 
-require('./bundle.scss');
+require('./main.scss');
 
 import $ from 'jquery';
 var _ = require('underscore');
