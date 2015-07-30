@@ -6,8 +6,9 @@ TARGET := ./target
 WEBUI  := ./webui
 
 DEVEL_BASE := /tmp/vita
-TEST_DATA := ./test_data
-DEVEL_CONFIG := $(ROOT_DIR)/develConfig.json
+
+TEST_DATA := $(ROOT_DIR)/dev_stuff/test_data
+DEVEL_CONFIG := $(ROOT_DIR)/dev_stuff/vita.config.json
 
 clean:
 	rm -rf $(APP) $(TARGET)
