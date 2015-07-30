@@ -44,8 +44,7 @@ var newConfig = function (dist, libs, noParseLibs) {
                 // TEMPLATES
                 { test: /\.hbs$/, loader: 'handlebars',
                   query: {
-                      helperDirs: [path.join(base, src, 'app','helpers'),
-                                   path.join(base, src, 'app','partials')]
+                      helperDirs: [path.join(base, src, 'app','helpers')]
                   }},
                 // CSS
                 { test: /\.css$/, loader: ExtractTextPlugin.extract('css') },
