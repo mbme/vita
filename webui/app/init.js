@@ -1,6 +1,5 @@
 'use strict';
 
-require('bootstrap.css');
 require('./bundle.scss');
 
 import $ from 'jquery';

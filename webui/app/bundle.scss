@@ -1,18 +1,26 @@
+
+$font-size-base: 16px;
+$icon-font-path: '../vendor/bootstrap-sass/assets/fonts/bootstrap/';
+
+@import '../vendor/bootstrap-sass/assets/stylesheets/bootstrap';
+
 $c-bg-main: #fcfcfc;
 $c-bg: #fff;
 $c-fg: #333;
-$base-font-size: 16px;
 
 $c-note-title: #ee6e73;
 $c-link: #337ab7;
 
 $c-error: #a94442;
 
-$ff-monospace: Menlo, Monaco, Consolas, "Courier New", monospace;
+$ff-monospace: $font-family-monospace;
 
 // UTILS
 
 %link {
+    color: $c-link;
+    cursor: pointer;
+
     &:link,
     &:visited,
     &:hover,
@@ -29,9 +37,6 @@ $ff-monospace: Menlo, Monaco, Consolas, "Courier New", monospace;
     &:focus {
         outline: thin dotted;
     }
-
-    color: $c-link;
-    cursor: pointer;
 }
 
 @import './styles/shadows';
@@ -40,10 +45,9 @@ $ff-monospace: Menlo, Monaco, Consolas, "Courier New", monospace;
 @import './board/styles';
 @import './record/styles';
 
-html,
-body {
-    font-size: $base-font-size;
-    line-height: 1.4;
+html {
+    font-size: $font-size-base;
+    line-height: $line-height-base;
 }
 
 body {

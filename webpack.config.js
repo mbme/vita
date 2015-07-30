@@ -93,8 +93,8 @@ var libs = {
     'jquery':              'jquery/dist/jquery.js',
     'velocity':            'velocity/velocity.js',
     'velocity.ui':         'velocity/velocity.ui.js',
-    'bootstrap':           'bootstrap/dist/js/bootstrap.js',
-    'bootstrap.css':       'bootstrap/dist/css/bootstrap.css'
+    'bootstrap':           'bootstrap-sass/assets/javascripts/bootstrap.js',
+    'bootstrap-sass':      'bootstrap-sass'
 };
 var noParseLibs = ['markdown-it', 'moment'];
 
