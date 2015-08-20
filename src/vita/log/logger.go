@@ -3,6 +3,8 @@ package log
 import (
 	"errors"
 	"fmt"
+	"os"
+	"strings"
 	"time"
 )
 
@@ -14,7 +16,17 @@ func ts() string {
 }
 
 func print(msg string) {
-	println(msg)
+	if !strings.HasSuffix(msg, "\n") {
+		msg += "\n"
+	}
+	os.Stdout.WriteString(msg)
+}
+
+func printErr(msg string) {
+	if !strings.HasSuffix(msg, "\n") {
+		msg += "\n"
+	}
+	os.Stderr.WriteString(msg)
 }
 
 // Debugf allows to log debug message
@@ -47,12 +59,12 @@ func Error(err interface{}) {
 
 // Errorf allows to log error message
 func Errorf(pattern string, args ...interface{}) {
-	print("ERROR: " + fmt.Sprintf(pattern, args...))
+	printErr("ERROR: " + fmt.Sprintf(pattern, args...))
 }
 
 // Fatal allows to log fatal message
 func Fatal(msg string) error {
-	print("FATAL: " + msg)
+	printErr("FATAL: " + msg)
 
 	return errors.New(msg)
 }

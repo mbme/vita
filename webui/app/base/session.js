@@ -2,10 +2,12 @@
 
 import Socket from 'base/socket';
 
+let base = `${window.location.hostname}:${window.VITA_PORT || window.location.port}`;
+
 let session = {
     config: {
-        socketAddr: "ws://test.dev:8081/ws",
-        serverAddr: "http://test.dev:8081"
+        socketAddr: `ws://${base}/ws`,
+        serverAddr: `${window.location.protocol}//${base}`
     },
 
     getServerAddress (addr) {

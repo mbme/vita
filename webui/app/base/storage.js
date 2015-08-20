@@ -85,6 +85,8 @@ let Storage = {
             let note = new NoteModel(result);
             console.log('open note %s', note.getId());
 
+            note.edit(true);
+
             this.openNotes.addNote(note);
 
             this.loadNotesList();

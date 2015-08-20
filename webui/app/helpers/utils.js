@@ -1,15 +1,20 @@
 'use strict';
 
 import RSVP from 'rsvp';
+import $ from 'jquery';
 
-export let successfullPromise = function (result) {
+export function successfullPromise (result) {
     return new RSVP.Promise(function (resolve) {
         resolve(result);
     });
-};
+}
 
-export let failedPromise = function (result) {
+export function failedPromise (result) {
     return new RSVP.Promise(function (resolve, reject) {
         reject(result);
     });
-};
+}
+
+export function autofocus ($el) {
+    $('[autofocus]:first', $el).focus();
+}

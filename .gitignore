@@ -27,6 +27,7 @@ _testmain.go
 /bin/vita
 
 /target
+/pkg
 
 .sass-cache
 node_modules

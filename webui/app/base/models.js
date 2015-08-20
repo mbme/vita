@@ -24,6 +24,7 @@ let FilesCollection = Backbone.Collection.extend({
 
 const IGNORED_ATTRS = ['edit', 'visible'];
 const CATEGORY_REGEX = /^[a-zA-Z0-9]+$/g;
+
 export let NoteModel = Backbone.Model.extend({
     defaults: {
         id: null,

@@ -7,6 +7,7 @@ import (
 	"os"
 	"path"
 	"vita/note"
+	"vita/utils"
 )
 
 const filePerm = 0644
@@ -21,8 +22,13 @@ type fsStorage struct {
 
 // InitFsStorageDirs creates require directories for vita FS storage
 func InitFsStorageDirs(basePath string, createParents bool) error {
+	realPath, err := utils.AbsPath(basePath)
+	if err != nil {
+		return err
+	}
+
 	for _, noteType := range note.Types {
-		dir := path.Join(basePath, noteType.String())
+		dir := path.Join(realPath, noteType.String())
 		var err error
 		if createParents {
 			err = os.MkdirAll(dir, dirPerm)
@@ -40,13 +46,18 @@ func InitFsStorageDirs(basePath string, createParents bool) error {
 
 // NewFsStorage create new Storager backed with file system
 func NewFsStorage(basePath string) (Storager, error) {
+	realPath, err := utils.AbsPath(basePath)
+	if err != nil {
+		return nil, err
+	}
+
 	storage := &fsStorage{
-		base:    basePath,
+		base:    realPath,
 		records: make(map[note.Key]*note.Info),
 	}
 
 	for _, noteType := range note.Types {
-		files, err := listFiles(path.Join(basePath, noteType.String()), false)
+		files, err := utils.ListFiles(path.Join(realPath, noteType.String()), false)
 		if err != nil {
 			return nil, err
 		}
