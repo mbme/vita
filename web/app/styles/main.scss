@@ -1,0 +1,9 @@
+$font-size-base: 16px;
+$icon-font-path: '../../vendor/bootstrap-sass/assets/fonts/bootstrap/';
+
+@import '../../vendor/bootstrap-sass/assets/stylesheets/bootstrap';
+
+html {
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+}

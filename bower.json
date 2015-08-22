@@ -6,10 +6,6 @@
     "moment": "*",
     "jquery": "*",
     "lodash": "*",
-    "backbone": "1.1.2",
-    "marionette": "*",
-    "backbone.radio": "*",
-    "backbone-validation": "*",
     "velocity": "*",
     "rsvp": "*",
     "bootstrap-sass": "~3.3.5"
