@@ -77,15 +77,17 @@ var newConfig = function (dist, libs, noParseLibs) {
 };
 
 var libs = {
-  'rsvp':                'rsvp/rsvp.js',
-  'markdown-it':         'markdown-it/dist/markdown-it.js',
-  'moment':              'moment/moment.js',
-  'jquery':              'jquery/dist/jquery.js',
-  'velocity':            'velocity/velocity.js',
-  'velocity.ui':         'velocity/velocity.ui.js',
-  'bootstrap':           'bootstrap-sass/assets/javascripts/bootstrap.js'
+  'rsvp':        'rsvp/rsvp.js',
+  'react':       'react/react.js',
+  'markdown-it': 'markdown-it/dist/markdown-it.js',
+  'moment':      'moment/moment.js',
+  'jquery':      'jquery/dist/jquery.js',
+
+  'velocity':    'velocity/velocity.js',
+  'velocity.ui': 'velocity/velocity.ui.js',
+  'bootstrap':   'bootstrap-sass/assets/javascripts/bootstrap.js',
 };
-var noParseLibs = ['markdown-it', 'moment'];
+var noParseLibs = ['markdown-it', 'moment', 'react', 'rsvp', 'jquery'];
 
 var devConfig = newConfig('./web', libs, noParseLibs);
 devConfig.debug = true;
