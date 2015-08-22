@@ -82,12 +82,13 @@ var libs = {
   'markdown-it': 'markdown-it/dist/markdown-it.js',
   'moment':      'moment/moment.js',
   'jquery':      'jquery/dist/jquery.js',
+  'lodash':      'lodash/lodash.js',
 
   'velocity':    'velocity/velocity.js',
   'velocity.ui': 'velocity/velocity.ui.js',
   'bootstrap':   'bootstrap-sass/assets/javascripts/bootstrap.js',
 };
-var noParseLibs = ['markdown-it', 'moment', 'react', 'rsvp', 'jquery'];
+var noParseLibs = ['markdown-it', 'moment', 'react', 'rsvp', 'jquery', 'lodash'];
 
 var devConfig = newConfig('./web', libs, noParseLibs);
 devConfig.debug = true;
