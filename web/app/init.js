@@ -1,21 +1,15 @@
 import './styles/main.scss';
 
+import {registerStore, bus} from 'viter/viter';
+import AppStore from 'stores/app-store';
+
 import React from 'react';
+import Test from './main';
 
-class Component extends React.Component {
-  constructor (props) {
-    super(props);
-  }
-}
+import './actions';
 
-class Test extends Component {
-  componentWillMount () {
-    console.log('TEST!')
-  }
-
-  render () {
-    return (<h1>HERE!</h1>)
-  }
-}
+registerStore('app', AppStore);
 
 React.render(<Test />, document.getElementById('content'));
+
+setTimeout(() => bus.publish('initialized'), 2000);
