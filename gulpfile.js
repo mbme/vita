@@ -24,6 +24,7 @@ gulp.task('webpack-dev-server', ['clean'], function (cb) {
     contentBase: dist,
     publicPath: '/',
     stats: { colors: true },
+    historyApiFallback: true, // for html5 history
     watchOptions: {
       aggregateTimeout: 4000
     }

@@ -2,6 +2,10 @@ import React from 'react';
 import {intersection} from 'lodash';
 import EventBus from './bus';
 
+function returnTrue() {
+  return true;
+}
+
 export const bus = new EventBus();
 
 export class Container extends React.Component {
@@ -11,6 +15,9 @@ export class Container extends React.Component {
 
   componentWillMount() {
     this.state = this.getState();
+    if (!this.shouldUpdate) {
+      this.shouldUpdate = returnTrue;
+    }
     this.triggerMethod('onInitialize');
     bus.subscribe('!stores-update', this.onStoresUpdate, this)
   }
@@ -21,11 +28,35 @@ export class Container extends React.Component {
   }
 
   onStoresUpdate(...stores) {
-    if (intersection(stores, this.stores).length) {
-      this.setState(this.getState());
+    if (!intersection(stores, this.stores).length) {
+      return;
+    }
+
+    let newState = this.getState();
+
+    if (this.shouldUpdate(this.state, newState)) {
+      this.setState(newState);
     }
   }
 }
+
+export function StoreWatcher({stores: names, getState: getState, shouldUpdate: shouldUpdate=returnTrue, render: render}) {
+  let state = getState(...(names.map(getStore)));
+
+  bus.subscribe('!stores-update', function (...stores) {
+    if (!intersection(stores, names).length) {
+      return;
+    }
+
+    let newState = getState(...(names.map(getStore)));
+
+    if (shouldUpdate(state, newState)) {
+      state = newState;
+      render(state);
+    }
+  });
+}
+
 
 const STORES = {};
 

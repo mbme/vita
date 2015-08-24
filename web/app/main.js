@@ -1,15 +1,23 @@
 import React from 'react';
 import {Container, Stores} from 'viter/viter';
 
-@Stores('app', 'test')
+@Stores('app')
   export default class Test extends Container {
-    getState (AppStore, TestStore) {
+    getState (AppStore) {
       return {
-        initialized: AppStore.initialized
+        initialized: AppStore.initialized,
+        selectedIds: AppStore.selectedIds
       };
     }
 
     render () {
-      return (<h1>HERE! {this.state.initialized ? "true" : "false"}</h1>)
+      return (
+        <div>
+          <h1>
+            HERE! {this.state.initialized ? "true" : "false"}
+          </h1>
+          {JSON.stringify(this.state.selectedIds)}
+        </div>
+      )
     }
   }

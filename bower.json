@@ -9,6 +9,7 @@
     "velocity": "*",
     "rsvp": "*",
     "bootstrap-sass": "~3.3.5",
-    "react": "~0.13.3"
+    "react": "~0.13.3",
+    "page.js": "~1.6.3"
   }
 }
