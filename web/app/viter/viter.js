@@ -40,22 +40,39 @@ export class Container extends React.Component {
   }
 }
 
-export function StoreWatcher({stores: names, getState: getState, shouldUpdate: shouldUpdate=returnTrue, render: render}, runNow=false) {
-  let state = getState(...(names.map(getStore)));
-  runNow && render(state);
+export function CreateStoreWatcher(config) {
+  let state = null;
 
-  bus.subscribe('!stores-update', function (...stores) {
-    if (!intersection(stores, names).length) {
+  function getState() {
+    return config.getState(...(config.stores.map(getStore)));
+  }
+
+  let watcher = function (...stores) {
+    if (!intersection(stores, config.stores).length) {
       return;
     }
 
-    let newState = getState(...(names.map(getStore)));
+    let newState = getState();
 
-    if (shouldUpdate(state, newState)) {
+    // check if we need re-render after store updated
+    if ((config.shouldUpdate || returnTrue)(state, newState)) {
       state = newState;
-      render(state);
+      config.render(state);
     }
-  });
+  };
+  return {
+    start (runNow = true) {
+      state = getState();
+
+      if (runNow) {
+        watcher(...config.stores);
+      }
+      bus.subscribe('!stores-update', watcher);
+    },
+    stop () {
+      bus.unsubscribe('!stores-update', watcher);
+    }
+  }
 }
 
 
