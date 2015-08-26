@@ -1,20 +1,26 @@
-import './styles/main.scss';
-
-import {registerStore, StoreWatcher, bus} from 'viter/viter';
-import AppStore from 'stores/app-store';
-import {getQueryParam, parseIdsStr} from 'helpers/utils';
-import {isEqual} from 'lodash';
+import 'styles/main.scss';
 
 import React from 'react';
+import $ from 'jquery';
 import page from 'page';
-import Test from './main';
+import {isEqual} from 'lodash';
 
-import './actions';
+import AppStore from 'stores/app-store';
+import NetStore from 'stores/net-store';
+
+import {registerStore, bus, StoreWatcher} from 'viter/viter';
+import {getQueryParam, parseIdsStr} from 'helpers/utils';
+import TestPage from 'pages/test';
+
+import 'base/actions';
+
+const basePath = `${window.location.hostname}:${window.VITA_PORT || window.location.port}`;
 
 registerStore('app', AppStore);
+registerStore('net', NetStore);
 
 const PAGES = {
-  'main': Test
+  'main': TestPage
 };
 
 // URL Query params renderer
@@ -49,24 +55,67 @@ StoreWatcher({
   render (state) {
     let Page = PAGES[state];
 
-    if (!Page) {
+    if (Page) {
+      React.render(<Page />, document.getElementById('content'));
+    } else {
       console.warn(`Unknown page "${state}"`);
-      return;
     }
-
-    React.render(<Page />, document.getElementById('content'));
   }
 });
 
+// WebSocket connector handler
+StoreWatcher({
+  stores: ['net'],
+
+  getState (NetStore) {
+    return NetStore.socket;
+  },
+
+  shouldUpdate (state, newState) {
+    return newState === null;
+  },
+
+  render () {
+    let socket = new WebSocket(`ws://${basePath}/ws`);
+    socket.onopen = () => bus.publish('socket:connected', socket);
+    socket.onclose = (e) => bus.publish('socket:disconnected', e);
+    socket.onmessage = (evt) => bus.publish('socket:message', evt.data);
+  }
+}, true);
+
+// Message handler
+StoreWatcher({
+  stores: ['net'],
+
+  getState (NetStore) {
+    return {
+      socket: NetStore.socket,
+      requests: NetStore.requests
+    };
+  },
+
+  shouldUpdate (state, newState) {
+    return newState.socket && newState.requests.length;
+  },
+
+  render ({socket: socket, requests: requests}) {
+    console.error("HERE", requests);
+  }
+});
 
 // init selected items from url
 bus.publish('item:selected', ...parseIdsStr(getQueryParam(window.location.search.substring(1), 'ids')));
 
-page('/', function (ctx) {
-  bus.publish('url:changed', 'main', ctx.querystring);
+page('/', function () {
+  bus.publish('url:changed', 'main');
 });
 page.start();
 
+$(document).on({
+  // without this drop event doesn't work in chrome
+  'dragover': e => e.preventDefault(),
+  'drop': e => e.preventDefault()
+});
 
 setTimeout(function () {
   bus.publish('initialized');

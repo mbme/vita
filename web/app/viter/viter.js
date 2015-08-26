@@ -40,8 +40,9 @@ export class Container extends React.Component {
   }
 }
 
-export function StoreWatcher({stores: names, getState: getState, shouldUpdate: shouldUpdate=returnTrue, render: render}) {
+export function StoreWatcher({stores: names, getState: getState, shouldUpdate: shouldUpdate=returnTrue, render: render}, runNow=false) {
   let state = getState(...(names.map(getStore)));
+  runNow && render(state);
 
   bus.subscribe('!stores-update', function (...stores) {
     if (!intersection(stores, names).length) {
@@ -63,12 +64,11 @@ const STORES = {};
 export function getStore(name) {
   let store = STORES[name];
 
-  if (!store) {
-    store = {};
-    console.warn(`getter: unknown store ${name}`);
+  if (store) {
+    return store;
+  } else {
+    console.error(`getter: unknown store ${name}`);
   }
-
-  return store;
 }
 
 export function registerStore(name, store) {
@@ -82,7 +82,7 @@ function isRegisteredStore(name) {
 export function publishStoreUpdate(...stores) {
   stores.forEach(function (store) {
     if (!isRegisteredStore(store)) {
-      console.warn(`publisher: unknown store ${store}`);
+      console.error(`publisher: unknown store ${store}`);
     }
   });
   bus.publish('!stores-update', ...stores);

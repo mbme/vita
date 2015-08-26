@@ -13,11 +13,12 @@ export function getQueryParam(query, param) {
   return null;
 }
 
-export function parseIdsStr(idsStr) {
-  let matches = (idsStr || '').match(/^\(([\d, ]*)\)$/);
-  if (!matches) {
-    return [];
-  }
+export function match(str, regex) {
+  return (str || '').match(regex) || [];
+}
 
-  return unique(matches[1].match(/(\d+)/g).map(x => parseInt(x, 10)));
+export function parseIdsStr(idsStr) {
+  let matches = match(idsStr, /^\(([\d, ]*)\)$/);
+
+  return unique(match(matches[1], /(\d+)/g).map(x => parseInt(x, 10)));
 }

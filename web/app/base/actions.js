@@ -33,3 +33,20 @@ registerAction('item:selected', function (...ids) {
 
   return 'app';
 });
+
+registerAction('socket:connected', function (socket) {
+  console.log('socket connected');
+  let NetStore = getStore('net');
+  NetStore.socket = socket;
+
+  return 'net';
+});
+
+registerAction('socket:disconnected', function (e) {
+  console.error('socket disconnected', e);
+
+  let NetStore = getStore('net');
+  NetStore.socket = null;
+
+  return 'net';
+});
