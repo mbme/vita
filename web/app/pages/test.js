@@ -2,12 +2,13 @@ import React from 'react';
 import {Container} from 'viter/viter';
 
 export default class Test extends Container {
-  stores = ['app']
+  stores = ['app', 'notes']
 
-  getState (AppStore) {
+  getState (AppStore, NotesStore) {
     return {
       initialized: AppStore.initialized,
-      selectedIds: AppStore.selectedIds
+      selectedIds: AppStore.selectedIds,
+      infos: NotesStore.infos
     };
   }
 
@@ -18,6 +19,9 @@ export default class Test extends Container {
           HERE! {this.state.initialized ? "true" : "false"}
         </h1>
         {JSON.stringify(this.state.selectedIds)}
+        <ul>
+          {this.state.infos.map(info => <li key={info.id}>{JSON.stringify(info)}</li>)}
+        </ul>
       </div>
     )
   }

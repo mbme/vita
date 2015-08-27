@@ -5,6 +5,7 @@ import page from 'page';
 
 import AppStore from 'stores/app-store';
 import NetStore from 'stores/net-store';
+import NotesStore from 'stores/notes-store';
 
 import {setStores, bus} from 'viter/viter';
 import {getQueryParam, parseIdsStr} from 'helpers/utils';
@@ -16,10 +17,12 @@ import MessageSender from 'watchers/message-sender';
 
 import 'actions/app-actions';
 import 'actions/socket-actions';
+import 'actions/notes-actions';
 
 setStores({
-  'app': AppStore,
-  'net': NetStore
+  'app':   AppStore,
+  'net':   NetStore,
+  'notes': NotesStore
 });
 
 QueryRenderer.start();

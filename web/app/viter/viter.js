@@ -16,6 +16,10 @@ export function getStore(name) {
   }
 }
 
+export function getStores(...names) {
+  return names.map(getStore);
+}
+
 export function setStore(name, store) {
   STORES[name] = store;
 }
@@ -57,7 +61,7 @@ export class Container extends React.Component {
     // override "getState" to always receive stores as input args
     let getState = this.getState;
     this.getState = function () {
-      return getState.apply(this, this.stores.map(getStore));
+      return getState.apply(this, getStores(...this.stores));
     };
 
     this.state = this.getState();
@@ -88,7 +92,7 @@ export function CreateStoreWatcher(config) {
   let state = null;
 
   function getState() {
-    return config.getState(...(config.stores.map(getStore)));
+    return config.getState(...(getStores(...config.stores)));
   }
 
   let watcher = function (...stores) {
