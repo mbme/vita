@@ -14,7 +14,8 @@ import SocketConnector from 'watchers/socket-connector';
 import PageRenderer from 'watchers/page-renderer';
 import MessageSender from 'watchers/message-sender';
 
-import 'base/actions';
+import 'actions/app-actions';
+import 'actions/socket-actions';
 
 registerStore('app', AppStore);
 registerStore('net', NetStore);
