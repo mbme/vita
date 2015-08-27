@@ -15,10 +15,15 @@ export default CreateStoreWatcher({
   },
 
   shouldUpdate (state, newState) {
-    return newState.socket && newState.requests.length;
+    return !!newState.requests.length;
   },
 
-  render ({socket: socket, requests: requests}) {
+  render ({socket, requests}) {
+    if (!socket) {
+      this._pending_requests = [];
+      return;
+    }
+
     // create new array of pending request ids to skip
     // ids of requests which were removed from 'requests' array
     let new_pending = [];
