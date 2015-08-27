@@ -1,12 +1,52 @@
 import React from 'react';
-import {intersection} from 'lodash';
+import {intersection, forEach} from 'lodash';
 import EventBus from './bus';
+
+export const bus = new EventBus();
+
+const STORES = {};
+
+export function getStore(name) {
+  let store = STORES[name];
+
+  if (store) {
+    return store;
+  } else {
+    console.error(`getter: unknown store ${name}`);
+  }
+}
+
+export function setStore(name, store) {
+  STORES[name] = store;
+}
+
+export function setStores (mappings) {
+  forEach(mappings, (store, name) => setStore(name, store))
+}
+
+function isRegisteredStore(name) {
+  return STORES.hasOwnProperty(name);
+}
+
+export function publishStoreUpdate(...stores) {
+  stores.forEach(function (store) {
+    if (!isRegisteredStore(store)) {
+      console.error(`publisher: unknown store ${store}`);
+    }
+  });
+  bus.publish('!stores-update', ...stores);
+}
+
+export function registerAction(event, handler) {
+  bus.subscribe(event, function (...params) {
+    let updatedStores = [].concat(handler(...params) || []);
+    publishStoreUpdate(...updatedStores);
+  });
+}
 
 function returnTrue() {
   return true;
 }
-
-export const bus = new EventBus();
 
 export class Container extends React.Component {
   triggerMethod(name, ...args) {
@@ -14,10 +54,14 @@ export class Container extends React.Component {
   }
 
   componentWillMount() {
+    // override "getState" to always receive stores as input args
+    let getState = this.getState;
+    this.getState = function () {
+      return getState.apply(this, this.stores.map(getStore));
+    };
+
     this.state = this.getState();
-    if (!this.shouldUpdate) {
-      this.shouldUpdate = returnTrue;
-    }
+
     this.triggerMethod('onInitialize');
     bus.subscribe('!stores-update', this.onStoresUpdate, this)
   }
@@ -34,7 +78,7 @@ export class Container extends React.Component {
 
     let newState = this.getState();
 
-    if (this.shouldUpdate(this.state, newState)) {
+    if ((this.shouldUpdate || returnTrue)(this.state, newState)) {
       this.setState(newState);
     }
   }
@@ -67,69 +111,12 @@ export function CreateStoreWatcher(config) {
       if (runNow) {
         watcher(...config.stores);
       }
+
       bus.subscribe('!stores-update', watcher);
     },
+
     stop () {
       bus.unsubscribe('!stores-update', watcher);
-    }
-  }
-}
-
-
-const STORES = {};
-
-export function getStore(name) {
-  let store = STORES[name];
-
-  if (store) {
-    return store;
-  } else {
-    console.error(`getter: unknown store ${name}`);
-  }
-}
-
-export function registerStore(name, store) {
-  STORES[name] = store;
-}
-
-function isRegisteredStore(name) {
-  return STORES.hasOwnProperty(name);
-}
-
-export function publishStoreUpdate(...stores) {
-  stores.forEach(function (store) {
-    if (!isRegisteredStore(store)) {
-      console.error(`publisher: unknown store ${store}`);
-    }
-  });
-  bus.publish('!stores-update', ...stores);
-}
-
-export function registerAction(event, handler) {
-  bus.subscribe(event, function (...params) {
-    let updatedStores = [].concat(handler(...params) || []);
-    publishStoreUpdate(...updatedStores);
-  });
-}
-
-// Component decorator
-export function Stores(...stores) {
-  return function (Comp) {
-
-    // return wrapped component constructor function
-    return function (...args) {
-      let comp = new Comp(...args);
-
-      // add property "stores"
-      comp.stores = stores;
-
-      // override "getState" to always receive stores as input args
-      let getState = comp.getState;
-      comp.getState = function () {
-        return getState.apply(this, stores.map(getStore));
-      };
-
-      return comp;
     }
   }
 }

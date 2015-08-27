@@ -6,7 +6,7 @@ import page from 'page';
 import AppStore from 'stores/app-store';
 import NetStore from 'stores/net-store';
 
-import {registerStore, bus} from 'viter/viter';
+import {setStores, bus} from 'viter/viter';
 import {getQueryParam, parseIdsStr} from 'helpers/utils';
 
 import QueryRenderer from 'watchers/query-renderer';
@@ -17,8 +17,10 @@ import MessageSender from 'watchers/message-sender';
 import 'actions/app-actions';
 import 'actions/socket-actions';
 
-registerStore('app', AppStore);
-registerStore('net', NetStore);
+setStores({
+  'app': AppStore,
+  'net': NetStore
+});
 
 QueryRenderer.start();
 PageRenderer.start();
