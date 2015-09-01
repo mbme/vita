@@ -1,12 +1,12 @@
 import { registerAction, getStores, publishStoreUpdate } from 'viter/viter';
 
 registerAction('socket:connected', function () {
-  let [NetStore, NotesStore] = getStores('net', 'notes');
+  let [NetStore, NotesInfoStore] = getStores('net', 'notes-info');
 
   NetStore.addRequest('notes-list-read').then(function (items) {
-    NotesStore.resetInfos(items);
+    NotesInfoStore.resetInfos(items);
 
-    return 'notes';
+    return 'notes-info';
   }).then(publishStoreUpdate);
 
   return 'net';

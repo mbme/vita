@@ -1,5 +1,4 @@
 const AppStore = {
-  initialized: false,
   page: '',
   selectedIds: []
 }

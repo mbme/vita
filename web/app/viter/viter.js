@@ -60,6 +60,9 @@ export class Container extends React.Component {
   componentWillMount() {
     // override "getState" to always receive stores as input args
     let getState = this.getState;
+    if (!getState) {
+      throw "getState must be provided";
+    }
     this.getState = function () {
       return getState.apply(this, getStores(...this.stores));
     };

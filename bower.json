@@ -2,14 +2,14 @@
   "name": "deps",
   "private": true,
   "dependencies": {
-    "markdown-it": "*",
-    "moment": "*",
     "jquery": "*",
     "lodash": "*",
-    "velocity": "*",
-    "rsvp": "*",
-    "bootstrap-sass": "~3.3.5",
+    "markdown-it": "*",
+    "moment": "*",
+    "normalize-css": "normalize.css#~3.0.3",
+    "page.js": "~1.6.3",
     "react": "~0.13.3",
-    "page.js": "~1.6.3"
+    "rsvp": "*",
+    "velocity": "*"
   }
 }

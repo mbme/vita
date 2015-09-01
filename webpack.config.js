@@ -87,7 +87,6 @@ var libs = {
 
   'velocity':    'velocity/velocity.js',
   'velocity.ui': 'velocity/velocity.ui.js',
-  'bootstrap':   'bootstrap-sass/assets/javascripts/bootstrap.js',
 };
 var noParseLibs = ['markdown-it', 'moment', 'react', 'rsvp', 'jquery', 'lodash', 'page'];
 

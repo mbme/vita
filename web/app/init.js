@@ -5,7 +5,7 @@ import page from 'page';
 
 import AppStore from 'stores/app-store';
 import NetStore from 'stores/net-store';
-import NotesStore from 'stores/notes-store';
+import NotesInfoStore from 'stores/notes-info-store';
 
 import {setStores, bus} from 'viter/viter';
 import {getQueryParam, parseIdsStr} from 'helpers/utils';
@@ -22,7 +22,7 @@ import 'actions/notes-actions';
 setStores({
   'app':   AppStore,
   'net':   NetStore,
-  'notes': NotesStore
+  'notes-info': NotesInfoStore
 });
 
 QueryRenderer.start();
@@ -43,8 +43,3 @@ $(document).on({
   'dragover': e => e.preventDefault(),
   'drop': e => e.preventDefault()
 });
-
-setTimeout(function () {
-  bus.publish('initialized');
-  bus.publish('item:selected', 4);
-}, 2000)
