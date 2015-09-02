@@ -1,4 +1,4 @@
-import 'styles/main.scss';
+import '../styles/main.css';
 
 import $ from 'jquery';
 import page from 'page';

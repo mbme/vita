@@ -43,12 +43,20 @@ var newConfig = function (dist, libs, noParseLibs) {
             ]
           }},
         // CSS
-        { test: /\.css$/, loader: ExtractTextPlugin.extract('css') },
-        // SCSS
-        { test: /\.scss$/, loader: ExtractTextPlugin.extract('css!sass')},
+        { test: /\.css$/, loader: ExtractTextPlugin.extract('style-loader','css-loader!postcss-loader') },
         // RESOURCES
-        { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url' }
+        { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url' },
       ]
+    },
+
+    postcss: function () {
+      return [
+        require('postcss-mixins'),
+        require('postcss-nested'),
+        require('postcss-simple-vars'),
+        require('postcss-vertical-rhythm')(),
+        require("postcss-calc"),
+        require('autoprefixer-core')({ browsers: ['last 2 versions'] })];
     },
 
     plugins: [
