@@ -55,6 +55,7 @@ var newConfig = function (dist, libs, noParseLibs) {
         require('postcss-nested'),
         require('postcss-simple-vars'),
         require('postcss-vertical-rhythm')(),
+        require('postcss-clearfix'),
         require("postcss-calc"),
         require('autoprefixer-core')({ browsers: ['last 2 versions'] })];
     },
