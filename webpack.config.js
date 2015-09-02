@@ -13,13 +13,15 @@ var newConfig = function (dist, libs, noParseLibs) {
 
   var config = {
     entry: {
-      app: 'init.js',
+      app: ['init.js', 'main.css'],
       vendor: []
     },
 
     resolve: {
       root: [path.join(base, src, 'app')],
-      alias: {}
+      alias: {
+        'main.css': path.join(base, src, 'styles/main.css')
+      }
     },
 
     output: {
