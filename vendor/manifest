@@ -4,25 +4,25 @@
 		{
 			"importpath": "github.com/codegangsta/cli",
 			"repository": "https://github.com/codegangsta/cli",
-			"revision": "bca61c476e3c752594983e4c9bcd5f62fb09f157",
+			"revision": "a65b733b303f0055f8d324d805f393cd3e7a7904",
 			"branch": "master"
 		},
 		{
 			"importpath": "github.com/gorilla/context",
 			"repository": "https://github.com/gorilla/context",
-			"revision": "215affda49addc4c8ef7e2534915df2c8c35c6cd",
+			"revision": "1c83b3eabd45b6d76072b66b746c20815fb2872d",
 			"branch": "master"
 		},
 		{
 			"importpath": "github.com/gorilla/mux",
 			"repository": "https://github.com/gorilla/mux",
-			"revision": "fe156cb197c7094648577e93c1734bb4c856969e",
+			"revision": "49c024275504f0341e5a9971eb7ba7fa3dc7af40",
 			"branch": "master"
 		},
 		{
 			"importpath": "github.com/gorilla/websocket",
 			"repository": "https://github.com/gorilla/websocket",
-			"revision": "6eb6ad425a89d9da7a5549bc6da8f79ba5c17844",
+			"revision": "b6ab76f1fe9803ee1d59e7e5b2a797c1fe897ce5",
 			"branch": "master"
 		}
 	]

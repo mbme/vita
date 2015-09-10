@@ -15,7 +15,7 @@ clean:
 	gulp clean
 
 build:
-	gb build -ldflags "-X main.gitTag $(shell git describe --tags --long --always)"
+	gb build -ldflags "-X main.gitTag $(shell git describe --tags --long --always)" all
 
 generate-resources:
 	gulp scripts:prod
