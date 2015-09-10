@@ -1,5 +1,6 @@
 import React from 'react';
 import {Container} from 'viter/viter';
+import SearchItem from './search-item';
 
 export default class SearchPanel extends Container {
   stores = ['notes-info']
@@ -13,7 +14,7 @@ export default class SearchPanel extends Container {
   render () {
     return (
       <ul className="SearchPanel">
-        {this.state.infos.map(info => <li key={info.id}>{JSON.stringify(info)}</li>)}
+        {this.state.infos.map(info => <SearchItem key={info.id} note={info}/>)}
       </ul>
     )
   }
