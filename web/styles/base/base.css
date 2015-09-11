@@ -1,0 +1,9 @@
+ul {
+  list-style-type: none;
+  margin: 0;
+}
+
+body {
+  font-size: $font-size;
+  color: $color;
+}

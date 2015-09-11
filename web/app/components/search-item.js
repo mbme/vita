@@ -8,7 +8,7 @@ export default class SearchItem extends React.Component {
     return (
       <li className="SearchItem">
         <h3>{this.props.note.name}</h3>
-        {this.props.note.categories.map(cat => <span key={cat} className="tag">{cat}</span>)}
+        {this.props.note.categories.map(cat => <span key={cat} className="category">{cat}</span>)}
       </li>
     )
   }

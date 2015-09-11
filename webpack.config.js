@@ -53,13 +53,21 @@ var newConfig = function (dist, libs, noParseLibs) {
 
     postcss: function () {
       return [
+        require('postcss-import')({
+          glob: true
+        }),
         require('postcss-mixins'),
         require('postcss-nested'),
-        require('postcss-simple-vars'),
+        require('postcss-simple-vars')({
+          variables: function () {
+            return require(path.join(base, src, 'styles/variables'));
+          }
+        }),
         require('postcss-vertical-rhythm')(),
         require('postcss-clearfix'),
         require("postcss-calc"),
-        require('autoprefixer-core')({ browsers: ['last 2 versions'] })];
+        require('autoprefixer-core')({ browsers: ['last 2 versions'] })
+      ];
     },
 
     plugins: [
