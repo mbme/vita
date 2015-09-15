@@ -40,6 +40,7 @@ var newConfig = function (dist, libs, noParseLibs) {
             "blacklist": [
               "es6.tailCall"
             ],
+            "cacheDirectory": true,
             "optional": [
               "runtime"
             ]
@@ -75,7 +76,8 @@ var newConfig = function (dist, libs, noParseLibs) {
         $:               "jquery",
         jQuery:          "jquery",
         "window.jQuery": "jquery",
-        "root.jQuery":   "jquery"
+        "root.jQuery":   "jquery",
+        React:           "react"
       }),
       new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.bundle.js"),
       new ExtractTextPlugin("[name].bundle.css")

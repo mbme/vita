@@ -1,6 +1,4 @@
-import React from 'react';
 import {Container} from 'viter/viter';
-
 
 export default class Desk extends Container {
   getState () {

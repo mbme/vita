@@ -1,4 +1,3 @@
-import React from 'react';
 import {Container} from 'viter/viter';
 import SearchItem from './search-item';
 
