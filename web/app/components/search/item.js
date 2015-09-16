@@ -5,10 +5,11 @@ export default class SearchItem extends React.Component {
     note: React.PropTypes.object.isRequired
   }
   render () {
+    let {note} = this.props;
     return (
       <li className="SearchItem">
-        <h3>{this.props.note.name}</h3>
-        {this.props.note.categories.map(cat => <span key={cat} className="category">{cat}</span>)}
+        <h3>{note.name}</h3>
+        {note.categories.map(cat => <span key={cat} className="category">{cat}</span>)}
       </li>
     )
   }

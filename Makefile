@@ -38,8 +38,6 @@ init-test-data:
 	$(APP) --config $(DEVEL_CONFIG) init --parents
 	cp -r $(TEST_DATA)/* $(DEVEL_BASE)
 
-
-.PHONY: run
 run:
 	$(APP) --config $(DEVEL_CONFIG) run
 

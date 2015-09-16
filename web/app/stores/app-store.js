@@ -1,6 +1,7 @@
 const AppStore = {
   page: '',
-  selectedIds: []
+  selectedIds: [],
+  searchFilter: ''
 }
 
 export default AppStore;

@@ -4,13 +4,12 @@ import {contains} from 'lodash';
 registerAction('url:changed', function (page) {
   let AppStore = getStore('app');
 
-  if (AppStore.page === page) {
-    return;
+  if (AppStore.page !== page) {
+
+    AppStore.page = page;
+
+    return 'app';
   }
-
-  AppStore.page = page;
-
-  return 'app';
 });
 
 registerAction('item:selected', function (...ids) {
@@ -18,11 +17,10 @@ registerAction('item:selected', function (...ids) {
 
   let newIds = ids.filter(id => !contains(AppStore.selectedIds, id));
 
-  if (!newIds.length) {
-    return;
+  if (newIds.length) {
+
+    AppStore.selectedIds.push(...newIds);
+
+    return 'app';
   }
-
-  AppStore.selectedIds.push(...newIds);
-
-  return 'app';
 });

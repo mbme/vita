@@ -17,6 +17,7 @@ import 'helpers/hacks';
 import 'actions/app-actions';
 import 'actions/socket-actions';
 import 'actions/notes-actions';
+import 'actions/search-actions';
 
 setStores({
   'app':   AppStore,
