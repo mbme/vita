@@ -1,0 +1,16 @@
+$w-sidebar: 300px;
+
+.MainPage {
+  height: 100%;
+  display: flex;
+
+  &-left-panel {
+    background-color: yellow;
+    flex: 0 0 $w-sidebar;
+  }
+
+  &-content {
+    background-color: orange;
+    flex: 1 100%;
+  }
+}
