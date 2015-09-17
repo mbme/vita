@@ -67,7 +67,7 @@ var newConfig = function (dist, libs, noParseLibs) {
         require('postcss-vertical-rhythm')(),
         require('postcss-clearfix'),
         require("postcss-calc"),
-        require('autoprefixer-core')({ browsers: ['last 2 versions'] })
+        require('autoprefixer')({ browsers: ['last 2 versions'] })
       ];
     },
 

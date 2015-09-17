@@ -1,8 +1,6 @@
 /*eslint no-var:0*/
 'use strict';
 
-var del = require('del');
-
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 
@@ -15,11 +13,7 @@ var port = 8080;
 
 gulp.task('default', ['webpack-dev-server']);
 
-gulp.task('clean', function tasksClean (cb) {
-  del([dist + '*.bundle.*'], cb);
-});
-
-gulp.task('webpack-dev-server', ['clean'], function (cb) {
+gulp.task('webpack-dev-server', function (cb) {
   new WebpackDevServer(webpack(webpackConfig.dev), {
     contentBase: dist,
     publicPath: '/',
