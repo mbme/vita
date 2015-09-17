@@ -3,4 +3,9 @@
   .category {
     padding: 0 5px;
   }
+
+  &:hover {
+    background-color: lightgrey;
+    cursor: pointer;
+  }
 }

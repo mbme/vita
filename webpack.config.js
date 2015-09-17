@@ -3,7 +3,6 @@
 
 var path = require('path');
 var webpack = require('webpack');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 var base = __dirname;
 var src = 'web';
@@ -18,10 +17,8 @@ var newConfig = function (dist, libs, noParseLibs) {
     },
 
     resolve: {
-      root: [path.join(base, src, 'app')],
-      alias: {
-        'main.css': path.join(base, src, 'styles/main.css')
-      }
+      root: [path.join(base, src, 'app'), path.join(base, src, 'styles')],
+      alias: {}
     },
 
     output: {
@@ -46,7 +43,7 @@ var newConfig = function (dist, libs, noParseLibs) {
             ]
           }},
         // CSS
-        { test: /\.css$/, loader: ExtractTextPlugin.extract('style-loader','css-loader!postcss-loader') },
+        { test: /\.css$/, loader: 'style-loader!css-loader!postcss-loader'},
         // RESOURCES
         { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url' },
       ]
@@ -55,7 +52,10 @@ var newConfig = function (dist, libs, noParseLibs) {
     postcss: function () {
       return [
         require('postcss-import')({
-          glob: true
+          glob: true,
+          onImport: function (files) {
+            files.forEach(this.addDependency);
+          }.bind(this)
         }),
         require('postcss-mixins'),
         require('postcss-nested'),
@@ -79,8 +79,7 @@ var newConfig = function (dist, libs, noParseLibs) {
         "root.jQuery":   "jquery",
         React:           "react"
       }),
-      new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.bundle.js"),
-      new ExtractTextPlugin("[name].bundle.css")
+      new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.bundle.js")
     ]
   };
 
