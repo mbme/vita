@@ -6,14 +6,14 @@
   "scripts": null,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mbme/vita.git"
+    "url": "git+https:\/\/github.com\/mbme\/vita.git"
   },
   "author": "mbme",
   "license": "GPLv3",
   "bugs": {
-    "url": "https://github.com/mbme/vita/issues"
+    "url": "https:\/\/github.com\/mbme\/vita\/issues"
   },
-  "homepage": "https://github.com/mbme/vita#readme",
+  "homepage": "https:\/\/github.com\/mbme\/vita#readme",
   "devDependencies": {
     "autoprefixer": "*",
     "babel-core": "*",
@@ -23,7 +23,6 @@
     "gulp": "*",
     "gulp-util": "*",
     "node-libs-browser": "*",
-    "node-sass": "*",
     "postcss-calc": "*",
     "postcss-clearfix": "*",
     "postcss-import": "*",
@@ -40,6 +39,13 @@
   },
   "dependencies": {
     "babel-runtime": "*",
-    "react": "^0.13.3"
+    "lodash": "*",
+    "markdown-it": "*",
+    "moment": "*",
+    "normalize.css": "*",
+    "page": "*",
+    "react": "*",
+    "rsvp": "*",
+    "velocity-animate": "*"
   }
 }

@@ -7,18 +7,19 @@ var webpack = require('webpack');
 var base = __dirname;
 var src = 'web';
 
-var newConfig = function (dist, libs, noParseLibs) {
+var newConfig = function (dist, noParseLibs) {
   noParseLibs = noParseLibs || [];
 
   var config = {
     entry: {
-      app: ['init.js', 'main.css'],
-      vendor: []
+      app: ['init.js', 'main.css']
     },
 
     resolve: {
-      root: [path.join(base, src, 'app'), path.join(base, src, 'styles')],
-      alias: {}
+      root: [path.join(base, src, 'app')],
+      alias: {
+        'main.css': path.join(base, src, 'styles/main.css')
+      }
     },
 
     output: {
@@ -67,45 +68,25 @@ var newConfig = function (dist, libs, noParseLibs) {
         "window.jQuery": "jquery",
         "root.jQuery":   "jquery",
         React:           "react"
-      }),
-      new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.bundle.js")
+      })
     ]
   };
 
-  Object.keys(libs).forEach(function (name) {
-    var libPath = path.join(base, src, 'vendor', libs[name]);
-    config.entry.vendor.push(libPath);
-    config.resolve.alias[name + '$'] = libPath;
-
-    if (noParseLibs.indexOf(name) !== -1) {
-      config.module.noParse.push(new RegExp(libPath));
-    }
-  });
+  config.module.noParse.push.apply(config.module.noParse, noParseLibs);
 
   return config;
 };
 
-var libs = {
-  'rsvp':        'rsvp/rsvp.js',
-  'markdown-it': 'markdown-it/dist/markdown-it.js',
-  'moment':      'moment/moment.js',
-  'jquery':      'jquery/dist/jquery.js',
-  'lodash':      'lodash/lodash.js',
-  'page':        'page.js/page.js',
-
-  'velocity':    'velocity/velocity.js',
-  'velocity.ui': 'velocity/velocity.ui.js',
-};
 var noParseLibs = ['markdown-it', 'moment', 'react', 'rsvp', 'jquery', 'lodash', 'page'];
 
-var devConfig = newConfig('./web', libs, noParseLibs);
+var devConfig = newConfig('./web', noParseLibs);
 devConfig.debug = true;
 devConfig.devtool = 'eval';
 devConfig.entry.app.push('webpack/hot/dev-server');
 devConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
 devConfig.module.loaders[0].loaders.unshift('react-hot');
 
-var prodConfig = newConfig('./target', libs, noParseLibs);
+var prodConfig = newConfig('./target', noParseLibs);
 
 prodConfig.debug = false;
 prodConfig.plugins.push(new webpack.optimize.UglifyJsPlugin({
