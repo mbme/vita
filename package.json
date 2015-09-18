@@ -6,14 +6,14 @@
   "scripts": null,
   "repository": {
     "type": "git",
-    "url": "git+https:\/\/github.com\/mbme\/vita.git"
+    "url": "git+https://github.com/mbme/vita.git"
   },
   "author": "mbme",
   "license": "GPLv3",
   "bugs": {
-    "url": "https:\/\/github.com\/mbme\/vita\/issues"
+    "url": "https://github.com/mbme/vita/issues"
   },
-  "homepage": "https:\/\/github.com\/mbme\/vita#readme",
+  "homepage": "https://github.com/mbme/vita#readme",
   "devDependencies": {
     "autoprefixer": "*",
     "babel-core": "*",
@@ -44,7 +44,8 @@
     "moment": "*",
     "normalize.css": "*",
     "page": "*",
-    "react": "*",
+    "react": "^0.14.0-rc1",
+    "react-dom": "^0.14.0-rc1",
     "rsvp": "*",
     "velocity-animate": "*"
   }

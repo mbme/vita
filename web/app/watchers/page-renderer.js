@@ -1,6 +1,6 @@
 import {CreateStoreWatcher} from 'viter/viter';
 
-import React from 'react';
+import ReactDOM from 'react-dom';
 import MainPage from 'pages/records';
 
 const PAGES = {
@@ -23,7 +23,7 @@ export default CreateStoreWatcher({
     let Page = PAGES[state];
 
     if (Page) {
-      React.render(<Page />, document.getElementById('container'));
+      ReactDOM.render(<Page />, document.getElementById('container'));
     } else {
       console.error(`Unknown page "${state}"`);
     }
