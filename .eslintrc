@@ -25,7 +25,6 @@
     "react/jsx-boolean-value": 1,
     "react/jsx-no-duplicate-props": 1,
     "react/jsx-no-undef": 1,
-    "react/jsx-quotes": 1,
     "react/jsx-sort-prop-types": 0,
     "react/jsx-sort-props": 0,
     "react/jsx-uses-react": 1,
@@ -41,6 +40,7 @@
     "react/self-closing-comp": 1,
     "react/wrap-multilines": 1,
     "no-mixed-spaces-and-tabs": 1,
+    "jsx-quotes": 1,
     "no-undef": 1,
     "no-var": 1
   }

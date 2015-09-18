@@ -72,8 +72,6 @@ var newConfig = function (dist, noParseLibs) {
     ]
   };
 
-  config.module.noParse.push.apply(config.module.noParse, noParseLibs);
-
   return config;
 };
 
