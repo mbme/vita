@@ -15,7 +15,8 @@ export default class SearchItem extends React.Component {
   render () {
     let {filter} = this.props;
     return (
-      <input type="text" className="SearchInput" defaultValue={filter} onChange={::this.handleChange} />
+      <input type="text" className="SearchInput"
+             placeholder="Search" defaultValue={filter} onChange={::this.handleChange} />
     )
   }
 

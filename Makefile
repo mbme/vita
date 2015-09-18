@@ -12,7 +12,6 @@ DEVEL_CONFIG := $(ROOT_DIR)/dev_stuff/vita.config.json
 
 clean:
 	rm -rf $(APP) $(TARGET)
-	gulp clean
 
 build:
 	gb build -ldflags "-X main.gitTag=$(shell git describe --tags --long --always)" all
@@ -34,7 +33,7 @@ release: clean generate-resources bundle-resources build
 clear-test-data:
 	rm -rf $(DEVEL_BASE)
 
-init-test-data:
+init-test-data: build
 	$(APP) --config $(DEVEL_CONFIG) init --parents
 	cp -r $(TEST_DATA)/* $(DEVEL_BASE)
 

@@ -1,7 +1,28 @@
 
 .SearchItem {
+  position: relative;
+
+  padding: 0 0.5vr;
+  margin-bottom: 1vr;
+
+  .name {
+    display: block;
+
+    font-weight: 600;
+    font-size: 1.5em;
+  }
+
+  time {
+    position: absolute;
+    top: 5px;
+    right: 0.5vr;
+
+    font-size: 0.8em;
+  }
+
   .category {
-    padding: 0 5px;
+    padding-right: 5px;
+    color: #333;
   }
 
   &:hover {

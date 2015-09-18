@@ -1,0 +1,9 @@
+.SearchPanel {
+  .SearchInput {
+    font-size: 1.5em;
+    width: 96%;
+
+    margin: 10px 2%;
+    padding: 5px 10px;
+  }
+}

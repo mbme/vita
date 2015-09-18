@@ -1,14 +1,20 @@
-ul {
-  list-style-type: none;
-  margin: 0;
-}
-
-body {
-  font-size: $font-size;
-  color: $color;
+* {
+  box-sizing: border-box;
 }
 
 html, body {
   width: 100%;
   height: 100%;
+}
+
+body {
+  color: $color;
+
+  font: $font-size/1.63 sans-serif;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
 }

@@ -68,7 +68,9 @@ var newConfig = function (dist, noParseLibs) {
         "window.jQuery": "jquery",
         "root.jQuery":   "jquery",
         React:           "react"
-      })
+      }),
+      // do not load moment locales
+      new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
     ]
   };
 

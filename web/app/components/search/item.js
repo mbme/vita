@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 
 export default class SearchItem extends React.Component {
   static propTypes = {
@@ -6,9 +7,11 @@ export default class SearchItem extends React.Component {
   }
   render () {
     let {note} = this.props;
+    let date = moment(note.timestamp * 1000).fromNow();
     return (
       <li className="SearchItem">
-        <h1>{note.name}</h1>
+        <span className="name">{note.name}</span>
+        <time>{date}</time>
         {note.categories.map(cat => <span key={cat} className="category">{cat}</span>)}
       </li>
     )
