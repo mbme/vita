@@ -8,7 +8,6 @@
     "moment": "*",
     "normalize-css": "normalize.css#~3.0.3",
     "page.js": "~1.6.3",
-    "react": "*",
     "rsvp": "*",
     "velocity": "*"
   }

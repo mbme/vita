@@ -8,7 +8,7 @@ export default class SearchItem extends React.Component {
     let {note} = this.props;
     return (
       <li className="SearchItem">
-        <h3>{note.name}</h3>
+        <h1>{note.name}</h1>
         {note.categories.map(cat => <span key={cat} className="category">{cat}</span>)}
       </li>
     )

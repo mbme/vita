@@ -30,18 +30,7 @@ var newConfig = function (dist, libs, noParseLibs) {
       noParse: [],
       loaders : [
         // JS
-        { test: /\.js?$/, include: /app/, loader: 'babel',
-          query: {
-            "stage": 0,
-            "loose": true,
-            "blacklist": [
-              "es6.tailCall"
-            ],
-            "cacheDirectory": true,
-            "optional": [
-              "runtime"
-            ]
-          }},
+        { test: /\.js?$/, include: /app/, loaders: ['babel?cacheDirectory=true']},
         // CSS
         { test: /\.css$/, loader: 'style-loader!css-loader!postcss-loader'},
         // RESOURCES
@@ -98,7 +87,6 @@ var newConfig = function (dist, libs, noParseLibs) {
 
 var libs = {
   'rsvp':        'rsvp/rsvp.js',
-  'react':       'react/react.js',
   'markdown-it': 'markdown-it/dist/markdown-it.js',
   'moment':      'moment/moment.js',
   'jquery':      'jquery/dist/jquery.js',
@@ -113,6 +101,9 @@ var noParseLibs = ['markdown-it', 'moment', 'react', 'rsvp', 'jquery', 'lodash',
 var devConfig = newConfig('./web', libs, noParseLibs);
 devConfig.debug = true;
 devConfig.devtool = 'eval';
+devConfig.entry.app.push('webpack/hot/dev-server');
+devConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
+devConfig.module.loaders[0].loaders.unshift('react-hot');
 
 var prodConfig = newConfig('./target', libs, noParseLibs);
 

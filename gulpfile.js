@@ -19,6 +19,7 @@ gulp.task('webpack-dev-server', function (cb) {
     publicPath: '/',
     stats: { colors: true },
     historyApiFallback: true, // for html5 history
+    hot: true,
     watchOptions: {
       aggregateTimeout: 4000
     }
