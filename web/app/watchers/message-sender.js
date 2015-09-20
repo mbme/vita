@@ -1,5 +1,5 @@
 import {CreateStoreWatcher} from 'viter/viter';
-import {contains} from 'lodash';
+import {contains, pick} from 'lodash';
 
 // Message handler
 export default CreateStoreWatcher({
@@ -29,7 +29,7 @@ export default CreateStoreWatcher({
     let new_pending = [];
     requests.forEach(request => {
       if (!contains(this._pending_requests, request.id)) {
-        socket.send(JSON.stringify(request));
+        socket.send(JSON.stringify(pick(request, 'id', 'method', 'params')));
       }
       new_pending.push(request.id);
     });

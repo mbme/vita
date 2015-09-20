@@ -18,33 +18,45 @@ export function match(str, regex) {
 }
 
 export function parseIdsStr(idsStr) {
-  let matches = match(idsStr, /^\(([\d, ]*)\)$/);
+  let matches = match(idsStr, /^\(([a-z0-9, :\/]*)\)$/);
 
-  return unique(match(matches[1], /(\d+)/g).map(x => parseInt(x, 10)));
+  return unique(match(matches[1], /(:[a-z]+\/[0-9]+)/g));
 }
 
 // https://github.com/bevacqua/fuzzysearch
 export function fuzzySearch(needle, haystack) {
-    let nlen = needle.length;
-    if (!nlen) { // if needle is empty then it matches everything
-        return true;
-    }
+  let nlen = needle.length;
 
-    let hlen = haystack.length;
-    if (nlen > hlen) {
-        return false;
-    }
-    if (nlen === hlen) {
-        return needle === haystack;
-    }
-    outer: for (let i = 0, j = 0; i < nlen; i++) {
-        let nch = needle.charCodeAt(i);
-        while (j < hlen) {
-            if (haystack.charCodeAt(j++) === nch) {
-                continue outer;
-            }
-        }
-        return false;
-    }
+  // if needle is empty then it matches everything
+  if (!nlen) {
     return true;
+  }
+
+  let hlen = haystack.length;
+  if (nlen > hlen) {
+    return false;
+  }
+  if (nlen === hlen) {
+    return needle === haystack;
+  }
+  outer: for (let i = 0, j = 0; i < nlen; i++) {
+    let nch = needle.charCodeAt(i);
+    while (j < hlen) {
+      if (haystack.charCodeAt(j++) === nch) {
+        continue outer;
+      }
+    }
+    return false;
+  }
+  return true;
+}
+
+export function id2key(idStr) {
+  let [type, id] = idStr.split('/');
+
+  return {type, id: +id};
+}
+
+export function key2id({type, id}) {
+  return `${type}/${id}`;
 }

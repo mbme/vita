@@ -3,6 +3,7 @@ import page from 'page';
 import AppStore from 'stores/app-store';
 import NetStore from 'stores/net-store';
 import NotesInfoStore from 'stores/notes-info-store';
+import NotesStore from 'stores/notes';
 
 import {setStores, bus} from 'viter/viter';
 import {getQueryParam, parseIdsStr} from 'helpers/utils';
@@ -22,7 +23,8 @@ import 'actions/search-actions';
 setStores({
   'app':   AppStore,
   'net':   NetStore,
-  'notes-info': NotesInfoStore
+  'notes-info': NotesInfoStore,
+  'notes': NotesStore
 });
 
 QueryRenderer.start();
