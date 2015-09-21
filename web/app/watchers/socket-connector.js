@@ -1,6 +1,7 @@
 import {bus, CreateStoreWatcher} from 'viter/viter';
+import {vitaPort} from 'config';
 
-const basePath = `${window.location.hostname}:${window.VITA_PORT || window.location.port}`;
+const basePath = `${window.location.hostname}:${vitaPort}`;
 
 // WebSocket connector handler
 export default CreateStoreWatcher({

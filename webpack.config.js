@@ -66,6 +66,9 @@ var config = {
       "root.jQuery":   "jquery",
       React:           "react"
     }),
+    new webpack.DefinePlugin({
+      VITA_PORT: 8081
+    }),
     // do not load moment locales
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
   ]
