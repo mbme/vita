@@ -106,7 +106,7 @@ export function CreateStoreWatcher(config) {
     let newState = getState();
 
     // check if we need re-render after store updated
-    if ((config.shouldUpdate || returnTrue)(state, newState)) {
+    if ((config.shouldUpdate || returnTrue).call(config, state, newState)) {
       state = newState;
       config.render(state);
     }
