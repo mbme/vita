@@ -3,7 +3,7 @@ ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 GOSRC  := ./src/vita
 APP    := ./bin/vita
 TARGET := ./target
-WEBUI  := ./webui
+WEBUI  := ./web
 
 DEVEL_BASE := /tmp/vita
 
@@ -39,6 +39,10 @@ init-test-data: build
 
 run:
 	$(APP) --config $(DEVEL_CONFIG) run
+
+run-web:
+	./node_modules/webpack-dev-server/bin/webpack-dev-server.js --content-base $(WEBUI) --hot --inline
+
 
 # check code
 check:
