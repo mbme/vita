@@ -3,10 +3,7 @@ import {setStores, bus, registerAction} from 'viter/viter';
 
 import 'helpers/hacks';
 
-import AppStore from 'stores/app-store';
-import NetStore from 'stores/net-store';
-import NotesInfoStore from 'stores/notes-info-store';
-import NotesStore from 'stores/notes';
+import {createAppStore, createNetStore, createNotesStore, createNotesInfoStore} from 'stores';
 
 import createQueryUpdater from 'watchers/query-renderer';
 import createSocketManager from 'watchers/socket-connector';
@@ -20,10 +17,10 @@ import SocketActions from 'actions/socket-actions';
 import UrlActions    from 'actions/url-actions';
 
 setStores({
-  'app':   AppStore,
-  'net':   NetStore,
-  'notes-info': NotesInfoStore,
-  'notes': NotesStore
+  'app':        createAppStore(),
+  'net':        createNetStore(),
+  'notes-info': createNotesInfoStore(),
+  'notes':      createNotesStore()
 });
 
 // page === layout
