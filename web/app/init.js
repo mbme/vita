@@ -1,12 +1,12 @@
-import page from 'page';
+import {forEach} from 'lodash';
+import {setStores, bus, registerAction} from 'viter/viter';
+
+import 'helpers/hacks';
 
 import AppStore from 'stores/app-store';
 import NetStore from 'stores/net-store';
 import NotesInfoStore from 'stores/notes-info-store';
 import NotesStore from 'stores/notes';
-
-import {setStores, bus} from 'viter/viter';
-import {getQueryParam, parseIdsStr} from 'helpers/utils';
 
 import createQueryUpdater from 'watchers/query-renderer';
 import createSocketManager from 'watchers/socket-connector';
@@ -15,10 +15,9 @@ import createMessageSender from 'watchers/message-sender';
 
 import MainPage from 'pages/records';
 
-import 'helpers/hacks';
-
-import 'actions/app-actions';
-import 'actions/socket-actions';
+import AppActions    from 'actions/app-actions';
+import SocketActions from 'actions/socket-actions';
+import UrlActions    from 'actions/url-actions';
 
 setStores({
   'app':   AppStore,
@@ -44,12 +43,11 @@ bus.subscribe('!stores-update', function (...args) {
   components.forEach(comp => comp(...args));
 });
 
-// init selected items from url
-bus.publish('item:selected', ...parseIdsStr(getQueryParam(window.location.search.substring(1), 'ids')));
-
-page('/', function () {
-  bus.publish('url:changed', 'main');
+let actions = [UrlActions, AppActions, SocketActions];
+actions.forEach(function (actionsGroup) {
+  forEach(actionsGroup, function (handler, action) {
+    registerAction(action, handler);
+  });
 });
-page.start();
 
 bus.publish('app:initialized');
