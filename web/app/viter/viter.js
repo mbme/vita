@@ -1,5 +1,5 @@
 import React from 'react';
-import {intersection, forEach} from 'lodash';
+import {intersection, forEach, defaults} from 'lodash';
 import EventBus from './bus';
 
 export const bus = new EventBus();
@@ -56,43 +56,48 @@ function returnTrue() {
   return true;
 }
 
-export class Container extends React.Component {
-  triggerMethod(name, ...args) {
-    this[name] && this[name](...args);
+export function createReactComponent (comp) {
+  return React.createClass(comp)
+}
+
+export function createReactContainer (comp) {
+  if (!comp.getState) {
+    throw `component ${comp.displayName}: missing getState`;
   }
 
-  componentWillMount() {
-    // override "getState" to always receive stores as input args
-    let getState = this.getState;
-    if (!getState) {
-      throw "getState must be provided";
+  let config = {
+    componentWillMount (...args) {
+      bus.subscribe('!stores-update', this.onStoresUpdate);
+      comp.componentWillMount && comp.componentWillMount.apply(this, args)
+    },
+
+    componentWillUnmount (...args) {
+      bus.unsubscribe('!stores-update', this.onStoresUpdate);
+      comp.componentWillUnmount && comp.componentWillUnmount.apply(this, args)
+    },
+
+    getState () {
+      return comp.getState.apply(this, getStores(...comp.stores));
+    },
+
+    getInitialState () {
+      return this.getState();
+    },
+
+    onStoresUpdate (...stores) {
+      if (!intersection(stores, comp.stores).length) {
+        return;
+      }
+
+      let newState = this.getState();
+
+      if ((comp.shouldUpdate || returnTrue).call(this, this.state, newState)) {
+        this.setState(newState);
+      }
     }
-    this.getState = function () {
-      return getState.apply(this, getStores(...this.stores));
-    };
+  };
 
-    this.state = this.getState();
-
-    this.triggerMethod('onInitialize');
-    bus.subscribe('!stores-update', this.onStoresUpdate, this)
-  }
-
-  componentWillUnmount() {
-    this.triggerMethod('onDestroy');
-    bus.unsubscribe('!stores-update', this.onStoresUpdate)
-  }
-
-  onStoresUpdate(...stores) {
-    if (!intersection(stores, this.stores).length) {
-      return;
-    }
-
-    let newState = this.getState();
-
-    if ((this.shouldUpdate || returnTrue)(this.state, newState)) {
-      this.setState(newState);
-    }
-  }
+  return React.createClass(defaults(config, comp));
 }
 
 export function createComponent(config) {

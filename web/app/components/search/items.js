@@ -1,10 +1,8 @@
-import React from 'react';
+import {createReactComponent} from 'viter/viter';
 import SearchItem from './item';
 
-export default class SearchItems extends React.Component {
-  static propTypes = {
-    results: React.PropTypes.array.isRequired
-  }
+export default createReactComponent({
+  displayName: 'SearchItems',
 
   render () {
     let {results} = this.props;
@@ -15,4 +13,4 @@ export default class SearchItems extends React.Component {
       </ul>
     )
   }
-}
+})

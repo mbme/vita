@@ -1,8 +1,10 @@
-import React from 'react';
+import {createReactComponent} from 'viter/viter';
+
 import SearchPanel from 'components/search/panel';
 import Desk from 'components/desk';
 
-export default class MainPage extends React.Component {
+export default createReactComponent({
+  displayName: 'MainPage',
   render () {
     return (
       <div className="MainPage">
@@ -11,4 +13,4 @@ export default class MainPage extends React.Component {
       </div>
     )
   }
-}
+})

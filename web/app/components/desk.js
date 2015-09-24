@@ -1,13 +1,15 @@
-import {Container} from 'viter/viter';
+import {createReactContainer} from 'viter/viter';
 
-export default class Desk extends Container {
-  stores = ['notes']
+export default createReactContainer({
+  displayName: 'Desk',
+
+  stores:  ['notes'],
 
   getState (NotesStore) {
     return {
       notes: NotesStore.notes
     };
-  }
+  },
 
   render () {
     let {notes} = this.state;
@@ -17,4 +19,4 @@ export default class Desk extends Container {
       </ul>
     )
   }
-}
+})
