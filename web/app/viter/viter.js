@@ -12,7 +12,7 @@ export function getStore(name) {
   if (store) {
     return store;
   } else {
-    console.error(`getter: unknown store ${name}`);
+    throw `getter: unknown store ${name}`;
   }
 }
 
@@ -35,7 +35,7 @@ function isRegisteredStore(name) {
 export function publishStoreUpdate(...stores) {
   stores.forEach(function (store) {
     if (!isRegisteredStore(store)) {
-      console.error(`publisher: unknown store ${store}`);
+      throw `publisher: unknown store ${store}`;
     }
   });
   bus.publish('!stores-update', ...stores);
@@ -43,8 +43,12 @@ export function publishStoreUpdate(...stores) {
 
 export function registerAction(event, handler) {
   bus.subscribe(event, function (...params) {
+    // handler can return nothing, one item or array of items
+    // so here we convert everything to array
     let updatedStores = [].concat(handler(...params) || []);
-    publishStoreUpdate(...updatedStores);
+
+    // publish update only when something really updated
+    updatedStores.length && publishStoreUpdate(...updatedStores);
   });
 }
 
@@ -91,19 +95,15 @@ export class Container extends React.Component {
   }
 }
 
-export function CreateStoreWatcher(config) {
+export function createComponent(config) {
   let state = null;
 
-  function getState() {
-    return config.getState(...(getStores(...config.stores)));
-  }
-
-  let watcher = function (...stores) {
+  return function (...stores) {
     if (!intersection(stores, config.stores).length) {
       return;
     }
 
-    let newState = getState();
+    let newState = config.getState(...(getStores(...config.stores)));
 
     // check if we need re-render after store updated
     if ((config.shouldUpdate || returnTrue).call(config, state, newState)) {
@@ -111,19 +111,4 @@ export function CreateStoreWatcher(config) {
       config.render(state);
     }
   };
-  return {
-    start (runNow = true) {
-      state = getState();
-
-      if (runNow) {
-        watcher(...config.stores);
-      }
-
-      bus.subscribe('!stores-update', watcher);
-    },
-
-    stop () {
-      bus.unsubscribe('!stores-update', watcher);
-    }
-  }
 }

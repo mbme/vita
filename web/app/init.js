@@ -8,17 +8,17 @@ import NotesStore from 'stores/notes';
 import {setStores, bus} from 'viter/viter';
 import {getQueryParam, parseIdsStr} from 'helpers/utils';
 
-import QueryRenderer from 'watchers/query-renderer';
-import SocketConnector from 'watchers/socket-connector';
-import PageRenderer from 'watchers/page-renderer';
-import MessageSender from 'watchers/message-sender';
+import createQueryUpdater from 'watchers/query-renderer';
+import createSocketManager from 'watchers/socket-connector';
+import createPageManager from 'watchers/page-renderer';
+import createMessageSender from 'watchers/message-sender';
+
+import MainPage from 'pages/records';
 
 import 'helpers/hacks';
 
 import 'actions/app-actions';
 import 'actions/socket-actions';
-import 'actions/notes-actions';
-import 'actions/search-actions';
 
 setStores({
   'app':   AppStore,
@@ -27,10 +27,22 @@ setStores({
   'notes': NotesStore
 });
 
-QueryRenderer.start();
-PageRenderer.start();
-SocketConnector.start();
-MessageSender.start();
+// page === layout
+const PAGES = {
+  'main': MainPage
+};
+
+let components = [
+  createPageManager(PAGES),
+  createMessageSender(),
+  createQueryUpdater(),
+  createSocketManager()
+];
+
+bus.subscribe('!stores-update', function (...args) {
+  console.debug('updated stores: %s', args.join(', '));
+  components.forEach(comp => comp(...args));
+});
 
 // init selected items from url
 bus.publish('item:selected', ...parseIdsStr(getQueryParam(window.location.search.substring(1), 'ids')));
@@ -39,3 +51,5 @@ page('/', function () {
   bus.publish('url:changed', 'main');
 });
 page.start();
+
+bus.publish('app:initialized');

@@ -5,3 +5,4 @@
 -/web/vendor
 -/bin/vita
 -/pkg
+-/src/vita/handlers/static-data.go

@@ -40,3 +40,27 @@ registerAction('item:selected', function (...ids) {
 
   return ['app', 'net'];
 });
+
+registerAction('search:filter-changed', function (filter) {
+  let AppStore = getStore('app');
+
+  if (AppStore.searchFilter !== filter) {
+    AppStore.searchFilter = filter;
+
+    console.debug('search filter -> %s', filter);
+
+    return 'app';
+  }
+});
+
+registerAction('app:initialized', function () {
+  let [NetStore, NotesInfoStore] = getStores('net', 'notes-info');
+
+  NetStore.addRequest('notes-list-read').then(function (items) {
+    NotesInfoStore.resetInfos(items);
+
+    return 'notes-info';
+  }).then(publishStoreUpdate);
+
+  return 'net';
+});
