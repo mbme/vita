@@ -17,7 +17,13 @@ export default function crateUrlRenderer() {
     },
 
     render (state) {
-      page(`${location.pathname}?ids=(${state.join(',')})`);
+      let url = location.pathname;
+
+      if (state.length) {
+        url += `?ids=(${state.join(',')})`;
+      }
+
+      page(url);
     }
   });
 }
