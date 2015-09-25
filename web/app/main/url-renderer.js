@@ -4,7 +4,7 @@ import page from 'page';
 import {createComponent} from 'viter/viter';
 
 // URL Query params renderer
-export default function crateQueryUpdater() {
+export default function crateUrlRenderer() {
   return createComponent({
     stores: ['app'],
 

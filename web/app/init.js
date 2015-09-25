@@ -5,10 +5,10 @@ import 'helpers/hacks';
 
 import {createAppStore, createNetStore, createNotesStore, createNotesInfoStore} from 'stores';
 
-import createQueryUpdater from 'watchers/query-renderer';
-import createSocketManager from 'watchers/socket-connector';
-import createPageManager from 'watchers/page-renderer';
-import createMessageSender from 'watchers/message-sender';
+import createUrlRenderer   from 'main/url-renderer';
+import createSocketManager from 'main/socket-manager';
+import createPageManager   from 'main/page-manager';
+import createMessageSender from 'main/message-sender';
 
 import MainPage from 'pages/records';
 
@@ -31,7 +31,7 @@ const PAGES = {
 let components = [
   createPageManager(PAGES),
   createMessageSender(),
-  createQueryUpdater(),
+  createUrlRenderer(),
   createSocketManager()
 ];
 
