@@ -1,4 +1,5 @@
 import {createReactContainer} from 'viter/viter';
+import Note from './note';
 
 export default createReactContainer({
   displayName: 'Desk',
@@ -15,7 +16,7 @@ export default createReactContainer({
     let {notes} = this.state;
     return (
       <ul className="Desk">
-        {notes.map(note => <li key={note.id}>{JSON.stringify(note)}</li>)}
+        {notes.map(note => <Note key={note.id} note={note} />)}
       </ul>
     )
   }

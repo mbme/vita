@@ -7,10 +7,14 @@ $w-sidebar: 350px;
   &-left-panel {
     background-color: yellow;
     flex: 0 0 $w-sidebar;
+    height: 100%;
+    overflow-y: auto;
   }
 
   &-content {
     background-color: orange;
     flex: 1 100%;
+    height: 100%;
+    overflow-y: auto;
   }
 }

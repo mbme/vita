@@ -1,7 +1,7 @@
 import {createReactComponent} from 'viter/viter';
 
 import SearchPanel from 'components/search/panel';
-import Desk from 'components/desk';
+import Desk from 'components/desk/desk';
 
 export default createReactComponent({
   displayName: 'MainPage',
