@@ -25,10 +25,12 @@ var config = {
   },
 
   module : {
-    noParse: [],
+    noParse: ['markdown-it'],
     loaders : [
       // JS
       { test: /\.js?$/, include: /app/, loaders: ['babel?cacheDirectory=true']},
+      // JSON
+      { test: /\.json$/, loader: 'json-loader'},
       // CSS
       { test: /\.css$/, loader: 'style-loader!css-loader!postcss-loader'},
       // RESOURCES

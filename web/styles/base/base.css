@@ -10,6 +10,9 @@ html, body {
 body {
   color: $color;
   font: $font-size/1.63 "Input Sans Narr","Input Sans Narrow",sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
   text-rendering: optimizelegibility;
 }
 
