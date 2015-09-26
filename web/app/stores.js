@@ -1,12 +1,32 @@
 import RSVP from 'rsvp';
-import { remove, find } from 'lodash';
+import _ from 'lodash';
 import {key2id} from 'helpers/utils';
 
 export function createAppStore () {
   return {
     page: '',
     selectedIds: [],
-    searchFilter: ''
+    searchFilter: '',
+
+    isSelectedId (id) {
+      return _.contains(this.selectedIds, id);
+    },
+
+    addSelectedId (id) {
+      this.selectedIds.unshift(id);
+    },
+
+    resetSelectedIds (ids = []) {
+      this.selectedIds = ids;
+    },
+
+    setSearchFilter (filter = '') {
+      this.searchFilter = filter;
+    },
+
+    setPage (page = '') {
+      this.page = page;
+    }
   };
 }
 
@@ -31,11 +51,15 @@ export function createNetStore () {
     },
 
     removeRequest (id) {
-      remove(this.requests, req => req.id === id);
+      _.remove(this.requests, req => req.id === id);
     },
 
     getRequest (id) {
-      return find(this.requests, req => req.id === id);
+      return _.find(this.requests, req => req.id === id);
+    },
+
+    setSocket (socket) {
+      this.socket = socket;
     }
   };
 }
@@ -43,12 +67,28 @@ export function createNetStore () {
 export function createNotesStore () {
   return {
     notes: [],
+
     addNote (note) {
       note.id = key2id(note.key);
       this.notes.push(note);
+
+      return this;
     },
+
     removeNote (id) {
-      remove(this.notes, note => note.id === id);
+      _.remove(this.notes, note => note.id === id);
+
+      return this;
+    },
+
+    getNote (id) {
+      return _.find(this.notes, note => note.id === id);
+    },
+
+    sort (orderedIds) {
+      this.notes = _(orderedIds).map(::this.getNote).compact().value();
+
+      return this;
     }
   };
 }

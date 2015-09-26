@@ -5,14 +5,13 @@ import {bus, getStore} from 'viter/viter';
 
 export default {
   'app:initialized': function () {
-    // init selected items from url
-    bus.publish('note:open', ...parseIdsStr(getQueryParam(window.location.search.substring(1), 'ids')));
-
     page('/', function () {
       bus.publish('url:changed', 'main');
     });
     page.start();
 
+    // init selected items from url
+    bus.publish('note:open', ...parseIdsStr(getQueryParam(window.location.search.substring(1), 'ids')));
   },
 
   'url:changed': function (page) {
@@ -22,7 +21,7 @@ export default {
       return;
     }
 
-    AppStore.page = page;
+    AppStore.setPage(page);
 
     return 'app';
   }

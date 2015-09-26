@@ -5,7 +5,7 @@ export default {
     console.log('socket connected');
 
     let NetStore = getStore('net');
-    NetStore.socket = socket;
+    NetStore.setSocket(socket);
 
     return 'net';
   },
@@ -14,7 +14,7 @@ export default {
     console.error('socket disconnected', e);
 
     let NetStore = getStore('net');
-    NetStore.socket = null;
+    NetStore.setSocket(null);
 
     return 'net';
   },

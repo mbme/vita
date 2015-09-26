@@ -19,13 +19,13 @@ export default {
     let [AppStore, NetStore] = getStores('app', 'net');
 
     // skip duplicate ids
-    let newIds = ids.filter(id => !_.contains(AppStore.selectedIds, id));
+    let newIds = _(ids).unique().reject(::AppStore.isSelectedId).value();
 
     if (!newIds.length) {
       return;
     }
 
-    AppStore.selectedIds.push(...newIds);
+    newIds.forEach(::AppStore.addSelectedId);
 
     let NotesStore = getStore('notes');
 
@@ -34,7 +34,7 @@ export default {
       NetStore.addRequest('note-read', id2key(id)).then(function (note) {
         console.log('open note %s', id);
 
-        NotesStore.addNote(note);
+        NotesStore.addNote(note).sort(AppStore.selectedIds);
 
         return 'notes';
       }).then(publishStoreUpdate);
@@ -54,7 +54,7 @@ export default {
 
     console.log('closed notes %s', ids.join(', '));
 
-    AppStore.selectedIds = newIds;
+    AppStore.resetSelectedIds(newIds);
 
     ids.forEach(id => NotesStore.removeNote(id));
 
@@ -65,7 +65,7 @@ export default {
     let AppStore = getStore('app');
 
     if (AppStore.searchFilter !== filter) {
-      AppStore.searchFilter = filter;
+      AppStore.setSearchFilter(filter);
 
       console.debug('search filter -> %s', filter);
 
