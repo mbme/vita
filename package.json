@@ -9,7 +9,7 @@
     "url": "git+https://github.com/mbme/vita.git"
   },
   "author": "mbme",
-  "license": "GPLv3",
+  "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/mbme/vita/issues"
   },
@@ -26,6 +26,7 @@
     "node-libs-browser": "*",
     "postcss-calc": "*",
     "postcss-clearfix": "*",
+    "postcss-color-function": "*",
     "postcss-import": "*",
     "postcss-loader": "*",
     "postcss-mixins": "*",

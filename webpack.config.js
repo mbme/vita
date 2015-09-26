@@ -54,6 +54,7 @@ var config = {
         }
       }),
       require('postcss-vertical-rhythm')(),
+      require('postcss-color-function'),
       require('postcss-clearfix'),
       require("postcss-calc"),
       require('autoprefixer')({ browsers: ['last 2 versions'] })

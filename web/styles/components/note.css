@@ -20,6 +20,11 @@
     .Icon {
       margin-left: 0.5vr;
       cursor: pointer;
+      color: color($color tint(40%));
+
+      &:hover {
+        color: $color;
+      }
     }
   }
 
