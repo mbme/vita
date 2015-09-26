@@ -46,6 +46,9 @@ export function createNotesStore () {
     addNote (note) {
       note.id = key2id(note.key);
       this.notes.push(note);
+    },
+    removeNote (id) {
+      remove(this.notes, note => note.id === id);
     }
   };
 }

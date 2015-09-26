@@ -1,4 +1,4 @@
-import {createReactComponent} from 'viter/viter';
+import {createReactComponent, bus} from 'viter/viter';
 import Icon from 'components/icon';
 import Markdown from 'components/markdown';
 
@@ -26,6 +26,6 @@ export default createReactComponent({
   },
 
   onClose () {
-    console.error('Close clicked');
+    bus.publish('note:close', this.props.note.id);
   }
 })

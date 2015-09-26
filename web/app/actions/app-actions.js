@@ -1,5 +1,5 @@
 import {getStore, getStores, publishStoreUpdate} from 'viter/viter';
-import {contains} from 'lodash';
+import _ from 'lodash';
 import {id2key} from 'helpers/utils';
 
 export default {
@@ -15,11 +15,11 @@ export default {
     return 'net';
   },
 
-  'item:selected': function (...ids) {
+  'note:open': function (...ids) {
     let [AppStore, NetStore] = getStores('app', 'net');
 
     // skip duplicate ids
-    let newIds = ids.filter(id => !contains(AppStore.selectedIds, id));
+    let newIds = ids.filter(id => !_.contains(AppStore.selectedIds, id));
 
     if (!newIds.length) {
       return;
@@ -41,6 +41,24 @@ export default {
     });
 
     return ['app', 'net'];
+  },
+
+  'note:close': function (...ids) {
+    let [AppStore, NotesStore] = getStores('app', 'notes');
+
+    let newIds = _.without(AppStore.selectedIds, ...ids);
+
+    if (_.eq(AppStore.selectedIds, newIds)) {
+      return;
+    }
+
+    console.log('closed notes %s', ids.join(', '));
+
+    AppStore.selectedIds = newIds;
+
+    ids.forEach(id => NotesStore.removeNote(id));
+
+    return ['app', 'notes'];
   },
 
   'search:filter-changed': function (filter) {

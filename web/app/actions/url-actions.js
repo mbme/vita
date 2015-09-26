@@ -6,7 +6,7 @@ import {bus, getStore} from 'viter/viter';
 export default {
   'app:initialized': function () {
     // init selected items from url
-    bus.publish('item:selected', ...parseIdsStr(getQueryParam(window.location.search.substring(1), 'ids')));
+    bus.publish('note:open', ...parseIdsStr(getQueryParam(window.location.search.substring(1), 'ids')));
 
     page('/', function () {
       bus.publish('url:changed', 'main');
