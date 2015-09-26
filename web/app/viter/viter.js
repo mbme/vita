@@ -1,5 +1,5 @@
 import React from 'react';
-import {intersection, forEach, defaults} from 'lodash';
+import _ from 'lodash';
 import EventBus from './bus';
 
 export const bus = new EventBus();
@@ -25,7 +25,7 @@ export function setStore(name, store) {
 }
 
 export function setStores (mappings) {
-  forEach(mappings, (store, name) => setStore(name, store))
+  _.forEach(mappings, (store, name) => setStore(name, store))
 }
 
 function isRegisteredStore(name) {
@@ -57,7 +57,25 @@ function returnTrue() {
 }
 
 export function createReactComponent (comp) {
-  return React.createClass(comp)
+  let config;
+
+  if (_.isFunction(comp)) {
+    config = {
+      displayName: comp.name,
+
+      shouldComponentUpdate: function (nextProps) {
+        return !_.eq(this.props, nextProps);
+      },
+
+      render: function () {
+        return comp(this.props);
+      }
+    }
+  } else {
+    config = comp;
+  }
+
+  return React.createClass(config)
 }
 
 export function createReactContainer (comp) {
@@ -85,7 +103,7 @@ export function createReactContainer (comp) {
     },
 
     onStoresUpdate (...stores) {
-      if (!intersection(stores, comp.stores).length) {
+      if (!_.intersection(stores, comp.stores).length) {
         return;
       }
 
@@ -97,14 +115,14 @@ export function createReactContainer (comp) {
     }
   };
 
-  return React.createClass(defaults(config, comp));
+  return React.createClass(_.defaults(config, comp));
 }
 
 export function createComponent(config) {
   let state = null;
 
   return function (...stores) {
-    if (!intersection(stores, config.stores).length) {
+    if (!_.intersection(stores, config.stores).length) {
       return;
     }
 
