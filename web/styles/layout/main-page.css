@@ -8,7 +8,6 @@ $w-sidebar: 350px;
     background-color: yellow;
     flex: 0 0 $w-sidebar;
     height: 100%;
-    overflow-y: auto;
   }
 
   &-content {

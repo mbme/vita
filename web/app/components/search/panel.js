@@ -22,7 +22,9 @@ export default createReactContainer({
     return (
       <ul className="SearchPanel">
         <SearchInput filter={filter} />
-        <SearchItems results={results} />
+        <div className="scroll">
+          <SearchItems results={results} />
+        </div>
       </ul>
     )
   }
