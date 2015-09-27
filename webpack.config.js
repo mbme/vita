@@ -15,7 +15,8 @@ var config = {
   resolve: {
     root: [path.join(base, src, 'app')],
     alias: {
-      'main.css': path.join(base, src, 'styles/main.css')
+      'main.css': path.join(base, src, 'styles/main.css'),
+      'velocity': 'velocity-animate'
     }
   },
 
