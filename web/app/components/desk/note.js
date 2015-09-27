@@ -1,6 +1,6 @@
 import {createReactComponent, bus} from 'viter/viter';
 import Icon from 'components/icon';
-import Markdown from 'components/markdown';
+import Record from 'components/notes/record';
 
 export default createReactComponent({
   displayName: 'Note',
@@ -17,9 +17,7 @@ export default createReactComponent({
           <Icon type="compose"/>
           <Icon type="images"/>
         </div>
-        <h1 className="title">{note.name}</h1>
-        <h4 className="categories">{note.categories.join(', ')}</h4>
-        <Markdown text={note.data}/>
+        <Record note={note} />
       </li>
     )
   },
