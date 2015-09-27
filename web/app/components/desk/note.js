@@ -55,6 +55,7 @@ export default createReactComponent({
   },
 
   onClose () {
-    bus.publish('note:close', this.props.note.id);
+    let el = ReactDOM.findDOMNode(this);
+    velocity(el, 'fadeOut', {duration: 200}).then(() => bus.publish('note:close', this.props.note.id));
   }
 })
