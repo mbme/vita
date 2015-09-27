@@ -12,15 +12,40 @@
 
   .icons {
     position: absolute;
-    top: 0.25vr;
-    right: 0.5vr;
-
-    font-size: 1vr;
+    top: 5px;
+    right: 10px;
 
     .Icon {
-      margin-left: 0.5vr;
       cursor: pointer;
-      color: color($color tint(40%));
+
+      font-size: 1vr;
+
+      color: color($color tint(60%));
+      &:hover {
+        color: $color;
+      }
+    }
+  }
+
+  .icons-right {
+    position: absolute;
+    top: 5px;
+    right: -31px;
+
+    width: 30px;
+    border-radius: 0 2px 2px 0;
+
+    font-size: 1vr;
+    color: #FFFFFF;
+    background: color(black alpha(20%)) none repeat scroll 0% 0%;
+
+    text-align: center;
+
+    .Icon {
+      cursor: pointer;
+
+      display: block;
+      margin: 0 5px;
 
       &:hover {
         color: $color;

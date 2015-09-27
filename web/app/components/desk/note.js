@@ -11,18 +11,17 @@ export default createReactComponent({
     return (
       <li className="Note">
         <div className="icons">
-          <Icon type="gear-a" onClick={this.onOptions}/>
           <Icon type="close-round" onClick={this.onClose}/>
+        </div>
+        <div className="icons-right">
+          <Icon type="compose"/>
+          <Icon type="images"/>
         </div>
         <h1 className="title">{note.name}</h1>
         <h4 className="categories">{note.categories.join(', ')}</h4>
         <Markdown text={note.data}/>
       </li>
     )
-  },
-
-  onOptions () {
-    console.error('Options clicked');
   },
 
   onClose () {
