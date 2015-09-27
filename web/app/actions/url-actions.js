@@ -5,13 +5,15 @@ import {bus, getStore} from 'viter/viter';
 
 export default {
   'app:initialized': function () {
+    let ids = parseIdsStr(getQueryParam(window.location.search.substring(1), 'ids'));
+
     page('/', function () {
       bus.publish('url:changed', 'main');
     });
     page.start();
 
     // init selected items from url
-    bus.publish('note:open', ...parseIdsStr(getQueryParam(window.location.search.substring(1), 'ids')));
+    ids.forEach(id => bus.publish('note:open', id));
   },
 
   'url:changed': function (page) {

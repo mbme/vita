@@ -16,6 +16,18 @@ export function createAppStore () {
       this.selectedIds.unshift(id);
     },
 
+    removeSelectedId (id) {
+      let pos = this.selectedIds.indexOf(id);
+
+      if (pos === -1) {
+        return false;
+      }
+
+      _.pullAt(this.selectedIds, pos);
+
+      return true;
+    },
+
     resetSelectedIds (ids = []) {
       this.selectedIds = ids;
     },
