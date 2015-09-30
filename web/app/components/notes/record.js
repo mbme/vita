@@ -1,12 +1,12 @@
 import {createReactComponent} from 'viter/viter';
 import Markdown from 'components/markdown';
 
-export default createReactComponent(function Record({note}) {
+export default createReactComponent(function Record({name, data, categories=[]}) {
   return (
     <div className="Record">
-      <h1 className="title">{note.name}</h1>
-      <h4 className="categories">{note.categories.join(', ')}</h4>
-      <Markdown text={note.data}/>
+      <h1 className="title">{name}</h1>
+      <h4 className="categories">{categories.join(', ')}</h4>
+      <Markdown text={data}/>
     </div>
   )
 });

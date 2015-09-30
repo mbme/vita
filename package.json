@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "babel-runtime": "*",
+    "codemirror": "^5.7.0",
     "lodash": "*",
     "markdown-it": "*",
     "moment": "*",

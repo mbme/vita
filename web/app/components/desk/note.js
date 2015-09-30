@@ -4,6 +4,7 @@ import velocity from 'velocity';
 import {createReactComponent, bus} from 'viter/viter';
 import Icon from 'components/icon';
 import Record from 'components/notes/record';
+import RecordEditor from 'components/notes/record-editor';
 
 
 export default createReactComponent({
@@ -49,7 +50,7 @@ export default createReactComponent({
           <Icon type="compose"/>
           <Icon type="images"/>
         </div>
-        <Record note={note} />
+        <RecordEditor note={note} />
       </li>
     )
   },
