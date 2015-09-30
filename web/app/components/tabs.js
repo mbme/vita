@@ -1,6 +1,7 @@
 import React from 'react';
 import {partial} from 'lodash';
 import {createReactComponent} from 'viter/viter';
+import cx from 'classnames';
 
 const Tabs = createReactComponent({
   getInitialState () {
@@ -14,10 +15,9 @@ const Tabs = createReactComponent({
     let {selected} = this.state;
 
     let headers = children.map((child, pos) => {
-      let className = pos === selected ? 'selected' : '';
       return (
         <li key={pos}
-            className={className}
+            className={cx({selected: pos === selected})}
             onClick={partial(this.onHeaderClicked, pos)}>
           {child.props.label}
         </li>
@@ -32,7 +32,7 @@ const Tabs = createReactComponent({
     });
 
     return (
-      <div className={className + " Tabs"}>
+      <div className={cx('Tabs', className)}>
         <ul className="Tabs-headers">{headers}</ul>
         {tabs}
       </div>
@@ -55,12 +55,8 @@ const Tabs = createReactComponent({
 const Tab = createReactComponent({
   render () {
     let {children, isSelected = false} = this.props;
-    let className = "Tab";
-    if (isSelected) {
-      className += " is-selected";
-    }
     return (
-      <div className={className}>
+      <div className={cx('Tab', {'is-selected': isSelected})}>
         {children}
       </div>
     )

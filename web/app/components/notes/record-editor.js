@@ -8,11 +8,11 @@ export default createReactComponent({
   displayName: 'RecordEditor',
 
   getInitialState () {
-    let note = this.props.note;
+    let {name, categories, data} = this.props.note;
     return {
-      name:       note.name,
-      categories: _.clone(note.categories),
-      data:       note.data
+      name:       name,
+      categories: _.clone(categories),
+      data:       data
     }
   },
 

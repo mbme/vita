@@ -1,7 +1,7 @@
 import {createReactComponent} from 'viter/viter';
 import {noop} from 'lodash';
+import cx from 'classnames';
 
 export default createReactComponent(function Icon ({type, onClick = noop, className = ""}) {
-  let classes = `Icon icon ion-${type} ${className}`;
-  return <i className={classes} onClick={onClick}></i>;
+  return <i className={cx('Icon', 'icon', `ion-${type}`, className)} onClick={onClick}></i>;
 })
