@@ -10,26 +10,31 @@ export default createReactComponent({
   getInitialState () {
     let {name, categories, data} = this.props.note;
     return {
-      name:       name,
-      categories: _.clone(categories),
-      data:       data
+      name,
+      data,
+      categories: _.clone(categories)
     }
   },
 
-  componentWillMount () {
-  },
-
   render () {
+    let {name, categories, data} = this.state;
+
     return (
       <Tabs className="RecordEditor"
             onBeforeChange={this.onBeforeTabChange}>
 
         <Tab label="Edit">
-          <Editor value="1"/>
+          <input type="text" className="name"
+                 defaultValue={name} placeholder="Name" ref="name"/>
+
+          <input type="text" className="categories"
+                 defaultValue={categories} placeholder="Categories" ref="categories"/>
+
+          <Editor defaultValue={data} ref="editor"/>
         </Tab>
 
         <Tab label="Preview">
-          <Record />
+          <Record name={name} data={data} categories={categories}/>
         </Tab>
 
       </Tabs>
@@ -37,6 +42,12 @@ export default createReactComponent({
   },
 
   onBeforeTabChange () {
-    console.error('HERE');
+    let {name, categories, editor} = this.refs;
+
+    this.setState({
+      name: name.value,
+      categories: [categories.value],
+      data: editor.value
+    });
   }
 })

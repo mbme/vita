@@ -1,5 +1,4 @@
 import {createReactComponent} from 'viter/viter';
-import ReactDOM from 'react-dom';
 
 import CodeMirror from 'codemirror';
 import 'codemirror/lib/codemirror.css';
@@ -8,23 +7,25 @@ export default createReactComponent({
   displayName: 'Editor',
 
   componentDidMount () {
-    let el = ReactDOM.findDOMNode(this.refs.textarea);
-    let codeMirror = CodeMirror.fromTextArea(el, {
+    this.value = this.props.defaultValue || '';
+
+    let codeMirror = CodeMirror.fromTextArea(this.refs.textarea, {
       lineNumbers: true
     });
     codeMirror.on('change', this.onValueChange);
   },
 
   onValueChange (doc) {
+    this.value = doc.getValue();
     if (this.props.onChange) {
-      this.props.onChange(doc.getValue());
+      this.props.onChange(this.value);
     }
   },
 
   render () {
     return (
       <div className="Editor">
-        <textarea ref="textarea" defaultValue={this.props.value} autoComplete="off" />
+        <textarea ref="textarea" defaultValue={this.props.defaultValue} autoComplete="off" />
       </div>
     )
   }
