@@ -115,7 +115,7 @@ export function createReactContainer (comp) {
     }
   };
 
-  return React.createClass(_.defaults(config, comp));
+  return createReactComponent(_.defaults(config, comp));
 }
 
 export function createComponent(config) {

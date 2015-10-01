@@ -1,4 +1,4 @@
-import {unique, words} from 'lodash';
+import {unique, words, isFunction} from 'lodash';
 
 export function getQueryParam(query, param) {
   let pairs = (query || '').split("&");
@@ -63,4 +63,25 @@ export function key2id({type, id}) {
 
 export function str2categories(str) {
   return unique(words(str, /[^, ]+/g));
+}
+
+/*
+ * Check if element is focused.
+ * Accepts native elements and custom components with `isFocused` property.
+ *
+ * @param {Component|Element} el element to check if focused
+ * @returns {boolean}
+ */
+export function isFocused(el) {
+  // handle our custom react components
+  if (isFunction(el.isFocused)) {
+    return el.isFocused();
+  }
+
+  if (el.hasOwnProperty('isFocused')) {
+    return el.isFocused;
+  }
+
+  // handle native elements
+  return el.matches(':focus');
 }

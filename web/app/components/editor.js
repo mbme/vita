@@ -7,12 +7,17 @@ export default createReactComponent({
   displayName: 'Editor',
 
   componentDidMount () {
-    this.value = this.props.defaultValue || '';
-
     let codeMirror = CodeMirror.fromTextArea(this.refs.textarea, {
       lineNumbers: true
     });
+
+    this.value = this.props.defaultValue || '';
+    this.isFocused = codeMirror.hasFocus();
+
     codeMirror.on('change', this.onValueChange);
+
+    codeMirror.on('focus', this.onFocusChange.bind(this, true));
+    codeMirror.on('blur', this.onFocusChange.bind(this, false));
   },
 
   onValueChange (doc) {
@@ -20,6 +25,10 @@ export default createReactComponent({
     if (this.props.onChange) {
       this.props.onChange(this.value);
     }
+  },
+
+  onFocusChange (focused) {
+    this.isFocused = focused;
   },
 
   render () {
