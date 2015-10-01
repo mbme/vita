@@ -1,5 +1,5 @@
 .RecordEditor {
-  .name, .categories {
+  .name, .CategoriesEditor {
     display: block;
     width: 100%;
     margin: 5px 0;

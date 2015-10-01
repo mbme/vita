@@ -1,8 +1,8 @@
-import _ from 'lodash';
 import {createReactComponent} from 'viter/viter';
 import {Tab, Tabs} from 'components/tabs';
 import Record from 'components/notes/record';
 import Editor from 'components/editor';
+import CategoriesEditor from './categories-editor';
 
 export default createReactComponent({
   displayName: 'RecordEditor',
@@ -11,8 +11,8 @@ export default createReactComponent({
     let {name, categories, data} = this.props.note;
     return {
       name,
-      data,
-      categories: _.clone(categories)
+      categories,
+      data
     }
   },
 
@@ -27,8 +27,7 @@ export default createReactComponent({
           <input type="text" className="name"
                  defaultValue={name} placeholder="Name" ref="name"/>
 
-          <input type="text" className="categories"
-                 defaultValue={categories} placeholder="Categories" ref="categories"/>
+          <CategoriesEditor defaultValue={categories} ref="categories"/>
 
           <Editor defaultValue={data} ref="editor"/>
         </Tab>
@@ -45,9 +44,9 @@ export default createReactComponent({
     let {name, categories, editor} = this.refs;
 
     this.setState({
-      name: name.value,
-      categories: [categories.value],
-      data: editor.value
+      name:       name.value,
+      categories: categories.value,
+      data:       editor.value
     });
   }
 })

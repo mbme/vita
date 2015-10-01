@@ -1,4 +1,4 @@
-import {unique} from 'lodash';
+import {unique, words} from 'lodash';
 
 export function getQueryParam(query, param) {
   let pairs = (query || '').split("&");
@@ -59,4 +59,8 @@ export function id2key(idStr) {
 
 export function key2id({type, id}) {
   return `${type}/${id}`;
+}
+
+export function str2categories(str) {
+  return unique(words(str, /[^, ]+/g));
 }
