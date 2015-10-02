@@ -8,17 +8,12 @@
   .name {
     display: block;
 
-    font-weight: 600;
-    font-size: 1.5em;
+    font-size: 1.2em;
+    color: $link-color;
   }
 
   time {
     font-size: 0.8em;
-  }
-
-  .category {
-    font-size: 0.8em;
-    padding-right: 5px;
   }
 
   &:hover {

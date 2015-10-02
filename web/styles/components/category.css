@@ -1,0 +1,10 @@
+.Category {
+  color: $category-color;
+  font-size: 0.8em;
+
+  padding: 0 5px;
+
+  &:before {
+    content: '#';
+  }
+}

@@ -1,0 +1,6 @@
+.CategoriesEditor {
+  display: block;
+  width: 100%;
+
+  color: $category-color;
+}

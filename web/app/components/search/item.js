@@ -1,7 +1,6 @@
-import {createReactComponent} from 'viter/viter';
-
+import {createReactComponent, bus} from 'viter/viter';
+import Category from 'components/category';
 import moment from 'moment';
-import {bus} from 'viter/viter';
 
 export default createReactComponent({
   displayName: 'SearchItem',
@@ -14,7 +13,7 @@ export default createReactComponent({
         <span className="name">{note.name}</span>
         <time>{date}</time>
         &nbsp;|&nbsp;
-        {note.categories.map(cat => <span key={cat} className="category">{cat}</span>)}
+        {note.categories.map(cat => <Category key={cat} name={cat} />)}
       </li>
     )
   }
