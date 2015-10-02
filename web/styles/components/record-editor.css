@@ -1,11 +1,27 @@
-.RecordEditor {
+.RecordEditor-edit {
   .name, .CategoriesEditor {
     display: block;
     width: 100%;
-    margin: 5px 0;
+
+    padding: 0.5vr 0;
+
+    font-weight: 600;
+  }
+
+  .name {
+    font-size: 1.5vr;
   }
 
   .Editor {
-    margin: 0 -1vr;
+    margin-top: 1vr;
+
+    .CodeMirror {
+      height: auto;
+      font-size: 14px;
+    }
   }
+}
+
+.RecordEditor-preview {
+
 }

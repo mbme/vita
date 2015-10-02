@@ -1,12 +1,12 @@
 .Note {
   width: 42em;
 
-  margin: 1vr auto;
+  margin:  1vr auto;
   padding: 1vr 2vr;
 
-  border: 1px solid #F6F6F6;
-  background-color: #FEFEFE;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  background: $text-bg;
+
+  @mixin paper-shadow;
 
   position: relative;
 
@@ -20,9 +20,9 @@
 
       font-size: 1vr;
 
-      color: color($color tint(60%));
+      color: $border-color;
       &:hover {
-        color: $color;
+        color: $font-color;
       }
     }
   }
@@ -48,7 +48,7 @@
       margin: 0 5px;
 
       &:hover {
-        color: $color;
+        color: $font-color;
       }
     }
   }

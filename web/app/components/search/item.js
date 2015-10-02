@@ -13,6 +13,7 @@ export default createReactComponent({
       <li className="SearchItem" onClick={() => bus.publish('note:open', note.id)}>
         <span className="name">{note.name}</span>
         <time>{date}</time>
+        &nbsp;|&nbsp;
         {note.categories.map(cat => <span key={cat} className="category">{cat}</span>)}
       </li>
     )

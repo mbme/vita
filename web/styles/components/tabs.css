@@ -1,14 +1,16 @@
 .Tabs {
   &-headers {
-    border-bottom: 1px solid silver;
+    border-bottom: $border;
 
     > li {
       display: inline-block;
       padding: 5px 10px;
       cursor: pointer;
 
+      font-size: 1.3em;
+
       &.selected {
-        color: $active-tab-color;
+        color: $focus-color;
       }
     }
   }

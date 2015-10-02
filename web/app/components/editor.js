@@ -3,12 +3,16 @@ import {createReactComponent} from 'viter/viter';
 import CodeMirror from 'codemirror';
 import 'codemirror/lib/codemirror.css';
 
+import 'codemirror/mode/markdown/markdown';
+
 export default createReactComponent({
   displayName: 'Editor',
 
   componentDidMount () {
     let codeMirror = CodeMirror.fromTextArea(this.refs.textarea, {
-      lineNumbers: true
+      lineNumbers: false,
+      lineWrapping: true,
+      mode: 'markdown'
     });
 
     this.value = this.props.defaultValue || '';

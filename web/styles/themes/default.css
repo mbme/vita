@@ -1,0 +1,15 @@
+$main-bg-color: #F1F1F1;
+$main-bg: $main-bg-color none repeat scroll 0% 0%;
+
+$text-bg-color: #FEFEFE;
+$text-bg: $text-bg-color none repeat scroll 0% 0%;
+
+$font-size: 16px;
+$line-height: 1.63;
+$font-color: #333;
+
+/* $border-color: #F6F6F6; */
+$border-color: silver;
+$border: 1px solid $border-color;
+
+$focus-color: #51CBEE;

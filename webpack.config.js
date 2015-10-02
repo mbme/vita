@@ -49,11 +49,7 @@ var config = {
       }),
       require('postcss-mixins'),
       require('postcss-nested'),
-      require('postcss-simple-vars')({
-        variables: function () {
-          return require(path.join(base, src, 'styles/variables'));
-        }
-      }),
+      require('postcss-simple-vars')(),
       require('postcss-vertical-rhythm')(),
       require('postcss-color-function'),
       require('postcss-clearfix'),

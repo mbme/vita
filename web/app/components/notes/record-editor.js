@@ -23,7 +23,7 @@ export default createReactComponent({
       <Tabs className="RecordEditor"
             onBeforeChange={this.onBeforeTabChange}>
 
-        <Tab label="Edit">
+        <Tab label="Edit" className="RecordEditor-edit">
           <input type="text" className="name"
                  defaultValue={name} placeholder="Name" ref="name"/>
 
@@ -32,7 +32,7 @@ export default createReactComponent({
           <Editor defaultValue={data} ref="editor"/>
         </Tab>
 
-        <Tab label="Preview">
+        <Tab label="Preview" className="RecordEditor-preview">
           <Record name={name} data={data} categories={categories}/>
         </Tab>
 

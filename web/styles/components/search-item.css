@@ -13,20 +13,15 @@
   }
 
   time {
-    position: absolute;
-    top: 5px;
-    right: 0.5vr;
-
     font-size: 0.8em;
   }
 
   .category {
+    font-size: 0.8em;
     padding-right: 5px;
-    color: #333;
   }
 
   &:hover {
-    background-color: lightgrey;
     cursor: pointer;
   }
 }

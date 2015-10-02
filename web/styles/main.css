@@ -1,5 +1,7 @@
 @import 'vendor/normalize-css/normalize';
 
+@import 'themes/default.css';
+
 @import "base/*.css";
 
 @import "layout/*.css";
