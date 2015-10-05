@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom';
 import velocity from 'velocity';
-import cx from 'classnames';
+import {partial} from 'lodash';
 
 import {createReactComponent, bus} from 'viter/viter';
 import Icon from 'components/icon';
@@ -47,7 +47,7 @@ export default createReactComponent({
           <Icon type="close-round" onClick={this.onClose}/>
         </div>
         <div className="icons-right">
-          <Icon type="compose" onClick={this.onEdit}/>
+          <Icon type="compose" onClick={partial(this.editNote, true)}/>
           <Icon type="images"/>
         </div>
         <Record name={name} data={data} categories={categories} />
@@ -89,7 +89,7 @@ export default createReactComponent({
     }).then(() => bus.publish('note:close', this.props.note.id));
   },
 
-  onEdit () {
-    bus.publish('note:edit', this.props.note.id);
+  editNote (edit) {
+    bus.publish('note:edit', this.props.note.id, edit);
   }
 })

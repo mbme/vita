@@ -20,7 +20,7 @@
 
       font-size: 1vr;
 
-      padding-left: 10px;
+      padding-left: 15px;
 
       color: $font-color-secondary;
       @mixin color-transition;

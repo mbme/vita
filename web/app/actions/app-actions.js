@@ -51,10 +51,10 @@ export default {
     return ['app', 'notes'];
   },
 
-  'note:edit': function (id) {
+  'note:edit': function (id, edit) {
     let NotesStore = getStore('notes');
 
-    if (NotesStore.editNote(id, true)) {
+    if (NotesStore.editNote(id, edit)) {
       return 'notes';
     }
   },
