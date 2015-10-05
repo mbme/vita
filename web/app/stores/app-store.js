@@ -5,6 +5,7 @@ export default function createAppStore () {
     page: '',
     selectedIds: [],
     searchFilter: '',
+    modals: [],
 
     isSelectedId (id) {
       return _.contains(this.selectedIds, id);
