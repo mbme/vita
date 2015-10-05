@@ -63,11 +63,11 @@ export function createNetStore () {
     },
 
     removeRequest (id) {
-      _.remove(this.requests, req => req.id === id);
+      _.remove(this.requests, {id: id});
     },
 
     getRequest (id) {
-      return _.find(this.requests, req => req.id === id);
+      return _.find(this.requests, {id: id});
     },
 
     setSocket (socket) {
@@ -88,19 +88,31 @@ export function createNotesStore () {
     },
 
     removeNote (id) {
-      _.remove(this.notes, note => note.id === id);
+      _.remove(this.notes, {id: id});
 
       return this;
     },
 
     getNote (id) {
-      return _.find(this.notes, note => note.id === id);
+      return _.find(this.notes, {id: id});
     },
 
     sort (orderedIds) {
       this.notes = _(orderedIds).map(::this.getNote).compact().value();
 
       return this;
+    },
+
+    editNote (id, edit = true) {
+      let note = this.getNote(id);
+
+      if (!note) {
+        return false;
+      }
+
+      note.edit = edit;
+
+      return true;
     }
   };
 }

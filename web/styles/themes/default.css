@@ -6,7 +6,9 @@ $text-bg: $text-bg-color none repeat scroll 0% 0%;
 
 $font-size: 16px;
 $line-height: 1.63;
+
 $font-color: #333;
+$font-color-secondary: silver;
 
 /* $border-color: #F6F6F6; */
 $border-color: silver;

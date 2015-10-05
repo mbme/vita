@@ -1,5 +1,6 @@
 import ReactDOM from 'react-dom';
 import velocity from 'velocity';
+import cx from 'classnames';
 
 import {createReactComponent, bus} from 'viter/viter';
 import Icon from 'components/icon';
@@ -38,16 +39,32 @@ export default createReactComponent({
     });
   },
 
-  render () {
-    let {note} = this.props;
-
+  renderNote () {
+    let {name, data, categories} = this.props.note;
     return (
       <li className="Note">
         <div className="icons">
           <Icon type="close-round" onClick={this.onClose}/>
         </div>
         <div className="icons-right">
-          <Icon type="compose"/>
+          <Icon type="compose" onClick={this.onEdit}/>
+          <Icon type="images"/>
+        </div>
+        <Record name={name} data={data} categories={categories} />
+      </li>
+    )
+  },
+
+  renderNoteEditor () {
+    let {note} = this.props;
+    return (
+      <li className="Note is-edit">
+        <div className="icons">
+          <Icon type="checkmark-round"/>
+          <Icon type="close-round" onClick={this.onClose}/>
+        </div>
+        <div className="icons-right">
+          <Icon type="trash-a"/>
           <Icon type="images"/>
         </div>
         <RecordEditor note={note} />
@@ -55,8 +72,24 @@ export default createReactComponent({
     )
   },
 
+  render () {
+    let {note} = this.props;
+
+    if (note.edit) {
+      return this.renderNoteEditor();
+    } else {
+      return this.renderNote();
+    }
+  },
+
   onClose () {
     let el = ReactDOM.findDOMNode(this);
-    velocity(el, 'fadeOut', {duration: 200}).then(() => bus.publish('note:close', this.props.note.id));
+    velocity(el, 'fadeOut', {
+      duration: 200
+    }).then(() => bus.publish('note:close', this.props.note.id));
+  },
+
+  onEdit () {
+    bus.publish('note:edit', this.props.note.id);
   }
 })

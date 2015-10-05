@@ -20,7 +20,10 @@
 
       font-size: 1vr;
 
-      color: $border-color;
+      padding-left: 10px;
+
+      color: $font-color-secondary;
+      @mixin color-transition;
       &:hover {
         color: $font-color;
       }
@@ -47,6 +50,7 @@
       display: block;
       margin: 0 5px;
 
+      @mixin color-transition;
       &:hover {
         color: $font-color;
       }

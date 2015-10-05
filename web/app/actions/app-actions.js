@@ -51,6 +51,14 @@ export default {
     return ['app', 'notes'];
   },
 
+  'note:edit': function (id) {
+    let NotesStore = getStore('notes');
+
+    if (NotesStore.editNote(id, true)) {
+      return 'notes';
+    }
+  },
+
   'search:filter-changed': function (filter) {
     let AppStore = getStore('app');
 
