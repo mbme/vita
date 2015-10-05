@@ -3,7 +3,7 @@ import {setStores, bus, registerAction} from 'viter/viter';
 
 import 'helpers/hacks';
 
-import {createAppStore, createNetStore, createNotesStore, createNotesInfoStore} from 'stores';
+import createStores from 'stores/creator';
 
 import createUrlRenderer   from 'main/url-renderer';
 import createSocketManager from 'main/socket-manager';
@@ -16,12 +16,7 @@ import AppActions    from 'actions/app-actions';
 import SocketActions from 'actions/socket-actions';
 import UrlActions    from 'actions/url-actions';
 
-setStores({
-  'app':        createAppStore(),
-  'net':        createNetStore(),
-  'notes-info': createNotesInfoStore(),
-  'notes':      createNotesStore()
-});
+setStores(createStores());
 
 // page === layout
 const PAGES = {
