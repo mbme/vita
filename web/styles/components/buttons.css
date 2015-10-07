@@ -1,0 +1,27 @@
+.Button {
+  border: 0 none;
+  border-radius: 2px;
+
+  padding: 0.25rem 1.5rem;
+
+  font-size: 1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+
+  color: $font-color;
+
+  background-color: transparent;
+  @mixin bg-color-transition;
+
+  &:hover {
+    background-color: color($font-color alpha(25%));
+  }
+
+  &-warn {
+    color: $btn-warn-color;
+
+    &:hover {
+      background-color: color($btn-warn-color alpha(25%));
+    }
+  }
+}

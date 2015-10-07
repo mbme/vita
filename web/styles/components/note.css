@@ -16,17 +16,10 @@
     right: 10px;
 
     .Icon {
-      cursor: pointer;
-
-      font-size: 1vr;
-
       padding-left: 15px;
 
-      color: $font-color-secondary;
-      @mixin color-transition;
-      &:hover {
-        color: $font-color;
-      }
+      font-size: 1vr;
+      @mixin action-icon;
     }
   }
 
@@ -39,21 +32,15 @@
     border-radius: 0 2px 2px 0;
 
     font-size: 1vr;
-    color: #FFFFFF;
     background: color(black alpha(20%)) none repeat scroll 0% 0%;
 
     text-align: center;
 
     .Icon {
-      cursor: pointer;
-
       display: block;
       margin: 0 5px;
 
-      @mixin color-transition;
-      &:hover {
-        color: $font-color;
-      }
+      @mixin action-icon #FFFFFF;
     }
   }
 }

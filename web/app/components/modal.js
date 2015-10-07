@@ -2,11 +2,16 @@ import {createReactComponent} from 'viter/viter';
 import Icon from 'components/icon';
 
 export default createReactComponent(function Modal ({config}) {
-  let {body, buttons, title, onCancel} = config;
+  let {body, buttons, title, onCancel, showExitIcon} = config;
+
+  let exitIcon = '';
+  if (showExitIcon) {
+    exitIcon = <Icon type="close-round" className="Exit" onClick={onCancel} />
+  }
 
   return (
     <div className="Modal">
-      <Icon type="close-round" className="Exit" onClick={onCancel} />
+      {exitIcon}
       <div className="Modal-header">
         {title}
       </div>

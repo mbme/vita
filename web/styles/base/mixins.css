@@ -6,3 +6,18 @@
 @define-mixin color-transition {
   transition: color 200ms;
 }
+
+@define-mixin bg-color-transition {
+  transition: background-color 200ms;
+}
+
+@define-mixin action-icon $color: $font-color-secondary {
+  cursor: pointer;
+
+  @mixin color-transition;
+
+  color: $color;
+  &:hover {
+    color: $font-color;
+  }
+}

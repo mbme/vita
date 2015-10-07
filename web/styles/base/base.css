@@ -5,10 +5,12 @@
 html, body {
   width: 100%;
   height: 100%;
+  font-size: $font-size;
 }
 
 body {
   color: $font-color;
+  /* for postcss-vertical-rhythm */
   font: $font-size/$line-height "Open Sans", sans-serif;
 }
 

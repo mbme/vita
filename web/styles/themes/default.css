@@ -18,3 +18,7 @@ $focus-color: #51CBEE;
 
 $link-color: blue;
 $category-color: #958079;
+
+$color-warn: #e57373;
+
+$btn-warn-color: $color-warn;
