@@ -69,5 +69,21 @@ export default {
 
       return 'app';
     }
+  },
+
+  'modal:open': function (modalConfig) {
+    let AppStore = getStore('app');
+
+    AppStore.addModal(modalConfig);
+
+    return 'app';
+  },
+
+  'modal:close': function (modalId) {
+    let AppStore = getStore('app');
+
+    if (AppStore.removeModal(modalId)) {
+      return 'app';
+    }
   }
 }

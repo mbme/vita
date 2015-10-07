@@ -85,3 +85,14 @@ export function isFocused(el) {
   // handle native elements
   return el.matches(':focus');
 }
+
+export function createDeferred() {
+  let deferred = {};
+
+  deferred.promise = new Promise(function (resolve, reject) {
+    deferred.resolve = resolve;
+    deferred.reject = reject;
+  });
+
+  return deferred;
+};

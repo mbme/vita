@@ -17,10 +17,12 @@ export default function createPageManager (pages) {
 
     render (state) {
       let Page = pages[state];
+      let container = document.getElementById('container');
 
       if (Page) {
-        ReactDOM.render(<Page />, document.getElementById('container'));
+        ReactDOM.render(<Page />, container);
       } else {
+        ReactDOM.unmountComponentAtNode(container);
         console.error(`Unknown page "${state}"`);
       }
     }

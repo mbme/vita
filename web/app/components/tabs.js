@@ -4,6 +4,8 @@ import {createReactComponent} from 'viter/viter';
 import cx from 'classnames';
 
 const Tabs = createReactComponent({
+  displayName: 'Tabs',
+
   getInitialState () {
     return {
       selected: 0
@@ -58,7 +60,6 @@ const Tab = createReactComponent(function Tab ({children, isSelected = false, cl
       {children}
     </div>
   )
-}
-);
+});
 
 export {Tabs, Tab}

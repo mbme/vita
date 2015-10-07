@@ -5,7 +5,7 @@ export default function createAppStore () {
     page: '',
     selectedIds: [],
     searchFilter: '',
-    modals: [],
+    modals: [], // @immutable
 
     isSelectedId (id) {
       return _.contains(this.selectedIds, id);
@@ -37,6 +37,22 @@ export default function createAppStore () {
 
     setPage (page = '') {
       this.page = page;
+    },
+
+    addModal (config) {
+      this.modals = this.modals.concat(config);
+    },
+
+    removeModal (id) {
+      let modal = _.find(this.modals, {id});
+
+      if (!modal) {
+        return false;
+      }
+
+      this.modals = _.without(this.modals, modal);
+
+      return true;
     }
   };
 }
