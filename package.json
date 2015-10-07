@@ -47,9 +47,8 @@
     "markdown-it": "*",
     "moment": "*",
     "page": "*",
-    "react": "^0.14.0-rc1",
-    "react-dom": "^0.14.0-rc1",
-    "rsvp": "*",
+    "react": "*",
+    "react-dom": "*",
     "velocity-animate": "*"
   }
 }

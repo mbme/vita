@@ -1,4 +1,4 @@
-import RSVP from 'rsvp';
+import {createDeferred} from 'helpers/utils';
 import _ from 'lodash';
 
 export default function createNetStore () {
@@ -13,7 +13,7 @@ export default function createNetStore () {
         id: reqId += 1,
         method,
         params,
-        deferred: RSVP.defer()
+        deferred: createDeferred()
       };
 
       this.requests.push(request);
