@@ -32,13 +32,14 @@ export function createConfirmationDialog (config) {
   };
 
   openModal({
+    type: config.type,
     showExitIcon: config.showExitIcon || false,
     id,
     title,
     body: config.body,
     buttons: [
       <Button label="Cancel" onClick={onCancel}/>,
-      <Button type="warn" label={config.confirmationButton || 'OK'} onClick={onSuccess}/>
+      <Button label={config.confirmationButton || 'OK'} onClick={onSuccess} type="primary" />
     ],
     onCancel
   });

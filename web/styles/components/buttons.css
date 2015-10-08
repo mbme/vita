@@ -16,12 +16,4 @@
   &:hover {
     background-color: color($font-color alpha(25%));
   }
-
-  &-warn {
-    color: $btn-warn-color;
-
-    &:hover {
-      background-color: color($btn-warn-color alpha(25%));
-    }
-  }
 }

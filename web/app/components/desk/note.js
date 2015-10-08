@@ -3,6 +3,7 @@ import velocity from 'velocity';
 import {partial} from 'lodash';
 
 import {createReactComponent, bus} from 'viter/viter';
+import {createConfirmationDialog} from 'helpers/dialogs';
 import Icon from 'components/icon';
 import Record from 'components/notes/record';
 import RecordEditor from 'components/notes/record-editor';
@@ -64,7 +65,7 @@ export default createReactComponent({
           <Icon type="close-round" onClick={this.onClose}/>
         </div>
         <div className="icons-right">
-          <Icon type="trash-a"/>
+          <Icon type="trash-a" onClick={this.onDelete}/>
           <Icon type="images"/>
         </div>
         <RecordEditor note={note} />
@@ -91,5 +92,18 @@ export default createReactComponent({
 
   editNote (edit) {
     bus.publish('note:edit', this.props.note.id, edit);
+  },
+
+  onDelete () {
+    createConfirmationDialog({
+      type: 'warn',
+      title: 'Delete note',
+      body: 'Do you really want to delete note?',
+      confirmationButton: 'Delete'
+    }).then(function () {
+      console.error('DELETE');
+    }, function () {
+      console.error('CANCEL');
+    })
   }
 })

@@ -1,7 +1,6 @@
 import * as viter from 'viter/viter';
 
 import 'helpers/hacks';
-import {createConfirmationDialog} from 'helpers/dialogs';
 
 import createStores from 'stores';
 import createWatchers from 'watchers';
@@ -27,13 +26,3 @@ getActions().forEach(function ([action, handler]) {
 });
 
 viter.bus.publish('app:initialized');
-
-createConfirmationDialog({
-  title: 'Delete note',
-  body: 'Do you really want to delete note?',
-  confirmationButton: 'Delete'
-}).then(function () {
-  console.error('DELETE');
-}, function () {
-  console.error('CANCEL');
-})
