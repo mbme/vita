@@ -1,4 +1,3 @@
-import ReactDOM from 'react-dom';
 import velocity from 'velocity';
 import {partial} from 'lodash';
 
@@ -31,7 +30,7 @@ export default createReactComponent({
   },
 
   scrollIntoView () {
-    let el = ReactDOM.findDOMNode(this);
+    let el = this.refs.note;
     velocity(el, 'scroll', {
       container: el.parentNode,
       duration: 400,
@@ -43,7 +42,7 @@ export default createReactComponent({
   renderNote () {
     let {name, data, categories} = this.props.note;
     return (
-      <li className="Note">
+      <li className="Note" ref="note">
         <div className="icons">
           <Icon type="close-round" onClick={this.onClose}/>
         </div>
@@ -59,7 +58,7 @@ export default createReactComponent({
   renderNoteEditor () {
     let {note} = this.props;
     return (
-      <li className="Note is-edit">
+      <li className="Note is-edit" ref="note">
         <div className="icons">
           <Icon type="checkmark-round"/>
           <Icon type="close-round" onClick={this.onClose}/>
@@ -84,10 +83,22 @@ export default createReactComponent({
   },
 
   onClose () {
-    let el = ReactDOM.findDOMNode(this);
-    velocity(el, 'fadeOut', {
-      duration: 200
-    }).then(() => bus.publish('note:close', this.props.note.id));
+    if (!this.props.note.edit) {
+      this.close();
+      return;
+    }
+
+    createConfirmationDialog({
+      type: 'warn',
+      title: 'Close note editor',
+      body: 'Close note editor without saving changes?',
+      confirmationButton: 'Close'
+    }).then(() => this.close())
+  },
+
+  close () {
+    velocity(this.refs.note, 'fadeOut', {duration: 200})
+                 .then(() => bus.publish('note:close', this.props.note.id));
   },
 
   editNote (edit) {
