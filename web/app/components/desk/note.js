@@ -1,3 +1,4 @@
+import React from 'react';
 import velocity from 'velocity';
 import cx from 'classnames';
 
@@ -37,12 +38,23 @@ export default createReactComponent({
   },
 
   render () {
-    let {className, children} = this.props;
+    let {className, children, menu = []} = this.props;
+
+    menu.push({
+      icon: 'close-round',
+      handler: this.onClose
+    });
+
+    let icons = menu.map(function ({icon, handler, type}) {
+      return <Icon className={cx({[`is-${type}`]: type})} type={icon} onClick={handler}/>;
+    });
+    let iconsPanel = React.createElement(
+      'div', {className: 'icons'}, ...icons
+    );
+
     return (
       <li className={cx("Note", className)} ref="note">
-        <div className="icons">
-          <Icon type="close-round" onClick={this.onClose}/>
-        </div>
+        {iconsPanel}
         {children}
       </li>
     )

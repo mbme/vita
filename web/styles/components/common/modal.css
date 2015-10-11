@@ -61,7 +61,7 @@
     }
   }
 
-  &-warn {
+  &.is-warn {
     .Button-primary {
       color: $btn-warn-color;
       &:hover {

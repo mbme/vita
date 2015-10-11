@@ -24,11 +24,17 @@ export default createReactComponent({
   render () {
     let {name, categories, data} = this.state;
 
-    return (
-      <Note id={this.props.note.id} className="RecordEditorView" onClose={this.onClose}>
-        <Icon type="checkmark-round" onClick={this.onSave}/>
-        <Icon type="trash-a" onClick={this.onDelete}/>
+    let menu = [{
+      icon: 'checkmark-round',
+      handler: this.onSave
+    }, {
+      icon: 'trash-a',
+      type: 'warn',
+      handler: this.onDelete
+    }];
 
+    return (
+      <Note id={this.props.note.id} menu={menu} className="RecordEditorView" onClose={this.onClose}>
         <Tabs onBeforeChange={this.onBeforeTabChange}>
 
           <Tab label="Edit" className="RecordEditorView-edit">

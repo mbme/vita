@@ -16,7 +16,7 @@ export default createReactComponent(function Modal ({config}) {
   );
 
   return (
-    <div className={cx('Modal', {[`Modal-${type}`]: type})}>
+    <div className={cx('Modal', {[`is-${type}`]: type})}>
       {exitIcon}
       <div className="Modal-header">
         {title}

@@ -11,9 +11,13 @@ export default createReactComponent({
   render () {
     let {id, name, data, categories} = this.props.note;
 
+    let menu = [{
+      icon: 'compose',
+      handler: partial(this.editNote, true)
+    }];
+
     return (
-      <Note id={id} className="RecordView">
-        <Icon type="compose" onClick={partial(this.editNote, true)}/>
+      <Note id={id} className="RecordView" menu={menu}>
         <Record name={name} data={data} categories={categories} />
       </Note>
     )

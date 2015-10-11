@@ -20,27 +20,10 @@
 
       font-size: 1vr;
       @mixin action-icon;
-    }
-  }
 
-  .icons-right {
-    position: absolute;
-    top: 5px;
-    right: -31px;
-
-    width: 30px;
-    border-radius: 0 2px 2px 0;
-
-    font-size: 1vr;
-    background: color(black alpha(20%)) none repeat scroll 0% 0%;
-
-    text-align: center;
-
-    .Icon {
-      display: block;
-      margin: 0 5px;
-
-      @mixin action-icon #FFFFFF;
+      &.is-warn:hover {
+        color: $color-warn;
+      }
     }
   }
 }
