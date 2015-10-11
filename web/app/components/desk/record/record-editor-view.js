@@ -2,7 +2,6 @@ import {createReactComponent, bus} from 'viter/viter';
 import {createConfirmationDialog} from 'helpers/dialogs';
 
 import {Tab, Tabs} from 'components/common/tabs';
-import Icon from 'components/common/icon';
 import Editor from 'components/common/editor';
 import CategoriesEditor from 'components/common/categories-editor';
 

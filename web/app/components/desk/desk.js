@@ -37,9 +37,9 @@ export default createReactContainer({
     let notes = this.state.notes.map(function (note) {
       let View = getNoteView(note);
 
-      return (<View key={note.id} note={note} />);
+      return <View key={note.id} note={note} />;
     });
 
-    return (<ul className="Desk">{notes}</ul>)
+    return <ul className="Desk">{notes}</ul>
   }
 })
