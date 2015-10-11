@@ -53,14 +53,18 @@ export default createReactComponent({
     )
   },
 
-  onBeforeTabChange () {
+  getCurrentState () {
     let {name, categories, editor} = this.refs;
 
-    this.setState({
+    return {
       name:       name.value,
       categories: categories.value,
       data:       editor.value
-    });
+    };
+  },
+
+  onBeforeTabChange () {
+    this.setState(this.getCurrentState());
   },
 
   onClose () {
@@ -73,7 +77,25 @@ export default createReactComponent({
   },
 
   onSave () {
-    bus.publish('note:save', this.props.note.id);
+    let {id, name, categories, data} = this.props.note;
+
+    let current = this.getCurrentState();
+
+    let changed = {};
+
+    if (name !== current.name) {
+      changed.name = current.name;
+    }
+
+    if (categories !== current.categories) {
+      changed.categories = current.categories;
+    }
+
+    if (data !== current.data) {
+      changed.data = current.data;
+    }
+
+    bus.publish('note:save', id, changed);
   },
 
   onDelete () {

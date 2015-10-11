@@ -1,18 +1,21 @@
+import _ from 'lodash';
 import {getStore, getStores, publishStoreUpdate} from 'viter/viter';
 import {id2key} from 'helpers/utils';
 
+function loadNotesList () {
+  let [NetStore, NotesInfoStore] = getStores('net', 'notes-info');
+
+  NetStore.addRequest('notes-list-read').then(function (items) {
+    NotesInfoStore.resetInfos(items);
+
+    publishStoreUpdate('notes-info');
+  });
+
+  publishStoreUpdate('net');
+}
+
 export default {
-  'app:initialized': function () {
-    let [NetStore, NotesInfoStore] = getStores('net', 'notes-info');
-
-    NetStore.addRequest('notes-list-read').then(function (items) {
-      NotesInfoStore.resetInfos(items);
-
-      return 'notes-info';
-    }).then(publishStoreUpdate);
-
-    return 'net';
-  },
+  'app:initialized': loadNotesList,
 
   'note:open': function (id) {
     let [AppStore, NetStore, NotesStore] = getStores('app', 'net', 'notes');
@@ -35,21 +38,37 @@ export default {
     return ['app', 'net'];
   },
 
-  'note:save': function (id) {
-    let [AppStore, NetStore] = getStores('app', 'net');
+  'note:save': function (id, changedData) {
+    let [NotesStore, NetStore] = getStores('notes', 'net');
 
-    let NotesStore = getStore('notes');
+    if (_.isEmpty(changedData)) {
+      console.log('note %s: not changed', id);
+      return;
+    }
+
+    let publicNote = NotesStore.getPublicNoteData(id);
+    if (!publicNote) {
+      console.log('cannot save unknown note %s', id);
+      return;
+    }
+
+    let data = _.assign(publicNote, changedData);
 
     // save-note
-    NetStore.addRequest('note-read', id2key(id)).then(function (note) {
-      console.log('open note %s', id);
+    NetStore.addRequest('note-update', data).then(function (note) {
+      console.log('note %s saved', id);
 
-      NotesStore.addNote(note).sort(AppStore.selectedIds);
+      if (!NotesStore.updateNote(id, note) || !NotesStore.editNote(id, false)) {
+        console.error('cannot update unknown note %s');
+        return;
+      }
+
+      loadNotesList();
 
       return 'notes';
     }).then(publishStoreUpdate);
 
-    return ['app', 'net'];
+    return 'net';
   },
 
   'note:close': function (id) {

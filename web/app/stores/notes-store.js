@@ -22,6 +22,27 @@ export default function createNotesStore () {
       return _.find(this.notes, {id: id});
     },
 
+    getPublicNoteData (id) {
+      let note = this.getNote(id);
+      if (!note) {
+        return undefined;
+      }
+
+      return _.pick(note, ['key', 'name', 'data', 'categories']);
+    },
+
+    updateNote (id, data) {
+      let note = this.getNote(id);
+
+      if (!note) {
+        return false;
+      }
+
+      _.assign(note, data);
+
+      return true;
+    },
+
     sort (orderedIds) {
       this.notes = _(orderedIds).map(::this.getNote).compact().value();
 
