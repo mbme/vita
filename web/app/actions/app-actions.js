@@ -14,6 +14,20 @@ function loadNotesList () {
   publishStoreUpdate('net');
 }
 
+function closeNote (id) {
+  let [AppStore, NotesStore] = getStores('app', 'notes');
+
+  if (!AppStore.removeSelectedId(id)) {
+    return;
+  }
+
+  NotesStore.removeNote(id);
+
+  console.log('closed note %s', id);
+
+  publishStoreUpdate('app', 'notes');
+}
+
 export default {
   'app:initialized': loadNotesList,
 
@@ -72,19 +86,7 @@ export default {
     publishStoreUpdate('net');
   },
 
-  'note:close': function (id) {
-    let [AppStore, NotesStore] = getStores('app', 'notes');
-
-    if (!AppStore.removeSelectedId(id)) {
-      return;
-    }
-
-    NotesStore.removeNote(id);
-
-    console.log('closed note %s', id);
-
-    publishStoreUpdate('app', 'notes');
-  },
+  'note:close': closeNote,
 
   'note:edit': function (id, edit) {
     let NotesStore = getStore('notes');
@@ -92,6 +94,25 @@ export default {
     if (NotesStore.editNote(id, edit)) {
       publishStoreUpdate('notes');
     }
+  },
+
+  'note:delete': function (id) {
+    let [NotesStore, NetStore] = getStores('notes', 'net');
+
+    let note = NotesStore.getNote(id);
+
+    if (!note) {
+      console.error('cannot delete unknown note %s', id);
+      return;
+    }
+
+    NetStore.addRequest('note-delete', id2key(id)).then(function () {
+      console.log('note %s deleted', id);
+      loadNotesList();
+      closeNote(id);
+    });
+
+    publishStoreUpdate('net');
   },
 
   'search:filter-changed': function (filter) {

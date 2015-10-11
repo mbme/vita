@@ -104,10 +104,6 @@ export default createReactComponent({
       title: 'Delete note',
       body: 'Are you sure you would like to delete this note?',
       confirmationButton: 'Delete'
-    }).then(function () {
-      console.error('DELETE');
-    }, function () {
-      console.error('CANCEL');
-    })
+    }).then(() => bus.publish('note:delete', this.props.note.id));
   }
 });

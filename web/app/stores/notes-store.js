@@ -11,7 +11,9 @@ export default function createNotesStore () {
     },
 
     removeNote (id) {
-      _.remove(this.notes, {id: id});
+      let removed = _.remove(this.notes, {id: id});
+
+      return removed.length > 0;
     },
 
     getNote (id) {
