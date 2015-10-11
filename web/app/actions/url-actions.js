@@ -1,7 +1,7 @@
 import page from 'page';
 
 import {getQueryParam, parseIdsStr} from 'helpers/utils';
-import {bus, getStore} from 'viter/viter';
+import {bus, getStore, publishStoreUpdate} from 'viter/viter';
 
 export default {
   'app:initialized': function () {
@@ -25,6 +25,6 @@ export default {
 
     AppStore.setPage(page);
 
-    return 'app';
+    publishStoreUpdate('app');
   }
 }

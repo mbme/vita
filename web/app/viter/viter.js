@@ -41,17 +41,6 @@ export function publishStoreUpdate(...stores) {
   bus.publish('!stores-update', ...stores);
 }
 
-export function registerAction(event, handler) {
-  bus.subscribe(event, function (...params) {
-    // handler can return nothing, one item or array of items
-    // so here we convert everything to array
-    let updatedStores = [].concat(handler(...params) || []);
-
-    // publish update only when something really updated
-    updatedStores.length && publishStoreUpdate(...updatedStores);
-  });
-}
-
 function returnTrue() {
   return true;
 }

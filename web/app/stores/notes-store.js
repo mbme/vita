@@ -8,14 +8,10 @@ export default function createNotesStore () {
     addNote (note) {
       note.id = key2id(note.key);
       this.notes.push(note);
-
-      return this;
     },
 
     removeNote (id) {
       _.remove(this.notes, {id: id});
-
-      return this;
     },
 
     getNote (id) {
@@ -45,8 +41,6 @@ export default function createNotesStore () {
 
     sort (orderedIds) {
       this.notes = _(orderedIds).map(::this.getNote).compact().value();
-
-      return this;
     },
 
     editNote (id, edit = true) {

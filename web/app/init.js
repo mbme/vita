@@ -1,4 +1,4 @@
-import * as viter from 'viter/viter';
+import {setStores, bus} from 'viter/viter';
 
 import 'helpers/hacks';
 
@@ -8,7 +8,7 @@ import getActions from 'actions';
 
 import MainPage from 'components/pages/records';
 
-viter.setStores(createStores());
+setStores(createStores());
 
 // page === layout
 const PAGES = {
@@ -16,13 +16,11 @@ const PAGES = {
 };
 
 let watchers = createWatchers(PAGES);
-viter.bus.subscribe('!stores-update', function (...args) {
+bus.subscribe('!stores-update', function (...args) {
   console.debug('updated stores: %s', args.join(', '));
   watchers.forEach(comp => comp(...args));
 });
 
-getActions().forEach(function ([action, handler]) {
-  viter.registerAction(action, handler);
-});
+getActions().forEach(([action, handler]) => bus.subscribe(action, handler));
 
-viter.bus.publish('app:initialized');
+bus.publish('app:initialized');

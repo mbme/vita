@@ -30,12 +30,13 @@ export default {
     NetStore.addRequest('note-read', id2key(id)).then(function (note) {
       console.log('open note %s', id);
 
-      NotesStore.addNote(note).sort(AppStore.selectedIds);
+      NotesStore.addNote(note);
+      NotesStore.sort(AppStore.selectedIds);
 
-      return 'notes';
-    }).then(publishStoreUpdate);
+      publishStoreUpdate('notes');
+    });
 
-    return ['app', 'net'];
+    publishStoreUpdate('app', 'net');
   },
 
   'note:save': function (id, changedData) {
@@ -65,10 +66,10 @@ export default {
 
       loadNotesList();
 
-      return 'notes';
-    }).then(publishStoreUpdate);
+      publishStoreUpdate('notes');
+    });
 
-    return 'net';
+    publishStoreUpdate('net');
   },
 
   'note:close': function (id) {
@@ -82,14 +83,14 @@ export default {
 
     console.log('closed note %s', id);
 
-    return ['app', 'notes'];
+    publishStoreUpdate('app', 'notes');
   },
 
   'note:edit': function (id, edit) {
     let NotesStore = getStore('notes');
 
     if (NotesStore.editNote(id, edit)) {
-      return 'notes';
+      publishStoreUpdate('notes');
     }
   },
 
@@ -101,7 +102,7 @@ export default {
 
       console.debug('search filter -> %s', filter);
 
-      return 'app';
+      publishStoreUpdate('app');
     }
   },
 
@@ -110,14 +111,14 @@ export default {
 
     AppStore.addModal(modalConfig);
 
-    return 'app';
+    publishStoreUpdate('app');
   },
 
   'modal:close': function (modalId) {
     let AppStore = getStore('app');
 
     if (AppStore.removeModal(modalId)) {
-      return 'app';
+      publishStoreUpdate('app');
     }
   }
 }

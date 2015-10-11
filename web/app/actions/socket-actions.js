@@ -1,4 +1,4 @@
-import { getStore } from 'viter/viter';
+import { getStore, publishStoreUpdate } from 'viter/viter';
 
 export default {
   'socket:connected': function (socket) {
@@ -7,7 +7,7 @@ export default {
     let NetStore = getStore('net');
     NetStore.setSocket(socket);
 
-    return 'net';
+    publishStoreUpdate('net');
   },
 
   'socket:disconnected': function (e) {
@@ -16,7 +16,7 @@ export default {
     let NetStore = getStore('net');
     NetStore.setSocket(null);
 
-    return 'net';
+    publishStoreUpdate('net');
   },
 
   'socket:message': function (msg) {
@@ -36,6 +36,6 @@ export default {
 
     NetStore.removeRequest(msg.id);
 
-    return 'net'
+    publishStoreUpdate('net');
   }
 }
