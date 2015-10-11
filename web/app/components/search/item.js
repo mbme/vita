@@ -1,5 +1,5 @@
 import {createReactComponent, bus} from 'viter/viter';
-import Category from 'components/category';
+import Category from 'components/common/category';
 import moment from 'moment';
 
 export default createReactComponent({

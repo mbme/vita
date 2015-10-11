@@ -1,5 +1,26 @@
 import {createReactContainer} from 'viter/viter';
-import Note from './note';
+
+import RecordEditorView from './record/record-editor-view';
+import RecordView from './record/record-view';
+
+const VIEWS = {
+  ':record':        RecordView,
+  ':record:editor': RecordEditorView
+};
+
+function getNoteView(note) {
+  let id = note.key.type;
+  if (note.edit) {
+    id += ':editor';
+  }
+  let view = VIEWS[id];
+
+  if (!view) {
+    throw `unknown note type ${id}`;
+  }
+
+  return view;
+};
 
 export default createReactContainer({
   displayName: 'Desk',
@@ -13,11 +34,12 @@ export default createReactContainer({
   },
 
   render () {
-    let {notes} = this.state;
-    return (
-      <ul className="Desk">
-        {notes.map(note => <Note key={note.id} note={note} />)}
-      </ul>
-    )
+    let notes = this.state.notes.map(function (note) {
+      let View = getNoteView(note);
+
+      return (<View key={note.id} note={note} />);
+    });
+
+    return (<ul className="Desk">{notes}</ul>)
   }
 })

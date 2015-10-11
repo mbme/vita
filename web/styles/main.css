@@ -6,4 +6,4 @@
 
 @import "layout/*.css";
 
-@import "components/*.css";
+@import "components/**/*.css";

@@ -2,7 +2,7 @@ import _ from 'lodash';
 import ReactDOM from 'react-dom';
 
 import {createComponent} from 'viter/viter';
-import Modal from 'components/modal';
+import Modal from 'components/common/modal';
 
 // Modals renderer
 export default function createModalsManager() {

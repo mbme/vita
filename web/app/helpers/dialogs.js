@@ -1,6 +1,6 @@
 import {bus} from 'viter/viter';
 import {createDeferred} from 'helpers/utils';
-import Button from 'components/button';
+import Button from 'components/common/button';
 
 let modalId = 0;
 

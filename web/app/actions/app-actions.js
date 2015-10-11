@@ -15,7 +15,7 @@ export default {
   },
 
   'note:open': function (id) {
-    let [AppStore, NetStore] = getStores('app', 'net');
+    let [AppStore, NetStore, NotesStore] = getStores('app', 'net', 'notes');
 
     if (AppStore.isSelectedId(id)) {
       return;
@@ -23,9 +23,24 @@ export default {
 
     AppStore.addSelectedId(id);
 
+    // load selected note
+    NetStore.addRequest('note-read', id2key(id)).then(function (note) {
+      console.log('open note %s', id);
+
+      NotesStore.addNote(note).sort(AppStore.selectedIds);
+
+      return 'notes';
+    }).then(publishStoreUpdate);
+
+    return ['app', 'net'];
+  },
+
+  'note:save': function (id) {
+    let [AppStore, NetStore] = getStores('app', 'net');
+
     let NotesStore = getStore('notes');
 
-    // load selected note
+    // save-note
     NetStore.addRequest('note-read', id2key(id)).then(function (note) {
       console.log('open note %s', id);
 

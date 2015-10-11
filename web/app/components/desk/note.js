@@ -1,12 +1,9 @@
 import velocity from 'velocity';
-import {partial} from 'lodash';
+import cx from 'classnames';
 
 import {createReactComponent, bus} from 'viter/viter';
-import {createConfirmationDialog} from 'helpers/dialogs';
-import Icon from 'components/icon';
-import Record from 'components/notes/record';
-import RecordEditor from 'components/notes/record-editor';
-
+import {resolvedPromise} from 'helpers/utils';
+import Icon from 'components/common/icon';
 
 export default createReactComponent({
   displayName: 'Note',
@@ -24,7 +21,7 @@ export default createReactComponent({
   },
 
   maybeScrollMeIntoView (id) {
-    if (id === this.props.note.id) {
+    if (id === this.props.id) {
       this.scrollIntoView();
     }
   },
@@ -39,82 +36,26 @@ export default createReactComponent({
     });
   },
 
-  renderNote () {
-    let {name, data, categories} = this.props.note;
-    return (
-      <li className="Note" ref="note">
-        <div className="icons">
-          <Icon type="close-round" onClick={this.onClose}/>
-        </div>
-        <div className="icons-right">
-          <Icon type="compose" onClick={partial(this.editNote, true)}/>
-          <Icon type="images"/>
-        </div>
-        <Record name={name} data={data} categories={categories} />
-      </li>
-    )
-  },
-
-  renderNoteEditor () {
-    let {note} = this.props;
-    return (
-      <li className="Note is-edit" ref="note">
-        <div className="icons">
-          <Icon type="checkmark-round"/>
-          <Icon type="close-round" onClick={this.onClose}/>
-        </div>
-        <div className="icons-right">
-          <Icon type="trash-a" onClick={this.onDelete}/>
-          <Icon type="images"/>
-        </div>
-        <RecordEditor note={note} />
-      </li>
-    )
-  },
-
   render () {
-    let {note} = this.props;
-
-    if (note.edit) {
-      return this.renderNoteEditor();
-    } else {
-      return this.renderNote();
-    }
+    let {className, children} = this.props;
+    return (
+      <li className={cx("Note", className)} ref="note">
+        <div className="icons">
+          <Icon type="close-round" onClick={this.onClose}/>
+        </div>
+        {children}
+      </li>
+    )
   },
 
   onClose () {
-    if (!this.props.note.edit) {
-      this.close();
-      return;
-    }
-
-    createConfirmationDialog({
-      type: 'warn',
-      title: 'Close note editor',
-      body: 'Close note editor without saving changes?',
-      confirmationButton: 'Close'
-    }).then(() => this.close())
+    let {onClose = resolvedPromise} = this.props;
+    onClose().then(this.close);
   },
 
   close () {
-    velocity(this.refs.note, 'fadeOut', {duration: 200})
-                 .then(() => bus.publish('note:close', this.props.note.id));
-  },
-
-  editNote (edit) {
-    bus.publish('note:edit', this.props.note.id, edit);
-  },
-
-  onDelete () {
-    createConfirmationDialog({
-      type: 'warn',
-      title: 'Delete note',
-      body: 'Do you really want to delete note?',
-      confirmationButton: 'Delete'
-    }).then(function () {
-      console.error('DELETE');
-    }, function () {
-      console.error('CANCEL');
-    })
+    velocity(this.refs.note, 'fadeOut', {
+      duration: 200
+    }).then(() => bus.publish('note:close', this.props.id));
   }
 })

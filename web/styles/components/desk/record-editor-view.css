@@ -1,4 +1,4 @@
-.RecordEditor-edit {
+.RecordEditoViewr-edit {
   .name, .CategoriesEditor {
     display: block;
     width: 100%;
@@ -20,8 +20,4 @@
       font-size: 14px;
     }
   }
-}
-
-.RecordEditor-preview {
-
 }

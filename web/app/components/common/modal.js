@@ -1,6 +1,6 @@
 import React from 'react';
 import {createReactComponent} from 'viter/viter';
-import Icon from 'components/icon';
+import Icon from 'components/common/icon';
 import cx from 'classnames';
 
 export default createReactComponent(function Modal ({config}) {

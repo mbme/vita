@@ -96,3 +96,21 @@ export function createDeferred() {
 
   return deferred;
 };
+
+/*
+ * @returns Promise
+ */
+export function resolvedPromise() {
+  return new Promise(function (resolve) {
+    resolve();
+  });
+};
+
+/*
+ * @returns Promise
+ */
+export function rejectedPromise() {
+  return new Promise(function (resolve, reject) {
+    reject();
+  });
+};
