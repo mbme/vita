@@ -1,0 +1,26 @@
+.SearchInput {
+  position: relative;
+  padding: 0.5vr 1vr;
+
+  font-size: 1.3em;
+
+  .Icon {
+    position: absolute;
+    color: $font-color-secondary;
+  }
+
+  input {
+    width: 100%;
+    padding-left: 25px;
+
+    &::placeholder {
+      color: $font-color-secondary;
+      padding-left: 85px;
+    }
+    &:focus {
+      &::placeholder {
+        padding-left: 0px;
+      }
+    }
+  }
+}

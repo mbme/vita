@@ -4,6 +4,14 @@ import {fuzzySearch} from 'helpers/utils';
 import SearchItems from './items';
 import SearchInput from './input';
 
+function getSearchType(filter) {
+  if (filter) {
+    return "Search Results";
+  }
+
+  return "All notes";
+}
+
 export default createReactContainer({
   displayName: 'SearchPanel',
 
@@ -20,12 +28,16 @@ export default createReactContainer({
     let {infos, filter} = this.state;
     let results = infos.filter(i => fuzzySearch(filter, i.name));
     return (
-      <ul className="SearchPanel">
+      <div className="SearchPanel">
+        <div className="SearchPanel-header">
+          <span className="search-type">{getSearchType(filter)}</span>
+          <span className="results-count">{results.length}</span>
+        </div>
         <SearchInput filter={filter} />
-        <div className="scroll">
+        <div className="SearchPanel-scroll">
           <SearchItems results={results} />
         </div>
-      </ul>
+      </div>
     )
   }
 })

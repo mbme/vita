@@ -1,4 +1,5 @@
 import {createReactComponent} from 'viter/viter';
+import Icon from 'components/common/icon';
 
 import {debounce} from 'lodash';
 import {searchDelay} from 'config';
@@ -14,8 +15,10 @@ export default createReactComponent({
   render () {
     let {filter} = this.props;
     return (
-      <input type="text" className="SearchInput"
-             placeholder="Search" defaultValue={filter} onChange={this.handleChange} />
+      <div className="SearchInput">
+        <Icon type="ios-search-strong"/>
+        <input type="text" placeholder="Search" defaultValue={filter} onChange={this.handleChange} />
+      </div>
     )
   },
 

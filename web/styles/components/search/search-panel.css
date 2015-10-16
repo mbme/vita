@@ -1,15 +1,18 @@
 .SearchPanel {
   height: 100%;
 
-  .SearchInput {
-    font-size: 1.3em;
-    width: 96%;
+  &-header {
+    text-align: center;
+    position: relative;
 
-    margin: 5px 2% 10px;
-    padding: 5px 10px;
+    .results-count {
+      color: $font-color-secondary;
+      padding-left: 0.5rem;
+      font-size: 0.9rem;
+    }
   }
 
-  .scroll {
+  &-scroll {
     height: calc(100% - 57px);
     overflow-y: auto;
   }
