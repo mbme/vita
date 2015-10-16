@@ -2,7 +2,7 @@
 .SearchItem {
   position: relative;
 
-  padding: 0 0.5vr;
+  padding: 0 1vr;
   margin-bottom: 1vr;
 
   .name {
@@ -18,5 +18,9 @@
 
   &:hover {
     cursor: pointer;
+  }
+
+  &.is-selected {
+    background-color: lime;
   }
 }

@@ -17,10 +17,7 @@ function loadNotesList () {
 function closeNote (id) {
   let [AppStore, NotesStore] = getStores('app', 'notes');
 
-  if (!AppStore.removeSelectedId(id)) {
-    return;
-  }
-
+  AppStore.removeSelectedId(id);
   NotesStore.removeNote(id);
 
   console.log('closed note %s', id);

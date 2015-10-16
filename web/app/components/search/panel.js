@@ -20,12 +20,13 @@ export default createReactContainer({
   getState (NotesInfoStore, AppStore) {
     return {
       infos: NotesInfoStore.infos,
-      filter: AppStore.searchFilter
+      filter: AppStore.searchFilter,
+      selectedIds: AppStore.selectedIds
     };
   },
 
   render () {
-    let {infos, filter} = this.state;
+    let {infos, filter, selectedIds} = this.state;
     let results = infos.filter(i => fuzzySearch(filter, i.name));
     return (
       <div className="SearchPanel">
@@ -35,7 +36,7 @@ export default createReactContainer({
         </div>
         <SearchInput filter={filter} />
         <div className="SearchPanel-scroll">
-          <SearchItems results={results} />
+          <SearchItems results={results} selectedIds={selectedIds}/>
         </div>
       </div>
     )

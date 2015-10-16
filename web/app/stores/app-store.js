@@ -3,7 +3,7 @@ import _ from 'lodash';
 export default function createAppStore () {
   return {
     page: '',
-    selectedIds: [],
+    selectedIds: [], // @immutable
     searchFilter: '',
     modals: [], // @immutable
 
@@ -12,19 +12,11 @@ export default function createAppStore () {
     },
 
     addSelectedId (id) {
-      this.selectedIds.unshift(id);
+      this.selectedIds = [id].concat(this.selectedIds);
     },
 
     removeSelectedId (id) {
-      let pos = this.selectedIds.indexOf(id);
-
-      if (pos === -1) {
-        return false;
-      }
-
-      _.pullAt(this.selectedIds, pos);
-
-      return true;
+      this.selectedIds = _.without(this.selectedIds, id);
     },
 
     resetSelectedIds (ids = []) {

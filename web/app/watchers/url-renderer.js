@@ -1,4 +1,3 @@
-import {isEqual} from 'lodash';
 import page from 'page';
 
 import {createComponent} from 'viter/viter';
@@ -9,11 +8,7 @@ export default function crateUrlRenderer() {
     stores: ['app'],
 
     getState (AppStore) {
-      return AppStore.selectedIds.slice(0).sort();
-    },
-
-    shouldUpdate (state, newState) {
-      return !isEqual(state, newState);
+      return AppStore.selectedIds;
     },
 
     render (state) {
