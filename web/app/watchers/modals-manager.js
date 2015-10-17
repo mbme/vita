@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import ReactDOM from 'react-dom';
 
 import {createComponent} from 'viter/viter';
@@ -19,7 +18,7 @@ export default function createModalsManager() {
 
     render (state) {
       let container = document.getElementById('modals-container');
-      let modalConfig = _.last(state);
+      let modalConfig = state.last();
 
       if (modalConfig) {
         let component = (

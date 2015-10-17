@@ -1,4 +1,4 @@
-import {createDeferred} from 'helpers/utils';
+import {createDeferred, byId} from 'helpers/utils';
 import {List} from 'immutable';
 
 export default function createNetStore () {
@@ -6,10 +6,6 @@ export default function createNetStore () {
 
   let requests = List();
   let socket = null;
-
-  function findPos(id) {
-    return requests.findIndex(rq => rq.id === id);
-  }
 
   return {
     get socket () {
@@ -34,7 +30,7 @@ export default function createNetStore () {
     },
 
     removeRequest (id) {
-      let pos = findPos(id);
+      let pos = requests.findIndex(byId(id));
 
       if (pos === -1) {
         return false;
@@ -46,7 +42,7 @@ export default function createNetStore () {
     },
 
     getRequest (id) {
-      let pos = findPos(id);
+      let pos = requests.findIndex(byId(id));
       if (pos > -1) {
         return requests.get(pos);
       }

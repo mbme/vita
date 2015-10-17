@@ -1,31 +1,44 @@
-import _ from 'lodash';
+import {List} from 'immutable';
+import {byId} from 'helpers/utils';
 
 export default function createAppStore () {
-  return {
-    page: '',
-    searchFilter: '',
-    modals: [], // @immutable
+  let page = '';
+  let searchFilter = '';
+  let modals = List();
 
-    setSearchFilter (filter = '') {
-      this.searchFilter = filter;
+  return {
+    get page () {
+      return page;
     },
 
-    setPage (page = '') {
-      this.page = page;
+    get searchFilter () {
+      return searchFilter;
+    },
+
+    get modals () {
+      return modals;
+    },
+
+    setSearchFilter (newFilter = '') {
+      searchFilter = newFilter;
+    },
+
+    setPage (newPage = '') {
+      page = newPage;
     },
 
     addModal (config) {
-      this.modals = this.modals.concat(config);
+      modals = modals.push(config);
     },
 
     removeModal (id) {
-      let modal = _.find(this.modals, {id});
+      let pos = modals.findIndex(byId(id));
 
-      if (!modal) {
+      if (pos === -1) {
         return false;
       }
 
-      this.modals = _.without(this.modals, modal);
+      modals = modals.delete(pos);
 
       return true;
     }
