@@ -1,12 +1,24 @@
 import {createDeferred} from 'helpers/utils';
-import _ from 'lodash';
+import {List} from 'immutable';
 
 export default function createNetStore () {
   let reqId = 0;
 
+  let requests = List();
+  let socket = null;
+
+  function findPos(id) {
+    return requests.findIndex(rq => rq.id === id);
+  }
+
   return {
-    socket: null,
-    requests: [],
+    get socket () {
+      return socket;
+    },
+
+    get requests () {
+      return requests;
+    },
 
     addRequest (method, params) {
       let request = {
@@ -16,21 +28,32 @@ export default function createNetStore () {
         deferred: createDeferred()
       };
 
-      this.requests.push(request);
+      requests = requests.push(request);
 
       return request.deferred.promise;
     },
 
     removeRequest (id) {
-      _.remove(this.requests, {id: id});
+      let pos = findPos(id);
+
+      if (pos === -1) {
+        return false;
+      }
+
+      requests = requests.delete(pos);
+
+      return true;
     },
 
     getRequest (id) {
-      return _.find(this.requests, {id: id});
+      let pos = findPos(id);
+      if (pos > -1) {
+        return requests.get(pos);
+      }
     },
 
-    setSocket (socket) {
-      this.socket = socket;
+    setSocket (newSocket) {
+      socket = newSocket;
     }
   };
 }

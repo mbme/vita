@@ -16,7 +16,7 @@ export default function createMessageSender() {
     },
 
     shouldUpdate (state, newState) {
-      return !!newState.requests.length;
+      return !newState.requests.isEmpty();
     },
 
     render ({socket, requests}) {

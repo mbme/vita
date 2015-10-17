@@ -39,7 +39,7 @@ function openNotes (...ids) {
     console.log('open notes %s', ids.join(', '));
 
     ids.forEach(id => NotesInfoStore.markSelected(id, true));
-    notes.forEach(::NotesStore.addNote);
+    notes.forEach(NotesStore.addNote);
 
     publishStoreUpdate('notes', 'notes-info');
   });

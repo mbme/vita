@@ -56,11 +56,9 @@ export default function createNotesStore () {
 
     getPublicNoteData (id) {
       let note = this.getNote(id);
-      if (!note) {
-        return undefined;
+      if (note) {
+        return pick(note.toJS(), ['key', 'name', 'data', 'categories']);
       }
-
-      return pick(note.toJS(), ['key', 'name', 'data', 'categories']);
     },
 
     updateNote (id, data) {
