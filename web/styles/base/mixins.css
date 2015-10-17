@@ -21,3 +21,8 @@
     color: $font-color;
   }
 }
+
+@define-mixin force-new-lines-for-long-words {
+  word-break: break-all;
+  hyphens: auto;
+}
