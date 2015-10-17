@@ -12,7 +12,7 @@ function loadNotesList () {
     NotesInfoStore.resetInfos(items);
 
     NotesStore.notes.forEach(function (note) {
-      NotesInfoStore.markSelected(note.id, true);
+      NotesInfoStore.markSelected(note.get('id'), true);
     });
 
     publishStoreUpdate('notes-info');

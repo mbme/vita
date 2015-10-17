@@ -1,10 +1,6 @@
-import {curry, pick} from 'lodash';
-import {key2id} from 'helpers/utils';
-import Immutable from 'immutable';
-
-const byId = curry(function (id, note) {
-  return note.get('id') === id;
-})
+import {pick} from 'lodash';
+import {key2id, byId} from 'helpers/utils';
+import {List, Map} from 'immutable';
 
 export default function createNotesStore () {
   let idsMap = {}; // note.id : note._id
@@ -17,10 +13,10 @@ export default function createNotesStore () {
     return idsMap[id];
   }
 
-  let notes = Immutable.List();
+  let notes = List();
 
   function addNote(note) {
-    notes = notes.push(Immutable.Map(note));
+    notes = notes.push(Map(note));
   }
 
   function findNote(id) {

@@ -1,30 +1,31 @@
-import _ from 'lodash';
-import {key2id} from 'helpers/utils';
+import {List, Map} from 'immutable';
+import {key2id, byId} from 'helpers/utils';
 
 export default function createNotesInfoStore () {
+  let infos = List();
   return {
-    infos: [],
+    get infos () {
+      return infos;
+    },
 
-    resetInfos (infos) {
-      this.infos = infos;
-      infos.forEach(info => info.id = key2id(info.key));
+    resetInfos (newInfos) {
+      infos = List(newInfos.map(info => Map(info).merge({id: key2id(info.key), selected: false})));
     },
 
     getInfo (id) {
-      return _.find(this.infos, {id});
+      return infos.find(byId(id));
     },
 
     markSelected (id, selected) {
-      let info = this.getInfo(id);
+      let pos = infos.findIndex(byId(id))
 
-      if (!info) {
-        return;
+      if (pos === -1) {
+        return false;
       }
 
-      let newInfo = Object.assign({}, info, {selected});
+      infos = infos.update(pos, info => info.merge({selected}));
 
-      let pos = this.infos.indexOf(info);
-      this.infos.splice(pos, 1, newInfo);
+      return true;
     }
   };
 }

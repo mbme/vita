@@ -114,3 +114,7 @@ export function rejectedPromise() {
     reject();
   });
 };
+
+export const byId = curry(function (id, x) {
+  return x.get('id') === id;
+})

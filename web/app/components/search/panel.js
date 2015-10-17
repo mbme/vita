@@ -28,17 +28,17 @@ export default createReactContainer({
   render () {
     let {infos, filter} = this.state;
     let matcher = fuzzySearch(filter);
-    let results = infos.filter(i => matcher(i.name));
+    let results = infos.filter(i => matcher(i.get('name')));
     return (
       <div className="SearchPanel">
         <div className="SearchPanel-header">
           <span className="search-type">{getSearchType(filter)}</span>
-          <span className="results-count">{results.length}</span>
+          <span className="results-count">{results.size}</span>
           <Icon className="plus" type="plus" onClick={this.createNote}/>
         </div>
         <SearchInput filter={filter} />
         <ul className="SearchPanel-scroll">
-          {results.map(info => <SearchItem key={info.id} note={info} />)}
+          {results.map(info => <SearchItem key={info.get('id')} note={info} />)}
         </ul>
       </div>
     )
