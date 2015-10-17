@@ -21,26 +21,29 @@ function loadNotesList () {
   publishStoreUpdate('net');
 }
 
-function openNote (id) {
+function openNotes (...ids) {
   let NetStore = getStore('net');
   let NotesStore = getStore('notes');
   let NotesInfoStore = getStore('notes-info');
 
-  if (NotesStore.hasNote(id)) {
+  _.remove(ids, ::NotesStore.hasNote);
+
+  if (!ids.length) {
     return;
   }
 
-  // load selected note
-  NetStore.addRequest('note-read', id2key(id)).then(function (note) {
-    console.log('open note %s', id);
+  let requests = ids.map(id => NetStore.addRequest('note-read', id2key(id)));
+  publishStoreUpdate('net');
 
-    NotesStore.addNote(note);
+  Promise.all(requests).then(function (notes) {
+    console.log('open notes %s', ids.join(', '));
 
-    publishStoreUpdate('notes');
+    ids.forEach(id => NotesInfoStore.markSelected(id, true));
+    notes.forEach(::NotesStore.addNote);
+
+    publishStoreUpdate('notes', 'notes-info');
   });
 
-  NotesInfoStore.markSelected(id, true);
-  publishStoreUpdate('notes-info', 'net');
 }
 
 function closeNote (id) {
@@ -128,7 +131,7 @@ function createNote () {
 export default {
   'app:initialized': loadNotesList,
 
-  'note:open': openNote,
+  'note:open': openNotes,
 
   'note:save': saveNote,
 

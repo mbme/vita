@@ -13,7 +13,7 @@ export default {
     page.start();
 
     // init selected items from url
-    ids.forEach(id => bus.publish('note:open', id));
+    bus.publish('note:open', ...ids);
   },
 
   'url:changed': function (page) {

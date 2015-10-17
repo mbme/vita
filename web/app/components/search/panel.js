@@ -37,9 +37,9 @@ export default createReactContainer({
           <Icon className="plus" type="plus" onClick={this.createNote}/>
         </div>
         <SearchInput filter={filter} />
-        <div className="SearchPanel-scroll">
+        <ul className="SearchPanel-scroll">
           {results.map(info => <SearchItem key={info.id} note={info} />)}
-        </div>
+        </ul>
       </div>
     )
   },
