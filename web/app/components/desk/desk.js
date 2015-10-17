@@ -3,9 +3,11 @@ import {createReactContainer} from 'viter/viter';
 import RecordEditorView from './record/record-editor-view';
 import RecordView from './record/record-view';
 
+import {NOTE_TYPES} from 'const';
+
 const VIEWS = {
-  ':record':        RecordView,
-  ':record:editor': RecordEditorView
+  [NOTE_TYPES.RECORD]:             RecordView,
+  [`${NOTE_TYPES.RECORD}:editor`]: RecordEditorView
 };
 
 function getNoteView(note) {
@@ -37,7 +39,7 @@ export default createReactContainer({
     let notes = this.state.notes.map(function (note) {
       let View = getNoteView(note);
 
-      return <View key={note.id} note={note} />;
+      return <View key={note._id} note={note} />;
     });
 
     return <ul className="Desk">{notes}</ul>

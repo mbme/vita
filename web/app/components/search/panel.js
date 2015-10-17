@@ -1,8 +1,9 @@
-import {createReactContainer} from 'viter/viter';
+import {createReactContainer, bus} from 'viter/viter';
 import {fuzzySearch} from 'helpers/utils';
 
 import SearchItems from './items';
 import SearchInput from './input';
+import Icon from 'components/common/icon';
 
 function getSearchType(filter) {
   if (filter) {
@@ -33,6 +34,7 @@ export default createReactContainer({
         <div className="SearchPanel-header">
           <span className="search-type">{getSearchType(filter)}</span>
           <span className="results-count">{results.length}</span>
+          <Icon className="plus" type="plus" onClick={this.createNote}/>
         </div>
         <SearchInput filter={filter} />
         <div className="SearchPanel-scroll">
@@ -40,5 +42,9 @@ export default createReactContainer({
         </div>
       </div>
     )
+  },
+
+  createNote () {
+    bus.publish('note:create');
   }
 })

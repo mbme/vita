@@ -1,19 +1,33 @@
 .SearchPanel {
   height: 100%;
 
+  display: flex;
+  flex-direction: column;
+
   &-header {
     text-align: center;
     position: relative;
+    font-size: 1.2rem;
 
     .results-count {
       color: $font-color-secondary;
       padding-left: 0.5rem;
       font-size: 0.9rem;
     }
+
+    .plus {
+      position: absolute;
+      right: 1vr;
+
+      cursor: pointer;
+      color: $color-action;
+      line-height: 1;
+      font-size: 1.9rem;
+    }
   }
 
   &-scroll {
-    height: calc(100% - 57px);
     overflow-y: auto;
+    flex-grow: 2;
   }
 }

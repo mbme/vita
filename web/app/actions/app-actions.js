@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import {getStore, getStores, publishStoreUpdate} from 'viter/viter';
 import {id2key} from 'helpers/utils';
+import {NOTE_TYPES} from 'const';
 
 function loadNotesList () {
   let [NetStore, NotesInfoStore] = getStores('net', 'notes-info');
@@ -42,7 +43,6 @@ export default {
       console.log('open note %s', id);
 
       NotesStore.addNote(note);
-      NotesStore.sort(AppStore.selectedIds);
 
       publishStoreUpdate('notes');
     });
@@ -110,6 +110,14 @@ export default {
     });
 
     publishStoreUpdate('net');
+  },
+
+  'note:create': function () {
+    let NotesStore = getStore('notes');
+
+    NotesStore.createNote(NOTE_TYPES.RECORD);
+
+    publishStoreUpdate('notes');
   },
 
   'search:filter-changed': function (filter) {

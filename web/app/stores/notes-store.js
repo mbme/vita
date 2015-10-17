@@ -2,16 +2,31 @@ import _ from 'lodash';
 import {key2id} from 'helpers/utils';
 
 export default function createNotesStore () {
+  let idsMap = {}; // note.id : note._id
+  let _id = 0;
+  function getPrivateId (id) {
+    if (!idsMap.hasOwnProperty(id)) {
+      idsMap[id] = _id += 1;
+    }
+
+    return idsMap[id];
+  }
+
   return {
     notes: [],
 
+    _add (note) {
+      this.notes.unshift(note);
+    },
+
     addNote (note) {
       note.id = key2id(note.key);
-      this.notes.push(note);
+      note._id = getPrivateId(note.id);
+      this._add(note);
     },
 
     removeNote (id) {
-      let removed = _.remove(this.notes, {id: id});
+      let removed = _.remove(this.notes, {id});
 
       return removed.length > 0;
     },
@@ -41,10 +56,6 @@ export default function createNotesStore () {
       return true;
     },
 
-    sort (orderedIds) {
-      this.notes = _(orderedIds).map(::this.getNote).compact().value();
-    },
-
     editNote (id, edit = true) {
       let note = this.getNote(id);
 
@@ -55,6 +66,17 @@ export default function createNotesStore () {
       note.edit = edit;
 
       return true;
+    },
+
+    createNote (type) {
+      this._add({
+        _id: _id += 1,
+        key: {type},
+        edit: true,
+        name: '',
+        data: '',
+        categories: []
+      });
     }
   };
 }
