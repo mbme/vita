@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import page from 'page';
 
 import {createComponent} from 'viter/viter';
@@ -5,17 +6,19 @@ import {createComponent} from 'viter/viter';
 // URL Query params renderer
 export default function crateUrlRenderer() {
   return createComponent({
-    stores: ['app'],
+    stores: ['notes'],
 
-    getState (AppStore) {
-      return AppStore.selectedIds;
+    getState (NotesStore) {
+      return NotesStore.notes;
     },
 
     render (state) {
       let url = location.pathname;
 
-      if (state.length) {
-        url += `?ids=(${state.join(',')})`;
+      let ids = _(state).map('id').compact().join(',');
+
+      if (ids) {
+        url += `?ids=(${ids})`;
       }
 
       page(url);

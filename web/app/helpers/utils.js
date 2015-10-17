@@ -1,4 +1,4 @@
-import {unique, words, isFunction} from 'lodash';
+import {unique, words, isFunction, curry} from 'lodash';
 
 export function getQueryParam(query, param) {
   let pairs = (query || '').split("&");
@@ -24,7 +24,7 @@ export function parseIdsStr(idsStr) {
 }
 
 // https://github.com/bevacqua/fuzzysearch
-export function fuzzySearch(needle, haystack) {
+export const fuzzySearch = curry(function (needle, haystack) {
   let nlen = needle.length;
 
   // if needle is empty then it matches everything
@@ -49,7 +49,7 @@ export function fuzzySearch(needle, haystack) {
     return false;
   }
   return true;
-}
+})
 
 export function id2key(idStr) {
   let [type, id] = idStr.split('/');

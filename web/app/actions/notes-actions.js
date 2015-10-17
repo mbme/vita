@@ -5,9 +5,14 @@ import {NOTE_TYPES} from 'const';
 
 function loadNotesList () {
   let [NetStore, NotesInfoStore] = getStores('net', 'notes-info');
+  let NotesStore = getStore('notes');
 
   NetStore.addRequest('notes-list-read').then(function (items) {
     NotesInfoStore.resetInfos(items);
+
+    NotesStore.notes.forEach(function (note) {
+      NotesInfoStore.markSelected(note.id, true);
+    });
 
     publishStoreUpdate('notes-info');
   });
@@ -16,13 +21,12 @@ function loadNotesList () {
 }
 
 function openNote (id) {
-  let [AppStore, NetStore, NotesStore] = getStores('app', 'net', 'notes');
+  let [NetStore, NotesStore] = getStores('net', 'notes');
+  let NotesInfoStore = getStore('notes-info');
 
-  if (AppStore.isSelectedId(id)) {
+  if (NotesStore.hasNote(id)) {
     return;
   }
-
-  AppStore.addSelectedId(id);
 
   // load selected note
   NetStore.addRequest('note-read', id2key(id)).then(function (note) {
@@ -33,18 +37,20 @@ function openNote (id) {
     publishStoreUpdate('notes');
   });
 
-  publishStoreUpdate('app', 'net');
+  NotesInfoStore.markSelected(id, true);
+  publishStoreUpdate('notes-info', 'net');
 }
 
 function closeNote (id) {
-  let [AppStore, NotesStore] = getStores('app', 'notes');
+  let NotesInfoStore = getStore('notes-info');
+  let NotesStore = getStore('notes');
 
-  AppStore.removeSelectedId(id);
   NotesStore.removeNote(id);
+  NotesInfoStore.markSelected(id, false);
 
   console.log('closed note %s', id);
 
-  publishStoreUpdate('app', 'notes');
+  publishStoreUpdate('notes-info', 'notes');
 }
 
 function saveNote (id, changedData) {

@@ -15,24 +15,28 @@ export default function createNotesStore () {
   return {
     notes: [],
 
-    _add (note) {
-      this.notes.unshift(note);
-    },
-
     addNote (note) {
       note.id = key2id(note.key);
       note._id = getPrivateId(note.id);
-      this._add(note);
+      this.notes.push(note);
+      this.notes = this.notes.slice(0);
     },
 
     removeNote (id) {
       let removed = _.remove(this.notes, {id});
+      if (removed.length) {
+        this.notes = this.notes.slice(0);
+      }
 
       return removed.length > 0;
     },
 
     getNote (id) {
-      return _.find(this.notes, {id: id});
+      return _.find(this.notes, {id});
+    },
+
+    hasNote (id) {
+      return !!this.getNote(id);
     },
 
     getPublicNoteData (id) {
@@ -69,7 +73,7 @@ export default function createNotesStore () {
     },
 
     createNote (type) {
-      this._add({
+      this.notes.push({
         _id: _id += 1,
         key: {type},
         edit: true,
@@ -77,6 +81,7 @@ export default function createNotesStore () {
         data: '',
         categories: []
       });
+      this.notes = this.notes.slice(0);
     }
   };
 }

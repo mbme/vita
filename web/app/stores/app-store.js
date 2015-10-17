@@ -3,25 +3,8 @@ import _ from 'lodash';
 export default function createAppStore () {
   return {
     page: '',
-    selectedIds: [], // @immutable
     searchFilter: '',
     modals: [], // @immutable
-
-    isSelectedId (id) {
-      return _.contains(this.selectedIds, id);
-    },
-
-    addSelectedId (id) {
-      this.selectedIds = [id].concat(this.selectedIds);
-    },
-
-    removeSelectedId (id) {
-      this.selectedIds = _.without(this.selectedIds, id);
-    },
-
-    resetSelectedIds (ids = []) {
-      this.selectedIds = ids;
-    },
 
     setSearchFilter (filter = '') {
       this.searchFilter = filter;

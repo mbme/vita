@@ -1,7 +1,7 @@
 import {createReactContainer, bus} from 'viter/viter';
 import {fuzzySearch} from 'helpers/utils';
 
-import SearchItems from './items';
+import SearchItem from './item';
 import SearchInput from './input';
 import Icon from 'components/common/icon';
 
@@ -21,14 +21,14 @@ export default createReactContainer({
   getState (NotesInfoStore, AppStore) {
     return {
       infos: NotesInfoStore.infos,
-      filter: AppStore.searchFilter,
-      selectedIds: AppStore.selectedIds
+      filter: AppStore.searchFilter
     };
   },
 
   render () {
-    let {infos, filter, selectedIds} = this.state;
-    let results = infos.filter(i => fuzzySearch(filter, i.name));
+    let {infos, filter} = this.state;
+    let matcher = fuzzySearch(filter);
+    let results = infos.filter(i => matcher(i.name));
     return (
       <div className="SearchPanel">
         <div className="SearchPanel-header">
@@ -38,7 +38,7 @@ export default createReactContainer({
         </div>
         <SearchInput filter={filter} />
         <div className="SearchPanel-scroll">
-          <SearchItems results={results} selectedIds={selectedIds}/>
+          {results.map(info => <SearchItem key={info.id} note={info} />)}
         </div>
       </div>
     )

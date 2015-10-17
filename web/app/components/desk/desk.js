@@ -41,6 +41,7 @@ export default createReactContainer({
 
       return <View key={note._id} note={note} />;
     });
+    notes.reverse();
 
     return <ul className="Desk">{notes}</ul>
   }
