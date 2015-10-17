@@ -11,8 +11,8 @@ const VIEWS = {
 };
 
 function getNoteView(note) {
-  let id = note.key.type;
-  if (note.edit) {
+  let id = note.get('type');
+  if (note.get('edit')) {
     id += ':editor';
   }
   let view = VIEWS[id];
@@ -39,9 +39,8 @@ export default createReactContainer({
     let notes = this.state.notes.map(function (note) {
       let View = getNoteView(note);
 
-      return <View key={note._id} note={note} />;
-    });
-    notes.reverse();
+      return <View key={note.get('_id')} note={note} />;
+    }).reverse();
 
     return <ul className="Desk">{notes}</ul>
   }

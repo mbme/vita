@@ -12,7 +12,7 @@ export default createReactComponent({
   displayName: 'RecordEditorView',
 
   getInitialState () {
-    let {name, categories, data} = this.props.note;
+    let {name, categories, data} = this.props.note.toJS();
     return {
       name,
       categories,
@@ -33,7 +33,7 @@ export default createReactComponent({
     }];
 
     return (
-      <Note id={this.props.note.id} menu={menu} className="RecordEditorView" onClose={this.onClose}>
+      <Note id={this.props.note.get('id')} menu={menu} className="RecordEditorView" onClose={this.onClose}>
         <Tabs onBeforeChange={this.onBeforeTabChange}>
 
           <Tab label="Edit" className="RecordEditorView-edit">
@@ -76,7 +76,7 @@ export default createReactComponent({
   },
 
   onSave () {
-    let {id, name, categories, data} = this.props.note;
+    let {id, name, categories, data} = this.props.note.toJS();
 
     let current = this.getCurrentState();
 
@@ -103,6 +103,6 @@ export default createReactComponent({
       title: 'Delete note',
       body: 'Are you sure you would like to delete this note?',
       confirmationButton: 'Delete'
-    }).then(() => bus.publish('note:delete', this.props.note.id));
+    }).then(() => bus.publish('note:delete', this.props.note.get('id')));
   }
 });

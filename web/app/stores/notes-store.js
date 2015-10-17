@@ -1,5 +1,10 @@
-import _ from 'lodash';
+import {curry, pick} from 'lodash';
 import {key2id} from 'helpers/utils';
+import Immutable from 'immutable';
+
+const byId = curry(function (id, note) {
+  return note.get('id') === id;
+})
 
 export default function createNotesStore () {
   let idsMap = {}; // note.id : note._id
@@ -12,27 +17,41 @@ export default function createNotesStore () {
     return idsMap[id];
   }
 
+  let notes = Immutable.List();
+
+  function addNote(note) {
+    notes = notes.push(Immutable.Map(note));
+  }
+
+  function findNote(id) {
+    return notes.findIndex(byId(id));
+  }
+
   return {
-    notes: [],
+    get notes () {
+      return notes;
+    },
 
     addNote (note) {
+      note.type = note.key.type;
       note.id = key2id(note.key);
       note._id = getPrivateId(note.id);
-      this.notes.push(note);
-      this.notes = this.notes.slice(0);
+      addNote(note);
     },
 
     removeNote (id) {
-      let removed = _.remove(this.notes, {id});
-      if (removed.length) {
-        this.notes = this.notes.slice(0);
+      let pos = findNote(id);
+      if (pos === -1) {
+        return false;
       }
 
-      return removed.length > 0;
+      notes = notes.delete(pos);
+
+      return true;
     },
 
     getNote (id) {
-      return _.find(this.notes, {id});
+      return notes.find(byId(id));
     },
 
     hasNote (id) {
@@ -45,43 +64,35 @@ export default function createNotesStore () {
         return undefined;
       }
 
-      return _.pick(note, ['key', 'name', 'data', 'categories']);
+      return pick(note.toJS(), ['key', 'name', 'data', 'categories']);
     },
 
     updateNote (id, data) {
-      let note = this.getNote(id);
+      let pos = findNote(id);
 
-      if (!note) {
+      if (pos === -1) {
         return false;
       }
 
-      _.assign(note, data);
+      notes = notes.update(pos, note => note.merge(data));
 
       return true;
     },
 
     editNote (id, edit = true) {
-      let note = this.getNote(id);
-
-      if (!note) {
-        return false;
-      }
-
-      note.edit = edit;
-
-      return true;
+      return this.updateNote(id, {edit})
     },
 
     createNote (type) {
-      this.notes.push({
+      addNote({
         _id: _id += 1,
+        type,
         key: {type},
         edit: true,
         name: '',
         data: '',
         categories: []
       });
-      this.notes = this.notes.slice(0);
     }
   };
 }

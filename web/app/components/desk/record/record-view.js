@@ -2,14 +2,13 @@ import {partial} from 'lodash';
 import {createReactComponent, bus} from 'viter/viter';
 
 import Note from 'components/desk/note';
-import Icon from 'components/common/icon';
 import Record from './record';
 
 export default createReactComponent({
   displayName: 'RecordView',
 
   render () {
-    let {id, name, data, categories} = this.props.note;
+    let {id, name, data, categories} = this.props.note.toJS();
 
     let menu = [{
       icon: 'compose',
@@ -24,6 +23,6 @@ export default createReactComponent({
   },
 
   editNote (edit) {
-    bus.publish('note:edit', this.props.note.id, edit);
+    bus.publish('note:edit', this.props.note.get('id'), edit);
   }
 })

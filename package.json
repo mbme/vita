@@ -43,6 +43,7 @@
     "babel-runtime": "*",
     "classnames": "*",
     "codemirror": "*",
+    "immutable": "^3.7.5",
     "lodash": "*",
     "markdown-it": "*",
     "moment": "*",
