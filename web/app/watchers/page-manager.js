@@ -11,7 +11,7 @@ export default function createPageManager (pages) {
       return AppStore.page;
     },
 
-    shouldUpdate (state, newState) {
+    shouldComponentUpdate (state, newState) {
       return newState && state !== newState;
     },
 

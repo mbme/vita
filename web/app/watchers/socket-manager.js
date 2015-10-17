@@ -14,7 +14,7 @@ export default function createSocketManager () {
       return NetStore.socket;
     },
 
-    shouldUpdate (state, newState) {
+    shouldComponentUpdate (state, newState) {
       return newState === null && !isConnecting;
     },
 

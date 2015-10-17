@@ -1,5 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
+import Immutable from 'immutable';
 import EventBus from './bus';
 
 export const bus = new EventBus();
@@ -41,8 +42,37 @@ export function publishStoreUpdate(...stores) {
   bus.publish('!stores-update', ...stores);
 }
 
-function returnTrue() {
+//@see https://github.com/jurassix/react-immutable-render-mixin
+function shallowEqual(objA, objB) {
+  if (objA === objB) {
+    return true;
+  }
+
+  if (typeof objA !== 'object' || objA === null ||
+      typeof objB !== 'object' || objB === null) {
+    return false;
+  }
+
+  let keysA = Object.keys(objA);
+  let keysB = Object.keys(objB);
+
+  if (keysA.length !== keysB.length) {
+    return false;
+  }
+
+  // Test for A's keys different from B.
+  let bHasOwnProperty = Object.prototype.hasOwnProperty.bind(objB);
+  for (let i = 0; i < keysA.length; i+=1) {
+    if (!bHasOwnProperty(keysA[i]) || !Immutable.is(objA[keysA[i]], objB[keysA[i]])) {
+      return false;
+    }
+  }
+
   return true;
+}
+
+function notShallowEqual(...args) {
+  return !shallowEqual(...args);
 }
 
 export function createReactComponent (comp) {
@@ -53,7 +83,7 @@ export function createReactComponent (comp) {
       displayName: comp.name,
 
       shouldComponentUpdate: function (nextProps) {
-        return !_.eq(this.props, nextProps);
+        return !shallowEqual(this.props, nextProps);
       },
 
       render: function () {
@@ -92,23 +122,25 @@ export function createReactContainer (comp) {
     },
 
     onStoresUpdate (...stores) {
-      if (!_.intersection(stores, comp.stores).length) {
-        return;
-      }
-
-      let newState = this.getState();
-
-      if ((comp.shouldUpdate || returnTrue).call(this, this.state, newState)) {
-        this.setState(newState);
+      // update state if updated at least one of stores
+      if (_.intersection(stores, comp.stores).length) {
+        this.setState(this.getState());
       }
     }
   };
 
-  return createReactComponent(_.defaults(config, comp));
+  return createReactComponent(_.defaults(config, comp, {
+    shouldComponentUpdate (nextProps, nextState) {
+      return !shallowEqual(this.props, nextProps) ||
+        !shallowEqual(this.state, nextState);
+    }
+  }));
 }
 
 export function createComponent(config) {
   let state = null;
+
+  const shouldUpdate = config.shouldComponentUpdate || notShallowEqual;
 
   return function (...stores) {
     if (!_.intersection(stores, config.stores).length) {
@@ -118,7 +150,7 @@ export function createComponent(config) {
     let newState = config.getState(...(getStores(...config.stores)));
 
     // check if we need re-render after store updated
-    if ((config.shouldUpdate || returnTrue).call(config, state, newState)) {
+    if ((shouldUpdate).call(config, state, newState)) {
       state = newState;
       config.render(state);
     }

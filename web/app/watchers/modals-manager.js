@@ -12,10 +12,6 @@ export default function createModalsManager() {
       return AppStore.modals;
     },
 
-    shouldUpdate (state, newState) {
-      return state !== newState;
-    },
-
     render (state) {
       let container = document.getElementById('modals-container');
       let modalConfig = state.last();

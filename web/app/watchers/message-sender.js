@@ -15,7 +15,7 @@ export default function createMessageSender() {
       };
     },
 
-    shouldUpdate (state, newState) {
+    shouldComponentUpdate (state, newState) {
       return !newState.requests.isEmpty();
     },
 
