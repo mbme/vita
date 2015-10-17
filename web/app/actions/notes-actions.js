@@ -1,10 +1,11 @@
 import _ from 'lodash';
-import {getStore, getStores, publishStoreUpdate} from 'viter/viter';
+import {getStore, publishStoreUpdate} from 'viter/viter';
 import {id2key} from 'helpers/utils';
 import {NOTE_TYPES} from 'const';
 
 function loadNotesList () {
-  let [NetStore, NotesInfoStore] = getStores('net', 'notes-info');
+  let NetStore = getStore('net');
+  let NotesInfoStore = getStore('notes-info');
   let NotesStore = getStore('notes');
 
   NetStore.addRequest('notes-list-read').then(function (items) {
@@ -21,7 +22,8 @@ function loadNotesList () {
 }
 
 function openNote (id) {
-  let [NetStore, NotesStore] = getStores('net', 'notes');
+  let NetStore = getStore('net');
+  let NotesStore = getStore('notes');
   let NotesInfoStore = getStore('notes-info');
 
   if (NotesStore.hasNote(id)) {
@@ -54,7 +56,8 @@ function closeNote (id) {
 }
 
 function saveNote (id, changedData) {
-  let [NotesStore, NetStore] = getStores('notes', 'net');
+  let NetStore = getStore('net');
+  let NotesStore = getStore('notes');
 
   if (_.isEmpty(changedData)) {
     console.log('note %s: not changed', id);
@@ -95,7 +98,8 @@ function editNote (id, edit) {
 }
 
 function deleteNote(id) {
-  let [NotesStore, NetStore] = getStores('notes', 'net');
+  let NetStore = getStore('net');
+  let NotesStore = getStore('notes');
 
   let note = NotesStore.getNote(id);
 

@@ -16,7 +16,7 @@ export function getStore(name) {
   }
 }
 
-export function getStores(...names) {
+function getStores(...names) {
   return names.map(getStore);
 }
 
