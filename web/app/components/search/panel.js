@@ -4,6 +4,7 @@ import {fuzzySearch} from 'helpers/utils';
 import SearchItem from './item';
 import SearchInput from './input';
 import Icon from 'components/common/icon';
+import {searchIgnoreCase} from 'config';
 
 function getSearchType(filter) {
   if (filter) {
@@ -11,6 +12,14 @@ function getSearchType(filter) {
   }
 
   return "All notes";
+}
+
+function lowerIfRequired(str) {
+  if (searchIgnoreCase) {
+    return str.toLowerCase();
+  }
+
+  return str;
 }
 
 export default createReactContainer({
@@ -27,8 +36,8 @@ export default createReactContainer({
 
   render () {
     let {infos, filter} = this.state;
-    let matcher = fuzzySearch(filter);
-    let results = infos.filter(i => matcher(i.name));
+    let matcher = fuzzySearch(lowerIfRequired(filter));
+    let results = infos.filter(i => matcher(lowerIfRequired(i.name)));
     return (
       <div className="SearchPanel">
         <div className="SearchPanel-header">
