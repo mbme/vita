@@ -15,10 +15,10 @@ export default function crateUrlRenderer() {
     render (state) {
       let url = location.pathname;
 
-      let ids = state.map(note => note.id).toArray();
+      let ids = _.compact(state.map(note => note.id).toArray());
 
       if (ids.length) {
-        url += `?ids=(${_.compact(ids).join(',')})`;
+        url += `?ids=(${ids.join(',')})`;
       }
 
       page(url);
