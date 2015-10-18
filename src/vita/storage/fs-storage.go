@@ -120,7 +120,7 @@ func (s *fsStorage) NoteExists(key note.Key) bool {
 	return ok
 }
 
-func (s *fsStorage) AddNote(noteType note.Type, name string, categories []note.Category) (note.Key, error) {
+func (s *fsStorage) AddNote(noteType note.Type, name string, data string, categories []note.Category) (note.Key, error) {
 	key := s.nextKey(noteType)
 	if err := key.Validate(); err != nil {
 		return note.NoKey, err
@@ -136,11 +136,15 @@ func (s *fsStorage) AddNote(noteType note.Type, name string, categories []note.C
 		return note.NoKey, err
 	}
 
-	fileInfo, err := s.writeNote((&note.Info{
+	data = strings.TrimSpace(data)
+
+	newNote := (&note.Info{
 		Key:        key,
 		Name:       name,
 		Categories: categories,
-	}).ToNote())
+	}).ToNote()
+	newNote.Data = data
+	fileInfo, err := s.writeNote(newNote)
 
 	if err != nil {
 		return note.NoKey, err

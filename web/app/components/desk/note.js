@@ -42,7 +42,7 @@ export default createReactComponent({
 
     menu.push({
       icon: 'close-round',
-      handler: this.onClose
+      handler: this.onBeforeClose
     });
 
     let icons = menu.map(function ({icon, handler, type}) {
@@ -60,14 +60,14 @@ export default createReactComponent({
     )
   },
 
-  onClose () {
-    let {onClose = resolvedPromise} = this.props;
-    onClose().then(this.close);
+  onBeforeClose () {
+    let {onBeforeClose = resolvedPromise, onClose} = this.props;
+    onBeforeClose().then(this.close).then(onClose);
   },
 
   close () {
-    velocity(this.refs.note, 'fadeOut', {
+    return velocity(this.refs.note, 'fadeOut', {
       duration: 200
-    }).then(() => bus.publish('note:close', this.props.id));
+    });
   }
 })

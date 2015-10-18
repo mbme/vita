@@ -34,7 +34,7 @@ export default createReactContainer({
         <div className="SearchPanel-header">
           <span className="search-type">{getSearchType(filter)}</span>
           <span className="results-count">{results.size}</span>
-          <Icon className="plus" type="plus" onClick={this.createNote}/>
+          <Icon className="plus" type="plus" onClick={this.newNote}/>
         </div>
         <SearchInput filter={filter} />
         <ul className="SearchPanel-scroll">
@@ -44,7 +44,7 @@ export default createReactContainer({
     )
   },
 
-  createNote () {
-    bus.publish('note:create');
+  newNote () {
+    bus.publish('note:new');
   }
 })

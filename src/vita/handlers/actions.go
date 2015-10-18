@@ -56,7 +56,7 @@ var handlers = map[RequestMethod]func(*RequestParams) (any, error){
 			return nil, errorBadParams
 		}
 
-		key, err := Storage.AddNote(dto.Type, dto.Name, dto.Categories)
+		key, err := Storage.AddNote(dto.Type, dto.Name, dto.Data, dto.Categories)
 		if err != nil {
 			return nil, err
 		}

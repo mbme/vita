@@ -16,7 +16,7 @@ export default createReactComponent({
     }];
 
     return (
-      <Note id={id} className="RecordView" menu={menu}>
+      <Note id={id} className="RecordView" menu={menu} onClose={this.onClose}>
         <Record name={name} data={data} categories={categories} />
       </Note>
     )
@@ -24,5 +24,9 @@ export default createReactComponent({
 
   editNote (edit) {
     bus.publish('note:edit', this.props.note.id, edit);
+  },
+
+  onClose () {
+    bus.publish('note:close', this.props.note.id);
   }
 })

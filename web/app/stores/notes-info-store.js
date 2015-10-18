@@ -9,7 +9,8 @@ const NoteInfoRecord = Record({
   },
   name: undefined,
   categories: [],
-  selected: false
+  selected: false,
+  timestamp: 0
 });
 
 export default function createNotesInfoStore () {

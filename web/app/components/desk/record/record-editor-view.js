@@ -22,18 +22,25 @@ export default createReactComponent({
 
   render () {
     let {name, categories, data} = this.state;
+    let note = this.props.note;
 
     let menu = [{
       icon: 'checkmark-round',
       handler: this.onSave
-    }, {
-      icon: 'trash-a',
-      type: 'warn',
-      handler: this.onDelete
     }];
 
+    // if new record then do not show delete button
+    if (!note.isNew()) {
+      menu.push({
+        icon: 'trash-a',
+        type: 'warn',
+        handler: this.onDelete
+      });
+    }
+
     return (
-      <Note id={this.props.note.id} menu={menu} className="RecordEditorView" onClose={this.onClose}>
+      <Note id={note.id} menu={menu} className="RecordEditorView"
+            onBeforeClose={this.onBeforeClose} onClose={this.onClose}>
         <Tabs onBeforeChange={this.onBeforeTabChange}>
 
           <Tab label="Edit" className="RecordEditorView-edit">
@@ -66,7 +73,7 @@ export default createReactComponent({
     this.setState(this.getCurrentState());
   },
 
-  onClose () {
+  onBeforeClose () {
     return createConfirmationDialog({
       type: 'warn',
       title: 'Close note editor',
@@ -75,26 +82,39 @@ export default createReactComponent({
     });
   },
 
+  onClose () {
+    let note = this.props.note;
+    if (note.isNew()) {
+      bus.publish('note:close-by-nId', note.nId);
+    } else {
+      bus.publish('note:close', note.id);
+    }
+  },
+
   onSave () {
-    let {id, name, categories, data} = this.props.note;
+    let note = this.props.note;
 
     let current = this.getCurrentState();
 
     let changed = {};
 
-    if (name !== current.name) {
+    if (note.name !== current.name) {
       changed.name = current.name;
     }
 
-    if (categories !== current.categories) {
+    if (note.categories !== current.categories) {
       changed.categories = current.categories;
     }
 
-    if (data !== current.data) {
+    if (note.data !== current.data) {
       changed.data = current.data;
     }
 
-    bus.publish('note:save', id, changed);
+    if (note.isNew()) {
+      bus.publish('note:create', note.nId, changed);
+    } else {
+      bus.publish('note:save', note.id, changed);
+    }
   },
 
   onDelete () {

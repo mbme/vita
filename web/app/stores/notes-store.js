@@ -1,8 +1,8 @@
-import {pick} from 'lodash';
+import {pick, defaults, invert} from 'lodash';
 import {key2id, byId} from 'helpers/utils';
 import {List, Record} from 'immutable';
 
-const NoteRecord = Record({
+class NoteRecord extends Record({
   nId: undefined,
   id: undefined,
   key: {
@@ -12,15 +12,33 @@ const NoteRecord = Record({
   edit: false,
   name: '',
   data: '',
-  categories: []
-});
+  categories: [],
+  timestamp: 0
+}) {
+  isNew () {
+    return !this.id
+  }
+
+  getPublicData () {
+    return pick(this, ['key', 'name', 'data', 'categories']);
+  }
+}
+
+function createNoteRecord(...data) {
+  return new NoteRecord(defaults(...data));
+}
 
 export default function createNotesStore () {
   let idsMap = {}; // note.id : note.nId
   let _id = 0;
+
+  function registerIdMapping(id, nId) {
+    idsMap[id] = nId;
+  }
+
   function getPrivateId (id) {
     if (!idsMap.hasOwnProperty(id)) {
-      idsMap[id] = _id += 1;
+      registerIdMapping(id, _id += 1);
     }
 
     return idsMap[id];
@@ -28,27 +46,30 @@ export default function createNotesStore () {
 
   let notes = List();
 
-  function addNote(note) {
-    notes = notes.push(NoteRecord(note));
-  }
-
-  function findNote(id) {
-    return notes.findIndex(byId(id));
-  }
-
   return {
     get notes () {
       return notes;
     },
 
     addNote (note) {
-      note.id = key2id(note.key);
-      note.nId = getPrivateId(note.id);
-      addNote(note);
+      let id = key2id(note.key);
+      let nId = getPrivateId(id);
+      notes = notes.push(createNoteRecord({id, nId}, note));
     },
 
     removeNote (id) {
-      let pos = findNote(id);
+      let pos  = notes.findIndex(byId(id));
+      if (pos === -1) {
+        return false;
+      }
+
+      notes = notes.delete(pos);
+
+      return true;
+    },
+
+    removeNoteByNid (nId) {
+      let pos = notes.findIndex(note => note.nId === nId);
       if (pos === -1) {
         return false;
       }
@@ -62,20 +83,16 @@ export default function createNotesStore () {
       return notes.find(byId(id));
     },
 
+    getNoteByNid (nId) {
+      return notes.find(note => note.nId === nId);
+    },
+
     hasNote (id) {
       return !!this.getNote(id);
     },
 
-    getPublicNoteData (id) {
-      let note = this.getNote(id);
-      if (note) {
-        return pick(note, ['key', 'name', 'data', 'categories']);
-      }
-    },
-
     updateNote (id, data) {
-      let pos = findNote(id);
-
+      let pos  = notes.findIndex(byId(id));
       if (pos === -1) {
         return false;
       }
@@ -89,12 +106,30 @@ export default function createNotesStore () {
       return this.updateNote(id, {edit})
     },
 
-    createNote (type) {
-      addNote({
+    newNote (type) {
+      notes = notes.push(new NoteRecord({
         nId: _id += 1,
         key: {type},
         edit: true
-      });
+      }));
+    },
+
+    replaceNote (nId, note) {
+      let pos = notes.findIndex(note => note.nId === nId);
+      if (pos === -1) {
+        return false;
+      }
+
+      let id = key2id(note.key);
+      registerIdMapping(id, nId);
+
+      notes = notes.set(pos, createNoteRecord({id, nId}, note));
+
+      return true;
+    },
+
+    getIdByNid (nId) {
+      return invert(idsMap)[nId];
     }
   };
 }
