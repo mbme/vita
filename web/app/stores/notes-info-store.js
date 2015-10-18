@@ -1,5 +1,16 @@
-import {List, Map} from 'immutable';
+import {List, Record} from 'immutable';
 import {key2id, byId} from 'helpers/utils';
+
+const NoteInfoRecord = Record({
+  id: undefined,
+  key: {
+    type: undefined,
+    id: undefined
+  },
+  name: undefined,
+  categories: [],
+  selected: false
+});
 
 export default function createNotesInfoStore () {
   let infos = List();
@@ -9,7 +20,7 @@ export default function createNotesInfoStore () {
     },
 
     resetInfos (newInfos) {
-      infos = List(newInfos.map(info => Map(info).merge({id: key2id(info.key), selected: false})));
+      infos = List(newInfos.map(info => NoteInfoRecord(info).merge({id: key2id(info.key)})));
     },
 
     getInfo (id) {

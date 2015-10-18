@@ -5,7 +5,7 @@ import cx from 'classnames';
 
 export default createReactComponent(function SearchItem ({note}) {
   let date = moment(note.timestamp * 1000).fromNow();
-  let {id, selected, name, categories} = note.toJS();
+  let {id, selected, name, categories} = note;
   return (
     <li className={cx("SearchItem", {'is-selected': selected})}
         onClick={() => bus.publish('note:open', id)}>

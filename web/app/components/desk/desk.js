@@ -11,14 +11,14 @@ const VIEWS = {
 };
 
 function getNoteView(note) {
-  let id = note.get('type');
-  if (note.get('edit')) {
-    id += ':editor';
+  let viewId = note.key.type;
+  if (note.edit) {
+    viewId += ':editor';
   }
-  let view = VIEWS[id];
+  let view = VIEWS[viewId];
 
   if (!view) {
-    throw `unknown note type ${id}`;
+    throw `unknown note type ${viewId}`;
   }
 
   return view;
@@ -39,7 +39,7 @@ export default createReactContainer({
     let notes = this.state.notes.map(function (note) {
       let View = getNoteView(note);
 
-      return <View key={note.get('_id')} note={note} />;
+      return <View key={note.nId} note={note} />;
     }).reverse();
 
     return <ul className="Desk">{notes}</ul>

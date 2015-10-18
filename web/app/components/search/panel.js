@@ -28,7 +28,7 @@ export default createReactContainer({
   render () {
     let {infos, filter} = this.state;
     let matcher = fuzzySearch(filter);
-    let results = infos.filter(i => matcher(i.get('name')));
+    let results = infos.filter(i => matcher(i.name));
     return (
       <div className="SearchPanel">
         <div className="SearchPanel-header">
@@ -38,7 +38,7 @@ export default createReactContainer({
         </div>
         <SearchInput filter={filter} />
         <ul className="SearchPanel-scroll">
-          {results.map(info => <SearchItem key={info.get('id')} note={info} />)}
+          {results.map(info => <SearchItem key={info.id} note={info} />)}
         </ul>
       </div>
     )

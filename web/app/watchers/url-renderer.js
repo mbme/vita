@@ -15,7 +15,7 @@ export default function crateUrlRenderer() {
     render (state) {
       let url = location.pathname;
 
-      let ids = state.map(note => note.get('id')).toArray();
+      let ids = state.map(note => note.id).toArray();
 
       if (ids.length) {
         url += `?ids=(${_.compact(ids).join(',')})`;

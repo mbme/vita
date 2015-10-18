@@ -1,5 +1,4 @@
 import {unique, words, isFunction, curry} from 'lodash';
-import Immutable from 'immutable';
 
 export function getQueryParam(query, param) {
   let pairs = (query || '').split("&");
@@ -117,9 +116,5 @@ export function rejectedPromise() {
 };
 
 export const byId = curry(function (id, x) {
-  if (Immutable.Map.isMap(x)) {
-    return x.get('id') === id;
-  } else {
-    return x.id === id;
-  }
-})
+  return x.id === id;
+});

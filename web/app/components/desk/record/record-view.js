@@ -8,7 +8,7 @@ export default createReactComponent({
   displayName: 'RecordView',
 
   render () {
-    let {id, name, data, categories} = this.props.note.toJS();
+    let {id, name, data, categories} = this.props.note;
 
     let menu = [{
       icon: 'compose',
@@ -23,6 +23,6 @@ export default createReactComponent({
   },
 
   editNote (edit) {
-    bus.publish('note:edit', this.props.note.get('id'), edit);
+    bus.publish('note:edit', this.props.note.id, edit);
   }
 })

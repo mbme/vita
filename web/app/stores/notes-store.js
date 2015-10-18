@@ -1,9 +1,22 @@
 import {pick} from 'lodash';
 import {key2id, byId} from 'helpers/utils';
-import {List, Map} from 'immutable';
+import {List, Record} from 'immutable';
+
+const NoteRecord = Record({
+  nId: undefined,
+  id: undefined,
+  key: {
+    type: undefined,
+    id: undefined
+  },
+  edit: false,
+  name: '',
+  data: '',
+  categories: []
+});
 
 export default function createNotesStore () {
-  let idsMap = {}; // note.id : note._id
+  let idsMap = {}; // note.id : note.nId
   let _id = 0;
   function getPrivateId (id) {
     if (!idsMap.hasOwnProperty(id)) {
@@ -16,7 +29,7 @@ export default function createNotesStore () {
   let notes = List();
 
   function addNote(note) {
-    notes = notes.push(Map(note));
+    notes = notes.push(NoteRecord(note));
   }
 
   function findNote(id) {
@@ -29,9 +42,8 @@ export default function createNotesStore () {
     },
 
     addNote (note) {
-      note.type = note.key.type;
       note.id = key2id(note.key);
-      note._id = getPrivateId(note.id);
+      note.nId = getPrivateId(note.id);
       addNote(note);
     },
 
@@ -57,7 +69,7 @@ export default function createNotesStore () {
     getPublicNoteData (id) {
       let note = this.getNote(id);
       if (note) {
-        return pick(note.toJS(), ['key', 'name', 'data', 'categories']);
+        return pick(note, ['key', 'name', 'data', 'categories']);
       }
     },
 
@@ -79,13 +91,9 @@ export default function createNotesStore () {
 
     createNote (type) {
       addNote({
-        _id: _id += 1,
-        type,
+        nId: _id += 1,
         key: {type},
-        edit: true,
-        name: '',
-        data: '',
-        categories: []
+        edit: true
       });
     }
   };
