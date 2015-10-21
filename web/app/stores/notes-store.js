@@ -1,32 +1,8 @@
-import {pick, defaults, invert} from 'lodash';
+import {invert} from 'lodash';
 import {key2id, byId} from 'helpers/utils';
-import {List, Record} from 'immutable';
+import {List} from 'immutable';
 
-class NoteRecord extends Record({
-  nId: undefined,
-  id: undefined,
-  key: {
-    type: undefined,
-    id: undefined
-  },
-  edit: false,
-  name: '',
-  data: '',
-  categories: [],
-  timestamp: 0
-}) {
-  isNew () {
-    return !this.id
-  }
-
-  getPublicData () {
-    return pick(this, ['key', 'name', 'data', 'categories']);
-  }
-}
-
-function createNoteRecord(...data) {
-  return new NoteRecord(defaults(...data));
-}
+import {createNoteRecord, mergeRecord} from './entities';
 
 export default function createNotesStore () {
   let idsMap = {}; // note.id : note.nId
@@ -97,7 +73,7 @@ export default function createNotesStore () {
         return false;
       }
 
-      notes = notes.update(pos, note => note.merge(data));
+      notes = notes.update(pos, note => mergeRecord(note, data));
 
       return true;
     },
@@ -107,7 +83,7 @@ export default function createNotesStore () {
     },
 
     newNote (type) {
-      notes = notes.push(new NoteRecord({
+      notes = notes.push(createNoteRecord({
         nId: _id += 1,
         key: {type},
         edit: true

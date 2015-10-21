@@ -18,7 +18,7 @@ function getNoteView(note) {
   let view = VIEWS[viewId];
 
   if (!view) {
-    throw `unknown note type ${viewId}`;
+    throw new Error(`unknown note type ${viewId}`);
   }
 
   return view;

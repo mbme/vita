@@ -4,29 +4,25 @@ import {createReactComponent, bus} from 'viter/viter';
 import Note from 'components/desk/note';
 import Record from './record';
 
-export default createReactComponent({
-  displayName: 'RecordView',
+function editNote (id, edit) {
+  bus.publish('note:edit', id, edit);
+}
 
-  render () {
-    let {id, name, data, categories} = this.props.note;
+function closeNote (id) {
+  bus.publish('note:close', id);
+}
 
-    let menu = [{
-      icon: 'compose',
-      handler: partial(this.editNote, true)
-    }];
+export default createReactComponent(function RecordView ({note}) {
+  let {id, name, data, categories} = note;
 
-    return (
-      <Note id={id} className="RecordView" menu={menu} onClose={this.onClose}>
-        <Record name={name} data={data} categories={categories} />
-      </Note>
-    )
-  },
+  let menu = [{
+    icon: 'compose',
+    handler: partial(editNote, id, true)
+  }];
 
-  editNote (edit) {
-    bus.publish('note:edit', this.props.note.id, edit);
-  },
-
-  onClose () {
-    bus.publish('note:close', this.props.note.id);
-  }
+  return (
+    <Note id={id} className="RecordView" menu={menu} onClose={partial(closeNote, id)}>
+      <Record name={name} data={data} categories={categories} />
+    </Note>
+  )
 })

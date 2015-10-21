@@ -8,16 +8,30 @@ import CategoriesEditor from 'components/common/categories-editor';
 import Note from 'components/desk/note';
 import Record from 'components/desk/record/record';
 
+function showCloseConfirmation () {
+  return createConfirmationDialog({
+    type: 'warn',
+    title: 'Close note editor',
+    body: 'Close note editor without saving changes?',
+    confirmationButton: 'Close'
+  });
+}
+
+function showDeleteConfirmation () {
+  return createConfirmationDialog({
+    type: 'warn',
+    title: 'Delete note',
+    body: 'Are you sure you would like to delete this note?',
+    confirmationButton: 'Delete'
+  });
+}
+
 export default createReactComponent({
   displayName: 'RecordEditorView',
 
   getInitialState () {
     let {name, categories, data} = this.props.note;
-    return {
-      name,
-      categories,
-      data
-    }
+    return {name, categories, data};
   },
 
   render () {
@@ -40,7 +54,7 @@ export default createReactComponent({
 
     return (
       <Note id={note.id} menu={menu} className="RecordEditorView"
-            onBeforeClose={this.onBeforeClose} onClose={this.onClose}>
+            onBeforeClose={showCloseConfirmation} onClose={this.onClose}>
         <Tabs onBeforeChange={this.onBeforeTabChange}>
 
           <Tab label="Edit" className="RecordEditorView-edit">
@@ -73,15 +87,6 @@ export default createReactComponent({
     this.setState(this.getCurrentState());
   },
 
-  onBeforeClose () {
-    return createConfirmationDialog({
-      type: 'warn',
-      title: 'Close note editor',
-      body: 'Close note editor without saving changes?',
-      confirmationButton: 'Close'
-    });
-  },
-
   onClose () {
     let note = this.props.note;
     if (note.isNew()) {
@@ -102,7 +107,7 @@ export default createReactComponent({
       changed.name = current.name;
     }
 
-    if (note.categories !== current.categories) {
+    if (!note.categories.equals(current.categories)) {
       changed.categories = current.categories;
     }
 
@@ -118,11 +123,6 @@ export default createReactComponent({
   },
 
   onDelete () {
-    createConfirmationDialog({
-      type: 'warn',
-      title: 'Delete note',
-      body: 'Are you sure you would like to delete this note?',
-      confirmationButton: 'Delete'
-    }).then(() => bus.publish('note:delete', this.props.note.id));
+    showDeleteConfirmation().then(() => bus.publish('note:delete', this.props.note.id));
   }
 });

@@ -1,11 +1,13 @@
 import {createReactComponent} from 'viter/viter';
-import {str2categories, isFocused} from 'helpers/utils';
+import {words} from 'lodash';
+import {isFocused} from 'helpers/utils';
+import {createCategories} from 'stores/entities';
 
 export default createReactComponent({
   displayName: 'CategoriesEditor',
 
-  isFocused () {
-    return this.isMounted() && isFocused(this.refs.categories);
+  shouldComponentUpdate () {
+    return false;
   },
 
   componentWillMount () {
@@ -13,14 +15,17 @@ export default createReactComponent({
   },
 
   render () {
-    let {defaultValue = []} = this.props;
     return (
       <input type="text" className="CategoriesEditor" onChange={this.onChange}
-             defaultValue={defaultValue.join(' ')} placeholder="Categories" ref="categories"/>
+             defaultValue={this.props.defaultValue.join(' ')} placeholder="Categories" ref="categories"/>
     )
   },
 
   onChange () {
-    this.value = str2categories(this.refs.categories.value);
+    this.value = createCategories(words(this.refs.categories.value));
+  },
+
+  isFocused () {
+    return this.isMounted() && isFocused(this.refs.categories);
   }
 })
