@@ -1,7 +1,5 @@
 import {bus, createComponent} from 'viter/viter';
-import {vitaPort} from 'config';
-
-const basePath = `${window.location.hostname}:${vitaPort}`;
+import {basePath} from 'config';
 
 // WebSocket connection manager
 export default function createSocketManager () {

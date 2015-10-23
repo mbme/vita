@@ -12,7 +12,7 @@ class NoteRecord extends Record({
   name: '',
   data: '',
   categories: createCategories(),
-  attachments: [],
+  attachments: createAttachments(),
   timestamp: 0
 }) {
   isNew () {
@@ -39,6 +39,7 @@ const NoteInfoRecord = Record({
 export function createNoteRecord(...data) {
   let obj = defaults(...data);
   obj.categories = createCategories(obj.categories);
+  obj.attachments = createAttachments(obj.attachments);
   return new NoteRecord(obj);
 }
 
@@ -50,6 +51,10 @@ export function createNoteInfoRecord(...data) {
 
 export function createCategories(categories = []) {
   return Set(categories);
+}
+
+export function createAttachments(attachments = []) {
+  return Set(attachments);
 }
 
 export function mergeRecord(record, data) {

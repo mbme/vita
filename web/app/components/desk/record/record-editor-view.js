@@ -4,6 +4,7 @@ import {createConfirmationDialog} from 'helpers/dialogs';
 import {Tab, Tabs} from 'components/common/tabs';
 import Editor from 'components/common/editor';
 import CategoriesEditor from 'components/common/categories-editor';
+import Attachments from './attachments';
 
 import Note from 'components/desk/note';
 import Record from 'components/desk/record/record';
@@ -30,12 +31,12 @@ export default createReactComponent({
   displayName: 'RecordEditorView',
 
   getInitialState () {
-    let {name, categories, data} = this.props.note;
-    return {name, categories, data};
+    let {name, categories, data, attachments} = this.props.note;
+    return {name, categories, data, attachments};
   },
 
   render () {
-    let {name, categories, data} = this.state;
+    let {name, categories, data, attachments} = this.state;
     let note = this.props.note;
 
     let menu = [{
@@ -68,6 +69,9 @@ export default createReactComponent({
             <Record name={name} data={data} categories={categories}/>
           </Tab>
 
+          <Tab label="Attachments" className="RecordEditorView-attachments">
+            <Attachments noteKey={note.key} attachments={attachments}/>
+          </Tab>
         </Tabs>
       </Note>
     )
@@ -83,8 +87,11 @@ export default createReactComponent({
     };
   },
 
-  onBeforeTabChange () {
-    this.setState(this.getCurrentState());
+  onBeforeTabChange (currentTab) {
+    // update local state only if switching from Edit tab
+    if (currentTab === 0) {
+      this.setState(this.getCurrentState());
+    }
   },
 
   onClose () {
