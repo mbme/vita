@@ -21,6 +21,6 @@
   }
 
   &.is-selected {
-    background-color: lime;
+    background-color: color($focus-color alpha(0.6));
   }
 }
