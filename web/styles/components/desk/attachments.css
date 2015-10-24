@@ -1,16 +1,13 @@
-
 .Attachments {
-  margin-top: 1vr;
-
-  width: 100%;
+  table {
+    width: 100%;
+  }
 
   .attachment-type-icon {
     width: 40px;
   }
 
   .size {
-    width: 90px;
-
     text-align: center;
     font-size: 0.9rem;
   }
@@ -26,6 +23,9 @@
 
     .Icon {
       @mixin action-icon;
+      &:hover {
+        color: $color-warn;
+      }
     }
   }
 }
