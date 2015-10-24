@@ -29,7 +29,7 @@ var config = {
     noParse: ['markdown-it'],
     loaders : [
       // JS
-      { test: /\.js?$/, include: /app/, loaders: ['babel?cacheDirectory=true']},
+      { test: /\.js?$/, include: /app/, loaders: ['react-hot', 'babel?cacheDirectory=true']},
       // JSON
       { test: /\.json$/, loader: 'json-loader'},
       // CSS
