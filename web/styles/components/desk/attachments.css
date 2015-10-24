@@ -1,4 +1,31 @@
 
 .Attachments {
+  margin-top: 1vr;
+
   width: 100%;
+
+  .attachment-type-icon {
+    width: 40px;
+  }
+
+  .size {
+    width: 90px;
+
+    text-align: center;
+    font-size: 0.9rem;
+  }
+
+  .ts {
+    font-size: 0.9rem;
+    width: 130px;
+  }
+
+  .buttons {
+    width: 20px;
+    text-align: right;
+
+    .Icon {
+      @mixin action-icon;
+    }
+  }
 }

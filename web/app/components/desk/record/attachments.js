@@ -23,7 +23,7 @@ let getFileAddr = curry(function (key, name) {
 });
 
 function formatTime(ts) {
-    return moment.unix(ts).format("DD.MM.YYYY HH:mm");
+  return moment.unix(ts).format("DD.MM.YYYY HH:mm");
 }
 
 export default createReactComponent({
@@ -34,14 +34,14 @@ export default createReactComponent({
 
     let addr = getFileAddr(noteKey);
 
-    let elements = attachments.map(function ({name, mime, type, size, timestamp}) {
+    let elements = attachments.map(({name, mime, type, size, timestamp}) => {
       return (
         <tr key={name}>
-          <td className="icon">{getFileIcon(type)}</td>
+          <td className="attachment-type-icon" title={mime}>{getFileIcon(type)}</td>
           <td className="name">{<a href={addr(name)}>{name}</a>}</td>
           <td className="size">{formatBytes(size)}</td>
-          <td className="mime">{mime}</td>
           <td className="ts">{formatTime(timestamp)}</td>
+          <td className="buttons"><Icon type="trash-b" onClick={this.onDelete}/></td>
         </tr>
       );
     });
@@ -51,5 +51,9 @@ export default createReactComponent({
         <tbody>{elements}</tbody>
       </table>
     );
+  },
+
+  onDelete () {
+    console.error('delete attachment');
   }
 })
