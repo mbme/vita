@@ -4,6 +4,10 @@ import Icon from 'components/common/icon';
 export default createReactComponent({
   displayName: 'FilePicker',
 
+  shouldComponentUpdate () {
+    return false;
+  },
+
   render () {
     return (
       <form className="FilePicker" ref="form" action="" onDrop={this.onDrop}>
