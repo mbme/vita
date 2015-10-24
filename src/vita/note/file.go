@@ -27,7 +27,7 @@ type FileInfo struct {
 }
 
 var typesMapping = map[FileType][]string{
-	ImageFile: []string{"image/png"},
+	ImageFile: []string{"image/png", "image/jpeg"},
 	AudioFile: []string{},
 	VideoFile: []string{},
 	TextFile:  []string{"text/plain"},
