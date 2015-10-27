@@ -21,7 +21,7 @@ export default createReactComponent(function Modal ({config}) {
       <div className="Modal-header">
         {title}
       </div>
-      <div className="Modal-body" dangerouslySetInnerHTML={{__html: body}}></div>
+      <div className="Modal-body">{body}</div>
       {buttonsSection}
     </div>
   )

@@ -27,7 +27,7 @@ function showDeleteConfirmation (name) {
   return createConfirmationDialog({
     type: 'warn',
     title: 'Delete file',
-    body: `Are you sure you would like to delete file <b>${name}</b>?`,
+    body: (<span>Are you sure you would like to delete file <b>{name}</b>?</span>),
     confirmationButton: 'Delete'
   });
 }
