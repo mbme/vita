@@ -1,12 +1,13 @@
 import {curry} from 'lodash';
 
-import {basePath} from 'config';
+import {baseUrl} from 'config';
 import {createReactComponent} from 'viter/viter';
+
 import Attachment from './attachment';
 import FileUploader from './file-uploader';
 
 let buildAttachmentUrl = curry(function (key, name) {
-  return `${basePath}/notes/${key.type}/${key.id}/attachments/${name}`;
+  return `${baseUrl}/notes/${key.type}/${key.id}/attachments/${name}`;
 });
 
 export default createReactComponent({
