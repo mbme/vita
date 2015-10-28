@@ -64,7 +64,10 @@ var config = {
       jQuery:          "jquery",
       "window.jQuery": "jquery",
       "root.jQuery":   "jquery",
-      React:           "react"
+      React:           "react",
+
+      // Fetch API polyfill
+      fetch: 'imports?this=>global!exports?global.fetch!whatwg-fetch'
     }),
     new webpack.DefinePlugin({
       VITA_PORT: 8081

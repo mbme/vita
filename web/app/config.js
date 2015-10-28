@@ -6,5 +6,6 @@ const basePath = `${window.location.hostname}:${port}`;
 export default {
   searchDelay: 200,
   searchIgnoreCase: true,
-  basePath
+  basePath,
+  baseUrl: `http://${basePath}`
 }

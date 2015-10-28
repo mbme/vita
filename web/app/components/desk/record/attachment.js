@@ -1,7 +1,5 @@
-import moment from 'moment';
-
 import {createReactComponent} from 'viter/viter';
-import {formatBytes} from 'helpers/utils';
+import {formatBytes, formatFileTs} from 'helpers/utils';
 import {createConfirmationDialog} from 'helpers/dialogs';
 
 import Icon from 'components/common/icon';
@@ -17,10 +15,6 @@ const FileTypeIcons = {
 function getFileIcon(type) {
   let icon =  FileTypeIcons[type];
   return (<Icon type={icon}/>);
-}
-
-function formatTime(ts) {
-  return moment.unix(ts).format("DD.MM.YYYY HH:mm");
 }
 
 function showDeleteConfirmation (name) {
@@ -44,7 +38,7 @@ export default createReactComponent({
         <td className="attachment-type-icon" title={mime}>{getFileIcon(type)}</td>
         <td className="name">{<a href={buildAddress(name)}>{name}</a>}</td>
         <td className="size">{formatBytes(size)}</td>
-        <td className="ts">{formatTime(timestamp)}</td>
+        <td className="ts">{formatFileTs(timestamp)}</td>
         <td className="buttons"><Icon type="trash-b" onClick={this.onDelete}/></td>
       </tr>
     );

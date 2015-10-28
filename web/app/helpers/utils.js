@@ -1,4 +1,5 @@
 import {unique, isFunction, curry} from 'lodash';
+import moment from 'moment';
 
 export function getQueryParam(query, param) {
   let pairs = (query || '').split("&");
@@ -129,4 +130,8 @@ export function formatBytes(bytes) {
     } else {
         return (bytes / B_in_GB).toFixed(2) + 'GB';
     }
+}
+
+export function formatFileTs(ts) {
+  return moment.unix(ts).format("DD.MM.YYYY HH:mm");
 }

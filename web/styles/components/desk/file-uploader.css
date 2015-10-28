@@ -1,0 +1,32 @@
+.FileUploader {
+  margin: 1vr 0;
+  text-align: center;
+
+  padding: 15px;
+  border: 1px dashed $border-color;
+  background: $file-picker-bg-color;
+
+  .picker-view {
+    input {
+      display: none;
+    }
+
+    .upload-link {
+      cursor: pointer;
+      color: $color-action;
+    }
+  }
+
+  .editor-view {
+    display: flex;
+    width: 100%;
+
+    > * {
+      flex-grow: 1;
+    }
+
+    input {
+      background-color: inherit;
+    }
+  }
+}

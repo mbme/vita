@@ -18,6 +18,8 @@
     "autoprefixer": "*",
     "babel-core": "*",
     "babel-loader": "*",
+    "exports-loader": "*",
+    "imports-loader": "*",
     "css-loader": "*",
     "file-loader": "*",
     "gulp": "*",
@@ -43,13 +45,14 @@
     "babel-runtime": "*",
     "classnames": "*",
     "codemirror": "*",
-    "immutable": "^3.7.5",
+    "immutable": "*",
     "lodash": "*",
     "markdown-it": "*",
     "moment": "*",
     "page": "*",
     "react": "*",
     "react-dom": "*",
-    "velocity-animate": "*"
+    "velocity-animate": "*",
+    "whatwg-fetch": "*"
   }
 }
