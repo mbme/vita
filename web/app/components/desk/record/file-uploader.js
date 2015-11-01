@@ -22,10 +22,6 @@ function uploadFile(noteKey, name, file) {
 export default createReactComponent({
   displayName: 'FileUploader',
 
-  shouldComponentUpdate (nextProps, nextState) {
-    return true;
-  },
-
   getInitialState () {
     return {
       view: Views.picker,
@@ -129,6 +125,7 @@ export default createReactComponent({
     let {noteKey} = this.props;
     uploadFile(noteKey, fileName, file).then((resp) => {
       console.error(resp);
+      this.props.onFileUploaded(resp);
       this.clearState();
     }).catch(function (err) {
       console.error('ERROR: ', err);

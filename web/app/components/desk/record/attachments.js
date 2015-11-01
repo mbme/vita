@@ -13,14 +13,22 @@ let buildAttachmentUrl = curry(function (key, name) {
 export default createReactComponent({
   displayName: 'Attachments',
 
+  getInitialState () {
+    return {
+      attachments: this.props.attachments
+    }
+  },
+
   render () {
-    let {attachments, noteKey} = this.props;
+    let noteKey = this.props.noteKey;
+
+    let attachments = this.state.attachments;
 
     let buildUrl = buildAttachmentUrl(noteKey);
 
     return (
       <div className="Attachments">
-        <FileUploader noteKey={noteKey}/>
+        <FileUploader noteKey={noteKey} onFileUploaded={this.onFileUploaded}/>
         <table>
           <tbody>
             {attachments.map(attachment =>
@@ -34,11 +42,14 @@ export default createReactComponent({
     );
   },
 
-  onDelete () {
-    console.error('delete attachment');
+  onFileUploaded (file) {
+    let attachments = this.state.attachments;
+    this.setState({
+      attachments: attachments.add(file)
+    });
   },
 
-  onFileSelected (file) {
-    console.error('select file', file.name);
+  onDelete () {
+    console.error('delete attachment');
   }
 })
