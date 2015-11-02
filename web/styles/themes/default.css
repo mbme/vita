@@ -23,5 +23,6 @@ $color-warn: #e57373;
 $color-action: #1976d2;
 
 $btn-warn-color: $color-warn;
+$btn-primary-color: $color-action;
 
 $file-picker-bg-color: #fafafa;

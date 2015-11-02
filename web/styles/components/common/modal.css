@@ -63,10 +63,7 @@
 
   &.is-warn {
     .Button-primary {
-      color: $btn-warn-color;
-      &:hover {
-        background-color: color($btn-warn-color alpha(25%));
-      }
+      @mixin btn-warn;
     }
   }
 }
