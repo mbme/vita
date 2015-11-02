@@ -31,13 +31,13 @@ export default createReactComponent({
 
   render () {
     let {attachment, buildAddress} = this.props;
-    let {name, mime, type, size, timestamp} = attachment;
+    let {name, mime, type, fileSize, timestamp} = attachment;
 
     return (
       <tr>
         <td className="attachment-type-icon" title={mime}>{getFileIcon(type)}</td>
         <td className="name">{<a href={buildAddress(name)}>{name}</a>}</td>
-        <td className="size">{formatBytes(size)}</td>
+        <td className="size">{formatBytes(fileSize)}</td>
         <td className="ts">{formatFileTs(timestamp)}</td>
         <td className="buttons"><Icon type="trash-b" onClick={this.onDelete}/></td>
       </tr>
@@ -45,6 +45,7 @@ export default createReactComponent({
   },
 
   onDelete () {
-    showDeleteConfirmation(this.props.attachment.name).then(this.props.onDelete);
+    let attachment = this.props.attachment;
+    showDeleteConfirmation(attachment.name).then(() => this.props.onDelete(attachment));
   }
 })

@@ -36,32 +36,32 @@ export default createReactComponent({
 
   renderPicker () {
     return (
-      <form className="picker-view" ref="form" action="" onDrop={this.onDrop}>
+        <form className="picker-view" ref="form" action="" onDrop={this.onDrop}>
         <Icon type="upload" />
         <span> Drop files here or </span>
         <span className="upload-link" onClick={this.onClickSelectFile}>select them</span>
         <input ref="input" name="" type="file" value="" onChange={this.onFileSelected}/>
-      </form>
+        </form>
     )
   },
 
   renderEditor () {
     let {file, fileName} = this.state;
     return (
-      <div className="editor-view">
+        <div className="editor-view">
         <input ref="fileName" name="" type="text" defaultValue={fileName}/>
         <span>{file.type}</span>
         <span>{formatBytes(file.size)}</span>
         <span><Button label="Upload" type="primary" onClick={this.onClickUpload}/></span>
         <span><Button label="Cancel" type="warn" onClick={this.onClickCancelUpload}/></span>
-      </div>
+        </div>
     )
   },
 
   renderUpload () {
     let {file, fileName} = this.state;
     return (
-      <div className="upload-view">
+        <div className="upload-view">
         UPLOADING FILE {fileName} ({formatBytes(file.size)})
       </div>
     )
@@ -70,21 +70,21 @@ export default createReactComponent({
   render () {
     let body;
     switch (this.state.view) {
-      case Views.picker:
-        body = this.renderPicker();
-        break;
-      case Views.editor:
-        body = this.renderEditor();
-        break;
-      case Views.upload:
-        body = this.renderUpload();
-        break;
-      default:
-        throw new Error(`unexpected view ${this.state.view}`);
+    case Views.picker:
+      body = this.renderPicker();
+      break;
+    case Views.editor:
+      body = this.renderEditor();
+      break;
+    case Views.upload:
+      body = this.renderUpload();
+      break;
+    default:
+      throw new Error(`unexpected view ${this.state.view}`);
     }
 
     return (
-      <div className="FileUploader">
+        <div className="FileUploader">
         {body}
       </div>
     )
@@ -121,7 +121,7 @@ export default createReactComponent({
       fileName,
       view: Views.upload
     });
-    console.error('uploading file');
+
     let {noteKey} = this.props;
     uploadFile(noteKey, fileName, file).then((resp) => {
       console.error(resp);

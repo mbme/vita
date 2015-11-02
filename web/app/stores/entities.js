@@ -36,15 +36,23 @@ const NoteInfoRecord = Record({
   timestamp: 0
 });
 
+const Attachment = Record({
+  name: '',
+  mime: undefined,
+  type: undefined,
+  fileSize: 0,
+  timestamp: 0
+});
+
 export function createNoteRecord(...data) {
-  let obj = defaults(...data);
+  let obj = defaults({}, ...data);
   obj.categories = createCategories(obj.categories);
   obj.attachments = createAttachments(obj.attachments);
   return new NoteRecord(obj);
 }
 
 export function createNoteInfoRecord(...data) {
-  let obj = defaults(...data);
+  let obj = defaults({}, ...data);
   obj.categories = createCategories(obj.categories);
   return new NoteInfoRecord(obj);
 }
@@ -53,8 +61,15 @@ export function createCategories(categories = []) {
   return Set(categories);
 }
 
+export function createAttachment({name, mime, type, size, timestamp}) {
+  return new Attachment({
+    name, mime, type, timestamp,
+    fileSize: size
+  });
+}
+
 export function createAttachments(attachments = []) {
-  return Set(attachments);
+  return Set(attachments.map(createAttachment));
 }
 
 export function mergeRecord(record, data) {

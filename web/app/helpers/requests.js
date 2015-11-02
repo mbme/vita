@@ -1,5 +1,9 @@
 import {forEach} from 'lodash';
 
+function toJSON(resp) {
+  return resp.json();
+}
+
 /*
  * Do POST request
  * @param {string} url request address
@@ -10,8 +14,12 @@ export function POST(url, data) {
   return fetch(url, {
     method: 'post',
     body: toFormData(data)
-  }).then(function (response) {
-    return response.json();
+  }).then(toJSON)
+}
+
+export function DELETE(url) {
+  return fetch(url, {
+    method: 'delete'
   })
 }
 

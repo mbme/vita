@@ -2,6 +2,8 @@ import {curry} from 'lodash';
 
 import {baseUrl} from 'config';
 import {createReactComponent} from 'viter/viter';
+import {DELETE} from 'helpers/requests';
+import {createAttachment} from 'stores/entities';
 
 import Attachment from './attachment';
 import FileUploader from './file-uploader';
@@ -9,6 +11,10 @@ import FileUploader from './file-uploader';
 let buildAttachmentUrl = curry(function (key, name) {
   return `${baseUrl}/notes/${key.type}/${key.id}/attachments/${name}`;
 });
+
+function deleteFile(key, name) {
+  return DELETE(`${baseUrl}/notes/${key.type}/${key.id}/attachments/${name}`);
+}
 
 export default createReactComponent({
   displayName: 'Attachments',
@@ -45,11 +51,17 @@ export default createReactComponent({
   onFileUploaded (file) {
     let attachments = this.state.attachments;
     this.setState({
-      attachments: attachments.add(file)
+      attachments: attachments.add(createAttachment(file))
     });
   },
 
-  onDelete () {
-    console.error('delete attachment');
+  onDelete (attachment) {
+    let attachments = this.state.attachments;
+    let noteKey = this.props.noteKey;
+    deleteFile(noteKey, attachment.name).then(() => {
+      this.setState({
+        attachments: attachments.delete(attachment)
+      })
+    }, (e) => console.error('cannot delete file %s:', attachment.name, e));
   }
 })
