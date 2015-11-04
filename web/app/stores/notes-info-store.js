@@ -1,6 +1,7 @@
-import {List, Record} from 'immutable';
+import {List} from 'immutable';
 import {key2id, byId} from 'helpers/utils';
 import {createNoteInfoRecord, mergeRecord} from './entities';
+import {searchResultsComparator} from 'config';
 
 export default function createNotesInfoStore () {
   let infos = List();
@@ -10,7 +11,10 @@ export default function createNotesInfoStore () {
     },
 
     resetInfos (newInfos) {
-      infos = List(newInfos.map(info => createNoteInfoRecord({id: key2id(info.key)}, info)));
+      let items = newInfos.map(info => createNoteInfoRecord({id: key2id(info.key)}, info));
+      items.sort(searchResultsComparator);
+
+      infos = List(items);
     },
 
     getInfo (id) {
