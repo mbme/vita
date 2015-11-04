@@ -4,13 +4,14 @@ $w-sidebar: 350px;
   height: 100%;
   display: flex;
 
+  background: $main-bg;
+
   &-left-panel {
     flex: 0 0 $w-sidebar;
     height: 100%;
   }
 
   &-content {
-    background: $main-bg;
     flex: 1 100%;
     height: 100%;
   }

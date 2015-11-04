@@ -1,8 +1,11 @@
 .SearchPanel {
   height: 100%;
+  margin-left: 1rem;
 
   display: flex;
   flex-direction: column;
+
+  background-color: $text-bg-color;
 
   &-header {
     text-align: center;
