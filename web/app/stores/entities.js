@@ -47,7 +47,7 @@ const Attachment = Record({
 export function createNoteRecord(...data) {
   let obj = defaults({}, ...data);
   obj.categories = createCategories(obj.categories);
-  obj.attachments = createAttachments(obj.attachments);
+  obj.attachments = createAttachments(obj.attachments || undefined);
   return new NoteRecord(obj);
 }
 
