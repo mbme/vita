@@ -1,5 +1,6 @@
-import {pick, defaults, forEach} from 'lodash';
+import {pick, defaults, forEach, clone} from 'lodash';
 import {Record, Set} from 'immutable';
+import {stringsComparator} from 'helpers/utils';
 
 class NoteRecord extends Record({
   nId: undefined,
@@ -58,6 +59,8 @@ export function createNoteInfoRecord(...data) {
 }
 
 export function createCategories(categories = []) {
+  let arr = clone(categories);
+  arr.sort(stringsComparator);
   return Set(categories);
 }
 

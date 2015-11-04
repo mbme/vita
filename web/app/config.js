@@ -1,4 +1,5 @@
 /*global VITA_PORT*/
+import {stringsComparator} from 'helpers/utils';
 
 const port = VITA_PORT || window.location.port;
 const basePath = `${window.location.hostname}:${port}`;
@@ -10,7 +11,7 @@ const basePath = `${window.location.hostname}:${port}`;
  * @param {NoteInfoRecord} rec2
  */
 function infoRecordNamesComparator(rec1, rec2) {
-  return rec1.name.localeCompare(rec2.name);
+  return stringsComparator(rec1.name, rec2.name);
 }
 
 export default {

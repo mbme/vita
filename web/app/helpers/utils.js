@@ -135,3 +135,7 @@ export function formatBytes(bytes) {
 export function formatFileTs(ts) {
   return moment.unix(ts).format("DD.MM.YYYY HH:mm");
 }
+
+export function stringsComparator(str1, str2) {
+  return str1.localeCompare(str2);
+}
