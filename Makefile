@@ -49,6 +49,9 @@ check:
 	go vet $(GOSRC)
 	golint $(GOSRC)
 
+check-web:
+	./node_modules/eslint/bin/eslint.js $(WEBUI)
+
 # install project deps
 deps:
 	gb vendor update --all
@@ -58,4 +61,4 @@ dev-deps:
 	go get -u github.com/constabulary/gb/...
 	go get -u github.com/jteeuwen/go-bindata/...
 
-.PHONY: clean build generate-resources bundle-resources release clear-test-data init-test-data run check deps dev-deps
+.PHONY: clean build generate-resources bundle-resources release clear-test-data init-test-data run check check-web deps dev-deps
