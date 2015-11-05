@@ -17,7 +17,8 @@ build:
 	gb build -ldflags "-X main.gitTag=$(shell git describe --tags --long --always)" all
 
 generate-resources:
-	gulp scripts:prod
+	// FIXME proper release
+	// gulp scripts:prod
 
 	cp $(WEBUI)/favicon.ico     $(TARGET)/
 	cp $(WEBUI)/prod-index.html $(TARGET)/index.html

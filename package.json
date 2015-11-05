@@ -15,21 +15,29 @@
   },
   "homepage": "https://github.com/mbme/vita#readme",
   "devDependencies": {
-    "autoprefixer": "*",
     "babel-core": "*",
-    "babel-eslint": "^4.1.4",
-    "babel-loader": "*",
     "babel-plugin-syntax-jsx": "*",
     "babel-plugin-transform-react-jsx": "*",
     "babel-preset-es2015": "*",
     "babel-preset-stage-0": "*",
-    "css-loader": "*",
+
     "eslint": "^1.8.0",
     "eslint-plugin-react": "^3.7.1",
+    "babel-eslint": "^4.1.4",
+
+    "webpack": "*",
+    "webpack-dev-server": "*",
+    "css-loader": "*",
+    "babel-loader": "*",
     "exports-loader": "*",
     "file-loader": "*",
     "imports-loader": "*",
     "json-loader": "*",
+    "react-hot-loader": "*",
+    "style-loader": "*",
+    "url-loader": "*",
+
+    "autoprefixer": "*",
     "postcss-calc": "*",
     "postcss-color-function": "*",
     "postcss-import": "*",
@@ -37,12 +45,7 @@
     "postcss-mixins": "*",
     "postcss-nested": "*",
     "postcss-simple-vars": "*",
-    "postcss-vertical-rhythm": "*",
-    "react-hot-loader": "*",
-    "style-loader": "*",
-    "url-loader": "*",
-    "webpack": "*",
-    "webpack-dev-server": "*"
+    "postcss-vertical-rhythm": "*"
   },
   "dependencies": {
     "babel-runtime": "*",
