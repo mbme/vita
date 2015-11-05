@@ -29,13 +29,15 @@ var config = {
     noParse: ['markdown-it'],
     loaders : [
       // JS
-      { test: /\.js?$/, include: /app/, loaders: ['react-hot', 'babel?cacheDirectory=true']},
+      { test: /\.js?$/, include: /app/, loaders: [
+        'react-hot-loader', 'babel-loader?cacheDirectory=true'
+      ]},
       // JSON
       { test: /\.json$/, loader: 'json-loader'},
       // CSS
       { test: /\.css$/, loader: 'style-loader!css-loader!postcss-loader'},
       // RESOURCES
-      { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url' },
+      { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader' },
     ]
   },
 
@@ -52,7 +54,6 @@ var config = {
       require('postcss-simple-vars')(),
       require('postcss-vertical-rhythm')(),
       require('postcss-color-function'),
-      require('postcss-clearfix'),
       require("postcss-calc"),
       require('autoprefixer')({ browsers: ['last 2 versions'] })
     ];

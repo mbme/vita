@@ -1,10 +1,4 @@
 {
-    "stage": 0,
-    "loose": true,
-    "blacklist": [
-        "es6.tailCall"
-    ],
-    "optional": [
-        "runtime"
-    ]
+  "plugins": ["transform-react-jsx", "syntax-jsx"],
+  "presets": ["es2015", "stage-0"]
 }

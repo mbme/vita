@@ -2,7 +2,6 @@
 import {stringsComparator} from 'helpers/utils';
 
 const port = VITA_PORT || window.location.port;
-const basePath = `${window.location.hostname}:${port}`;
 
 /**
  * Compare info records by name.
@@ -14,11 +13,8 @@ function infoRecordNamesComparator(rec1, rec2) {
   return stringsComparator(rec1.name, rec2.name);
 }
 
-export default {
-  searchDelay: 200,
-  searchIgnoreCase: true,
-  basePath,
-  baseUrl: `http://${basePath}`,
-
-  searchResultsComparator: infoRecordNamesComparator
-}
+export const searchDelay = 200;
+export const searchIgnoreCase = true;
+export const basePath = `${window.location.hostname}:${port}`;
+export const baseUrl = `http://${basePath}`;
+export const searchResultsComparator = infoRecordNamesComparator;
