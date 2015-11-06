@@ -37,7 +37,7 @@ export default createReactComponent({
 
   render () {
     let {name, categories, data, attachments} = this.state;
-    let note = this.props.note;
+    let {note, shouldScroll} = this.props;
 
     let menu = [{
       icon: 'checkmark-round',
@@ -54,7 +54,9 @@ export default createReactComponent({
     }
 
     return (
-      <Note id={note.id} menu={menu} className="RecordEditorView"
+      <Note id={note.id} className="RecordEditorView"
+            shouldScroll={shouldScroll}
+            menu={menu}
             onBeforeClose={showCloseConfirmation} onClose={this.onClose}>
         <Tabs onBeforeChange={this.onBeforeTabChange}>
 

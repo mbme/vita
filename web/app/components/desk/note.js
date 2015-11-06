@@ -18,7 +18,9 @@ export default createReactComponent({
   },
 
   componentDidMount () {
-    this.scrollIntoView();
+    if (this.props.shouldScroll) {
+      this.scrollIntoView();
+    }
   },
 
   maybeScrollMeIntoView (id) {

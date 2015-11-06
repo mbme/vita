@@ -12,7 +12,7 @@ function closeNote (id) {
   bus.publish('note:close', id);
 }
 
-export default createReactComponent(function RecordView ({note}) {
+export default createReactComponent(function RecordView ({note, shouldScroll}) {
   let {id, name, data, categories} = note;
 
   let menu = [{
@@ -21,7 +21,10 @@ export default createReactComponent(function RecordView ({note}) {
   }];
 
   return (
-    <Note id={id} className="RecordView" menu={menu} onClose={partial(closeNote, id)}>
+    <Note id={id} className="RecordView"
+          shouldScroll={shouldScroll}
+          menu={menu}
+          onClose={partial(closeNote, id)}>
       <Record name={name} data={data} categories={categories} />
     </Note>
   )
