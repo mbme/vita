@@ -1,4 +1,4 @@
-import {pick, defaults, forEach, clone} from 'lodash';
+import {pick, defaults, clone} from 'lodash';
 import {Record, Set} from 'immutable';
 import {stringsComparator} from 'helpers/utils';
 
@@ -75,8 +75,10 @@ export function createAttachments(attachments = []) {
   return Set(attachments.map(createAttachment));
 }
 
-export function mergeRecord(record, data) {
-  return record.withMutations(function (record) {
-    forEach(data, (value, key) => record.set(key, value));
-  });
+export function mergeNoteRecord(record, data) {
+  return createNoteRecord(data, record.toJS());
+}
+
+export function mergeNoteInfoRecord(record, data) {
+  return createNoteInfoRecord(data, record.toJS());
 }

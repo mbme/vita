@@ -2,7 +2,7 @@ import {invert} from 'lodash';
 import {key2id, byId} from 'helpers/utils';
 import {List} from 'immutable';
 
-import {createNoteRecord, mergeRecord} from './entities';
+import {createNoteRecord, mergeNoteRecord} from './entities';
 
 export default function createNotesStore () {
   let idsMap = {}; // note.id : note.nId
@@ -73,7 +73,7 @@ export default function createNotesStore () {
         return false;
       }
 
-      notes = notes.update(pos, note => mergeRecord(note, data));
+      notes = notes.update(pos, note => mergeNoteRecord(note, data));
 
       return true;
     },

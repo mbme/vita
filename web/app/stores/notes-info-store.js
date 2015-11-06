@@ -1,6 +1,6 @@
 import {List} from 'immutable';
 import {key2id, byId} from 'helpers/utils';
-import {createNoteInfoRecord, mergeRecord} from './entities';
+import {createNoteInfoRecord, mergeNoteInfoRecord} from './entities';
 import {searchResultsComparator} from 'config';
 
 export default function createNotesInfoStore () {
@@ -28,7 +28,7 @@ export default function createNotesInfoStore () {
         return false;
       }
 
-      infos = infos.update(pos, info => mergeRecord(info, {selected}));
+      infos = infos.update(pos, info => mergeNoteInfoRecord(info, {selected}));
 
       return true;
     }
