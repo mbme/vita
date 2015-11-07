@@ -36,6 +36,20 @@ markdownIt.renderer.rules.image = function (tokens, idx, options, env, self) {
   return defaultImageRender(tokens, idx, options, env, self);
 };
 
+// Remember old link renderer, if overriden, or proxy to default renderer
+let defaultLinkRender = markdownIt.renderer.rules.link_open || function(tokens, idx, options, env, self) {
+  return self.renderToken(tokens, idx, options);
+};
+
+markdownIt.renderer.rules.link_open = function (tokens, idx, options, env, self) {
+  let token = tokens[idx];
+  let href = token.attrs[token.attrIndex('href')];
+
+  href[1] = preprocessUrl(href[1], env.noteKey, env.attachments);
+
+  return defaultLinkRender(tokens, idx, options, env, self);
+};
+
 export default createReactComponent(function Markdown ({noteKey, text, attachments}) {
   let data = markdownIt.render(text, {
     noteKey: noteKey,
