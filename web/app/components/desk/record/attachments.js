@@ -1,16 +1,11 @@
-import {curry} from 'lodash';
-
 import {baseUrl} from 'config';
 import {createReactComponent} from 'viter/viter';
 import {DELETE} from 'helpers/requests';
 import {createAttachment} from 'stores/entities';
+import {buildAttachmentUrl} from 'helpers/utils';
 
 import Attachment from './attachment';
 import FileUploader from './file-uploader';
-
-let buildAttachmentUrl = curry(function (key, name) {
-  return `${baseUrl}/notes/${key.type}/${key.id}/attachments/${name}`;
-});
 
 function deleteFile(key, name) {
   return DELETE(`${baseUrl}/notes/${key.type}/${key.id}/attachments/${name}`);

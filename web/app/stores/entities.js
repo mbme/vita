@@ -1,5 +1,5 @@
 import {pick, defaults, clone} from 'lodash';
-import {Record, Set} from 'immutable';
+import {Record, Set, Map} from 'immutable';
 import {stringsComparator} from 'helpers/utils';
 
 class NoteRecord extends Record({
@@ -47,24 +47,33 @@ const Attachment = Record({
 
 export function createNoteRecord(...data) {
   let obj = defaults({}, ...data);
-  obj.categories = createCategories(obj.categories);
+  obj.categories = createCategories(obj.categories || undefined);
   obj.attachments = createAttachments(obj.attachments || undefined);
   return new NoteRecord(obj);
 }
 
 export function createNoteInfoRecord(...data) {
   let obj = defaults({}, ...data);
-  obj.categories = createCategories(obj.categories);
+  obj.categories = createCategories(obj.categories || undefined);
   return new NoteInfoRecord(obj);
 }
 
 export function createCategories(categories = []) {
+  if (Set.isSet(categories)) {
+    return categories;
+  }
+
   let arr = clone(categories);
   arr.sort(stringsComparator);
   return Set(categories);
 }
 
-export function createAttachment({name, mime, type, size, timestamp}) {
+export function createAttachment(attachment) {
+  if (Map.isMap(attachment)) {
+    return attachment;
+  }
+
+  let {name, mime, type, size, timestamp} = attachment;
   return new Attachment({
     name, mime, type, timestamp,
     fileSize: size
@@ -72,13 +81,17 @@ export function createAttachment({name, mime, type, size, timestamp}) {
 }
 
 export function createAttachments(attachments = []) {
+  if (Set.isSet(attachments)) {
+    return attachments;
+  }
+
   return Set(attachments.map(createAttachment));
 }
 
 export function mergeNoteRecord(record, data) {
-  return createNoteRecord(data, record.toJS());
+  return createNoteRecord(data, record.toObject());
 }
 
 export function mergeNoteInfoRecord(record, data) {
-  return createNoteInfoRecord(data, record.toJS());
+  return createNoteInfoRecord(data, record.toObject());
 }

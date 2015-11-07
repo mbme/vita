@@ -31,13 +31,14 @@ export default createReactComponent({
   displayName: 'RecordEditorView',
 
   getInitialState () {
-    let {name, categories, data, attachments} = this.props.note;
-    return {name, categories, data, attachments};
+    return {
+      note: this.props.note
+    };
   },
 
   render () {
-    let {name, categories, data, attachments} = this.state;
-    let {note, shouldScroll} = this.props;
+    let {note} = this.state;
+    let {shouldScroll} = this.props;
 
     let menu = [{
       icon: 'checkmark-round',
@@ -58,23 +59,25 @@ export default createReactComponent({
             shouldScroll={shouldScroll}
             menu={menu}
             onBeforeClose={showCloseConfirmation} onClose={this.onClose}>
+
         <Tabs onBeforeChange={this.onBeforeTabChange}>
 
           <Tab label="Edit" className="RecordEditorView-edit">
             <input type="text" className="name"
-                   defaultValue={name} placeholder="Name" ref="name"/>
-            <CategoriesEditor defaultValue={categories} ref="categories"/>
-            <Editor defaultValue={data} ref="editor"/>
+                   defaultValue={note.name} placeholder="Name" ref="name"/>
+            <CategoriesEditor defaultValue={note.categories} ref="categories"/>
+            <Editor defaultValue={note.data} ref="editor"/>
           </Tab>
 
           <Tab label="Preview" className="RecordEditorView-preview">
-            <Record name={name} data={data} categories={categories}/>
+            <Record note={note}/>
           </Tab>
 
           <Tab label="Attachments" className="RecordEditorView-attachments">
-            <Attachments noteKey={note.key} attachments={attachments}/>
+            <Attachments noteKey={note.key} attachments={note.attachments}/>
           </Tab>
         </Tabs>
+
       </Note>
     )
   },
@@ -89,10 +92,11 @@ export default createReactComponent({
     };
   },
 
-  onBeforeTabChange (currentTab) {
-    // update local state only if switching from Edit tab
-    if (currentTab === 0) {
-      this.setState(this.getCurrentState());
+  onBeforeTabChange (newTab, currentTab) {
+    // do not update when switching from preview
+    if (currentTab !== 1) {
+      let note = this.state.note.merge(this.getCurrentState());
+      this.setState({note});
     }
   },
 

@@ -13,19 +13,17 @@ function closeNote (id) {
 }
 
 export default createReactComponent(function RecordView ({note, shouldScroll}) {
-  let {id, name, data, categories} = note;
-
   let menu = [{
     icon: 'compose',
-    handler: partial(editNote, id, true)
+    handler: partial(editNote, note.id, true)
   }];
 
   return (
-    <Note id={id} className="RecordView"
+    <Note id={note.id} className="RecordView"
           shouldScroll={shouldScroll}
           menu={menu}
-          onClose={partial(closeNote, id)}>
-      <Record name={name} data={data} categories={categories} />
+          onClose={partial(closeNote, note.id)}>
+      <Record note={note} />
     </Note>
   )
 })
