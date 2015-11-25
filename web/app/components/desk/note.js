@@ -32,9 +32,8 @@ export default createReactComponent({
   scrollIntoView () {
     let el = this.refs.note;
     velocity(el, 'scroll', {
-      container: el.parentNode,
-      duration: 400,
-      offset: 20,
+      duration: 300,
+      offset: -6,
       easing: "ease-in-out"
     });
   },

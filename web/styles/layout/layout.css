@@ -2,3 +2,21 @@
   width: 100%;
   height: 100%;
 }
+
+.MainPage {
+  background: $main-bg;
+
+  &-left-panel {
+    position: fixed;
+
+    width: 40%;
+    height: 100%;
+
+    padding: 6px 0;
+  }
+
+  &-content {
+    margin-left: 40%;
+    width: 60%;
+  }
+}
