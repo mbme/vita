@@ -1,5 +1,3 @@
-$focused-color: color(#ffecb3 alpha(0.6));
-
 .SearchItem {
   position: relative;
 
@@ -22,6 +20,6 @@ $focused-color: color(#ffecb3 alpha(0.6));
   }
 
   &.is-selected {
-    background-color: $focused-color;
+    background-color: $highlight-color;
   }
 }

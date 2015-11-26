@@ -8,6 +8,10 @@ html, body {
   font-size: $font-size;
 }
 
+html {
+  overflow-y: scroll;
+}
+
 body {
   color: $font-color;
   /* for postcss-vertical-rhythm */

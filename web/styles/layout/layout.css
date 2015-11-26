@@ -5,6 +5,7 @@
 
 .MainPage {
   background: $main-bg;
+  min-height: 100%;
 
   &-left-panel {
     position: fixed;
