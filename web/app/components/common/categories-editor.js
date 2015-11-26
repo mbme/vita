@@ -15,9 +15,10 @@ export default createReactComponent({
   },
 
   render () {
+    let {defaultValue, placeholder = ''} = this.props;
     return (
       <input type="text" className="CategoriesEditor" onChange={this.onChange}
-             defaultValue={this.props.defaultValue.join(' ')} placeholder="Categories" ref="categories"/>
+             defaultValue={defaultValue.join(' ')} placeholder={placeholder} ref="categories"/>
     )
   },
 

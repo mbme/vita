@@ -14,10 +14,19 @@
 
   .Editor {
     margin-top: 1vr;
+    @mixin input-border;
+
+    &.is-focused {
+      @mixin input-border-focused;
+    }
 
     .CodeMirror {
       height: auto;
       font-size: 14px;
+
+      &-placeholder {
+        color: $font-color-secondary;
+      }
     }
   }
 }

@@ -4,6 +4,7 @@ import CodeMirror from 'codemirror';
 import 'codemirror/lib/codemirror.css';
 
 import 'codemirror/mode/markdown/markdown';
+import 'codemirror/addon/display/placeholder';
 
 export default createReactComponent({
   displayName: 'Editor',
@@ -33,12 +34,14 @@ export default createReactComponent({
 
   onFocusChange (focused) {
     this.isFocused = focused;
+    this.refs.editor.classList.toggle('is-focused', focused);
   },
 
   render () {
+    let {defaultValue, placeholder = ''} = this.props;
     return (
-      <div className="Editor">
-        <textarea ref="textarea" defaultValue={this.props.defaultValue} autoComplete="off" />
+      <div className="Editor" ref="editor">
+        <textarea ref="textarea" placeholder={placeholder} defaultValue={defaultValue} autoComplete="off" />
       </div>
     )
   }

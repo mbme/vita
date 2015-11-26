@@ -30,15 +30,12 @@ ul {
 }
 
 input[type=text], textarea {
-  outline: none;
-
-  border: 0 none;
-  border-bottom: 1px solid $border-color;
-
+  @mixin input-border;
   &:focus {
-    border: 0 none;
-    border-bottom: 1px solid $focus-color;
+    @mixin input-border-focused;
+  }
 
-    box-shadow: 0 1px 0px 0px $focus-color;
+  &::placeholder {
+    color: $font-color-secondary;
   }
 }

@@ -65,8 +65,12 @@ export default createReactComponent({
           <Tab label="Edit" className="RecordEditorView-edit">
             <input type="text" className="name"
                    defaultValue={note.name} placeholder="Name" ref="name"/>
-            <CategoriesEditor defaultValue={note.categories} ref="categories"/>
-            <Editor defaultValue={note.data} ref="editor"/>
+            <CategoriesEditor defaultValue={note.categories}
+                              placeholder="Categories"
+                              ref="categories"/>
+            <Editor defaultValue={note.data}
+                    placeholder="Drop few lines..."
+                    ref="editor"/>
           </Tab>
 
           <Tab label="Preview" className="RecordEditorView-preview">

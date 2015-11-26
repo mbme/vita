@@ -26,3 +26,17 @@
   word-break: break-all;
   hyphens: auto;
 }
+
+@define-mixin input-border {
+  outline: none;
+
+  border: 0 none;
+  border-bottom: 1px solid $border-color;
+}
+
+@define-mixin input-border-focused {
+  border: 0 none;
+  border-bottom: 1px solid $focus-color;
+
+  box-shadow: 0 1px 0px 0px $focus-color;
+}
