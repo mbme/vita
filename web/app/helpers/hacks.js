@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 
 // without this drop event doesn't work in chrome
 document.addEventListener('dragover', e => e.preventDefault());
