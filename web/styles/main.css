@@ -1,9 +1,72 @@
 @import 'vendor/normalize-css/normalize';
 
 @import 'themes/default.css';
+@import 'mixins.css';
 
-@import "base/*.css";
+* {
+  box-sizing: border-box;
+}
 
-@import "layout/*.css";
+html, body {
+  width: 100%;
+  height: 100%;
+  font-size: $font-size;
+}
+
+html {
+  overflow-y: scroll;
+}
+
+body {
+  color: $font-color;
+  /* for postcss-vertical-rhythm */
+  font: $font-size/$line-height "Open Sans", sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  text-rendering: optimizelegibility;
+  font-weight: 600;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+input[type=text], textarea {
+  @mixin input-border;
+  &:focus {
+    @mixin input-border-focused;
+  }
+
+  &::placeholder {
+    color: $font-color-secondary;
+  }
+}
+
+#container {
+  width: 100%;
+  height: 100%;
+}
+
+.MainPage {
+  background: $main-bg;
+  min-height: 100%;
+
+  &-left-panel {
+    position: fixed;
+
+    width: 40%;
+    height: 100%;
+
+    padding: 6px 0;
+  }
+
+  &-content {
+    margin-left: 40%;
+    width: 60%;
+  }
+}
 
 @import "components/**/*.css";
