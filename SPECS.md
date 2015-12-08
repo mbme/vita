@@ -22,12 +22,10 @@ Note specs
   * data: `byte[]` file content
 
 
-Websocket API
+Server API
 ==================
 
-`/ws`: websocket connection
-
-* Request
+* `Request`
 
     ```javascript
     {
@@ -37,21 +35,21 @@ Websocket API
     }
     ```
 
-* Response
+* `Response`
 
     ```javascript
     {
         result,
-        error = null,
+        error: undefined,
         id // request id
     }
     ```
 
-* Error Response
+* `ErrorResponse`
 
     ```javascript
     {
-        result = null,
+        result: undefined,
         error, // string
         id // request id
     }
@@ -100,22 +98,29 @@ Websocket API
     }
     ```
 
-Read notes list
+Websocket
 --------------------
 
-* Request
+`/ws`: websocket connection
 
-  * `method`: `"notes-list-read"`
+Communication happens in form of request-response.
 
-  * `params`: `null`
+Client sends `Request` object with unique `id` field and receives `Response` or `ErrorResponse` with the same `id`.
 
-* Response
+### Read notes list
 
-    * `result`: `NoteInfo[]` info about all available notes
+* Request:
+
+    * `method`: `"notes-list-read"`
+
+    * `params`: `null`
+
+* Response:
+
+    `result`: `NoteInfo[]` info about all available notes
 
 
-Read note
---------------------
+### Read note
 
 * Request
 
@@ -132,11 +137,10 @@ Read note
 
 * Response
 
-    * `result`: `Note` requested note
+    `result`: `Note` requested note
 
 
-Create note
---------------------
+### Create note
 
 * Request
 
@@ -155,11 +159,10 @@ Create note
 
 * Response
 
-    * `result`: `Note` created note
+    `result`: `Note` created note
 
 
-Update note
---------------------
+### Update note
 
 * Request
 
@@ -181,11 +184,10 @@ Update note
 
 * Response
 
-    * `result`: `Note` updated note
+    `result`: `Note` updated note
 
 
-Delete note
---------------------
+### Delete note
 
 * Request
 
@@ -202,7 +204,7 @@ Delete note
 
 * Response
 
-    * `result`: key of deleted note
+    `result`: key of deleted note
 
     ```javascript
     {
@@ -212,14 +214,65 @@ Delete note
     ```
 
 
-HTTP API
-==================
-
-Add attachment
+HTTP
 ------------------
 
-Read attachment
-------------------
+All requests always return status `200 OK`.
 
-Remove attachment
-------------------
+In case of error response body is `ErrorResponse`.
+
+### Add attachment
+
+* Request
+
+    `POST /$type/$id/attachments` with MIME type `multipart/form-data`
+
+    * `$type: string` note type
+
+    * `$id: uint` unique note id
+
+    Form fields:
+
+    * `name` must contain file name
+
+    * `file` must contain file data
+
+* Response
+
+    `Response` with
+
+    * `result`: `Attachment` created attachment
+
+### Read attachment
+
+* Request
+
+    `GET /$type/$id/attachments/$fileId`
+
+    * `$type: string` note type
+
+    * `$id: uint` unique note id
+
+    * `$fileId: string` attachment name unique between other attachments of this note
+
+* Response
+
+    File content.
+
+### Remove attachment
+
+* Request
+
+    `DELETE /$type/$id/attachments/$fileId`
+
+    * `$type: string` note type
+
+    * `$id: uint` unique note id
+
+    * `$fileId: string` attachment name unique between other attachments of this note
+
+* Response
+
+    `Response` with
+
+    * `result`: `null`
