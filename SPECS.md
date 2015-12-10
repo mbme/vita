@@ -217,15 +217,15 @@ Client sends `Request` object with unique `id` field and receives `Response` or 
 HTTP
 ------------------
 
-All requests always return status `200 OK`.
+All requests always return status `200` if everything is ok and `400` otherwise.
 
-In case of error response body is `ErrorResponse`.
+In case of error response body contains error message.
 
 ### Add attachment
 
 * Request
 
-    `POST /$type/$id/attachments` with MIME type `multipart/form-data`
+    `POST /notes/$type/$id/attachments` with MIME type `multipart/form-data`
 
     * `$type: string` note type
 
@@ -239,15 +239,13 @@ In case of error response body is `ErrorResponse`.
 
 * Response
 
-    `Response` with
-
-    * `result`: `Attachment` created attachment
+    `Attachment` attachment description
 
 ### Read attachment
 
 * Request
 
-    `GET /$type/$id/attachments/$fileId`
+    `GET /notes/$type/$id/attachments/$fileId`
 
     * `$type: string` note type
 
@@ -257,13 +255,13 @@ In case of error response body is `ErrorResponse`.
 
 * Response
 
-    File content.
+    File content
 
 ### Remove attachment
 
 * Request
 
-    `DELETE /$type/$id/attachments/$fileId`
+    `DELETE /notes/$type/$id/attachments/$fileId`
 
     * `$type: string` note type
 
@@ -273,6 +271,4 @@ In case of error response body is `ErrorResponse`.
 
 * Response
 
-    `Response` with
-
-    * `result`: `null`
+    `null`
