@@ -6,6 +6,7 @@ import (
 	"github.com/gorilla/websocket"
 	"io"
 	"net/http"
+	"sync/atomic"
 	"vita/log"
 )
 
@@ -38,6 +39,8 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
+var socketCounter int32 = 0
+
 //WsHandler websocket connection handler
 func WsHandler(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
@@ -45,18 +48,21 @@ func WsHandler(w http.ResponseWriter, r *http.Request) {
 		log.Errorf("cannot open websocket: %v", err)
 		return
 	}
-	log.Info("websocket: open")
+
+	var id = atomic.AddInt32(&socketCounter, 1)
+	log.Infof("websocket: %v open", id)
 
 	for {
 		// parse request
 		req := &request{}
 		if err = conn.ReadJSON(req); err != nil {
-			if err == io.EOF {
-				log.Info("connection: closed")
+			if err == io.ErrUnexpectedEOF {
+				log.Errorf("can't parse message: %v", err)
 				return
 			}
 
-			log.Errorf("can't parse message: %v", err)
+			log.Infof("websocket: %v closed", id)
+
 			return // close websocket
 		}
 
