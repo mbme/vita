@@ -4,9 +4,11 @@ function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
     return response
   } else {
-    let error = new Error(response.statusText)
-    error.response = response
-    throw error
+    return response.text().then(function (text) {
+      let error = new Error(text)
+      error.response = response
+      throw error
+    })
   }
 }
 
@@ -30,7 +32,7 @@ export function POST(url, data) {
 export function DELETE(url) {
   return fetch(url, {
     method: 'delete'
-  })
+  }).then(checkStatus)
 }
 
 export function toFormData(data) {

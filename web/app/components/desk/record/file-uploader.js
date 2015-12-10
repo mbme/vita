@@ -142,7 +142,7 @@ export default createReactComponent({
       console.error(`failed to upload file ${fileName}:`, err);
       this.setState({
         view: Views.editor,
-        errMsg: `failed to upload file ${fileName}`
+        errMsg: `failed to upload file ${fileName}: ${err}`
       })
     });
   },
