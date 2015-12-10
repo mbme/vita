@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"vita/log"
 
@@ -30,6 +31,14 @@ func writeJSON(w http.ResponseWriter, data any) error {
 	return err
 }
 
+func writeErrStr(w http.ResponseWriter, msg string, args ...interface{}) {
+	http.Error(w, fmt.Sprintf(msg, args...), http.StatusBadRequest)
+}
+
+func writeErr(w http.ResponseWriter, err error) {
+	writeErrStr(w, err.Error())
+}
+
 // AddFileHandler handles adding attachments
 func AddFileHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
@@ -40,26 +49,26 @@ func AddFileHandler(w http.ResponseWriter, r *http.Request) {
 	key, err := note.ParseKey(typeStr, idStr)
 	if err != nil {
 		log.Errorf("error parsing key: %v", err)
-		http.Error(w, "error parsing key", http.StatusBadRequest)
+		writeErrStr(w, "error parsing key: %v", err)
 		return
 	}
 
 	if !Storage.NoteExists(key) {
 		log.Errorf("file upload: unknown note %v", key)
-		http.Error(w, "unknown note", http.StatusBadRequest)
+		writeErrStr(w, "unknown note %v", key)
 		return
 	}
 
 	if err := r.ParseMultipartForm(10 * 1024 * 1024); err != nil {
 		log.Errorf("file upload for %v -> parse error: %v", key, err)
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		writeErr(w, err)
 		return
 	}
 
 	file, _, err := r.FormFile("file")
 	if err != nil {
 		log.Errorf("file upload for %v -> form parse error: %v", key, err)
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		writeErr(w, err)
 		return
 	}
 
@@ -68,20 +77,20 @@ func AddFileHandler(w http.ResponseWriter, r *http.Request) {
 	data, err := ioutil.ReadAll(file)
 	if err != nil {
 		log.Errorf("file upload for %v -> file read error: %v", key, err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		writeErr(w, err)
 		return
 	}
 
 	info, err := Storage.AddAttachment(key, name, data)
 	if err != nil {
 		log.Errorf("file upload for %v -> attaching error: %v", key, err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		writeErr(w, err)
 		return
 	}
 
 	if writeJSON(w, info) != nil {
 		log.Errorf("file upload for %v -> response error: %v", key, err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		writeErr(w, err)
 	}
 
 	log.Infof("file upload for %v -> attached file %v", key, name)
@@ -97,13 +106,13 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 	key, err := note.ParseKey(typeStr, idStr)
 	if err != nil {
 		log.Errorf("error parsing key: %v", err)
-		http.Error(w, "error parsing key", http.StatusBadRequest)
+		writeErrStr(w, "error parsing key: %v", err)
 		return
 	}
 
 	if !Storage.NoteExists(key) {
 		log.Errorf("file upload: unknown note %v", key)
-		http.Error(w, "unknown note", http.StatusBadRequest)
+		writeErrStr(w, "unknown note %v", key)
 		return
 	}
 
@@ -112,14 +121,14 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 	data, err := Storage.GetAttachment(key, fileID)
 	if err != nil {
 		log.Errorf("file read for %v -> read error: %v", key, err)
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		writeErr(w, err)
 		return
 	}
 
 	_, err = w.Write(data)
 	if err != nil {
 		log.Errorf("file read for %v -> write error: %v", key, err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		writeErr(w, err)
 	}
 }
 
@@ -133,13 +142,13 @@ func RemoveFileHandler(w http.ResponseWriter, r *http.Request) {
 	key, err := note.ParseKey(typeStr, idStr)
 	if err != nil {
 		log.Errorf("error parsing key: %v", err)
-		http.Error(w, "error parsing key", http.StatusBadRequest)
+		writeErrStr(w, "error parsing key: %v", err)
 		return
 	}
 
 	if !Storage.NoteExists(key) {
 		log.Errorf("file upload: unknown note %v", key)
-		http.Error(w, "unknown note", http.StatusBadRequest)
+		writeErrStr(w, "unknown note %v", key)
 		return
 	}
 
@@ -148,7 +157,7 @@ func RemoveFileHandler(w http.ResponseWriter, r *http.Request) {
 	err = Storage.RemoveAttachment(key, fileID)
 	if err != nil {
 		log.Errorf("file remove for %v -> remove error: %v", key, err)
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		writeErr(w, err)
 		return
 	}
 
