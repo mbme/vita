@@ -37,7 +37,7 @@ var config = {
       // CSS
       { test: /\.css$/, loader: 'style-loader!css-loader'},
       // FONTS
-      { test: /\.woff|\.woff2|\.svg|\.eot|\.ttf|\.png/, loader: 'url-loader?prefix=font/&limit=10000' },
+      { test: /\.woff|\.woff2|\.svg|\.eot|\.ttf|\.png/, loader: 'url-loader?limit=10000' },
     ]
   },
 

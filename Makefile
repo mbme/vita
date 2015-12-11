@@ -13,7 +13,7 @@ DEVEL_CONFIG := $(ROOT_DIR)/dev_stuff/vita.config.json
 clean:
 	rm -rf $(APP) $(TARGET)
 
-build:
+build: check
 	gb build -ldflags "-X main.gitTag=$(shell git describe --tags --long --always)" all
 
 generate-resources:
@@ -24,7 +24,7 @@ generate-resources:
 bundle-resources:
 	go-bindata -nomemcopy -pkg "handlers" -prefix "$(TARGET)" -o $(GOSRC)/handlers/static-data.go $(TARGET)/...
 
-release: clean generate-resources bundle-resources build
+release: check-web clean generate-resources bundle-resources build
 
 
 # for development
@@ -59,5 +59,6 @@ deps:
 dev-deps:
 	go get -u github.com/constabulary/gb/...
 	go get -u github.com/jteeuwen/go-bindata/...
+	go get -u github.com/golang/lint/golint
 
 .PHONY: clean build generate-resources bundle-resources release clear-test-data init-test-data run check check-web deps dev-deps

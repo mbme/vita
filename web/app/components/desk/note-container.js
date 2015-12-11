@@ -1,4 +1,4 @@
-import {createReactComponent, bus} from 'viter/viter';
+import {createReactComponent} from 'viter/viter';
 
 import RecordEditorView from './record/record-editor-view';
 import RecordView from './record/record-view';
