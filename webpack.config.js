@@ -68,9 +68,6 @@ var config = {
       // Fetch API polyfill
       fetch: 'imports?this=>global!exports?global.fetch!whatwg-fetch'
     }),
-    new webpack.DefinePlugin({
-      VITA_PORT: 8081
-    }),
     // do not load moment locales
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
   ]
@@ -86,11 +83,20 @@ if (process.env.NODE_ENV === 'production') {
       warnings: false
     }
   }));
+  config.plugins.push(new webpack.DefinePlugin({
+      VITA_PORT: undefined,
+      DEV: false
+  }));
 } else {
   config.output.path = path.resolve('./web');
 
   config.debug = true;
   config.devtool = 'eval';
+
+  config.plugins.push(new webpack.DefinePlugin({
+      VITA_PORT: 8081,
+      DEV: true
+  }));
 }
 
 module.exports = config;

@@ -1,3 +1,4 @@
+/* global DEV */
 import {setStores, bus} from 'viter/viter';
 
 import 'helpers/hacks';
@@ -22,5 +23,10 @@ bus.subscribe('!stores-update', function (...args) {
 });
 
 getActions().forEach(([action, handler]) => bus.subscribe(action, handler));
+
+
+if (DEV) {
+  document.title += ' [DEV]';
+}
 
 bus.publish('app:initialized');
