@@ -17,11 +17,9 @@ build:
 	gb build -ldflags "-X main.gitTag=$(shell git describe --tags --long --always)" all
 
 generate-resources:
-	// FIXME proper release
-	// gulp scripts:prod
-
+	NODE_ENV="production" ./node_modules/webpack/bin/webpack.js --content-base $(WEBUI)
 	cp $(WEBUI)/favicon.ico     $(TARGET)/
-	cp $(WEBUI)/prod-index.html $(TARGET)/index.html
+	cp $(WEBUI)/index.html      $(TARGET)/
 
 bundle-resources:
 	go-bindata -nomemcopy -pkg "handlers" -prefix "$(TARGET)" -o $(GOSRC)/handlers/static-data.go $(TARGET)/...

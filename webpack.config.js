@@ -9,13 +9,13 @@ var src = 'web';
 
 var config = {
   entry: {
-    app: ['init.js', 'main.css']
+    app: ['init.js', 'styles']
   },
 
   resolve: {
     root: [path.join(base, src, 'app')],
     alias: {
-      'main.css': path.join(base, src, 'styles/main.css'),
+      'styles': path.join(base, src, 'styles/styles.js'),
       'velocity': 'velocity-animate'
     }
   },
@@ -35,9 +35,9 @@ var config = {
       // JSON
       { test: /\.json$/, loader: 'json-loader'},
       // CSS
-      { test: /\.css$/, loader: 'style-loader!css-loader!postcss-loader'},
-      // RESOURCES
-      { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader' },
+      { test: /\.css$/, loader: 'style-loader!css-loader'},
+      // FONTS
+      { test: /\.woff|\.woff2|\.svg|\.eot|\.ttf|\.png/, loader: 'url-loader?prefix=font/&limit=10000' },
     ]
   },
 
@@ -45,9 +45,7 @@ var config = {
     return [
       require('postcss-import')({
         glob: true,
-        onImport: function (files) {
-          files.forEach(this.addDependency);
-        }.bind(this)
+        addDependencyTo: webpack
       }),
       require('postcss-mixins'),
       require('postcss-nested'),
