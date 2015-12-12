@@ -33,6 +33,8 @@ ul {
 }
 
 input[type=text], textarea {
+  background-color: inherit;
+
   @mixin input-border;
   &:focus {
     @mixin input-border-focused;
