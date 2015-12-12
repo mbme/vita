@@ -1,0 +1,48 @@
+.Markdown {
+  ul {
+    list-style: inside none disc;
+  }
+
+  img {
+    display: block;
+    margin: 1vr auto;
+
+    max-width: 100%;
+
+    border: $border;
+  }
+
+  pre {
+    background-color: $text-bg-secondary;
+    padding: 0.5vr;
+  }
+
+  blockquote {
+    background-color: $text-bg-secondary;
+    padding: 0.5vr;
+  }
+
+  /* monospace */
+  code {
+    background-color: $text-bg-secondary;
+    padding: 1px 5px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    tr {
+      border-top: $border;
+
+      &:nth-child(2n) {
+        background-color: $text-bg-secondary;
+      }
+    }
+
+    th, td {
+      border: $border;
+      padding: 0.5vr 1vr;
+    }
+  }
+}

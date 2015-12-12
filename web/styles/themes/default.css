@@ -4,6 +4,8 @@ $main-bg: $main-bg-color none repeat scroll 0% 0%;
 $text-bg-color: #FEFEFE;
 $text-bg: $text-bg-color none repeat scroll 0% 0%;
 
+$text-bg-secondary: $main-bg-color;
+
 $font-size: 16px;
 $line-height: 1.63;
 
