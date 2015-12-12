@@ -45,7 +45,7 @@ var config = {
     return [
       require('postcss-import')({
         glob: true,
-        addDependencyTo: webpack
+        addDependencyTo: this
       }),
       require('postcss-mixins'),
       require('postcss-nested'),
