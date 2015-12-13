@@ -30,7 +30,7 @@
     right: 10px;
 
     .Icon {
-      padding-left: 15px;
+      padding-left: 1vr;
 
       font-size: 1vr;
       @mixin action-icon;

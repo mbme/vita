@@ -48,6 +48,10 @@ export default createReactComponent({
     // if new record then do not show delete button
     if (!note.isNew()) {
       menu.push({
+        icon: 'arrow-return-left',
+        type: 'warn',
+        handler: this.onUndo
+      },{
         icon: 'trash-a',
         type: 'warn',
         handler: this.onDelete
@@ -104,15 +108,6 @@ export default createReactComponent({
     }
   },
 
-  onClose () {
-    let note = this.props.note;
-    if (note.isNew()) {
-      bus.publish('note:close-by-nId', note.nId);
-    } else {
-      bus.publish('note:close', note.id);
-    }
-  },
-
   onSave () {
     let note = this.props.note;
 
@@ -136,6 +131,19 @@ export default createReactComponent({
       bus.publish('note:create', note.nId, changed);
     } else {
       bus.publish('note:save', note.id, changed);
+    }
+  },
+
+  onUndo () {
+    showCloseConfirmation().then(() => bus.publish('note:edit', this.props.note.id, false));
+  },
+
+  onClose () {
+    let note = this.props.note;
+    if (note.isNew()) {
+      bus.publish('note:close-by-nId', note.nId);
+    } else {
+      bus.publish('note:close', note.id);
     }
   },
 
