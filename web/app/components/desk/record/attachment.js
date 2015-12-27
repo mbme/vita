@@ -36,7 +36,7 @@ export default createReactComponent({
     return (
       <tr>
         <td className="attachment-type-icon" title={mime}>{getFileIcon(type)}</td>
-        <td className="name">{<a href={buildAddress(name)}>{name}</a>}</td>
+        <td className="name">{<a href={buildAddress(name)} target="_blank">{name}</a>}</td>
         <td className="size">{formatBytes(fileSize)}</td>
         <td className="ts">{formatFileTs(timestamp)}</td>
         <td className="buttons"><Icon type="trash-b" onClick={this.onDelete}/></td>

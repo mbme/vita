@@ -49,6 +49,16 @@ input[type=text], textarea {
   }
 }
 
+a,
+a:visited {
+  color: $link-color;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 #container {
   width: 100%;
   height: 100%;
