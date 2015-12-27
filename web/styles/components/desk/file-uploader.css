@@ -6,37 +6,12 @@
   border: 1px dashed $border-color;
   background: $file-picker-bg-color;
 
-  .picker-view {
-    input {
-      display: none;
-    }
-
-    .upload-link {
-      cursor: pointer;
-      color: $color-action;
-    }
+  input {
+    display: none;
   }
 
-  .editor-view {
-    .row1 {
-      display: flex;
-
-      > * {
-        flex-grow: 1;
-      }
-
-      input {
-        background-color: inherit;
-      }
-    }
-
-    .error-message {
-      color: $color-warn;
-      margin-top: 0.5vr;
-    }
-
-    .row2 {
-      margin-top: 0.5vr;
-    }
+  .upload-link {
+    cursor: pointer;
+    color: $color-action;
   }
 }

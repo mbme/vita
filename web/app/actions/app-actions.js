@@ -13,18 +13,18 @@ export default {
     }
   },
 
-  'modal:open': function (modalConfig) {
+  'modal:open': function (id, view) {
     let AppStore = getStore('app');
 
-    AppStore.addModal(modalConfig);
+    AppStore.addModal(id, view);
 
     publishStoreUpdate('app');
   },
 
-  'modal:close': function (modalId) {
+  'modal:close': function (id) {
     let AppStore = getStore('app');
 
-    if (AppStore.removeModal(modalId)) {
+    if (AppStore.removeModal(id)) {
       publishStoreUpdate('app');
     }
   }

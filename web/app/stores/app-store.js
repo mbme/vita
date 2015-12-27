@@ -27,8 +27,8 @@ export default function createAppStore () {
       page = newPage;
     },
 
-    addModal (config) {
-      modals = modals.push(config);
+    addModal (id, view) {
+      modals = modals.push({id, view});
     },
 
     removeModal (id) {

@@ -1,48 +1,136 @@
-import {bus} from 'viter/viter';
+import React from 'react';
+import cx from 'classnames';
+import {bus, createReactComponent} from 'viter/viter';
 import {createDeferred} from 'helpers/utils';
+
 import Button from 'components/common/button';
+import Icon from 'components/common/icon';
+
+const Modal = createReactComponent({
+  displayName: 'Modal',
+
+  render () {
+    let {type, children} = this.props;
+
+    return React.createElement(
+      'div', {className: cx('Modal', {[`is-${type}`]: type})},
+      ...children
+    );
+  }
+});
 
 let modalId = 0;
 
-function openModal(config) {
-  bus.publish('modal:open', config);
+export function createModal(type) {
+  let id = modalId += 1;
+  return {
+    open (...children) {
+      let modal = React.createElement(
+        Modal, {key: id, type, children}
+      );
+      bus.publish('modal:open', id, modal);
+    },
+
+    close () {
+      bus.publish('modal:close', id);
+    }
+  }
+};
+
+export function buildHeader (title) {
+  return (
+    <div className="Modal-header"><h1>{title}</h1></div>
+  );
 }
 
-function closeModal(id) {
-  bus.publish('modal:close', id);
+export function buildBody (children, className) {
+  return React.createElement(
+    'div', {className: cx('Modal-body', className)}, ...children
+  );
+}
+
+export function buildButtons (buttons, className) {
+  return React.createElement(
+    'div', {className: cx('Modal-buttons', className)}, ...buttons
+  );
+}
+
+function buildCloseIcon (onClose) {
+  return (
+    <Icon type="close-round" className="Exit" onClick={onClose} />
+  );
+}
+
+export function modalBuilder() {
+  let data = {
+    closeIcon: false,
+    title: false,
+    body: [],
+    buttons: []
+  };
+
+  return {
+    addCloseIcon (onClose) {
+      data.closeIcon = buildCloseIcon(onClose);
+      return this;
+    },
+
+    setTitle (title) {
+      data.title = title;
+      return this;
+    },
+
+    addBodyElement (el) {
+      data.body.push(el);
+      return this;
+    },
+
+    addButton (el) {
+      data.buttons.push(el);
+      return this;
+    },
+
+    build () {
+      return [
+        data.closeIcon,
+        buildHeader(data.title),
+        buildBody(data.body),
+        buildButtons(data.buttons)
+      ];
+    }
+  }
 }
 
 export function createConfirmationDialog (config) {
-  let id = modalId += 1;
+  let modal = createModal(config.type);
   let deferred = createDeferred();
 
-  let title = '';
-  if (config.title) {
-    title = <h1>{config.title}</h1>
+  function onSuccess() {
+    modal.close();
+    deferred.resolve();
   }
 
-  let onCancel = function () {
+  function onCancel () {
+    modal.close();
     deferred.reject();
-    closeModal(id);
-  };
+  }
 
-  let onSuccess = function () {
-    deferred.resolve();
-    closeModal(id);
-  };
+  let children = modalBuilder(
+  ).addCloseIcon(onCancel)
+   .setTitle(config.title)
+   .addBodyElement(config.body)
+   .addButton(
+     <Button label="Cancel"
+             onClick={onCancel}/>
+   )
+   .addButton(
+     <Button label={config.confirmationButton || 'OK'}
+             onClick={onSuccess}
+             type="primary" />
+   )
+   .build();
 
-  openModal({
-    type: config.type,
-    showExitIcon: config.showExitIcon || false,
-    id,
-    title,
-    body: config.body,
-    buttons: [
-      <Button label="Cancel" onClick={onCancel}/>,
-      <Button label={config.confirmationButton || 'OK'} onClick={onSuccess} type="primary" />
-    ],
-    onCancel
-  });
+  modal.open(...children);
 
   return deferred.promise;
 }

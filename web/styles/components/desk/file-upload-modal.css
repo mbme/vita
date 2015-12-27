@@ -1,0 +1,24 @@
+.FileUploadModalView {
+  .editor-view {
+    .input-row {
+      display: flex;
+
+      > * {
+        flex-grow: 1;
+      }
+
+      input {
+        background-color: inherit;
+      }
+
+      .mime, .size {
+        text-align: center;
+      }
+    }
+
+    .error-message {
+      color: $color-warn;
+      margin-top: 0.5vr;
+    }
+  }
+}
