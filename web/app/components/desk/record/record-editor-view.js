@@ -5,6 +5,8 @@ import {Tab, Tabs} from 'components/common/tabs';
 import Editor from 'components/common/editor';
 import CategoriesEditor from 'components/common/categories-editor';
 import Attachments from './attachments';
+import FileUploader from './file-uploader';
+import * as Files from 'helpers/files';
 
 import Note from 'components/desk/note';
 import Record from 'components/desk/record/record';
@@ -82,12 +84,35 @@ export default createReactComponent({
           </Tab>
 
           <Tab label="Attachments" className="RecordEditorView-attachments">
-            <Attachments noteKey={note.key} attachments={note.attachments}/>
+            <FileUploader uploadFile={this.uploadFile}/>
+            <Attachments noteKey={note.key}
+                         attachments={note.attachments}
+                         deleteAttachment={this.deleteAttachment}/>
           </Tab>
         </Tabs>
 
       </Note>
     )
+  },
+
+  uploadFile (fileName, file) {
+    return Files.uploadFile(this.state.note.key, fileName, file).then(resp => {
+      let note = this.state.note;
+
+      this.setState({
+        note: note.set('attachments', note.attachments.add(resp))
+      });
+    });
+  },
+
+  deleteAttachment (attachment) {
+    Files.deleteFile(this.state.note.key, attachment.name).then(() => {
+      let note = this.state.note;
+
+      this.setState({
+        note: note.set('attachments', note.attachments.delete(attachment))
+      });
+    }, e => console.error('cannot delete file %s:', attachment.name, e));
   },
 
   getCurrentState () {

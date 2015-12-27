@@ -1,15 +1,7 @@
 import {createReactComponent} from 'viter/viter';
-import {POST} from 'helpers/requests';
-import {baseUrl} from 'config';
 import showFileUploadModal from './file-upload-modal';
 
 import Icon from 'components/common/icon';
-
-function uploadFile(noteKey, name, file) {
-  return POST(`${baseUrl}/notes/${noteKey.type}/${noteKey.id}/attachments`, {
-    name, file
-  });
-}
 
 export default createReactComponent({
   displayName: 'FileUploader',
@@ -42,15 +34,6 @@ export default createReactComponent({
   },
 
   selectFile (file) {
-    let {noteKey, onFileUploaded} = this.props;
-    showFileUploadModal(file, function (fileName) {
-      return uploadFile(noteKey, fileName, file).then(function (result) {
-        onFileUploaded(result);
-        return result;
-      }, function (err) {
-        console.error('failed to upload file %s: %s', fileName, err);
-        throw err;
-      })
-    });
+    showFileUploadModal(file, fileName => this.props.uploadFile(fileName, file));
   }
 })
