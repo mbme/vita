@@ -1,5 +1,15 @@
 .FileUploadModalView {
   .editor-view {
+    img.preview {
+      display: block;
+      margin: 1vr auto;
+
+      max-width: 100%;
+      max-height: 480px;
+
+      border: $border;
+    }
+
     .input-row {
       display: flex;
 

@@ -23,8 +23,10 @@ export default function createModalsManager() {
           </div>
         );
         ReactDOM.render(component, container)
+        document.body.classList.add('no-scroll');
       } else {
         ReactDOM.unmountComponentAtNode(container);
+        document.body.classList.remove('no-scroll');
       }
     }
   });

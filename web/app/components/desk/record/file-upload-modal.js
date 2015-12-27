@@ -6,22 +6,37 @@ import Button from 'components/common/button';
 
 const header = buildHeader("File upload");
 
+const imageMimeTypes = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif', 'image/svg', 'image/webp'];
+
+function isImage(file) {
+  return imageMimeTypes.indexOf(file.type) > -1;
+}
+
 const FileUploadModalView = createReactComponent({
   displayName: 'FileUploadModalView',
 
   getInitialState () {
+    let file = this.props.file;
+    let preview = isImage(file) ? window.URL.createObjectURL(file) : false;
     return {
       uploading: false,
-      fileName: this.props.file.name,
+      fileName: file.name,
+      preview,
       errMsg: '',
     }
   },
 
   renderEditor () {
-    let {fileName, errMsg} = this.state;
+    let {fileName, preview, errMsg} = this.state;
     let {file} = this.props;
 
+    let previewImg = false;
+    if (preview) {
+      previewImg = <img className="preview" alt={file.name} src={preview}/>;
+    }
+
     let body = buildBody([
+      previewImg,
       <div className="input-row">
         <input ref="fileName" name="" type="text" defaultValue={fileName}/>
         <span className="mime">{file.type}</span>
