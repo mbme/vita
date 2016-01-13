@@ -1,14 +1,13 @@
 import {createReactComponent} from 'viter/viter';
-import showFileUploadModal from './file-upload-modal';
 
 import Icon from 'components/common/icon';
 
 export default createReactComponent({
-  displayName: 'FileUploader',
+  displayName: 'FilePicker',
 
   render () {
     return (
-      <form className="FileUploader" ref="form" action="" onDrop={this.onDrop}>
+      <form className="FilePicker" ref="form" action="" onDrop={this.onDrop}>
         <Icon type="upload" />
         <span> Drop files here or </span>
         <span className="upload-link" onClick={this.onClickSelectFile}>select them</span>
@@ -24,16 +23,12 @@ export default createReactComponent({
   onDrop (e) {
     let files = e.dataTransfer.files;
     if (files.length) {
-      this.selectFile(files[0]);
+      this.props.onFileSelected(files[0]);
     }
   },
 
   onFileSelected (e) {
-    this.selectFile(e.target.files[0]);
+    this.props.onFileSelected(e.target.files[0]);
     this.refs.form.reset()
-  },
-
-  selectFile (file) {
-    showFileUploadModal(file, fileName => this.props.uploadFile(fileName, file));
   }
 })

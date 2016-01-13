@@ -2,6 +2,8 @@ import _ from 'lodash';
 import {getStore, publishStoreUpdate} from 'viter/viter';
 import {id2key} from 'helpers/utils';
 import {NOTE_TYPES} from 'const';
+import * as Files from 'helpers/files';
+import showFileUploadModal from 'helpers/file-upload-dialog';
 
 function loadNotesList () {
   let NetStore = getStore('net');
@@ -63,58 +65,16 @@ function closeNote (id) {
 
 function closeNoteByNid (nId) {
   let NotesStore = getStore('notes');
-  if (NotesStore.removeNoteByNid(nId)) {
-    console.log('closed note by nId %s', nId);
-
-    publishStoreUpdate('notes');
-  } else {
-    console.error('cannot close note with unknown nId %s', nId);
-  }
-}
-
-function saveNote (id, changedData) {
-  let NetStore = getStore('net');
-  let NotesStore = getStore('notes');
-
-  if (_.isEmpty(changedData)) {
-    console.log('note %s: not changed', id);
-    NotesStore.editNote(id, false);
-    publishStoreUpdate('notes');
-    return;
-  }
-
-  let note = NotesStore.getNote(id);
-  if (!note) {
-    console.error('cannot save unknown note %s', id);
-    return;
-  }
-
-  let data = _.assign(note.getPublicData(), changedData);
-
-  // save-note
-  NetStore.addRequest('note-update', data).then(function (note) {
-    console.log('note %s saved', id);
-
-    if (!NotesStore.updateNote(id, note) || !NotesStore.editNote(id, false)) {
-      console.error('cannot update unknown note %s', id);
-      return;
-    }
-
-    loadNotesList();
-
-    publishStoreUpdate('notes');
-  });
-
-  publishStoreUpdate('net');
+  NotesStore.removeNoteByNid(nId);
+  console.log('closed note by nId %s', nId);
+  publishStoreUpdate('notes');
 }
 
 function editNote (id, edit) {
   let NotesStore = getStore('notes');
-
-  if (NotesStore.editNote(id, edit)) {
-    console.log('edit note %s', id);
-    publishStoreUpdate('notes');
-  }
+  NotesStore.editNote(id, edit);
+  console.log('edit note %s', id);
+  publishStoreUpdate('notes');
 }
 
 function deleteNote(id) {
@@ -147,15 +107,45 @@ function newNote () {
   publishStoreUpdate('notes');
 }
 
-function createNote (nId, newData) {
+export function saveNote (id, changedData) {
+  let NetStore = getStore('net');
+  let NotesStore = getStore('notes');
+
+  let note = NotesStore.getNote(id);
+  if (!note) {
+    console.error('cannot save unknown note %s', id);
+    return Promise.reject();
+  }
+
+  if (_.isEmpty(changedData)) {
+    console.log('note %s: not changed', id);
+    return Promise.resolve(note);
+  }
+
+  let data = _.assign(note.getPublicData(), changedData);
+
+  // save-note
+  let promise = NetStore.addRequest('note-update', data).then(function (note) {
+    console.log('note %s saved', id);
+    NotesStore.updateNote(id, note);
+
+    publishStoreUpdate('notes');
+
+    loadNotesList();
+
+    return NotesStore.getNote(id);
+  });
+
+  publishStoreUpdate('net');
+
+  return promise;
+}
+
+export function createNote (nId, newData) {
   let NotesStore = getStore('notes');
   let NetStore = getStore('net');
 
-  let note = NotesStore.getNoteByNid(nId);
-  if (!note) {
-    console.error('cannot create note with unknown nId %s', nId);
-    return;
-  }
+  let note = NotesStore.getExistingNoteByNid(nId);
 
   let data = {
     type: note.key.type,
@@ -164,26 +154,60 @@ function createNote (nId, newData) {
     categories: newData.categories || ['uncategorized']
   };
 
-  NetStore.addRequest('note-create', data).then(function (note) {
-    if (NotesStore.replaceNote(nId, note)) {
-      console.log('new note %s saved', NotesStore.getIdByNid(nId));
-      publishStoreUpdate('notes');
-    } else {
-      console.error('cannot update unknown note with nId %s', nId);
-    }
+  let promise = NetStore.addRequest('note-create', data).then(function (noteRaw) {
+    let note = NotesStore.replaceNote(nId, noteRaw);
+    console.log('new note %s saved', note);
+
+    publishStoreUpdate('notes');
 
     loadNotesList();
+
+    return note;
   });
 
   publishStoreUpdate('net');
+
+  return promise;
+}
+
+function maybeCreateNote(note) {
+  if (!note.isNew()) {
+    return Promise.resolve(note);
+  }
+
+  return createNote(note.nId, {});
+}
+
+export function attachFile(nId, file) {
+  let NotesStore = getStore('notes');
+
+  showFileUploadModal(file, function (file, fileName) {
+    return new Promise(function (resolve) {
+      let note = NotesStore.getExistingNoteByNid(nId);
+      resolve(maybeCreateNote(note))
+    }).then(note => Files.uploadFile(note.key, fileName, file))
+      .then(function (attachment) {
+        NotesStore.addAttachment(nId, attachment);
+        publishStoreUpdate('notes');
+      });
+  });
+}
+
+export function deleteFile(nId, fileName) {
+  let NotesStore = getStore('notes');
+
+  let note = NotesStore.getExistingNoteByNid(nId);
+
+  Files.deleteFile(note.key, fileName).then(function () {
+    NotesStore.removeAttachment(nId, fileName);
+    publishStoreUpdate('notes');
+  });
 }
 
 export default {
   'app:initialized': loadNotesList,
 
   'note:open': openNotes,
-
-  'note:save': saveNote,
 
   'note:close': closeNote,
   'note:close-by-nId': closeNoteByNid,
@@ -192,6 +216,5 @@ export default {
 
   'note:delete': deleteNote,
 
-  'note:new': newNote,
-  'note:create': createNote
+  'note:new': newNote
 }

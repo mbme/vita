@@ -5,11 +5,17 @@ import {Tab, Tabs} from 'components/common/tabs';
 import Editor from 'components/common/editor';
 import CategoriesEditor from 'components/common/categories-editor';
 import Attachments from './attachments';
-import FileUploader from './file-uploader';
-import * as Files from 'helpers/files';
+import FilePicker from './file-picker';
 
 import Note from 'components/desk/note';
 import Record from 'components/desk/record/record';
+
+import {
+  createNote,
+  saveNote,
+  attachFile,
+  deleteFile
+} from 'actions/notes-actions';
 
 function showCloseConfirmation () {
   return createConfirmationDialog({
@@ -64,7 +70,7 @@ export default createReactComponent({
       <Note id={note.id} className="RecordEditorView"
             shouldScroll={shouldScroll}
             menu={menu}
-            onBeforeClose={showCloseConfirmation} onClose={this.onClose}>
+            onBeforeClose={showCloseConfirmation} onClose={this.close}>
 
         <Tabs onBeforeChange={this.onBeforeTabChange}>
 
@@ -84,7 +90,7 @@ export default createReactComponent({
           </Tab>
 
           <Tab label="Attachments" className="RecordEditorView-attachments">
-            <FileUploader uploadFile={this.uploadFile}/>
+            <FilePicker onFileSelected={this.uploadFile}/>
             <Attachments noteKey={note.key}
                          attachments={note.attachments}
                          deleteAttachment={this.deleteAttachment}/>
@@ -95,24 +101,12 @@ export default createReactComponent({
     )
   },
 
-  uploadFile (fileName, file) {
-    return Files.uploadFile(this.state.note.key, fileName, file).then(resp => {
-      let note = this.state.note;
-
-      this.setState({
-        note: note.set('attachments', note.attachments.add(resp))
-      });
-    });
+  uploadFile (file) {
+    attachFile(this.state.note.nId, file);
   },
 
   deleteAttachment (attachment) {
-    Files.deleteFile(this.state.note.key, attachment.name).then(() => {
-      let note = this.state.note;
-
-      this.setState({
-        note: note.set('attachments', note.attachments.delete(attachment))
-      });
-    }, e => console.error('cannot delete file %s:', attachment.name, e));
+    deleteFile(this.state.note.id, attachment.name);
   },
 
   getCurrentState () {
@@ -125,15 +119,7 @@ export default createReactComponent({
     };
   },
 
-  onBeforeTabChange (newTab, currentTab) {
-    // do not update when switching from preview
-    if (currentTab !== 1) {
-      let note = this.state.note.merge(this.getCurrentState());
-      this.setState({note});
-    }
-  },
-
-  onSave () {
+  getChanged () {
     let note = this.props.note;
 
     let current = this.getCurrentState();
@@ -152,18 +138,37 @@ export default createReactComponent({
       changed.data = current.data;
     }
 
-    if (note.isNew()) {
-      bus.publish('note:create', note.nId, changed);
-    } else {
-      bus.publish('note:save', note.id, changed);
+    return changed;
+  },
+
+  onBeforeTabChange (newTab, currentTab) {
+    // do not update when switching from preview
+    if (currentTab !== 1) {
+      let note = this.state.note.merge(this.getCurrentState());
+      this.setState({note});
     }
+  },
+
+  saveNote () {
+    let note = this.props.note;
+    let changed = this.getChanged();
+
+    if (note.isNew()) {
+      return createNote(note.nId, changed);
+    } else {
+      return saveNote(note.id, changed);
+    }
+  },
+
+  onSave () {
+    this.saveNote().then(this.close);
   },
 
   onUndo () {
     showCloseConfirmation().then(() => bus.publish('note:edit', this.props.note.id, false));
   },
 
-  onClose () {
+  close () {
     let note = this.props.note;
     if (note.isNew()) {
       bus.publish('note:close-by-nId', note.nId);

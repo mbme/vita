@@ -1,8 +1,16 @@
-import {invert} from 'lodash';
+import {curry} from 'lodash';
 import {key2id, byId} from 'helpers/utils';
 import {List} from 'immutable';
 
-import {createNoteRecord, mergeNoteRecord} from './entities';
+import {
+  createNoteRecord,
+  mergeNoteRecord,
+  createAttachment
+} from './entities';
+
+const byNid = curry(function (nId, x) {
+  return x.nId === nId;
+});
 
 export default function createNotesStore () {
   let idsMap = {}; // note.id : note.nId
@@ -21,6 +29,17 @@ export default function createNotesStore () {
   }
 
   let notes = List();
+
+  function getExistingNotePosByNid(nId) {
+    let pos = notes.findIndex(byNid(nId));
+    if (pos === -1) {
+      let errMsg = `cannot find note with nId=${nId}`;
+      console.error(errMsg);
+      throw new Error(errMsg);
+    }
+
+    return pos;
+  }
 
   return {
     get notes () {
@@ -45,10 +64,7 @@ export default function createNotesStore () {
     },
 
     removeNoteByNid (nId) {
-      let pos = notes.findIndex(note => note.nId === nId);
-      if (pos === -1) {
-        return false;
-      }
+      let pos = getExistingNotePosByNid(nId);
 
       notes = notes.delete(pos);
 
@@ -60,7 +76,13 @@ export default function createNotesStore () {
     },
 
     getNoteByNid (nId) {
-      return notes.find(note => note.nId === nId);
+      return notes.find(byNid(nId));
+    },
+
+    getExistingNoteByNid (nId) {
+      let pos = getExistingNotePosByNid(nId);
+
+      return notes.get(pos);
     },
 
     hasNote (id) {
@@ -70,16 +92,14 @@ export default function createNotesStore () {
     updateNote (id, data) {
       let pos  = notes.findIndex(byId(id));
       if (pos === -1) {
-        return false;
+        throw new Error();
       }
 
       notes = notes.update(pos, note => mergeNoteRecord(note, data));
-
-      return true;
     },
 
     editNote (id, edit = true) {
-      return this.updateNote(id, {edit})
+      this.updateNote(id, {edit})
     },
 
     newNote (type) {
@@ -91,21 +111,39 @@ export default function createNotesStore () {
     },
 
     replaceNote (nId, note) {
-      let pos = notes.findIndex(note => note.nId === nId);
-      if (pos === -1) {
-        return false;
-      }
+      let pos = getExistingNotePosByNid(nId);
 
       let id = key2id(note.key);
       registerIdMapping(id, nId);
 
-      notes = notes.set(pos, createNoteRecord({id, nId}, note));
+      let newNote = createNoteRecord({id, nId}, note);
+      notes = notes.set(pos, newNote);
 
-      return true;
+      return newNote;
     },
 
-    getIdByNid (nId) {
-      return invert(idsMap)[nId];
+    addAttachment (nId, attachment) {
+      let pos = getExistingNotePosByNid(nId);
+      let note = notes.get(pos);
+
+      let attachments = note.attachments.add(createAttachment(attachment));
+
+      let newNote = note.set('attachments', attachments);
+
+      notes = notes.set(pos, newNote);
+    },
+
+    removeAttachment (nId, attachmentName) {
+      let pos = getExistingNotePosByNid(nId);
+      let note = notes.get(pos);
+
+      let attachments = note.attachments.filterNot(
+        attachment => attachment.name === attachmentName
+      );
+
+      let newNote = note.set('attachments', attachments);
+
+      notes = notes.set(pos, newNote);
     }
   };
 }
