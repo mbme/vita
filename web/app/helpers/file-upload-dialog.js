@@ -83,6 +83,7 @@ const FileUploadModalView = createReactComponent({
     this.props.uploadFile(this.props.file, fileName).then(() => {
       this.close();
     }).catch((err) => {
+      console.error(err);
       let errMsg = `failed to upload file ${fileName}: ${err}`;
       this.setState({errMsg, uploading: false})
     });

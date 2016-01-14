@@ -52,27 +52,10 @@ export default function createNotesStore () {
       notes = notes.push(createNoteRecord({id, nId}, note));
     },
 
-    removeNote (id) {
-      let pos  = notes.findIndex(byId(id));
-      if (pos === -1) {
-        return false;
-      }
-
-      notes = notes.delete(pos);
-
-      return true;
-    },
-
     removeNoteByNid (nId) {
       let pos = getExistingNotePosByNid(nId);
 
       notes = notes.delete(pos);
-
-      return true;
-    },
-
-    getNote (id) {
-      return notes.find(byId(id));
     },
 
     getNoteByNid (nId) {
@@ -86,20 +69,30 @@ export default function createNotesStore () {
     },
 
     hasNote (id) {
-      return !!this.getNote(id);
+      return !!notes.find(byId(id));
     },
 
-    updateNote (id, data) {
-      let pos  = notes.findIndex(byId(id));
-      if (pos === -1) {
-        throw new Error();
+    updateNote (nId, data) {
+      let pos = getExistingNotePosByNid(nId);
+
+      let other = {};
+
+      if (data.key) {
+        let id = key2id(data.key);
+        registerIdMapping(id, nId);
+        other.id = id;
       }
 
-      notes = notes.update(pos, note => mergeNoteRecord(note, data));
+      let note = notes.get(pos);
+      let newNote = mergeNoteRecord(note, data, other);
+
+      notes = notes.set(pos, newNote);
+
+      return newNote;
     },
 
-    editNote (id, edit = true) {
-      this.updateNote(id, {edit})
+    editNote (nId, edit = true) {
+      return this.updateNote(nId, {edit})
     },
 
     newNote (type) {
@@ -110,23 +103,11 @@ export default function createNotesStore () {
       }));
     },
 
-    replaceNote (nId, note) {
-      let pos = getExistingNotePosByNid(nId);
-
-      let id = key2id(note.key);
-      registerIdMapping(id, nId);
-
-      let newNote = createNoteRecord({id, nId}, note);
-      notes = notes.set(pos, newNote);
-
-      return newNote;
-    },
-
     addAttachment (nId, attachment) {
       let pos = getExistingNotePosByNid(nId);
       let note = notes.get(pos);
 
-      let attachments = note.attachments.add(createAttachment(attachment));
+      let attachments = note.attachments.add(createAttachment(note.key, attachment));
 
       let newNote = note.set('attachments', attachments);
 

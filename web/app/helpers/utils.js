@@ -1,6 +1,5 @@
 import {unique, isFunction, curry} from 'lodash';
 import moment from 'moment';
-import {baseUrl} from 'config';
 
 export function getQueryParam(query, param) {
   let pairs = (query || '').split("&");
@@ -140,7 +139,3 @@ export function formatFileTs(ts) {
 export function stringsComparator(str1, str2) {
   return str1.localeCompare(str2);
 }
-
-export const buildAttachmentUrl = curry(function (key, name) {
-  return `${baseUrl}/notes/${key.type}/${key.id}/attachments/${name}`;
-});

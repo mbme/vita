@@ -1,4 +1,4 @@
-import {createReactComponent, bus} from 'viter/viter';
+import {createReactComponent} from 'viter/viter';
 import {createConfirmationDialog} from 'helpers/dialogs';
 
 import {Tab, Tabs} from 'components/common/tabs';
@@ -14,7 +14,10 @@ import {
   createNote,
   saveNote,
   attachFile,
-  deleteFile
+  deleteFile,
+  closeNote,
+  editNote,
+  deleteNote
 } from 'actions/notes-actions';
 
 function showCloseConfirmation () {
@@ -39,14 +42,12 @@ export default createReactComponent({
   displayName: 'RecordEditorView',
 
   getInitialState () {
-    return {
-      note: this.props.note
-    };
+    let {name, data, categories} = this.props.note;
+    return {name, data, categories};
   },
 
   render () {
-    let {note} = this.state;
-    let {shouldScroll} = this.props;
+    let {shouldScroll, note} = this.props;
 
     let menu = [{
       icon: 'checkmark-round',
@@ -65,6 +66,9 @@ export default createReactComponent({
         handler: this.onDelete
       });
     }
+    console.error(note.isNew());
+
+    let {name, data, categories} = this.state;
 
     return (
       <Note id={note.id} className="RecordEditorView"
@@ -86,13 +90,15 @@ export default createReactComponent({
           </Tab>
 
           <Tab label="Preview" className="RecordEditorView-preview">
-            <Record note={note}/>
+            <Record name={name}
+                    data={data}
+                    categories={categories}
+                    attachments={note.attachments}/>
           </Tab>
 
           <Tab label="Attachments" className="RecordEditorView-attachments">
             <FilePicker onFileSelected={this.uploadFile}/>
-            <Attachments noteKey={note.key}
-                         attachments={note.attachments}
+            <Attachments attachments={note.attachments}
                          deleteAttachment={this.deleteAttachment}/>
           </Tab>
         </Tabs>
@@ -102,11 +108,11 @@ export default createReactComponent({
   },
 
   uploadFile (file) {
-    attachFile(this.state.note.nId, file);
+    attachFile(this.props.note.nId, file);
   },
 
   deleteAttachment (attachment) {
-    deleteFile(this.state.note.id, attachment.name);
+    deleteFile(this.props.note.id, attachment.name);
   },
 
   getCurrentState () {
@@ -119,7 +125,15 @@ export default createReactComponent({
     };
   },
 
-  getChanged () {
+  onBeforeTabChange (newTab, currentTab) {
+    // do not update when switching from preview
+    if (currentTab !== 1) {
+      let {name, data, categories} = this.getCurrentState();
+      this.setState({name, data, categories});
+    }
+  },
+
+  saveNote () {
     let note = this.props.note;
 
     let current = this.getCurrentState();
@@ -138,25 +152,10 @@ export default createReactComponent({
       changed.data = current.data;
     }
 
-    return changed;
-  },
-
-  onBeforeTabChange (newTab, currentTab) {
-    // do not update when switching from preview
-    if (currentTab !== 1) {
-      let note = this.state.note.merge(this.getCurrentState());
-      this.setState({note});
-    }
-  },
-
-  saveNote () {
-    let note = this.props.note;
-    let changed = this.getChanged();
-
     if (note.isNew()) {
       return createNote(note.nId, changed);
     } else {
-      return saveNote(note.id, changed);
+      return saveNote(note.nId, changed);
     }
   },
 
@@ -165,19 +164,14 @@ export default createReactComponent({
   },
 
   onUndo () {
-    showCloseConfirmation().then(() => bus.publish('note:edit', this.props.note.id, false));
+    showCloseConfirmation().then(() => editNote(this.props.note.nId, false));
   },
 
   close () {
-    let note = this.props.note;
-    if (note.isNew()) {
-      bus.publish('note:close-by-nId', note.nId);
-    } else {
-      bus.publish('note:close', note.id);
-    }
+    closeNote(this.props.note.nId)
   },
 
   onDelete () {
-    showDeleteConfirmation().then(() => bus.publish('note:delete', this.props.note.id));
+    showDeleteConfirmation().then(() => deleteNote(this.props.note.nId));
   }
 });

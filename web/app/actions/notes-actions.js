@@ -48,50 +48,39 @@ function openNotes (...ids) {
 
 }
 
-function closeNote (id) {
-  let NotesInfoStore = getStore('notes-info');
+export function closeNote (nId) {
   let NotesStore = getStore('notes');
+  let note = NotesStore.getExistingNoteByNid(nId);
 
-  if (NotesStore.removeNote(id)) {
-    NotesInfoStore.markSelected(id, false);
-
-    console.log('closed note %s', id);
-
-    publishStoreUpdate('notes-info', 'notes');
-  } else {
-    console.error('cannot close note with unknown id %s', id);
+  if (!note.isNew()) {
+    let NotesInfoStore = getStore('notes-info');
+    NotesInfoStore.markSelected(note.id, false);
   }
-}
 
-function closeNoteByNid (nId) {
-  let NotesStore = getStore('notes');
   NotesStore.removeNoteByNid(nId);
+
   console.log('closed note by nId %s', nId);
-  publishStoreUpdate('notes');
+
+  publishStoreUpdate('notes', 'notes-info');
 }
 
-function editNote (id, edit) {
+export function editNote (nId, edit) {
   let NotesStore = getStore('notes');
-  NotesStore.editNote(id, edit);
-  console.log('edit note %s', id);
+  let note = NotesStore.editNote(nId, edit);
+  console.log('edit note %s', note);
   publishStoreUpdate('notes');
 }
 
-function deleteNote(id) {
+export function deleteNote(nId) {
   let NetStore = getStore('net');
   let NotesStore = getStore('notes');
 
-  let note = NotesStore.getNote(id);
+  let note = NotesStore.getExistingNoteByNid(nId);
 
-  if (!note) {
-    console.error('cannot delete unknown note %s', id);
-    return;
-  }
-
-  NetStore.addRequest('note-delete', id2key(id)).then(function () {
-    console.log('note %s deleted', id);
+  NetStore.addRequest('note-delete', id2key(note.id)).then(function () {
+    console.log('note %s deleted', note);
     loadNotesList();
-    closeNote(id);
+    closeNote(nId);
   });
 
   publishStoreUpdate('net');
@@ -107,38 +96,33 @@ function newNote () {
   publishStoreUpdate('notes');
 }
 
-export function saveNote (id, changedData) {
+export function saveNote (nId, changedData) {
   let NetStore = getStore('net');
   let NotesStore = getStore('notes');
 
-  let note = NotesStore.getNote(id);
-  if (!note) {
-    console.error('cannot save unknown note %s', id);
-    return Promise.reject();
-  }
+  let note = NotesStore.getExistingNoteByNid(nId);
 
   if (_.isEmpty(changedData)) {
-    console.log('note %s: not changed', id);
+    console.log('note %s: not changed', note);
     return Promise.resolve(note);
   }
 
-  let data = _.assign(note.getPublicData(), changedData);
+  return new Promise(function (resolve) {
+    let data = _.assign(note.getPublicData(), changedData);
 
-  // save-note
-  let promise = NetStore.addRequest('note-update', data).then(function (note) {
-    console.log('note %s saved', id);
-    NotesStore.updateNote(id, note);
+    resolve(NetStore.addRequest('note-update', data))
+    publishStoreUpdate('net');
+  }).then(function (noteData) {
+
+    let note = NotesStore.updateNote(nId, noteData);
+    console.log('note %s saved', note);
 
     publishStoreUpdate('notes');
 
     loadNotesList();
 
-    return NotesStore.getNote(id);
+    return note;
   });
-
-  publishStoreUpdate('net');
-
-  return promise;
 }
 
 export function createNote (nId, newData) {
@@ -155,8 +139,7 @@ export function createNote (nId, newData) {
   };
 
   let promise = NetStore.addRequest('note-create', data).then(function (noteRaw) {
-    let note = NotesStore.replaceNote(nId, noteRaw);
-    console.log('new note %s saved', note);
+    let note = NotesStore.updateNote(nId, noteRaw);
 
     publishStoreUpdate('notes');
 
@@ -208,13 +191,6 @@ export default {
   'app:initialized': loadNotesList,
 
   'note:open': openNotes,
-
-  'note:close': closeNote,
-  'note:close-by-nId': closeNoteByNid,
-
-  'note:edit': editNote,
-
-  'note:delete': deleteNote,
 
   'note:new': newNote
 }

@@ -1,6 +1,7 @@
-import {pick, defaults, clone} from 'lodash';
+import {pick, defaults, clone, partial} from 'lodash';
 import {Record, Set, Map} from 'immutable';
 import {stringsComparator} from 'helpers/utils';
+import {baseUrl} from 'config';
 
 class NoteRecord extends Record({
   nId: undefined,
@@ -42,13 +43,14 @@ const Attachment = Record({
   mime: undefined,
   type: undefined,
   fileSize: 0,
-  timestamp: 0
+  timestamp: 0,
+  url: ''
 });
 
 export function createNoteRecord(...data) {
   let obj = defaults({}, ...data);
   obj.categories = createCategories(obj.categories || undefined);
-  obj.attachments = createAttachments(obj.attachments || undefined);
+  obj.attachments = createAttachments(obj.key, obj.attachments || undefined);
   return new NoteRecord(obj);
 }
 
@@ -68,7 +70,7 @@ export function createCategories(categories = []) {
   return Set(categories);
 }
 
-export function createAttachment(attachment) {
+export function createAttachment(noteKey, attachment) {
   if (Map.isMap(attachment)) {
     return attachment;
   }
@@ -76,22 +78,23 @@ export function createAttachment(attachment) {
   let {name, mime, type, size, timestamp} = attachment;
   return new Attachment({
     name, mime, type, timestamp,
-    fileSize: size
+    fileSize: size,
+    url: `${baseUrl}/notes/${noteKey.type}/${noteKey.id}/attachments/${name}`
   });
 }
 
-export function createAttachments(attachments = []) {
+export function createAttachments(noteKey, attachments = []) {
   if (Set.isSet(attachments)) {
     return attachments;
   }
 
-  return Set(attachments.map(createAttachment));
+  return Set(attachments.map(partial(createAttachment, noteKey)));
 }
 
-export function mergeNoteRecord(record, data) {
-  return createNoteRecord(data, record.toObject());
+export function mergeNoteRecord(record, ...data) {
+  return createNoteRecord(...(data.reverse()), record.toObject());
 }
 
-export function mergeNoteInfoRecord(record, data) {
-  return createNoteInfoRecord(data, record.toObject());
+export function mergeNoteInfoRecord(record, ...data) {
+  return createNoteInfoRecord(...(data.reverse()), record.toObject());
 }
