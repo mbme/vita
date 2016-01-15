@@ -66,7 +66,6 @@ export default createReactComponent({
         handler: this.onDelete
       });
     }
-    console.error(note.isNew());
 
     let {name, data, categories} = this.state;
 

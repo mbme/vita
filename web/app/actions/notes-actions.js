@@ -5,6 +5,11 @@ import {NOTE_TYPES} from 'const';
 import * as Files from 'helpers/files';
 import showFileUploadModal from 'helpers/file-upload-dialog';
 
+const MinRecord = {
+  name: 'No name',
+  categories: ['uncategorized']
+};
+
 function loadNotesList () {
   let NetStore = getStore('net');
   let NotesInfoStore = getStore('notes-info');
@@ -103,11 +108,18 @@ export function saveNote (nId, changedData) {
   let note = NotesStore.getExistingNoteByNid(nId);
 
   if (_.isEmpty(changedData)) {
-    console.log('note %s: not changed', note);
+    console.log('note %s: not changed', note.id);
     return Promise.resolve(note);
   }
 
   return new Promise(function (resolve) {
+    // FIXME maybe there is better solution
+    if (changedData.categories && changedData.categories.isEmpty()) {
+      changedData.categories = MinRecord.categories;
+    }
+    if (changedData.hasOwnProperty('name') && !changedData.name) {
+      changedData.name = MinRecord.name;
+    }
     let data = _.assign(note.getPublicData(), changedData);
 
     resolve(NetStore.addRequest('note-update', data))
@@ -133,9 +145,9 @@ export function createNote (nId, newData) {
 
   let data = {
     type: note.key.type,
-    name: newData.name || 'No name',
+    name: newData.name || MinRecord.name,
     data: newData.data,
-    categories: newData.categories || ['uncategorized']
+    categories: newData.categories || MinRecord.categories
   };
 
   let promise = NetStore.addRequest('note-create', data).then(function (noteRaw) {
