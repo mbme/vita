@@ -1,5 +1,6 @@
-import {createReactContainer, bus} from 'viter/viter';
+import {createReactContainer} from 'viter/viter';
 import {fuzzySearch} from 'helpers/utils';
+import {newNote} from 'actions/notes-actions';
 
 import SearchItem from './item';
 import SearchInput from './input';
@@ -43,7 +44,7 @@ export default createReactContainer({
         <div className="SearchPanel-header">
           <span className="search-type">{getSearchType(filter)}</span>
           <span className="results-count">{results.size}</span>
-          <Icon className="plus" type="plus" onClick={this.newNote}/>
+          <Icon className="plus" type="plus" onClick={newNote}/>
         </div>
         <SearchInput filter={filter} />
         <ul className="SearchPanel-scroll">
@@ -51,9 +52,5 @@ export default createReactContainer({
         </ul>
       </div>
     )
-  },
-
-  newNote () {
-    bus.publish('note:new');
   }
 })

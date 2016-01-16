@@ -10,11 +10,11 @@ export default createReactComponent({
   displayName: 'Note',
 
   componentWillMount () {
-    bus.subscribe('note:open', this.maybeScrollMeIntoView);
+    bus.subscribe('note:focus', this.maybeScrollMeIntoView);
   },
 
   componentWillUnmount () {
-    bus.unsubscribe('note:open', this.maybeScrollMeIntoView);
+    bus.unsubscribe('note:focus', this.maybeScrollMeIntoView);
   },
 
   componentDidMount () {

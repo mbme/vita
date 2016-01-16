@@ -46,10 +46,15 @@ export default function createNotesStore () {
       return notes;
     },
 
-    addNote (note) {
-      let id = key2id(note.key);
+    addNote (data) {
+      let id = key2id(data.key);
       let nId = getPrivateId(id);
-      notes = notes.push(createNoteRecord({id, nId}, note));
+
+      let note = createNoteRecord({id, nId}, data);
+
+      notes = notes.push(note);
+
+      return note;
     },
 
     removeNoteByNid (nId) {
@@ -68,8 +73,8 @@ export default function createNotesStore () {
       return notes.get(pos);
     },
 
-    hasNote (id) {
-      return !!notes.find(byId(id));
+    getNoteById (id) {
+      return notes.find(byId(id));
     },
 
     updateNote (nId, data) {

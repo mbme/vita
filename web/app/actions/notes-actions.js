@@ -28,29 +28,26 @@ function loadNotesList () {
   publishStoreUpdate('net');
 }
 
-function openNotes (...ids) {
+export function openNote(id) {
   let NetStore = getStore('net');
   let NotesStore = getStore('notes');
   let NotesInfoStore = getStore('notes-info');
 
-  _.remove(ids, ::NotesStore.hasNote);
-
-  if (!ids.length) {
+  // check if already open
+  if (NotesStore.getNoteById(id)) {
     return;
   }
 
-  let requests = ids.map(id => NetStore.addRequest('note-read', id2key(id)));
-  publishStoreUpdate('net');
+  NetStore.addRequest('note-read', id2key(id)).then(function (data) {
+    console.log('open note %s', id);
 
-  Promise.all(requests).then(function (notes) {
-    console.log('open notes %s', ids.join(', '));
-
-    ids.forEach(id => NotesInfoStore.markSelected(id, true));
-    notes.forEach(NotesStore.addNote);
+    NotesStore.addNote(data);
+    NotesInfoStore.markSelected(id, true);
 
     publishStoreUpdate('notes', 'notes-info');
   });
 
+  publishStoreUpdate('net');
 }
 
 export function closeNote (nId) {
@@ -91,7 +88,7 @@ export function deleteNote(nId) {
   publishStoreUpdate('net');
 }
 
-function newNote () {
+export function newNote () {
   let NotesStore = getStore('notes');
 
   NotesStore.newNote(NOTE_TYPES.RECORD);
@@ -200,9 +197,5 @@ export function deleteFile(nId, fileName) {
 }
 
 export default {
-  'app:initialized': loadNotesList,
-
-  'note:open': openNotes,
-
-  'note:new': newNote
+  'app:initialized': loadNotesList
 }

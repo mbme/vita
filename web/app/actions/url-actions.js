@@ -2,6 +2,7 @@ import page from 'page';
 
 import {getQueryParam, parseIdsStr} from 'helpers/utils';
 import {bus, getStore, publishStoreUpdate} from 'viter/viter';
+import {openNote} from 'actions/notes-actions';
 
 export default {
   'app:initialized': function () {
@@ -13,7 +14,7 @@ export default {
     page.start();
 
     // init selected items from url
-    bus.publish('note:open', ...ids);
+    ids.forEach(openNote);
   },
 
   'url:changed': function (page) {
