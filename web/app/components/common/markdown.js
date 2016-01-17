@@ -1,12 +1,14 @@
 import {createReactComponent} from 'viter/viter';
 
 import MarkdownIt from 'markdown-it';
+import MarkdownItFootnote from 'markdown-it-footnote';
 
 const markdownIt = new MarkdownIt('default', {
   html: true,
   linkify: true,
   typographer: true
 });
+markdownIt.use(MarkdownItFootnote);
 
 function isAttachmentUrl(url) {
   return url && url.length > 2 && url[0] === '!' && url[url.length-1] === '!';

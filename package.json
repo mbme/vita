@@ -55,6 +55,7 @@
     "immutable": "*",
     "lodash": "*",
     "markdown-it": "*",
+    "markdown-it-footnote": "*",
     "moment": "*",
     "page": "*",
     "react": "*",
