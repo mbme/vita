@@ -111,7 +111,7 @@ export default createReactComponent({
   },
 
   deleteAttachment (attachment) {
-    deleteFile(this.props.note.id, attachment.name);
+    deleteFile(this.props.note.nId, attachment.name);
   },
 
   getCurrentState () {

@@ -63,10 +63,7 @@ var config = {
       jQuery:          "jquery",
       "window.jQuery": "jquery",
       "root.jQuery":   "jquery",
-      React:           "react",
-
-      // Fetch API polyfill
-      fetch: 'imports?this=>global!exports?global.fetch!whatwg-fetch'
+      React:           "react"
     }),
     // do not load moment locales
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)

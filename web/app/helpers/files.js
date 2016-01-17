@@ -9,5 +9,5 @@ export function uploadFile(key, name, file) {
   return POST(
     `${baseUrl}/notes/${key.type}/${key.id}/attachments`,
     {name, file}
-  );
+  ).then(resp => JSON.parse(resp));
 }

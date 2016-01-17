@@ -1,19 +1,45 @@
 import {forEach} from 'lodash';
 
-function checkStatus(response) {
-  if (response.status >= 200 && response.status < 300) {
-    return response
-  } else {
-    return response.text().then(function (text) {
-      let error = new Error(text)
-      error.response = response
-      throw error
-    })
-  }
+/**
+ * Execute XMLHttpRequest.
+ * @param {string!} requestType HTTP request type
+ * @param {string!} url request url
+ * @param {Blob|String|Document|FormData} [data] request body
+ * @returns {Promise}
+ */
+function xhr(requestType, url, data) {
+  return new Promise(function (resolve, reject) {
+    let xhr = new XMLHttpRequest();
+
+    xhr.onload = function () {
+      if (this.status >= 200 && this.status < 300) {
+        resolve(this.response);
+      } else {
+        reject(new Error(this.responseText));
+      }
+    };
+    xhr.onerror = reject;
+    xhr.onabor = reject;
+
+    xhr.open(requestType, url, true);
+
+    xhr.send(data);
+  });
 }
 
-function toJSON(resp) {
-  return resp.json();
+/**
+ * Convert plain object into FormData object.
+ * @param {object} data plain JS object
+ * @returns {FormData}
+ */
+function toFormData(data) {
+  let formData = new FormData();
+
+  forEach(data, function (val, key) {
+    formData.append(key, val);
+  });
+
+  return formData;
 }
 
 /*
@@ -23,24 +49,9 @@ function toJSON(resp) {
  * @returns {Promise}
  */
 export function POST(url, data) {
-  return fetch(url, {
-    method: 'post',
-    body: toFormData(data)
-  }).then(checkStatus).then(toJSON)
+  return xhr('POST', url, toFormData(data));
 }
 
 export function DELETE(url) {
-  return fetch(url, {
-    method: 'delete'
-  }).then(checkStatus)
-}
-
-export function toFormData(data) {
-  let formData = new FormData();
-
-  forEach(data, function (val, key) {
-    formData.append(key, val);
-  });
-
-  return formData;
+  return xhr('DELETE', url);
 }

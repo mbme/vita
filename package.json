@@ -59,7 +59,6 @@
     "page": "*",
     "react": "*",
     "react-dom": "*",
-    "velocity-animate": "*",
-    "whatwg-fetch": "*"
+    "velocity-animate": "*"
   }
 }
