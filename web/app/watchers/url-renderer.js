@@ -7,7 +7,7 @@ import {match, getQueryParam} from 'helpers/utils';
 function parseIdsStr(idsStr) {
   let matches = match(idsStr, /^\(([a-z0-9, :\/]*)\)$/);
 
-  return _.unique(match(matches[1], /(:[a-z]+\/[0-9]+)/g));
+  return _.uniq(match(matches[1], /(:[a-z]+\/[0-9]+)/g));
 }
 
 export function getIdsFromUrl() {

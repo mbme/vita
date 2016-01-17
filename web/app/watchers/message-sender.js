@@ -1,5 +1,5 @@
 import {createComponent} from 'viter/viter';
-import {contains, pick} from 'lodash';
+import {includes, pick} from 'lodash';
 
 // Message sender
 export default function createMessageSender() {
@@ -29,7 +29,7 @@ export default function createMessageSender() {
       // ids of requests which were removed from 'requests' array
       let newPending = [];
       requests.forEach(request => {
-        if (!contains(pendingRequests, request.id)) {
+        if (!includes(pendingRequests, request.id)) {
           socket.send(JSON.stringify(pick(request, 'id', 'method', 'params')));
         }
         newPending.push(request.id);
