@@ -1,5 +1,11 @@
 ### An h3 header ###
 
+#### Unordered list:
+
+* test 1
+* some other shit
+* and third item for convenience
+
 Now a nested list:
 
  1. First, get these ingredients:

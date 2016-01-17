@@ -1,6 +1,6 @@
 .Markdown {
   ul {
-    list-style: inside none disc;
+    list-style: disc inside none;
   }
 
   img {
