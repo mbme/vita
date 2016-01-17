@@ -1,7 +1,8 @@
 import React from 'react';
 import cx from 'classnames';
-import {bus, createReactComponent} from 'viter/viter';
+import {createReactComponent} from 'viter/viter';
 import {createDeferred} from 'helpers/utils';
+import {openModal, closeModal} from 'actions/app-actions';
 
 import Button from 'components/common/button';
 import Icon from 'components/common/icon';
@@ -28,11 +29,11 @@ export function createModal(type) {
       let modal = React.createElement(
         Modal, {key: id, type, children}
       );
-      bus.publish('modal:open', id, modal);
+      openModal(id, modal);
     },
 
     close () {
-      bus.publish('modal:close', id);
+      closeModal(id);
     }
   }
 };

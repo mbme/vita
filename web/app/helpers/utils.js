@@ -1,4 +1,4 @@
-import {unique, isFunction, curry} from 'lodash';
+import {isFunction, curry} from 'lodash';
 import moment from 'moment';
 
 export function getQueryParam(query, param) {
@@ -16,12 +16,6 @@ export function getQueryParam(query, param) {
 
 export function match(str, regex) {
   return (str || '').match(regex) || [];
-}
-
-export function parseIdsStr(idsStr) {
-  let matches = match(idsStr, /^\(([a-z0-9, :\/]*)\)$/);
-
-  return unique(match(matches[1], /(:[a-z]+\/[0-9]+)/g));
 }
 
 // https://github.com/bevacqua/fuzzysearch

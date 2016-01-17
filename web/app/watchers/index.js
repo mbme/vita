@@ -4,9 +4,9 @@ import createPageManager   from './page-manager';
 import createModalsManager  from './modals-manager';
 import createMessageSender from './message-sender';
 
-export default function createWatchers(pageMapping) {
+export default function createWatchers() {
   return [
-    createPageManager(pageMapping),
+    createPageManager(),
     createModalsManager(),
     createMessageSender(),
     createUrlRenderer(),

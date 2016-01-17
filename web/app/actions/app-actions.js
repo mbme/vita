@@ -12,20 +12,30 @@ export function updateFilter (filter) {
   }
 }
 
-export default {
-  'modal:open': function (id, view) {
-    let AppStore = getStore('app');
+export function openModal (id, view) {
+  let AppStore = getStore('app');
 
-    AppStore.addModal(id, view);
+  AppStore.addModal(id, view);
 
+  publishStoreUpdate('app');
+}
+
+export function closeModal (id) {
+  let AppStore = getStore('app');
+
+  if (AppStore.removeModal(id)) {
     publishStoreUpdate('app');
-  },
-
-  'modal:close': function (id) {
-    let AppStore = getStore('app');
-
-    if (AppStore.removeModal(id)) {
-      publishStoreUpdate('app');
-    }
   }
+}
+
+export function changePage (page) {
+  let AppStore = getStore('app');
+
+  if (AppStore.page === page) {
+    return;
+  }
+
+  AppStore.setPage(page);
+
+  publishStoreUpdate('app');
 }

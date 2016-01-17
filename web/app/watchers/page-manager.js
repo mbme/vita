@@ -2,8 +2,15 @@ import {createComponent} from 'viter/viter';
 
 import ReactDOM from 'react-dom';
 
+import MainPage from 'components/pages/records';
+
+// page === layout
+const PAGES = {
+  'main': MainPage
+};
+
 // Page renderer
-export default function createPageManager (pages) {
+export default function createPageManager () {
   return createComponent({
     stores: ['app'],
 
@@ -16,7 +23,7 @@ export default function createPageManager (pages) {
     },
 
     render (state) {
-      let Page = pages[state];
+      let Page = PAGES[state];
       let container = document.getElementById('container');
 
       if (Page) {

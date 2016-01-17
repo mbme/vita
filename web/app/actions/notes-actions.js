@@ -10,7 +10,7 @@ const MinRecord = {
   categories: ['uncategorized']
 };
 
-function loadNotesList () {
+export function loadNotesList () {
   let NetStore = getStore('net');
   let NotesInfoStore = getStore('notes-info');
   let NotesStore = getStore('notes');
@@ -194,8 +194,4 @@ export function deleteFile(nId, fileName) {
     NotesStore.removeAttachment(nId, fileName);
     publishStoreUpdate('notes');
   });
-}
-
-export default {
-  'app:initialized': loadNotesList
 }

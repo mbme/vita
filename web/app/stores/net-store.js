@@ -29,23 +29,23 @@ export default function createNetStore () {
       return request.deferred.promise;
     },
 
-    removeRequest (id) {
-      let pos = requests.findIndex(byId(id));
-
+    processResponse (msg) {
+      let pos = requests.findIndex(byId(msg.id));
       if (pos === -1) {
-        return false;
+        let errMsg = `unexpected response ${msg}`;
+        console.error(errMsg);
+        throw new Error(errMsg);
+      }
+
+      let request = requests.get(pos);
+
+      if (msg.error) {
+        request.deferred.reject(msg.error);
+      } else {
+        request.deferred.resolve(msg.result);
       }
 
       requests = requests.delete(pos);
-
-      return true;
-    },
-
-    getRequest (id) {
-      let pos = requests.findIndex(byId(id));
-      if (pos > -1) {
-        return requests.get(pos);
-      }
     },
 
     setSocket (newSocket) {

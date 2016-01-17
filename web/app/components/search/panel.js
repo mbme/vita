@@ -1,6 +1,6 @@
 import {createReactContainer} from 'viter/viter';
 import {fuzzySearch} from 'helpers/utils';
-import {newNote} from 'actions/notes-actions';
+import {newNote, loadNotesList} from 'actions/notes-actions';
 
 import SearchItem from './item';
 import SearchInput from './input';
@@ -33,6 +33,10 @@ export default createReactContainer({
       infos: NotesInfoStore.infos,
       filter: AppStore.searchFilter
     };
+  },
+
+  componentWillMount () {
+    loadNotesList();
   },
 
   render () {

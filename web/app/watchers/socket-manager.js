@@ -1,5 +1,6 @@
-import {bus, createComponent} from 'viter/viter';
+import {createComponent} from 'viter/viter';
 import {basePath} from 'config';
+import {useSocket} from 'actions/socket-actions';
 
 // WebSocket connection manager
 export default function createSocketManager () {
@@ -20,12 +21,15 @@ export default function createSocketManager () {
       isConnecting = true;
 
       let socket = new WebSocket(`ws://${basePath}/ws`);
-      socket.onopen = () => {
+      socket.onopen = function () {
         isConnecting = false;
-        bus.publish('socket:connected', socket);
+        console.log('socket connected');
+        useSocket(socket);
       };
-      socket.onclose = (e) => bus.publish('socket:disconnected', e);
-      socket.onmessage = (evt) => bus.publish('socket:message', JSON.parse(evt.data));
+      socket.onclose = function (e) {
+        console.error('socket disconnected', e);
+        useSocket(null);
+      };
     }
   })
 }

@@ -1,41 +1,22 @@
 import { getStore, publishStoreUpdate } from 'viter/viter';
 
-export default {
-  'socket:connected': function (socket) {
-    console.log('socket connected');
+function handleSocketMessage (msg) {
+  let NetStore = getStore('net');
 
-    let NetStore = getStore('net');
-    NetStore.setSocket(socket);
+  NetStore.processResponse(msg);
 
-    publishStoreUpdate('net');
-  },
+  publishStoreUpdate('net');
+}
 
-  'socket:disconnected': function (e) {
-    console.error('socket disconnected', e);
+export function useSocket (socket) {
+  let NetStore = getStore('net');
+  NetStore.setSocket(socket);
 
-    let NetStore = getStore('net');
-    NetStore.setSocket(null);
-
-    publishStoreUpdate('net');
-  },
-
-  'socket:message': function (msg) {
-    let NetStore = getStore('net');
-
-    let request = NetStore.getRequest(msg.id);
-    if (!request) {
-      console.error('unexpected message', msg);
-      return;
+  if (socket) {
+    socket.onmessage = function (e) {
+      handleSocketMessage(JSON.parse(e.data));
     }
-
-    if (msg.error) {
-      request.deferred.reject(msg.error);
-    } else {
-      request.deferred.resolve(msg.result);
-    }
-
-    NetStore.removeRequest(msg.id);
-
-    publishStoreUpdate('net');
   }
+
+  publishStoreUpdate('net');
 }
