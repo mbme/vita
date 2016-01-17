@@ -159,7 +159,7 @@ export default createReactComponent({
   },
 
   onSave () {
-    this.saveNote().then(this.close);
+    this.saveNote().then(() => editNote(this.props.note.nId, false));
   },
 
   onUndo () {
