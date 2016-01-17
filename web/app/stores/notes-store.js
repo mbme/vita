@@ -20,9 +20,13 @@ export default function createNotesStore () {
     idsMap[id] = nId;
   }
 
-  function getPrivateId (id) {
+  function nextNid() {
+    return _id += 1;
+  }
+
+  function getOrCreateNid (id) {
     if (!idsMap.hasOwnProperty(id)) {
-      registerIdMapping(id, _id += 1);
+      registerIdMapping(id, nextNid());
     }
 
     return idsMap[id];
@@ -30,7 +34,7 @@ export default function createNotesStore () {
 
   let notes = List();
 
-  function getExistingNotePosByNid(nId) {
+  function getExistingNotePos(nId) {
     let pos = notes.findIndex(byNid(nId));
     if (pos === -1) {
       let errMsg = `cannot find note with nId=${nId}`;
@@ -48,7 +52,7 @@ export default function createNotesStore () {
 
     addNote (data) {
       let id = key2id(data.key);
-      let nId = getPrivateId(id);
+      let nId = getOrCreateNid(id);
 
       let note = createNoteRecord({id, nId}, data);
 
@@ -57,18 +61,14 @@ export default function createNotesStore () {
       return note;
     },
 
-    removeNoteByNid (nId) {
-      let pos = getExistingNotePosByNid(nId);
+    removeNote (nId) {
+      let pos = getExistingNotePos(nId);
 
       notes = notes.delete(pos);
     },
 
-    getNoteByNid (nId) {
-      return notes.find(byNid(nId));
-    },
-
-    getExistingNoteByNid (nId) {
-      let pos = getExistingNotePosByNid(nId);
+    getExistingNote (nId) {
+      let pos = getExistingNotePos(nId);
 
       return notes.get(pos);
     },
@@ -78,7 +78,7 @@ export default function createNotesStore () {
     },
 
     updateNote (nId, data) {
-      let pos = getExistingNotePosByNid(nId);
+      let pos = getExistingNotePos(nId);
 
       let other = {};
 
@@ -102,14 +102,14 @@ export default function createNotesStore () {
 
     newNote (type) {
       notes = notes.push(createNoteRecord({
-        nId: _id += 1,
+        nId: nextNid(),
         key: {type},
         edit: true
       }));
     },
 
     addAttachment (nId, attachment) {
-      let pos = getExistingNotePosByNid(nId);
+      let pos = getExistingNotePos(nId);
       let note = notes.get(pos);
 
       let attachments = note.attachments.add(createAttachment(note.key, attachment));
@@ -120,7 +120,7 @@ export default function createNotesStore () {
     },
 
     removeAttachment (nId, attachmentName) {
-      let pos = getExistingNotePosByNid(nId);
+      let pos = getExistingNotePos(nId);
       let note = notes.get(pos);
 
       let attachments = note.attachments.filterNot(

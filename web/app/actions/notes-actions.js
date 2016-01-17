@@ -52,14 +52,14 @@ export function openNote(id) {
 
 export function closeNote (nId) {
   let NotesStore = getStore('notes');
-  let note = NotesStore.getExistingNoteByNid(nId);
+  let note = NotesStore.getExistingNote(nId);
 
   if (!note.isNew()) {
     let NotesInfoStore = getStore('notes-info');
     NotesInfoStore.markSelected(note.id, false);
   }
 
-  NotesStore.removeNoteByNid(nId);
+  NotesStore.removeNote(nId);
 
   console.log('closed note by nId %s', nId);
 
@@ -77,7 +77,7 @@ export function deleteNote(nId) {
   let NetStore = getStore('net');
   let NotesStore = getStore('notes');
 
-  let note = NotesStore.getExistingNoteByNid(nId);
+  let note = NotesStore.getExistingNote(nId);
 
   NetStore.addRequest('note-delete', id2key(note.id)).then(function () {
     console.log('note %s deleted', note);
@@ -102,7 +102,7 @@ export function saveNote (nId, changedData) {
   let NetStore = getStore('net');
   let NotesStore = getStore('notes');
 
-  let note = NotesStore.getExistingNoteByNid(nId);
+  let note = NotesStore.getExistingNote(nId);
 
   if (_.isEmpty(changedData)) {
     console.log('note %s: not changed', note.id);
@@ -138,7 +138,7 @@ export function createNote (nId, newData) {
   let NotesStore = getStore('notes');
   let NetStore = getStore('net');
 
-  let note = NotesStore.getExistingNoteByNid(nId);
+  let note = NotesStore.getExistingNote(nId);
 
   let data = {
     type: note.key.type,
@@ -175,7 +175,7 @@ export function attachFile(nId, file) {
 
   showFileUploadModal(file, function (file, fileName) {
     return new Promise(function (resolve) {
-      let note = NotesStore.getExistingNoteByNid(nId);
+      let note = NotesStore.getExistingNote(nId);
       resolve(maybeCreateNote(note))
     }).then(note => Files.uploadFile(note.key, fileName, file))
       .then(function (attachment) {
@@ -188,7 +188,7 @@ export function attachFile(nId, file) {
 export function deleteFile(nId, fileName) {
   let NotesStore = getStore('notes');
 
-  let note = NotesStore.getExistingNoteByNid(nId);
+  let note = NotesStore.getExistingNote(nId);
 
   Files.deleteFile(note.key, fileName).then(function () {
     NotesStore.removeAttachment(nId, fileName);
