@@ -24,7 +24,7 @@ generate-resources:
 bundle-resources:
 	go-bindata -nomemcopy -pkg "handlers" -prefix "$(TARGET)" -o $(GOSRC)/handlers/static-data.go $(TARGET)/...
 
-release: check-web clean generate-resources bundle-resources build
+build-web: check-web clean generate-resources bundle-resources
 
 
 # for development
