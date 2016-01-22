@@ -13,9 +13,9 @@ export function useSocket (socket) {
   NetStore.setSocket(socket);
 
   if (socket) {
-    socket.onmessage = function (e) {
+    socket.addEventListener('message', function (e) {
       handleSocketMessage(JSON.parse(e.data));
-    }
+    });
   }
 
   publishStoreUpdate('net');

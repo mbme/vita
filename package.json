@@ -25,6 +25,7 @@
     "eslint": "*",
     "eslint-plugin-react": "*",
     "babel-eslint": "*",
+    "eslint-config-airbnb": "*",
 
     "webpack": "*",
     "webpack-dev-server": "*",

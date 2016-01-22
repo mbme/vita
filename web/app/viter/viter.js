@@ -7,43 +7,43 @@ export const bus = new EventBus();
 
 const STORES = {};
 
-export function getStore(name) {
+export function getStore (name) {
   let store = STORES[name];
 
   if (store) {
     return store;
-  } else {
-    throw `getter: unknown store ${name}`;
   }
+
+  throw new Error(`getter: unknown store ${name}`);
 }
 
-function getStores(...names) {
+function getStores (...names) {
   return names.map(getStore);
 }
 
-export function setStore(name, store) {
+export function setStore (name, store) {
   STORES[name] = store;
 }
 
 export function setStores (mappings) {
-  _.forEach(mappings, (store, name) => setStore(name, store))
+  _.forEach(mappings, (store, name) => setStore(name, store));
 }
 
-function isRegisteredStore(name) {
+function isRegisteredStore (name) {
   return STORES.hasOwnProperty(name);
 }
 
-export function publishStoreUpdate(...stores) {
+export function publishStoreUpdate (...stores) {
   stores.forEach(function (store) {
     if (!isRegisteredStore(store)) {
-      throw `publisher: unknown store ${store}`;
+      throw new Error(`publisher: unknown store ${store}`);
     }
   });
   bus.publish('!stores-update', ...stores);
 }
 
-//@see https://github.com/jurassix/react-immutable-render-mixin
-function shallowEqual(objA, objB) {
+// @see https://github.com/jurassix/react-immutable-render-mixin
+function shallowEqual (objA, objB) {
   if (objA === objB) {
     return true;
   }
@@ -62,7 +62,7 @@ function shallowEqual(objA, objB) {
 
   // Test for A's keys different from B.
   let bHasOwnProperty = Object.prototype.hasOwnProperty.bind(objB);
-  for (let i = 0; i < keysA.length; i+=1) {
+  for (let i = 0; i < keysA.length; i += 1) {
     if (!bHasOwnProperty(keysA[i]) || !Immutable.is(objA[keysA[i]], objB[keysA[i]])) {
       return false;
     }
@@ -71,7 +71,7 @@ function shallowEqual(objA, objB) {
   return true;
 }
 
-function notShallowEqual(...args) {
+function notShallowEqual (...args) {
   return !shallowEqual(...args);
 }
 
@@ -82,35 +82,39 @@ export function createReactComponent (comp) {
     config = {
       displayName: comp.name,
 
-      shouldComponentUpdate: function (nextProps) {
+      shouldComponentUpdate (nextProps) {
         return !shallowEqual(this.props, nextProps);
       },
 
-      render: function () {
+      render () {
         return comp(this.props);
       }
-    }
+    };
   } else {
     config = comp;
   }
 
-  return React.createClass(config)
+  return React.createClass(config);
 }
 
 export function createReactContainer (comp) {
   if (!comp.getState) {
-    throw `component ${comp.displayName}: missing getState`;
+    throw new Error(`component ${comp.displayName}: missing getState`);
   }
 
   let config = {
     componentWillMount (...args) {
       bus.subscribe('!stores-update', this.onStoresUpdate);
-      comp.componentWillMount && comp.componentWillMount.apply(this, args)
+      if (comp.componentWillMount) {
+        comp.componentWillMount.apply(this, args);
+      }
     },
 
     componentWillUnmount (...args) {
       bus.unsubscribe('!stores-update', this.onStoresUpdate);
-      comp.componentWillUnmount && comp.componentWillUnmount.apply(this, args)
+      if (comp.componentWillUnmount) {
+        comp.componentWillUnmount.apply(this, args);
+      }
     },
 
     getState () {
@@ -137,7 +141,7 @@ export function createReactContainer (comp) {
   }));
 }
 
-export function createComponent(config) {
+export function createComponent (config) {
   let state = null;
 
   const shouldUpdate = config.shouldComponentUpdate || notShallowEqual;

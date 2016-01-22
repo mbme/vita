@@ -1,14 +1,16 @@
-import {createReactComponent} from 'viter/viter';
-import {formatBytes} from 'helpers/utils';
-import {createModal, buildHeader, buildButtons, buildBody} from 'helpers/dialogs';
+import { createReactComponent } from 'viter/viter';
+import { formatBytes } from 'helpers/utils';
+import { createModal, buildHeader, buildButtons, buildBody } from 'helpers/dialogs';
 
 import Button from 'components/common/button';
 
-const header = buildHeader("File upload");
+const header = buildHeader('File upload');
 
-const imageMimeTypes = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif', 'image/svg', 'image/webp'];
+const imageMimeTypes = [
+  'image/jpg', 'image/jpeg', 'image/png', 'image/gif', 'image/svg', 'image/webp'
+];
 
-function isImage(file) {
+function isImage (file) {
   return imageMimeTypes.indexOf(file.type) > -1;
 }
 
@@ -23,12 +25,12 @@ const FileUploadModalView = createReactComponent({
       fileName: file.name,
       preview,
       errMsg: '',
-    }
+    };
   },
 
   renderEditor () {
-    let {fileName, preview, errMsg} = this.state;
-    let {file} = this.props;
+    let { fileName, preview, errMsg } = this.state;
+    let { file } = this.props;
 
     let previewImg = false;
     if (preview) {
@@ -50,22 +52,22 @@ const FileUploadModalView = createReactComponent({
       <Button label="Upload" type="primary" onClick={this.onClickUpload}/>
     ]);
 
-    return {body, buttons};
+    return { body, buttons };
   },
 
   renderUpload () {
-    let {fileName} = this.state;
-    let {file} = this.props;
+    let { fileName } = this.state;
+    let { file } = this.props;
 
     let body = buildBody([
       `UPLOADING FILE ${fileName} (${formatBytes(file.size)})`
     ], 'upload-view');
 
-    return {body, buttons: false};
+    return { body, buttons: false };
   },
 
   render () {
-    let {body, buttons} = this.state.uploading ? this.renderUpload() : this.renderEditor();
+    let { body, buttons } = this.state.uploading ? this.renderUpload() : this.renderEditor();
     return (
       <div className="FileUploadModalView">
         {header}
@@ -78,14 +80,12 @@ const FileUploadModalView = createReactComponent({
   onClickUpload () {
     let fileName = this.refs.fileName.value;
 
-    this.setState({errMsg: '', uploading: true, fileName});
+    this.setState({ errMsg: '', uploading: true, fileName });
 
-    this.props.uploadFile(this.props.file, fileName).then(() => {
-      this.close();
-    }).catch((err) => {
+    this.props.uploadFile(fileName).then(() => this.close()).catch((err) => {
       console.error(err);
       let errMsg = `failed to upload file ${fileName}: ${err}`;
-      this.setState({errMsg, uploading: false})
+      this.setState({ errMsg, uploading: false });
     });
   },
 

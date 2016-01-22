@@ -1,12 +1,12 @@
-import {partial} from 'lodash';
-import {createReactComponent} from 'viter/viter';
+import { partial } from 'lodash';
+import { createReactComponent } from 'viter/viter';
 
-import {editNote, closeNote} from 'actions/notes-actions';
+import { editNote, closeNote } from 'actions/notes-actions';
 
 import Note from 'components/desk/note';
 import Record from './record';
 
-export default createReactComponent(function RecordView ({note, shouldScroll}) {
+export default createReactComponent(function RecordView ({ note, shouldScroll }) {
   let menu = [{
     icon: 'compose',
     handler: partial(editNote, note.nId, true)
@@ -22,5 +22,5 @@ export default createReactComponent(function RecordView ({note, shouldScroll}) {
               data={note.data}
               attachments={note.attachments} />
     </Note>
-  )
-})
+  );
+});

@@ -1,4 +1,4 @@
-import {createReactComponent} from 'viter/viter';
+import { createReactComponent } from 'viter/viter';
 
 import MarkdownIt from 'markdown-it';
 import MarkdownItFootnote from 'markdown-it-footnote';
@@ -10,22 +10,22 @@ const markdownIt = new MarkdownIt('default', {
 });
 markdownIt.use(MarkdownItFootnote);
 
-function isAttachmentUrl(url) {
-  return url && url.length > 2 && url[0] === '!' && url[url.length-1] === '!';
+function isAttachmentUrl (url) {
+  return url && url.length > 2 && url[0] === '!' && url[url.length - 1] === '!';
 }
 
-function preprocessUrl(url, attachments) {
+function preprocessUrl (url, attachments) {
   if (!isAttachmentUrl(url)) {
     return url;
   }
 
   let addr = url.substring(1, url.length - 1);
-  let attachment = attachments.find(attachment => attachment.name === addr);
+  let attachment = attachments.find(item => item.name === addr);
   if (attachment) {
     return attachment.url;
-  } else {
-    return url;
   }
+
+  return url;
 }
 
 let defaultImageRender = markdownIt.renderer.rules.image;
@@ -39,9 +39,12 @@ markdownIt.renderer.rules.image = function (tokens, idx, options, env, self) {
 };
 
 // Remember old link renderer, if overriden, or proxy to default renderer
-let defaultLinkRender = markdownIt.renderer.rules.link_open || function(tokens, idx, options, env, self) {
-  return self.renderToken(tokens, idx, options);
-};
+let defaultLinkRender = markdownIt.renderer.rules.link_open;
+if (!defaultLinkRender) {
+  defaultLinkRender = function (tokens, idx, options, env, self) {
+    return self.renderToken(tokens, idx, options);
+  };
+}
 
 markdownIt.renderer.rules.link_open = function (tokens, idx, options, env, self) {
   let token = tokens[idx];
@@ -52,7 +55,7 @@ markdownIt.renderer.rules.link_open = function (tokens, idx, options, env, self)
   return defaultLinkRender(tokens, idx, options, env, self);
 };
 
-export default createReactComponent(function Markdown ({text, attachments}) {
-  let data = markdownIt.render(text, {attachments});
-  return <div className="Markdown" dangerouslySetInnerHTML={{__html: data}}/>
+export default createReactComponent(function Markdown ({ text, attachments }) {
+  let data = markdownIt.render(text, { attachments });
+  return <div className="Markdown" dangerouslySetInnerHTML={{ __html: data }}/>;
 });

@@ -1,6 +1,6 @@
-import {createComponent} from 'viter/viter';
-import {basePath} from 'config';
-import {useSocket} from 'actions/socket-actions';
+import { createComponent } from 'viter/viter';
+import { basePath } from 'config';
+import { useSocket } from 'actions/socket-actions';
 
 // WebSocket connection manager
 export default function createSocketManager () {
@@ -31,5 +31,5 @@ export default function createSocketManager () {
         useSocket(null);
       };
     }
-  })
+  });
 }

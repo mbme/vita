@@ -1,5 +1,6 @@
-import {createDeferred, byId} from 'helpers/utils';
-import {List} from 'immutable';
+/* eslint new-cap:[2, {"capIsNewExceptions": ["List"]}] */
+import { createDeferred, byId } from 'helpers/utils';
+import { List } from 'immutable';
 
 export default function createNetStore () {
   let reqId = 0;

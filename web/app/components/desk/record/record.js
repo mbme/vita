@@ -1,8 +1,8 @@
-import {createReactComponent} from 'viter/viter';
+import { createReactComponent } from 'viter/viter';
 import Markdown from 'components/common/markdown';
 import Category from 'components/common/category';
 
-export default createReactComponent(function Record({name, categories, data, attachments}) {
+export default createReactComponent(function Record ({ name, categories, data, attachments }) {
   return (
     <div className="Record">
       <h1 className="name">{name}</h1>
@@ -11,5 +11,5 @@ export default createReactComponent(function Record({name, categories, data, att
       </span>
       <Markdown text={data} attachments={attachments}/>
     </div>
-  )
+  );
 });

@@ -1,9 +1,9 @@
 import ReactDOM from 'react-dom';
 
-import {createComponent} from 'viter/viter';
+import { createComponent } from 'viter/viter';
 
 // Modals renderer
-export default function createModalsManager() {
+export default function createModalsManager () {
   return createComponent({
     stores: ['app'],
 
@@ -22,7 +22,7 @@ export default function createModalsManager() {
             {modal.view}
           </div>
         );
-        ReactDOM.render(component, container)
+        ReactDOM.render(component, container);
         document.body.classList.add('no-scroll');
       } else {
         ReactDOM.unmountComponentAtNode(container);

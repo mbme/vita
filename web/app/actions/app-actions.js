@@ -1,4 +1,4 @@
-import {getStore, publishStoreUpdate} from 'viter/viter';
+import { getStore, publishStoreUpdate } from 'viter/viter';
 
 export function updateFilter (filter) {
   let AppStore = getStore('app');

@@ -1,6 +1,7 @@
-import {curry} from 'lodash';
-import {key2id, byId} from 'helpers/utils';
-import {List} from 'immutable';
+/* eslint new-cap:[2, {"capIsNewExceptions": ["List"]}] */
+import { curry } from 'lodash';
+import { key2id, byId } from 'helpers/utils';
+import { List } from 'immutable';
 
 import {
   createNoteRecord,
@@ -16,12 +17,13 @@ export default function createNotesStore () {
   let idsMap = {}; // note.id : note.nId
   let _id = 0;
 
-  function registerIdMapping(id, nId) {
+  function registerIdMapping (id, nId) {
     idsMap[id] = nId;
   }
 
-  function nextNid() {
-    return _id += 1;
+  function nextNid () {
+    _id += 1;
+    return _id;
   }
 
   function getOrCreateNid (id) {
@@ -34,7 +36,7 @@ export default function createNotesStore () {
 
   let notes = List();
 
-  function getExistingNotePos(nId) {
+  function getExistingNotePos (nId) {
     let pos = notes.findIndex(byNid(nId));
     if (pos === -1) {
       let errMsg = `cannot find note with nId=${nId}`;
@@ -54,7 +56,7 @@ export default function createNotesStore () {
       let id = key2id(data.key);
       let nId = getOrCreateNid(id);
 
-      let note = createNoteRecord({id, nId}, data);
+      let note = createNoteRecord({ id, nId }, data);
 
       notes = notes.push(note);
 
@@ -97,13 +99,13 @@ export default function createNotesStore () {
     },
 
     editNote (nId, edit = true) {
-      return this.updateNote(nId, {edit})
+      return this.updateNote(nId, { edit });
     },
 
     newNote (type) {
       notes = notes.push(createNoteRecord({
         nId: nextNid(),
-        key: {type},
+        key: { type },
         edit: true
       }));
     },

@@ -1,8 +1,8 @@
-import {createComponent} from 'viter/viter';
-import {includes, pick} from 'lodash';
+import { createComponent } from 'viter/viter';
+import { includes, pick } from 'lodash';
 
 // Message sender
-export default function createMessageSender() {
+export default function createMessageSender () {
   let pendingRequests = [];
 
   return createComponent({
@@ -19,7 +19,7 @@ export default function createMessageSender() {
       return !newState.requests.isEmpty();
     },
 
-    render ({socket, requests}) {
+    render ({ socket, requests }) {
       if (!socket) {
         pendingRequests = [];
         return;
@@ -38,4 +38,4 @@ export default function createMessageSender() {
       pendingRequests = newPending;
     }
   });
-};
+}

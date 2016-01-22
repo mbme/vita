@@ -1,7 +1,7 @@
 import _ from 'lodash';
-import {getStore, publishStoreUpdate} from 'viter/viter';
-import {id2key} from 'helpers/utils';
-import {NOTE_TYPES} from 'const';
+import { getStore, publishStoreUpdate } from 'viter/viter';
+import { id2key } from 'helpers/utils';
+import { NOTE_TYPES } from 'const';
 import * as Files from 'helpers/files';
 import showFileUploadModal from 'helpers/file-upload-dialog';
 
@@ -28,7 +28,7 @@ export function loadNotesList () {
   publishStoreUpdate('net');
 }
 
-export function openNote(id) {
+export function openNote (id) {
   let NetStore = getStore('net');
   let NotesStore = getStore('notes');
   let NotesInfoStore = getStore('notes-info');
@@ -73,7 +73,7 @@ export function editNote (nId, edit) {
   publishStoreUpdate('notes');
 }
 
-export function deleteNote(nId) {
+export function deleteNote (nId) {
   let NetStore = getStore('net');
   let NotesStore = getStore('notes');
 
@@ -119,18 +119,17 @@ export function saveNote (nId, changedData) {
     }
     let data = _.assign(note.getPublicData(), changedData);
 
-    resolve(NetStore.addRequest('note-update', data))
+    resolve(NetStore.addRequest('note-update', data));
     publishStoreUpdate('net');
   }).then(function (noteData) {
-
-    let note = NotesStore.updateNote(nId, noteData);
-    console.log('note %s saved', note);
+    let updatedNote = NotesStore.updateNote(nId, noteData);
+    console.log('note %s saved', updatedNote);
 
     publishStoreUpdate('notes');
 
     loadNotesList();
 
-    return note;
+    return updatedNote;
   });
 }
 
@@ -138,10 +137,10 @@ export function createNote (nId, newData) {
   let NotesStore = getStore('notes');
   let NetStore = getStore('net');
 
-  let note = NotesStore.getExistingNote(nId);
+  let { key } = NotesStore.getExistingNote(nId);
 
   let data = {
-    type: note.key.type,
+    type: key.type,
     name: newData.name || MinRecord.name,
     data: newData.data,
     categories: newData.categories || MinRecord.categories
@@ -162,7 +161,7 @@ export function createNote (nId, newData) {
   return promise;
 }
 
-function maybeCreateNote(note) {
+function maybeCreateNote (note) {
   if (!note.isNew()) {
     return Promise.resolve(note);
   }
@@ -170,13 +169,13 @@ function maybeCreateNote(note) {
   return createNote(note.nId, {});
 }
 
-export function attachFile(nId, file) {
+export function attachFile (nId, file) {
   let NotesStore = getStore('notes');
 
-  showFileUploadModal(file, function (file, fileName) {
+  showFileUploadModal(file, function (fileName) {
     return new Promise(function (resolve) {
       let note = NotesStore.getExistingNote(nId);
-      resolve(maybeCreateNote(note))
+      resolve(maybeCreateNote(note));
     }).then(note => Files.uploadFile(note.key, fileName, file))
       .then(function (attachment) {
         NotesStore.addAttachment(nId, attachment);
@@ -185,7 +184,7 @@ export function attachFile(nId, file) {
   });
 }
 
-export function deleteFile(nId, fileName) {
+export function deleteFile (nId, fileName) {
   let NotesStore = getStore('notes');
 
   let note = NotesStore.getExistingNote(nId);

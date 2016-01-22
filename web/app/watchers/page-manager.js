@@ -1,4 +1,4 @@
-import {createComponent} from 'viter/viter';
+import { createComponent } from 'viter/viter';
 
 import ReactDOM from 'react-dom';
 

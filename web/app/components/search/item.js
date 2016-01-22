@@ -1,5 +1,5 @@
-import {createReactComponent, bus} from 'viter/viter';
-import {openNote} from 'actions/notes-actions';
+import { createReactComponent, bus } from 'viter/viter';
+import { openNote } from 'actions/notes-actions';
 import cx from 'classnames';
 
 import Category from 'components/common/category';
@@ -10,15 +10,15 @@ export default createReactComponent({
 
   render () {
     let note = this.props.note;
-    let {selected, name, categories, timestamp} = note;
+    let { selected, name, categories, timestamp } = note;
     return (
-      <li className={cx("SearchItem", {'is-selected': selected})} onClick={this.onClick}>
+      <li className={cx('SearchItem', { 'is-selected': selected })} onClick={this.onClick}>
         <span className="name">{name}</span>
         <TimeAgo timestamp={timestamp}/>
         &nbsp;|&nbsp;
         {categories.map(cat => <Category key={cat} name={cat} />)}
       </li>
-    )
+    );
   },
 
   onClick () {
@@ -29,4 +29,4 @@ export default createReactComponent({
       openNote(note.id);
     }
   }
-})
+});

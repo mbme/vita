@@ -1,4 +1,4 @@
-import {forEach} from 'lodash';
+import { forEach } from 'lodash';
 
 /**
  * Execute XMLHttpRequest.
@@ -7,23 +7,23 @@ import {forEach} from 'lodash';
  * @param {Blob|String|Document|FormData} [data] request body
  * @returns {Promise}
  */
-function xhr(requestType, url, data) {
+function xhr (requestType, url, data) {
   return new Promise(function (resolve, reject) {
-    let xhr = new XMLHttpRequest();
+    let request = new XMLHttpRequest();
 
-    xhr.onload = function () {
+    request.onload = function () {
       if (this.status >= 200 && this.status < 300) {
         resolve(this.response);
       } else {
         reject(new Error(this.responseText));
       }
     };
-    xhr.onerror = reject;
-    xhr.onabor = reject;
+    request.onerror = reject;
+    request.onabor = reject;
 
-    xhr.open(requestType, url, true);
+    request.open(requestType, url, true);
 
-    xhr.send(data);
+    request.send(data);
   });
 }
 
@@ -32,7 +32,7 @@ function xhr(requestType, url, data) {
  * @param {object} data plain JS object
  * @returns {FormData}
  */
-function toFormData(data) {
+function toFormData (data) {
   let formData = new FormData();
 
   forEach(data, function (val, key) {
@@ -42,16 +42,21 @@ function toFormData(data) {
   return formData;
 }
 
-/*
- * Do POST request
+/**
+ * Do POST HTTP request
  * @param {string} url request address
  * @param {Object} data key-value dictionary
  * @returns {Promise}
  */
-export function POST(url, data) {
+export function httpPost (url, data) {
   return xhr('POST', url, toFormData(data));
 }
 
-export function DELETE(url) {
+/**
+ * Do DELETE HTTP request
+ * @param {string} url request address
+ * @returns {Promise}
+ */
+export function httpDelete (url) {
   return xhr('DELETE', url);
 }

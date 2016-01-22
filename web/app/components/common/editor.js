@@ -1,4 +1,4 @@
-import {createReactComponent} from 'viter/viter';
+import { createReactComponent } from 'viter/viter';
 
 import CodeMirror from 'codemirror';
 import 'codemirror/lib/codemirror.css';
@@ -38,11 +38,14 @@ export default createReactComponent({
   },
 
   render () {
-    let {defaultValue, placeholder = ''} = this.props;
+    let { defaultValue, placeholder = '' } = this.props;
     return (
       <div className="Editor" ref="editor">
-        <textarea ref="textarea" placeholder={placeholder} defaultValue={defaultValue} autoComplete="off" />
+        <textarea ref="textarea"
+                  placeholder={placeholder}
+                  defaultValue={defaultValue}
+                  autoComplete="off" />
       </div>
-    )
+    );
   }
-})
+});

@@ -25,17 +25,17 @@ var config = {
     filename: 'app.bundle.js'
   },
 
-  module : {
+  module: {
     noParse: ['markdown-it'],
-    loaders : [
+    loaders: [
       // JS
       { test: /\.js?$/, include: /app/, loaders: [
         'react-hot-loader', 'babel-loader?cacheDirectory=true'
-      ]},
+      ] },
       // JSON
-      { test: /\.json$/, loader: 'json-loader'},
+      { test: /\.json$/, loader: 'json-loader' },
       // CSS
-      { test: /\.css$/, loader: 'style-loader!css-loader'},
+      { test: /\.css$/, loader: 'style-loader!css-loader' },
       // FONTS
       { test: /\.woff|\.woff2|\.svg|\.eot|\.ttf|\.png/, loader: 'url-loader?limit=10000' },
     ]

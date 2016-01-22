@@ -1,19 +1,19 @@
-import {createReactComponent} from 'viter/viter';
-import {formatBytes, formatFileTs} from 'helpers/utils';
-import {createConfirmationDialog} from 'helpers/dialogs';
+import { createReactComponent } from 'viter/viter';
+import { formatBytes, formatFileTs } from 'helpers/utils';
+import { createConfirmationDialog } from 'helpers/dialogs';
 
 import Icon from 'components/common/icon';
 
-const FileTypeIcons = {
-  'image':    'image',
-  'document': 'document-text',
-  'video':    'social-youtube-outline',
-  'audio':    'headphone',
-  'binary':   'document'
+const FILE_TYPE_ICONS = {
+  image:    'image',
+  document: 'document-text',
+  video:    'social-youtube-outline',
+  audio:    'headphone',
+  binary:   'document'
 };
 
-function getFileIcon(type) {
-  let icon =  FileTypeIcons[type];
+function getFileIcon (type) {
+  let icon = FILE_TYPE_ICONS[type];
   return (<Icon type={icon}/>);
 }
 
@@ -30,7 +30,7 @@ export default createReactComponent({
   displayName: 'Attachment',
 
   render () {
-    let {name, mime, type, fileSize, timestamp, url} = this.props.attachment;
+    let { name, mime, type, fileSize, timestamp, url } = this.props.attachment;
 
     return (
       <tr>
@@ -47,4 +47,4 @@ export default createReactComponent({
     let attachment = this.props.attachment;
     showDeleteConfirmation(attachment.name).then(() => this.props.onDelete(attachment));
   }
-})
+});

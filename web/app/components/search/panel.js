@@ -1,21 +1,21 @@
-import {createReactContainer} from 'viter/viter';
-import {fuzzySearch} from 'helpers/utils';
-import {newNote, loadNotesList} from 'actions/notes-actions';
+import { createReactContainer } from 'viter/viter';
+import { fuzzySearch } from 'helpers/utils';
+import { newNote, loadNotesList } from 'actions/notes-actions';
 
 import SearchItem from './item';
 import SearchInput from './input';
 import Icon from 'components/common/icon';
-import {searchIgnoreCase} from 'config';
+import { searchIgnoreCase } from 'config';
 
-function getSearchType(filter) {
+function getSearchType (filter) {
   if (filter) {
-    return "Search Results";
+    return 'Search Results';
   }
 
-  return "All notes";
+  return 'All notes';
 }
 
-function lowerIfRequired(str) {
+function lowerIfRequired (str) {
   if (searchIgnoreCase) {
     return str.toLowerCase();
   }
@@ -40,7 +40,7 @@ export default createReactContainer({
   },
 
   render () {
-    let {infos, filter} = this.state;
+    let { infos, filter } = this.state;
     let matcher = fuzzySearch(lowerIfRequired(filter));
     let results = infos.filter(i => matcher(lowerIfRequired(i.name)));
     return (
@@ -55,6 +55,6 @@ export default createReactContainer({
           {results.map(info => <SearchItem key={info.id} note={info} />)}
         </ul>
       </div>
-    )
+    );
   }
-})
+});

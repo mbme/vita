@@ -1,4 +1,4 @@
-import {createReactContainer} from 'viter/viter';
+import { createReactContainer } from 'viter/viter';
 import NoteContainer from './note-container';
 
 export default createReactContainer({
@@ -17,6 +17,6 @@ export default createReactContainer({
       note => <NoteContainer key={note.nId} note={note} />
     ).reverse();
 
-    return <ul className="Desk">{notes}</ul>
+    return <ul className="Desk">{notes}</ul>;
   }
-})
+});

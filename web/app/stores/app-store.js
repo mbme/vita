@@ -1,5 +1,6 @@
-import {List} from 'immutable';
-import {byId} from 'helpers/utils';
+/* eslint new-cap:[2, {"capIsNewExceptions": ["List"]}] */
+import { List } from 'immutable';
+import { byId } from 'helpers/utils';
 
 export default function createAppStore () {
   let page = '';
@@ -28,7 +29,7 @@ export default function createAppStore () {
     },
 
     addModal (id, view) {
-      modals = modals.push({id, view});
+      modals = modals.push({ id, view });
     },
 
     removeModal (id) {

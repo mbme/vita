@@ -1,4 +1,4 @@
-import {createReactComponent} from 'viter/viter';
+import { createReactComponent } from 'viter/viter';
 
 import Attachment from './attachment';
 
@@ -6,7 +6,7 @@ export default createReactComponent({
   displayName: 'Attachments',
 
   render () {
-    let {attachments, deleteAttachment} = this.props;
+    let { attachments, deleteAttachment } = this.props;
 
     let items = attachments.map(
       function (attachment) {
@@ -14,7 +14,7 @@ export default createReactComponent({
           <Attachment key={attachment.name}
                       attachment={attachment}
                       onDelete={deleteAttachment}/>
-        )
+        );
       });
 
     return (
@@ -25,4 +25,4 @@ export default createReactComponent({
       </div>
     );
   }
-})
+});

@@ -1,4 +1,4 @@
-import {createReactComponent} from 'viter/viter';
+import { createReactComponent } from 'viter/viter';
 
 import Icon from 'components/common/icon';
 
@@ -13,7 +13,7 @@ export default createReactComponent({
         <span className="upload-link" onClick={this.onClickSelectFile}>select them</span>
         <input ref="input" name="" type="file" value="" onChange={this.onFileSelected}/>
       </form>
-    )
+    );
   },
 
   onClickSelectFile () {
@@ -29,6 +29,6 @@ export default createReactComponent({
 
   onFileSelected (e) {
     this.props.onFileSelected(e.target.files[0]);
-    this.refs.form.reset()
+    this.refs.form.reset();
   }
-})
+});

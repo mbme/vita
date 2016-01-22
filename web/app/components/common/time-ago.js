@@ -1,7 +1,7 @@
-import {createReactComponent} from 'viter/viter';
+import { createReactComponent } from 'viter/viter';
 import moment from 'moment';
 
-function formatDate(timestamp) {
+function formatDate (timestamp) {
   return moment(timestamp * 1000).fromNow();
 }
 
@@ -11,11 +11,14 @@ export default createReactComponent({
   getInitialState () {
     return {
       date: this.getFormattedDate()
-    }
+    };
   },
 
   componentWillMount () {
-    this.updateInterval = setInterval(() =>  this.setState({ date: this.getFormattedDate()}), 60*1000);
+    this.updateInterval = setInterval(
+      () => this.setState({ date: this.getFormattedDate() }),
+      60 * 1000
+    );
   },
 
   componentWillUnmount () {
@@ -27,6 +30,6 @@ export default createReactComponent({
   },
 
   render () {
-    return <time>{this.state.date}</time>
+    return <time>{this.state.date}</time>;
   }
-})
+});

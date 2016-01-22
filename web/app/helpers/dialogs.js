@@ -1,8 +1,8 @@
 import React from 'react';
 import cx from 'classnames';
-import {createReactComponent} from 'viter/viter';
-import {createDeferred} from 'helpers/utils';
-import {openModal, closeModal} from 'actions/app-actions';
+import { createReactComponent } from 'viter/viter';
+import { createDeferred } from 'helpers/utils';
+import { openModal, closeModal } from 'actions/app-actions';
 
 import Button from 'components/common/button';
 import Icon from 'components/common/icon';
@@ -11,10 +11,10 @@ const Modal = createReactComponent({
   displayName: 'Modal',
 
   render () {
-    let {type, children} = this.props;
+    let { type, children } = this.props;
 
     return React.createElement(
-      'div', {className: cx('Modal', {[`is-${type}`]: type})},
+      'div', { className: cx('Modal', { [`is-${type}`]: type }) },
       ...children
     );
   }
@@ -22,12 +22,12 @@ const Modal = createReactComponent({
 
 let modalId = 0;
 
-export function createModal(type) {
+export function createModal (type) {
   let id = modalId += 1;
   return {
     open (...children) {
       let modal = React.createElement(
-        Modal, {key: id, type, children}
+        Modal, { key: id, type, children }
       );
       openModal(id, modal);
     },
@@ -35,8 +35,8 @@ export function createModal(type) {
     close () {
       closeModal(id);
     }
-  }
-};
+  };
+}
 
 export function buildHeader (title) {
   return (
@@ -46,13 +46,13 @@ export function buildHeader (title) {
 
 export function buildBody (children, className) {
   return React.createElement(
-    'div', {className: cx('Modal-body', className)}, ...children
+    'div', { className: cx('Modal-body', className) }, ...children
   );
 }
 
 export function buildButtons (buttons, className) {
   return React.createElement(
-    'div', {className: cx('Modal-buttons', className)}, ...buttons
+    'div', { className: cx('Modal-buttons', className) }, ...buttons
   );
 }
 
@@ -62,7 +62,7 @@ function buildCloseIcon (onClose) {
   );
 }
 
-export function modalBuilder() {
+export function modalBuilder () {
   let data = {
     closeIcon: false,
     title: false,
@@ -99,14 +99,14 @@ export function modalBuilder() {
         buildButtons(data.buttons)
       ];
     }
-  }
+  };
 }
 
 export function createConfirmationDialog (config) {
   let modal = createModal(config.type);
   let deferred = createDeferred();
 
-  function onSuccess() {
+  function onSuccess () {
     modal.close();
     deferred.resolve();
   }

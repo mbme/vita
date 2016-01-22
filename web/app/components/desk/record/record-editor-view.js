@@ -1,7 +1,7 @@
-import {createReactComponent} from 'viter/viter';
-import {createConfirmationDialog} from 'helpers/dialogs';
+import { createReactComponent } from 'viter/viter';
+import { createConfirmationDialog } from 'helpers/dialogs';
 
-import {Tab, Tabs} from 'components/common/tabs';
+import { Tab, Tabs } from 'components/common/tabs';
 import Editor from 'components/common/editor';
 import CategoriesEditor from 'components/common/categories-editor';
 import Attachments from './attachments';
@@ -42,12 +42,12 @@ export default createReactComponent({
   displayName: 'RecordEditorView',
 
   getInitialState () {
-    let {name, data, categories} = this.props.note;
-    return {name, data, categories};
+    let { name, data, categories } = this.props.note;
+    return { name, data, categories };
   },
 
   render () {
-    let {shouldScroll, note} = this.props;
+    let { shouldScroll, note } = this.props;
 
     let menu = [{
       icon: 'checkmark-round',
@@ -60,14 +60,14 @@ export default createReactComponent({
         icon: 'arrow-return-left',
         type: 'warn',
         handler: this.onUndo
-      },{
+      }, {
         icon: 'trash-a',
         type: 'warn',
         handler: this.onDelete
       });
     }
 
-    let {name, data, categories} = this.state;
+    let { name, data, categories } = this.state;
 
     return (
       <Note id={note.id} className="RecordEditorView"
@@ -103,7 +103,7 @@ export default createReactComponent({
         </Tabs>
 
       </Note>
-    )
+    );
   },
 
   uploadFile (file) {
@@ -115,7 +115,7 @@ export default createReactComponent({
   },
 
   getCurrentState () {
-    let {name, categories, editor} = this.refs;
+    let { name, categories, editor } = this.refs;
 
     return {
       name:       name.value,
@@ -127,8 +127,8 @@ export default createReactComponent({
   onBeforeTabChange (newTab, currentTab) {
     // do not update when switching from preview
     if (currentTab !== 1) {
-      let {name, data, categories} = this.getCurrentState();
-      this.setState({name, data, categories});
+      let { name, data, categories } = this.getCurrentState();
+      this.setState({ name, data, categories });
     }
   },
 
@@ -153,9 +153,9 @@ export default createReactComponent({
 
     if (note.isNew()) {
       return createNote(note.nId, changed);
-    } else {
-      return saveNote(note.nId, changed);
     }
+
+    return saveNote(note.nId, changed);
   },
 
   onSave () {
@@ -167,7 +167,7 @@ export default createReactComponent({
   },
 
   close () {
-    closeNote(this.props.note.nId)
+    closeNote(this.props.note.nId);
   },
 
   onDelete () {
