@@ -33,13 +33,18 @@ function isRegisteredStore (name) {
   return STORES.hasOwnProperty(name);
 }
 
+const storesBus = new EventBus();
+
 export function publishStoreUpdate (...stores) {
   stores.forEach(function (store) {
     if (!isRegisteredStore(store)) {
       throw new Error(`publisher: unknown store ${store}`);
     }
   });
-  bus.publish('!stores-update', ...stores);
+
+  console.debug('updated stores: %s', stores.join(', '));
+
+  storesBus.publish('!stores-update', ...stores);
 }
 
 // @see https://github.com/jurassix/react-immutable-render-mixin
@@ -104,14 +109,14 @@ export function createReactContainer (comp) {
 
   let config = {
     componentWillMount (...args) {
-      bus.subscribe('!stores-update', this.onStoresUpdate);
+      storesBus.subscribe('!stores-update', this.onStoresUpdate);
       if (comp.componentWillMount) {
         comp.componentWillMount.apply(this, args);
       }
     },
 
     componentWillUnmount (...args) {
-      bus.unsubscribe('!stores-update', this.onStoresUpdate);
+      storesBus.unsubscribe('!stores-update', this.onStoresUpdate);
       if (comp.componentWillUnmount) {
         comp.componentWillUnmount.apply(this, args);
       }
@@ -146,7 +151,7 @@ export function createComponent (config) {
 
   const shouldUpdate = config.shouldComponentUpdate || notShallowEqual;
 
-  return function (...stores) {
+  function updateComponent (...stores) {
     if (!_.intersection(stores, config.stores).length) {
       return;
     }
@@ -157,6 +162,16 @@ export function createComponent (config) {
     if ((shouldUpdate).call(config, state, newState)) {
       state = newState;
       config.render(state);
+    }
+  }
+
+  return {
+    init () {
+      storesBus.subscribe('!stores-update', updateComponent);
+    },
+
+    destroy () {
+      storesBus.unsubscribe('!stores-update', updateComponent);
     }
   };
 }

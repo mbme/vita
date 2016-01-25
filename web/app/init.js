@@ -1,5 +1,5 @@
 /* global DEV */
-import { setStores, bus } from 'viter/viter';
+import { setStores } from 'viter/viter';
 import page from 'page';
 
 import 'helpers/hacks';
@@ -11,17 +11,14 @@ import { getIdsFromUrl } from 'watchers/url-renderer';
 import createStores from 'stores';
 import createWatchers from 'watchers';
 
-setStores(createStores());
-
-let watchers = createWatchers();
-bus.subscribe('!stores-update', function (...args) {
-  console.debug('updated stores: %s', args.join(', '));
-  watchers.forEach(comp => comp(...args));
-});
-
 if (DEV) {
   document.title += ' [DEV]';
 }
+
+setStores(createStores());
+
+let watchers = createWatchers();
+watchers.forEach(w => w.init());
 
 // START
 
