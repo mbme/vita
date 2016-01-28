@@ -1,31 +1,43 @@
+/* eslint new-cap:[2, {"capIsNewExceptions": ["List"]}] */
 /* global DEV */
-import { setStores } from 'viter/viter';
+import { initStore } from 'viter/viter';
+import { List } from 'immutable';
 import page from 'page';
 
 import 'helpers/hacks';
 
-import { openNote } from 'actions/notes-actions';
-import { changePage } from 'actions/app-actions';
-import { getIdsFromUrl } from 'watchers/url-renderer';
+import { openNote } from 'controllers/notes-controller';
+import { changePage } from 'controllers/app-controller';
+import { getIdsFromUrl } from 'managers/url-manager';
 
-import createStores from 'stores';
-import createWatchers from 'watchers';
+import createManagers from 'managers';
 
 if (DEV) {
   document.title += ' [DEV]';
 }
 
-setStores(createStores());
+// setup Store properties
+initStore({
+  notes:        List(),
+  infos:        List(),
+  modals:       List(),
+  requests:     List(),
+  socket:       null,
+  page:         '',
+  searchFilter: ''
+});
 
-let watchers = createWatchers();
-watchers.forEach(w => w.init());
+let managers = createManagers();
+managers.forEach(w => w.init());
 
 // START
+
+let openIds = getIdsFromUrl();
 
 page('/', function () {
   changePage('main');
 });
 page.start();
 
-// init selected items from url
-getIdsFromUrl().forEach(openNote);
+// open notes by ids from url
+openIds.forEach(openNote);

@@ -1,15 +1,15 @@
-import createUrlRenderer from './url-renderer';
+import createUrlManager from './url-manager';
 import createSocketManager from './socket-manager';
 import createPageManager from './page-manager';
 import createModalsManager from './modals-manager';
-import createMessageSender from './message-sender';
+import createMessagesManager from './messages-manager';
 
-export default function createWatchers () {
+export default function createManagers () {
   return [
     createPageManager(),
     createModalsManager(),
-    createMessageSender(),
-    createUrlRenderer(),
+    createMessagesManager(),
+    createUrlManager(),
     createSocketManager()
   ];
 }

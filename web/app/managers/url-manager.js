@@ -15,12 +15,11 @@ export function getIdsFromUrl () {
 }
 
 // URL Query params renderer
-export default function crateUrlRenderer () {
+export default function crateUrlManager () {
   return createComponent({
-    stores: ['notes'],
 
-    getState (NotesStore) {
-      return NotesStore.notes;
+    getState ({ notes }) {
+      return notes;
     },
 
     render (state) {

@@ -1,16 +1,14 @@
 import { createComponent } from 'viter/viter';
 import { basePath } from 'config';
-import { useSocket } from 'actions/socket-actions';
+import { useSocket } from 'controllers/app-controller';
 
 // WebSocket connection manager
 export default function createSocketManager () {
   let isConnecting = false;
 
   return createComponent({
-    stores: ['net'],
-
-    getState (NetStore) {
-      return NetStore.socket;
+    getState ({ socket }) {
+      return socket;
     },
 
     shouldComponentUpdate (state, newState) {

@@ -5,46 +5,43 @@ import EventBus from './bus';
 
 export const bus = new EventBus();
 
-const STORES = {};
+/**
+ * App store
+ */
+export const STORE = {};
 
-export function getStore (name) {
-  let store = STORES[name];
+let batchUpates = false;
 
-  if (store) {
-    return store;
-  }
+/**
+ * Register store properties and their default values.
+ * @param {object} defaults {propName: defaultValue}
+ */
+export function initStore (defaults) {
+  _.forEach(defaults, function (initialValue, name) {
+    let value = initialValue;
+    Object.defineProperty(STORE, name, {
+      get () {
+        return value;
+      },
 
-  throw new Error(`getter: unknown store ${name}`);
-}
+      set (newValue) {
+        value = newValue;
 
-function getStores (...names) {
-  return names.map(getStore);
-}
+        if (batchUpates) {
+          return;
+        }
 
-export function setStore (name, store) {
-  STORES[name] = store;
-}
-
-export function setStores (mappings) {
-  _.forEach(mappings, (store, name) => setStore(name, store));
-}
-
-function isRegisteredStore (name) {
-  return STORES.hasOwnProperty(name);
-}
-
-const storesBus = new EventBus();
-
-export function publishStoreUpdate (...stores) {
-  stores.forEach(function (store) {
-    if (!isRegisteredStore(store)) {
-      throw new Error(`publisher: unknown store ${store}`);
-    }
+        bus.publish('!store-update', name);
+      }
+    });
   });
+}
 
-  console.debug('updated stores: %s', stores.join(', '));
-
-  storesBus.publish('!stores-update', ...stores);
+export function batchStoreUpdates (updater) {
+  batchUpates = true;
+  updater();
+  batchUpates = false;
+  bus.publish('!store-update');
 }
 
 // @see https://github.com/jurassix/react-immutable-render-mixin
@@ -109,32 +106,25 @@ export function createReactContainer (comp) {
 
   let config = {
     componentWillMount (...args) {
-      storesBus.subscribe('!stores-update', this.onStoresUpdate);
+      bus.subscribe('!store-update', this.onStoreUpdate);
       if (comp.componentWillMount) {
         comp.componentWillMount.apply(this, args);
       }
     },
 
     componentWillUnmount (...args) {
-      storesBus.unsubscribe('!stores-update', this.onStoresUpdate);
+      bus.unsubscribe('!store-update', this.onStoreUpdate);
       if (comp.componentWillUnmount) {
         comp.componentWillUnmount.apply(this, args);
       }
     },
 
-    getState () {
-      return comp.getState.apply(this, getStores(...comp.stores));
-    },
-
     getInitialState () {
-      return this.getState();
+      return this.getState(STORE);
     },
 
-    onStoresUpdate (...stores) {
-      // update state if updated at least one of stores
-      if (_.intersection(stores, comp.stores).length) {
-        this.setState(this.getState());
-      }
+    onStoreUpdate () {
+      this.setState(this.getState(STORE));
     }
   };
 
@@ -151,15 +141,11 @@ export function createComponent (config) {
 
   const shouldUpdate = config.shouldComponentUpdate || notShallowEqual;
 
-  function updateComponent (...stores) {
-    if (!_.intersection(stores, config.stores).length) {
-      return;
-    }
-
-    let newState = config.getState(...(getStores(...config.stores)));
+  function updateComponent () {
+    let newState = config.getState(STORE);
 
     // check if we need re-render after store updated
-    if ((shouldUpdate).call(config, state, newState)) {
+    if (shouldUpdate.call(config, state, newState)) {
       state = newState;
       config.render(state);
     }
@@ -167,11 +153,11 @@ export function createComponent (config) {
 
   return {
     init () {
-      storesBus.subscribe('!stores-update', updateComponent);
+      bus.subscribe('!store-update', updateComponent);
     },
 
     destroy () {
-      storesBus.unsubscribe('!stores-update', updateComponent);
+      bus.unsubscribe('!store-update', updateComponent);
     }
   };
 }

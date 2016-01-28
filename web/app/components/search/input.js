@@ -1,5 +1,5 @@
 import { createReactComponent } from 'viter/viter';
-import { updateFilter } from 'actions/app-actions';
+import { updateFilter } from 'controllers/app-controller';
 import Icon from 'components/common/icon';
 
 import { debounce } from 'lodash';

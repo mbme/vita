@@ -18,7 +18,7 @@ import {
   closeNote,
   editNote,
   deleteNote
-} from 'actions/notes-actions';
+} from 'controllers/notes-controller';
 
 function showCloseConfirmation () {
   return createConfirmationDialog({

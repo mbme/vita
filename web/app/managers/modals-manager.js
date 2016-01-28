@@ -5,10 +5,9 @@ import { createComponent } from 'viter/viter';
 // Modals renderer
 export default function createModalsManager () {
   return createComponent({
-    stores: ['app'],
 
-    getState (AppStore) {
-      return AppStore.modals;
+    getState ({ modals }) {
+      return modals;
     },
 
     render (state) {

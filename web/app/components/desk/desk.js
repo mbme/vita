@@ -4,12 +4,8 @@ import NoteContainer from './note-container';
 export default createReactContainer({
   displayName: 'Desk',
 
-  stores:  ['notes'],
-
-  getState (NotesStore) {
-    return {
-      notes: NotesStore.notes
-    };
+  getState ({ notes }) {
+    return { notes };
   },
 
   render () {

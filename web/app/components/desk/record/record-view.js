@@ -1,7 +1,7 @@
 import { partial } from 'lodash';
 import { createReactComponent } from 'viter/viter';
 
-import { editNote, closeNote } from 'actions/notes-actions';
+import { editNote, closeNote } from 'controllers/notes-controller';
 
 import Note from 'components/desk/note';
 import Record from './record';

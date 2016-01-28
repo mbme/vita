@@ -2,7 +2,7 @@ import React from 'react';
 import cx from 'classnames';
 import { createReactComponent } from 'viter/viter';
 import { createDeferred } from 'helpers/utils';
-import { openModal, closeModal } from 'actions/app-actions';
+import { openModal, closeModal } from 'controllers/app-controller';
 
 import Button from 'components/common/button';
 import Icon from 'components/common/icon';

@@ -1,5 +1,5 @@
 import { createReactComponent, bus } from 'viter/viter';
-import { openNote } from 'actions/notes-actions';
+import { openNote } from 'controllers/notes-controller';
 import cx from 'classnames';
 
 import Category from 'components/common/category';

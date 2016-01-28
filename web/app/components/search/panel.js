@@ -1,6 +1,6 @@
 import { createReactContainer } from 'viter/viter';
 import { fuzzySearch } from 'helpers/utils';
-import { newNote, loadNotesList } from 'actions/notes-actions';
+import { newNote, loadNotesList } from 'controllers/notes-controller';
 
 import SearchItem from './item';
 import SearchInput from './input';
@@ -26,13 +26,8 @@ function lowerIfRequired (str) {
 export default createReactContainer({
   displayName: 'SearchPanel',
 
-  stores:  ['notes-info', 'app'],
-
-  getState (NotesInfoStore, AppStore) {
-    return {
-      infos: NotesInfoStore.infos,
-      filter: AppStore.searchFilter
-    };
+  getState ({ infos, searchFilter }) {
+    return { infos, searchFilter };
   },
 
   componentWillMount () {
@@ -40,17 +35,17 @@ export default createReactContainer({
   },
 
   render () {
-    let { infos, filter } = this.state;
-    let matcher = fuzzySearch(lowerIfRequired(filter));
+    let { infos, searchFilter } = this.state;
+    let matcher = fuzzySearch(lowerIfRequired(searchFilter));
     let results = infos.filter(i => matcher(lowerIfRequired(i.name)));
     return (
       <div className="SearchPanel">
         <div className="SearchPanel-header">
-          <span className="search-type">{getSearchType(filter)}</span>
+          <span className="search-type">{getSearchType(searchFilter)}</span>
           <span className="results-count">{results.size}</span>
           <Icon className="plus" type="plus" onClick={newNote}/>
         </div>
-        <SearchInput filter={filter} />
+        <SearchInput filter={searchFilter} />
         <ul className="SearchPanel-scroll">
           {results.map(info => <SearchItem key={info.id} note={info} />)}
         </ul>

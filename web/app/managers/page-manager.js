@@ -12,10 +12,9 @@ const PAGES = {
 // Page renderer
 export default function createPageManager () {
   return createComponent({
-    stores: ['app'],
 
-    getState (AppStore) {
-      return AppStore.page;
+    getState ({ page }) {
+      return page;
     },
 
     shouldComponentUpdate (state, newState) {

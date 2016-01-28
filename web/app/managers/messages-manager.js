@@ -2,17 +2,13 @@ import { createComponent } from 'viter/viter';
 import { includes, pick } from 'lodash';
 
 // Message sender
-export default function createMessageSender () {
+export default function createMessagesManager () {
   let pendingRequests = [];
 
   return createComponent({
-    stores: ['net'],
 
-    getState (NetStore) {
-      return {
-        socket: NetStore.socket,
-        requests: NetStore.requests
-      };
+    getState ({ socket, requests }) {
+      return { socket, requests };
     },
 
     shouldComponentUpdate (state, newState) {

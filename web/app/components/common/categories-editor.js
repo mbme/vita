@@ -1,7 +1,7 @@
 import { createReactComponent } from 'viter/viter';
 import { words } from 'lodash';
 import { isFocused } from 'helpers/utils';
-import { createCategories } from 'stores/entities';
+import { createCategories } from 'services/entities';
 
 export default createReactComponent({
   displayName: 'CategoriesEditor',
