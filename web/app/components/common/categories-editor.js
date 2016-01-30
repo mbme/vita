@@ -1,6 +1,5 @@
 import { createReactComponent } from 'viter/viter';
 import { words } from 'lodash';
-import { isFocused } from 'helpers/utils';
 import { createCategories } from 'services/entities';
 
 export default createReactComponent({
@@ -24,9 +23,5 @@ export default createReactComponent({
 
   onChange () {
     this.value = createCategories(words(this.refs.categories.value));
-  },
-
-  isFocused () {
-    return this.isMounted() && isFocused(this.refs.categories);
   }
 });

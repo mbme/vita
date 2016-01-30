@@ -1,4 +1,4 @@
-import { isFunction, curry } from 'lodash';
+import { curry } from 'lodash';
 import moment from 'moment';
 
 export function getQueryParam (query, param) {
@@ -59,27 +59,6 @@ export function id2key (idStr) {
 
 export function key2id ({ type, id }) {
   return `${type}/${id}`;
-}
-
-/*
- * Check if element is focused.
- * Accepts native elements and custom components with `isFocused` property.
- *
- * @param {Component|Element} el element to check if focused
- * @returns {boolean}
- */
-export function isFocused (el) {
-  // handle our custom react components
-  if (isFunction(el.isFocused)) {
-    return el.isFocused();
-  }
-
-  if (el.hasOwnProperty('isFocused')) {
-    return el.isFocused;
-  }
-
-  // handle native elements
-  return el.matches(':focus');
 }
 
 export function createDeferred () {

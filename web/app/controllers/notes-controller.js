@@ -87,18 +87,10 @@ export function saveNote (nId, changedData) {
     return Promise.resolve(note);
   }
 
-  return new Promise(function (resolve) {
-    // FIXME maybe there is better solution
-    if (changedData.categories && changedData.categories.isEmpty()) {
-      changedData.categories = MinRecord.categories;
-    }
-    if (changedData.hasOwnProperty('name') && !changedData.name) {
-      changedData.name = MinRecord.name;
-    }
-    let data = _.assign(note.getPublicData(), changedData);
-
-    resolve(NetService.sendRequest('note-update', data));
-  }).then(function (noteData) {
+  let data = _.assign({
+    key: id2key(note.id)
+  }, changedData);
+  return NetService.sendRequest('note-update', data).then(function (noteData) {
     let updatedNote = NotesService.updateNote(nId, noteData);
     console.log('note %s saved', updatedNote.id);
 

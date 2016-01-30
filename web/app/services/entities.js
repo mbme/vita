@@ -1,5 +1,5 @@
 /* eslint new-cap:[2, {"capIsNewExceptions": ["Set", "Record"]}] */
-import { pick, defaults, clone, partial } from 'lodash';
+import { defaults, clone, partial } from 'lodash';
 import { Record, Set, Map } from 'immutable';
 import { stringsComparator } from 'helpers/utils';
 import { baseUrl } from 'config';
@@ -61,10 +61,6 @@ class NoteRecord extends Record({
 }) {
   isNew () {
     return !this.id;
-  }
-
-  getPublicData () {
-    return pick(this, ['key', 'name', 'data', 'categories']);
   }
 }
 
