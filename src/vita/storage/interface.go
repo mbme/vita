@@ -21,7 +21,7 @@ type Storager interface {
 
 	AddNote(noteType note.Type, name string, data string, categories []note.Category) (note.Key, error)
 	GetNote(key note.Key) (*note.Note, error)
-	UpdateNote(key note.Key, name string, data string, categories []note.Category) error
+	UpdateNote(key note.Key, name *string, data *string, categories *[]note.Category) error
 	RemoveNote(key note.Key) error
 	NoteExists(key note.Key) bool
 

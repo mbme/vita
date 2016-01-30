@@ -31,7 +31,7 @@ func preprocessCategories(categories []note.Category) ([]note.Category, error) {
 	return categories, nil
 }
 
-func readNoteInfo(noteType note.Type, fileInfo os.FileInfo) (*note.Info, error) {
+func parseNoteInfo(noteType note.Type, fileInfo os.FileInfo) (*note.Info, error) {
 	values := noteMatcher.FindStringSubmatch(fileInfo.Name())
 	if values == nil {
 		return nil, errorNotNote

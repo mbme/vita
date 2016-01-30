@@ -64,7 +64,7 @@ func NewFsStorage(basePath string) (Storager, error) {
 
 		// read notes
 		for _, f := range files {
-			note, err := readNoteInfo(noteType, f)
+			note, err := parseNoteInfo(noteType, f)
 			if err != nil {
 				if err != errorNotNote {
 					log.Errorf("%v", err)
@@ -150,7 +150,7 @@ func (s *fsStorage) AddNote(noteType note.Type, name string, data string, catego
 		return note.NoKey, err
 	}
 
-	info, err := readNoteInfo(noteType, fileInfo)
+	info, err := parseNoteInfo(noteType, fileInfo)
 	if err != nil {
 		return note.NoKey, err
 	}
@@ -174,47 +174,63 @@ func (s *fsStorage) GetNote(key note.Key) (*note.Note, error) {
 	return s.readNote(info)
 }
 
-func (s *fsStorage) UpdateNote(key note.Key, name string, data string, categories []note.Category) error {
-	err := key.Validate()
+func (s *fsStorage) UpdateNote(key note.Key, name *string, data *string, categories *[]note.Category) error {
+	note, err := s.GetNote(key)
 	if err != nil {
 		return err
 	}
 
-	oldInfo, ok := s.records[key]
+	info, ok := s.records[key]
 	if !ok {
 		return errorNoteNotFound
 	}
 
-	name = strings.TrimSpace(name)
-	if len(name) == 0 {
-		return errorBadNoteName
+	newNote := info.ToNote()
+
+	if name == nil {
+		newNote.Name = note.Name
+	} else {
+		newNote.Name = strings.TrimSpace(*name)
+		if len(newNote.Name) == 0 {
+			return errorBadNoteName
+		}
 	}
 
-	data = strings.TrimSpace(data)
+	if data == nil {
+		newNote.Data = note.Data
+	} else {
+		newNote.Data = strings.TrimSpace(*data)
+	}
 
-	categories, err = preprocessCategories(categories)
+	if categories == nil {
+		newNote.Categories = note.Categories
+	} else {
+		newNote.Categories, err = preprocessCategories(*categories)
+		if err != nil {
+			return err
+		}
+	}
+
+	fileInfo, err := s.writeNote(newNote)
 	if err != nil {
 		return err
 	}
 
-	note := oldInfo.ToNote()
-	note.Name = name
-	note.Data = data
-	note.Categories = categories
-
-	if _, err := s.writeNote(note); err != nil {
-		return err
+	newInfo, err := parseNoteInfo(newNote.Key.Type, fileInfo)
+	if err != nil {
+		log.Errorf("cannot read new note info %v: %v", newInfo, err)
 	}
+	// copy information about attachments
+	newInfo.Attachments = info.Attachments
 
 	// we should remove old file if file name changed
-	if getNoteFile(oldInfo) != getNoteFile(note.ToInfo()) {
-		if err := s.removeNote(oldInfo); err != nil {
-			log.Warnf("cannot remove old note %v file %v", oldInfo, err)
+	if getNoteFile(info) != getNoteFile(newInfo) {
+		if err := s.removeNote(info); err != nil {
+			log.Warnf("cannot remove old note %v file %v", info, err)
 		}
 	}
 
-	oldInfo.Name = name
-	oldInfo.Categories = categories
+	s.records[key] = newInfo
 
 	return nil
 }

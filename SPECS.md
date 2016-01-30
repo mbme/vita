@@ -176,9 +176,9 @@ Client sends `Request` object with unique `id` field and receives `Response` or 
             type, // string: note type
             id // uint: unique note id
         },
-        name, // string: note name
-        data, // string: note content
-        categories // string[]: note categories
+        name, // string: optional, new note name
+        data, // string: optional, new note content
+        categories // string[]: optional, new note categories
     }
     ```
 

@@ -10,8 +10,8 @@ type addNoteDTO struct {
 }
 
 type updateNoteDTO struct {
-	Key        note.Key        `json:"key"`
-	Name       string          `json:"name"`
-	Data       string          `json:"data"`
-	Categories []note.Category `json:"categories"`
+	Key        note.Key         `json:"key"`
+	Name       *string          `json:"name"`
+	Data       *string          `json:"data"`
+	Categories *[]note.Category `json:"categories"`
 }
