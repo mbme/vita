@@ -17,10 +17,11 @@ const Tabs = createReactComponent({
     let { selected } = this.state;
 
     let headers = children.map((child, pos) => {
+      let clickHandler = partial(this.onHeaderClicked, pos);
       return (
         <li key={pos}
             className={cx({ selected: pos === selected })}
-            onClick={partial(this.onHeaderClicked, pos)}>
+            onClick={clickHandler}>
           {child.props.label}
         </li>
       );

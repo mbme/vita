@@ -4,6 +4,8 @@
   "rules": {
     "space-before-function-paren": [2, "always"],
     "prefer-const": 0,
+    "prefer-arrow-callback": 0,
+    "prefer-template": 0,
     "func-names": 0,
     "no-console": 0,
     "comma-dangle": 0,
