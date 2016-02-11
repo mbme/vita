@@ -62,11 +62,7 @@ var config = {
 
   plugins: [
     new webpack.ProvidePlugin({
-      '$':             'jquery',
-      'jQuery':        'jquery',
-      'window.jQuery': 'jquery',
-      'root.jQuery':   'jquery',
-      'React':         'react'
+      'React': 'react'
     }),
     // do not load moment locales
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)

@@ -16,7 +16,6 @@
   "homepage": "https://github.com/mbme/vita#readme",
   "devDependencies": {
     "babel-core": "*",
-    "babel-polyfill": "*",
     "babel-plugin-syntax-jsx": "*",
     "babel-plugin-transform-react-jsx": "*",
     "babel-preset-es2015": "*",
@@ -50,7 +49,7 @@
     "postcss-vertical-rhythm": "*"
   },
   "dependencies": {
-    "babel-runtime": "*",
+    "babel-polyfill": "*",
     "classnames": "*",
     "codemirror": "*",
     "immutable": "*",
