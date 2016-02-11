@@ -1,7 +1,8 @@
-/*eslint no-var:0*/
+/* eslint strict: 0, no-var: 0, object-shorthand: 0 */
 'use strict';
 
 var path = require('path');
+var glob = require('glob');
 var webpack = require('webpack');
 
 var base = __dirname;
@@ -44,26 +45,28 @@ var config = {
   postcss: function () {
     return [
       require('postcss-import')({
-        glob: true,
-        addDependencyTo: this
+        addDependencyTo: this,
+        resolve: function (id, cssBase) {
+          return glob.sync(path.join(cssBase, id));
+        }
       }),
       require('postcss-mixins'),
       require('postcss-nested'),
       require('postcss-simple-vars')(),
       require('postcss-vertical-rhythm')(),
       require('postcss-color-function'),
-      require("postcss-calc"),
+      require('postcss-calc'),
       require('autoprefixer')({ browsers: ['last 2 versions'] })
     ];
   },
 
   plugins: [
     new webpack.ProvidePlugin({
-      $:               "jquery",
-      jQuery:          "jquery",
-      "window.jQuery": "jquery",
-      "root.jQuery":   "jquery",
-      React:           "react"
+      '$':             'jquery',
+      'jQuery':        'jquery',
+      'window.jQuery': 'jquery',
+      'root.jQuery':   'jquery',
+      'React':         'react'
     }),
     // do not load moment locales
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
@@ -81,8 +84,8 @@ if (process.env.NODE_ENV === 'production') {
     }
   }));
   config.plugins.push(new webpack.DefinePlugin({
-      VITA_PORT: undefined,
-      DEV: false
+    VITA_PORT: undefined,
+    DEV:       false
   }));
 } else {
   config.output.path = path.resolve('./web');
@@ -91,8 +94,8 @@ if (process.env.NODE_ENV === 'production') {
   config.devtool = 'eval';
 
   config.plugins.push(new webpack.DefinePlugin({
-      VITA_PORT: 8081,
-      DEV: true
+    VITA_PORT: 8081,
+    DEV:       true
   }));
 }
 
