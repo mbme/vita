@@ -47,7 +47,7 @@ export default createReactComponent({
   },
 
   render () {
-    let { shouldScroll, note } = this.props;
+    let { note } = this.props;
 
     let menu = [{
       icon: 'checkmark-round',
@@ -71,7 +71,6 @@ export default createReactComponent({
 
     return (
       <Note id={note.id} className="RecordEditorView"
-            shouldScroll={shouldScroll}
             menu={menu}
             onBeforeClose={showCloseConfirmation} onClose={this.close}>
 

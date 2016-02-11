@@ -6,7 +6,7 @@ import { editNote, closeNote } from 'controllers/notes-controller';
 import Note from 'components/desk/note';
 import Record from './record';
 
-export default createReactComponent(function RecordView ({ note, shouldScroll }) {
+export default createReactComponent(function RecordView ({ note }) {
   let menu = [{
     icon: 'compose',
     handler: partial(editNote, note.nId, true)
@@ -14,7 +14,6 @@ export default createReactComponent(function RecordView ({ note, shouldScroll })
 
   return (
     <Note id={note.id} className="RecordView"
-          shouldScroll={shouldScroll}
           menu={menu}
           onClose={partial(closeNote, note.nId)}>
       <Record name={note.name}

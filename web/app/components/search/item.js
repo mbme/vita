@@ -23,10 +23,15 @@ export default createReactComponent({
 
   onClick () {
     let note = this.props.note;
+
+    // if note is already open then just focus it
     if (note.selected) {
       bus.publish('note:focus', note.id);
     } else {
-      openNote(note.id);
+      // else open and focus
+      openNote(note.id).then(function () {
+        bus.publish('note:focus', note.id);
+      });
     }
   }
 });

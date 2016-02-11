@@ -30,10 +30,10 @@ export function loadNotesList () {
 export function openNote (id) {
   // check if already open
   if (NotesService.getNoteById(id)) {
-    return;
+    return Promise.reject();
   }
 
-  NetService.sendRequest('note-read', id2key(id)).then(function (data) {
+  return NetService.sendRequest('note-read', id2key(id)).then(function (data) {
     batchStoreUpdates(function () {
       console.log('open note %s', id);
 

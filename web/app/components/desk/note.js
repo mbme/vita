@@ -6,35 +6,41 @@ import { createReactComponent, bus } from 'viter/viter';
 import { resolvedPromise } from 'helpers/utils';
 import Icon from 'components/common/icon';
 
+/**
+ * General notes container which shows note menu and do animations.
+ */
 export default createReactComponent({
   displayName: 'Note',
 
   componentWillMount () {
-    bus.subscribe('note:focus', this.maybeScrollMeIntoView);
+    bus.subscribe('note:focus', this.maybeScrollIntoView);
   },
 
   componentWillUnmount () {
-    bus.unsubscribe('note:focus', this.maybeScrollMeIntoView);
+    bus.unsubscribe('note:focus', this.maybeScrollIntoView);
   },
 
-  componentDidMount () {
-    if (this.props.shouldScroll) {
-      this.scrollIntoView();
+  maybeScrollIntoView (id) {
+    if (id !== this.props.id) {
+      return;
     }
-  },
 
-  maybeScrollMeIntoView (id) {
-    if (id === this.props.id) {
-      this.scrollIntoView();
-    }
-  },
-
-  scrollIntoView () {
     let el = this.refs.note;
     velocity(el, 'scroll', {
       duration: 300,
       offset: -6,
       easing: 'ease-in-out'
+    });
+  },
+
+  onBeforeClose () {
+    let { onBeforeClose = resolvedPromise, onClose } = this.props;
+    onBeforeClose().then(this.close).then(onClose);
+  },
+
+  close () {
+    return velocity(this.refs.note, 'fadeOut', {
+      duration: 200
     });
   },
 
@@ -49,6 +55,7 @@ export default createReactComponent({
     let icons = menu.map(function ({ icon, handler, type }) {
       return <Icon className={cx({ [`is-${type}`]: type })} type={icon} onClick={handler}/>;
     });
+    // we do this to avoid addding keys to icons
     let iconsPanel = React.createElement(
       'div', { className: 'icons' }, ...icons
     );
@@ -59,16 +66,5 @@ export default createReactComponent({
         {children}
       </li>
     );
-  },
-
-  onBeforeClose () {
-    let { onBeforeClose = resolvedPromise, onClose } = this.props;
-    onBeforeClose().then(this.close).then(onClose);
-  },
-
-  close () {
-    return velocity(this.refs.note, 'fadeOut', {
-      duration: 200
-    });
   }
 });
