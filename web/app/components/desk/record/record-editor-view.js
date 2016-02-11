@@ -69,6 +69,13 @@ export default createReactComponent({
 
     let { name, data, categories } = this.state;
 
+    let completions = note.attachments.map(function (attachment) {
+      return {
+        type:  'attachment',
+        value: `!${attachment.name}!`,
+        text: `${attachment.name} [${attachment.type}]`
+      };
+    }).toJS();
     return (
       <Note id={note.id} className="RecordEditorView"
             menu={menu}
@@ -83,6 +90,7 @@ export default createReactComponent({
                               placeholder="Categories"
                               ref="categories"/>
             <Editor defaultValue={note.data}
+                    completions={completions}
                     placeholder="Drop few lines..."
                     ref="editor"/>
           </Tab>
