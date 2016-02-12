@@ -4,7 +4,9 @@ function arrAppend (arr, item) {
 }
 
 export default class EventBus {
-  _listenersMap = {};
+  constructor () {
+    this._listenersMap = {};
+  }
 
   _getListeners (event) {
     return this._listenersMap[event] || [];

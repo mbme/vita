@@ -19,7 +19,6 @@
     "babel-plugin-syntax-jsx": "*",
     "babel-plugin-transform-react-jsx": "*",
     "babel-preset-es2015": "*",
-    "babel-preset-stage-0": "*",
 
     "eslint": "*",
     "eslint-plugin-react": "*",

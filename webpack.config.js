@@ -19,6 +19,8 @@ var config = {
       'styles': path.join(base, src, 'styles/styles.js'),
       'velocity': 'velocity-animate'
     },
+
+    // we need this to allow to import jsx files like js files (without extension)
     extensions: ['', '.js', '.jsx']
   },
 
@@ -30,7 +32,7 @@ var config = {
   module: {
     noParse: ['markdown-it'],
     loaders: [
-      // JS
+      // JS and JSX
       { test: /\.jsx?$/, include: /app/, loaders: [
         'react-hot-loader', 'babel-loader?cacheDirectory=true'
       ] },
