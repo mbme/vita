@@ -18,7 +18,8 @@ var config = {
     alias: {
       'styles': path.join(base, src, 'styles/styles.js'),
       'velocity': 'velocity-animate'
-    }
+    },
+    extensions: ['', '.js', '.jsx']
   },
 
   output: {
@@ -30,7 +31,7 @@ var config = {
     noParse: ['markdown-it'],
     loaders: [
       // JS
-      { test: /\.js?$/, include: /app/, loaders: [
+      { test: /\.jsx?$/, include: /app/, loaders: [
         'react-hot-loader', 'babel-loader?cacheDirectory=true'
       ] },
       // JSON

@@ -1,6 +1,7 @@
 import { createComponent } from 'viter/viter';
 
 import ReactDOM from 'react-dom';
+import React from 'react';
 
 import MainPage from 'components/pages/records';
 
@@ -26,7 +27,7 @@ export default function createPageManager () {
       let container = document.getElementById('container');
 
       if (Page) {
-        ReactDOM.render(<Page />, container);
+        ReactDOM.render(React.createElement(Page), container);
       } else {
         ReactDOM.unmountComponentAtNode(container);
         console.error(`Unknown page "${state}"`);
