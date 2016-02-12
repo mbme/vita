@@ -4,6 +4,8 @@ GOSRC  := ./src/vita
 APP    := ./bin/vita
 TARGET := ./target
 WEBUI  := ./web
+WEBTEST  := ./web-tests
+NODE_BIN := ./node_modules/.bin
 
 DEVEL_BASE := /tmp/vita
 
@@ -17,7 +19,7 @@ build: check
 	gb build -ldflags "-X main.gitTag=$(shell git describe --tags --long --always)" all
 
 generate-resources:
-	NODE_ENV="production" ./node_modules/webpack/bin/webpack.js --content-base $(WEBUI)
+	NODE_ENV="production" $(NODE_BIN)/webpack --content-base $(WEBUI)
 	cp $(WEBUI)/favicon.ico     $(TARGET)/
 	cp $(WEBUI)/index.html      $(TARGET)/
 
@@ -40,7 +42,10 @@ run:
 	$(APP) --config $(DEVEL_CONFIG) run
 
 run-web:
-	./node_modules/webpack-dev-server/bin/webpack-dev-server.js --content-base $(WEBUI) --hot --inline
+	$(NODE_BIN)/webpack-dev-server --content-base $(WEBUI) --hot --inline
+
+test-web:
+	NODE_ENV="test" $(NODE_BIN)/mocha --recursive --reporter nyan --compilers js:babel-register $(WEBTEST)/**/*.js
 
 
 # check code

@@ -20,6 +20,11 @@
     "babel-plugin-transform-react-jsx": "*",
     "babel-preset-es2015": "*",
 
+    "mocha": "*",
+    "babel-register": "*",
+    "chai": "*",
+    "sinon": "*",
+
     "eslint": "*",
     "eslint-plugin-react": "*",
     "babel-eslint": "*",
