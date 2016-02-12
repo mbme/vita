@@ -4,7 +4,7 @@ import cx from 'classnames';
 
 import { createReactComponent, bus } from 'viter/viter';
 import { resolvedPromise } from 'helpers/utils';
-import Icon from 'components/common/icon';
+import Icon from 'components/icon';
 
 /**
  * General notes container which shows note menu and do animations.

@@ -2,7 +2,7 @@ import { createReactComponent } from 'viter/viter';
 import { formatBytes } from 'helpers/utils';
 import { createModal, buildHeader, buildButtons, buildBody } from 'helpers/dialogs';
 
-import Button from 'components/common/button';
+import Button from 'components/button';
 
 const header = buildHeader('File upload');
 

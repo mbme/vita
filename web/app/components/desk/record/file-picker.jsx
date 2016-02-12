@@ -1,6 +1,6 @@
 import { createReactComponent } from 'viter/viter';
 
-import Icon from 'components/common/icon';
+import Icon from 'components/icon';
 
 export default createReactComponent({
   displayName: 'FilePicker',

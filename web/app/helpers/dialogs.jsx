@@ -4,8 +4,8 @@ import { createReactComponent } from 'viter/viter';
 import { createDeferred } from 'helpers/utils';
 import { openModal, closeModal } from 'controllers/app-controller';
 
-import Button from 'components/common/button';
-import Icon from 'components/common/icon';
+import Button from 'components/button';
+import Icon from 'components/icon';
 
 const Modal = createReactComponent({
   displayName: 'Modal',

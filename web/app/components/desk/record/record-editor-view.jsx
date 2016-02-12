@@ -1,9 +1,9 @@
 import { createReactComponent } from 'viter/viter';
 import { createConfirmationDialog } from 'helpers/dialogs';
 
-import { Tab, Tabs } from 'components/common/tabs';
-import Editor from 'components/common/editor';
-import CategoriesEditor from 'components/common/categories-editor';
+import { Tab, Tabs } from 'components/tabs';
+import Editor from 'components/editor';
+import CategoriesEditor from 'components/categories-editor';
 import Attachments from './attachments';
 import FilePicker from './file-picker';
 

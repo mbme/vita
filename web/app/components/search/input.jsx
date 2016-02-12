@@ -1,6 +1,6 @@
 import { createReactComponent } from 'viter/viter';
 import { updateFilter } from 'controllers/app-controller';
-import Icon from 'components/common/icon';
+import Icon from 'components/icon';
 
 import { debounce } from 'lodash';
 import { searchDelay } from 'config';

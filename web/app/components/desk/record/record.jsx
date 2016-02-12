@@ -1,6 +1,6 @@
 import { createReactComponent } from 'viter/viter';
-import Markdown from 'components/common/markdown';
-import Category from 'components/common/category';
+import Markdown from 'components/markdown';
+import Category from 'components/category';
 
 export default createReactComponent(function Record ({ name, categories, data, attachments }) {
   return (

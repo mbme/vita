@@ -2,8 +2,8 @@ import { createReactComponent, bus } from 'viter/viter';
 import { openNote } from 'controllers/notes-controller';
 import cx from 'classnames';
 
-import Category from 'components/common/category';
-import TimeAgo from 'components/common/time-ago';
+import Category from 'components/category';
+import TimeAgo from 'components/time-ago';
 
 export default createReactComponent({
   displayName: 'SearchItem',

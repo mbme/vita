@@ -4,7 +4,7 @@ import { newNote, loadNotesList } from 'controllers/notes-controller';
 
 import SearchItem from './item';
 import SearchInput from './input';
-import Icon from 'components/common/icon';
+import Icon from 'components/icon';
 import { searchIgnoreCase } from 'config';
 
 function getSearchType (filter) {

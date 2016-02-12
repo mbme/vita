@@ -2,7 +2,7 @@ import { createReactComponent } from 'viter/viter';
 import { formatBytes, formatFileTs } from 'helpers/utils';
 import { createConfirmationDialog } from 'helpers/dialogs';
 
-import Icon from 'components/common/icon';
+import Icon from 'components/icon';
 
 const FILE_TYPE_ICONS = {
   image:    'image',
