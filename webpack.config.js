@@ -6,7 +6,9 @@ var glob = require('glob');
 var webpack = require('webpack');
 
 var base = __dirname;
-var src = 'web';
+var src = path.join(base, 'web');
+var appRoot = path.join(src, 'app');
+var target = path.join(base, 'target');
 
 var config = {
   entry: {
@@ -14,9 +16,9 @@ var config = {
   },
 
   resolve: {
-    root: [path.join(base, src, 'app')],
+    root: [appRoot],
     alias: {
-      'styles': path.join(base, src, 'styles/styles.js'),
+      'styles':   path.join(src, 'styles/styles.js'),
       'velocity': 'velocity-animate'
     },
 
@@ -73,7 +75,8 @@ var config = {
 };
 
 if (process.env.NODE_ENV === 'production') {
-  config.output.path = path.resolve('./target');
+
+  config.output.path = target;
 
   config.debug = false;
   config.plugins.push(new webpack.optimize.UglifyJsPlugin({
@@ -86,7 +89,26 @@ if (process.env.NODE_ENV === 'production') {
     VITA_PORT: undefined,
     DEV:       false
   }));
-} else {
+
+} if (process.env.NODE_ENV === 'test') {
+
+  config.entry.app = glob.sync(path.join(appRoot, '**/*.spec.js?(x)')).map(function (testPath) {
+    return path.relative(appRoot, testPath);
+  });
+  config.output = {
+    path:     target,
+    filename: 'test.bundle.js'
+  };
+
+  config.target = 'node';
+  config.debug = true;
+
+  config.plugins.push(new webpack.DefinePlugin({
+    VITA_PORT: 8081,
+    DEV:       false
+  }));
+
+} else { // DEVELOPMENT
   config.output.path = path.resolve('./web');
 
   config.debug = true;

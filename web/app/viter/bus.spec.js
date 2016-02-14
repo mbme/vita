@@ -1,6 +1,4 @@
-import EventBus from '../../web/app/viter/bus';
-import { expect } from 'chai';
-import sinon from 'sinon';
+import EventBus from 'viter/bus';
 
 const badEvents = [null, undefined, 1, {}, true, '', function () {}];
 const badHandlers = [null, undefined, 1, {}, true, '', 'sfasdf'];

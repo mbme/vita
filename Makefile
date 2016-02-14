@@ -4,7 +4,6 @@ GOSRC  := ./src/vita
 APP    := ./bin/vita
 TARGET := ./target
 WEBUI  := ./web
-WEBTEST  := ./web-tests
 NODE_BIN := ./node_modules/.bin
 
 DEVEL_BASE := /tmp/vita
@@ -45,7 +44,8 @@ run-web:
 	$(NODE_BIN)/webpack-dev-server --content-base $(WEBUI) --hot --inline
 
 test-web:
-	NODE_ENV="test" $(NODE_BIN)/mocha --recursive --reporter nyan --compilers js:babel-register $(WEBTEST)/**/*.js
+	NODE_ENV="test" $(NODE_BIN)/webpack --content-base $(WEBUI)
+	NODE_ENV="test" $(NODE_BIN)/mocha --require mocha-setup.js --reporter nyan $(TARGET)/test.bundle.js
 
 
 # check code
