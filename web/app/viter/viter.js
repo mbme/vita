@@ -1,48 +1,8 @@
 import React from 'react';
 import _ from 'lodash';
 import Immutable from 'immutable';
-import EventBus from './bus';
 
-export const bus = new EventBus();
-
-/**
- * App store
- */
-export const STORE = {};
-
-let batchUpates = false;
-
-/**
- * Register store properties and their default values.
- * @param {object} defaults {propName: defaultValue}
- */
-export function initStore (defaults) {
-  _.forEach(defaults, function (initialValue, name) {
-    let value = initialValue;
-    Object.defineProperty(STORE, name, {
-      get () {
-        return value;
-      },
-
-      set (newValue) {
-        value = newValue;
-
-        if (batchUpates) {
-          return;
-        }
-
-        bus.publish('!store-update', name);
-      }
-    });
-  });
-}
-
-export function batchStoreUpdates (updater) {
-  batchUpates = true;
-  updater();
-  batchUpates = false;
-  bus.publish('!store-update');
-}
+import { STORE, addStoreListener, removeStoreListener } from './store';
 
 // @see https://github.com/jurassix/react-immutable-render-mixin
 function shallowEqual (objA, objB) {
@@ -106,14 +66,14 @@ export function createReactContainer (comp) {
 
   let config = {
     componentWillMount (...args) {
-      bus.subscribe('!store-update', this.onStoreUpdate);
+      addStoreListener(this.onStoreUpdate);
       if (comp.componentWillMount) {
         comp.componentWillMount.apply(this, args);
       }
     },
 
     componentWillUnmount (...args) {
-      bus.unsubscribe('!store-update', this.onStoreUpdate);
+      removeStoreListener(this.onStoreUpdate);
       if (comp.componentWillUnmount) {
         comp.componentWillUnmount.apply(this, args);
       }
@@ -153,11 +113,11 @@ export function createComponent (config) {
 
   return {
     init () {
-      bus.subscribe('!store-update', updateComponent);
+      addStoreListener(updateComponent);
     },
 
     destroy () {
-      bus.unsubscribe('!store-update', updateComponent);
+      removeStoreListener(updateComponent);
     }
   };
 }

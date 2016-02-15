@@ -1,5 +1,4 @@
-import { createReactComponent, bus } from 'viter/viter';
-import { openNote } from 'controllers/notes-controller';
+import { createReactComponent } from 'viter/viter';
 import cx from 'classnames';
 
 import Category from 'components/category';
@@ -9,8 +8,7 @@ export default createReactComponent({
   displayName: 'SearchItem',
 
   render () {
-    let note = this.props.note;
-    let { selected, name, categories, timestamp } = note;
+    let { selected, name, categories, timestamp } = this.props.info;
     return (
       <li className={cx('SearchItem', { 'is-selected': selected })} onClick={this.onClick}>
         <span className="name">{name}</span>
@@ -22,16 +20,7 @@ export default createReactComponent({
   },
 
   onClick () {
-    let note = this.props.note;
-
-    // if note is already open then just focus it
-    if (note.selected) {
-      bus.publish('note:focus', note.id);
-    } else {
-      // else open and focus
-      openNote(note.id).then(function () {
-        bus.publish('note:focus', note.id);
-      });
-    }
+    let { info } = this.props;
+    this.props.onClick(info);
   }
 });

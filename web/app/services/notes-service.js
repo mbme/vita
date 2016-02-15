@@ -1,7 +1,7 @@
 import { curry } from 'lodash';
 import { key2id, byId } from 'helpers/utils';
 
-import { STORE } from 'viter/viter';
+import { STORE } from 'viter/store';
 
 import {
   createNoteRecord,

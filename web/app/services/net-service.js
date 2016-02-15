@@ -1,4 +1,4 @@
-import { STORE } from 'viter/viter';
+import { STORE } from 'viter/store';
 import { createDeferred, byId } from 'helpers/utils';
 
 let reqId = 0;

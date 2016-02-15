@@ -1,6 +1,7 @@
 /* eslint new-cap:[2, {"capIsNewExceptions": ["List"]}] */
 /* global DEV */
-import { initStore } from 'viter/viter';
+import { initStore } from 'viter/store';
+import EventBus from 'viter/bus';
 import { List } from 'immutable';
 import page from 'page';
 
@@ -15,6 +16,9 @@ import createManagers from 'managers';
 if (DEV) {
   document.title += ' [DEV]';
 }
+
+// global app bus
+export const bus = new EventBus();
 
 // setup Store properties
 initStore({

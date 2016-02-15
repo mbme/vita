@@ -1,6 +1,6 @@
 /* eslint new-cap:[2, {"capIsNewExceptions": ["List"]}] */
 import { List } from 'immutable';
-import { STORE } from 'viter/viter';
+import { STORE } from 'viter/store';
 import { key2id, byId } from 'helpers/utils';
 import { createNoteInfoRecord, mergeNoteInfoRecord } from './entities';
 import { searchResultsComparator } from 'config';

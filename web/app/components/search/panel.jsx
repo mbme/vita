@@ -1,11 +1,17 @@
+import { debounce } from 'lodash';
+
+import { bus } from 'init';
 import { createReactContainer } from 'viter/viter';
 import { fuzzySearch } from 'helpers/utils';
-import { newNote, loadNotesList } from 'controllers/notes-controller';
+import { updateFilter } from 'controllers/app-controller';
+import { newNote, openNote, loadNotesList } from 'controllers/notes-controller';
 
 import SearchItem from './item';
 import SearchInput from './input';
 import Icon from 'components/icon';
-import { searchIgnoreCase } from 'config';
+import { searchDelay, searchIgnoreCase } from 'config';
+
+const dispatchFilterUpdate = debounce(updateFilter, searchDelay);
 
 function getSearchType (filter) {
   if (filter) {
@@ -34,6 +40,18 @@ export default createReactContainer({
     loadNotesList();
   },
 
+  onSearchItemClick ({ selected, id }) {
+    // if note is already open then just focus it
+    if (selected) {
+      bus.publish('note:focus', id);
+    } else {
+      // else open and focus
+      openNote(id).then(function () {
+        bus.publish('note:focus', id);
+      });
+    }
+  },
+
   render () {
     let { infos, searchFilter } = this.state;
     let matcher = fuzzySearch(lowerIfRequired(searchFilter));
@@ -45,9 +63,9 @@ export default createReactContainer({
           <span className="results-count">{results.size}</span>
           <Icon className="plus" type="plus" onClick={newNote}/>
         </div>
-        <SearchInput filter={searchFilter} />
+        <SearchInput filter={searchFilter} onChange={dispatchFilterUpdate} />
         <ul className="SearchPanel-scroll">
-          {results.map(info => <SearchItem key={info.id} note={info} />)}
+          {results.map(info => <SearchItem key={info.id} info={info} onClick={this.onSearchItemClick} />)}
         </ul>
       </div>
     );

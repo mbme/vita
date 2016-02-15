@@ -28,7 +28,7 @@
     "enzyme": "*",
     "react-addons-test-utils": "*",
 
-    "eslint": "*",
+    "eslint": "^1.x.x",
     "eslint-plugin-react": "*",
     "babel-eslint": "*",
     "eslint-config-airbnb": "*",

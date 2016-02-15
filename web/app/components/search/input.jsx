@@ -1,11 +1,5 @@
 import { createReactComponent } from 'viter/viter';
-import { updateFilter } from 'controllers/app-controller';
 import Icon from 'components/icon';
-
-import { debounce } from 'lodash';
-import { searchDelay } from 'config';
-
-const dispatchFilterUpdate = debounce(updateFilter, searchDelay);
 
 export default createReactComponent({
   displayName: 'SearchInput',
@@ -28,6 +22,6 @@ export default createReactComponent({
   },
 
   handleChange (e) {
-    dispatchFilterUpdate(e.target.value);
+    this.props.onChange(e.target.value);
   }
 });

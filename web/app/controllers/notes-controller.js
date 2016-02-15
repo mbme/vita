@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { NOTE_TYPES } from 'const';
-import { batchStoreUpdates } from 'viter/viter';
+import { inBatch } from 'viter/store';
 
 import { id2key } from 'helpers/utils';
 import * as Files from 'helpers/files';
@@ -17,7 +17,7 @@ const MinRecord = {
 
 export function loadNotesList () {
   NetService.sendRequest('notes-list-read').then(function (items) {
-    batchStoreUpdates(function () {
+    inBatch(function () {
       NotesInfoService.resetInfos(items);
 
       NotesService.getNotes().forEach(
@@ -34,7 +34,7 @@ export function openNote (id) {
   }
 
   return NetService.sendRequest('note-read', id2key(id)).then(function (data) {
-    batchStoreUpdates(function () {
+    inBatch(function () {
       console.log('open note %s', id);
 
       NotesService.addNote(data);
@@ -46,7 +46,7 @@ export function openNote (id) {
 export function closeNote (nId) {
   let note = NotesService.getNote(nId);
 
-  batchStoreUpdates(function () {
+  inBatch(function () {
     NotesService.removeNote(nId);
 
     if (note.isNew()) {

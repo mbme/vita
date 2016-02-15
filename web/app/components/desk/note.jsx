@@ -2,7 +2,8 @@ import React from 'react';
 import velocity from 'velocity';
 import cx from 'classnames';
 
-import { createReactComponent, bus } from 'viter/viter';
+import { bus } from 'init';
+import { createReactComponent } from 'viter/viter';
 import { resolvedPromise } from 'helpers/utils';
 import Icon from 'components/icon';
 

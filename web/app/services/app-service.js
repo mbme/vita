@@ -1,4 +1,4 @@
-import { STORE } from 'viter/viter';
+import { STORE } from 'viter/store';
 import { byId } from 'helpers/utils';
 
 export default {
