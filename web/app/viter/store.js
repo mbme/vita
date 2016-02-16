@@ -1,51 +1,94 @@
-import { forEach } from 'lodash';
-import EventBus from './bus';
+import { forEach, keys } from 'lodash';
+import EventBus from 'viter/bus';
 
 const bus = new EventBus();
+const UPDATE_EVENT = '!store-update';
 
-/**
- * App store
- */
-export const STORE = {};
+let storeProps = {};
 
 let batchUpates = false;
+let updateHappened = false;
 
-/**
- * Register store properties and their default values.
- * @param {object} defaults {propName: defaultValue}
- */
-export function initStore (defaults) {
-  forEach(defaults, function (initialValue, name) {
-    let value = initialValue;
-    Object.defineProperty(STORE, name, {
-      get () {
-        return value;
-      },
+function setProperty (name, initialValue) {
+  let value = initialValue;
 
-      set (newValue) {
-        value = newValue;
+  Object.defineProperty(storeProps, name, {
+    configurable: true, // allow to delete it
+    enumerable: true, // allow to iterate over props
 
-        if (batchUpates) {
-          return;
-        }
+    get () {
+      return value;
+    },
 
-        bus.publish('!store-update');
+    set (newValue) {
+      if (value === newValue) {
+        return;
       }
-    });
+      // TODO freeze here!
+      value = newValue;
+
+      if (batchUpates) {
+        updateHappened = true;
+      } else {
+        bus.publish(UPDATE_EVENT);
+      }
+    }
   });
 }
 
+function deleteProperty (name) {
+  delete storeProps[name];
+}
+
+function clearStore () {
+  keys(storeProps).forEach(deleteProperty);
+}
+
+/**
+ * Register store properties and their default values.
+ * Clears all previously stored values.
+ * @param {object} defaults {propName: defaultValue}
+ */
+export function initStore (defaults) {
+  clearStore();
+  forEach(defaults, (initialValue, name) => setProperty(name, initialValue));
+  bus.publish(UPDATE_EVENT);
+}
+
+/**
+ * Execute store updates in a batch as a single update.
+ * @param {Function} updater function which contains store updates
+ */
 export function inBatch (updater) {
   batchUpates = true;
+  updateHappened = false;
+
   updater();
+
   batchUpates = false;
-  bus.publish('!store-update');
+  if (updateHappened) {
+    bus.publish(UPDATE_EVENT);
+  }
 }
 
+/**
+ * Add new listener for store updates.
+ * @param {Function} listener
+ */
 export function addStoreListener (listener) {
-  bus.subscribe('!store-update', listener);
+  bus.subscribe(UPDATE_EVENT, listener);
 }
 
+/**
+ * Remove store listener.
+ * @param {Function} listener
+ */
 export function removeStoreListener (listener) {
-  bus.unsubscribe('!store-update', listener);
+  bus.unsubscribe(UPDATE_EVENT, listener);
 }
+
+
+/**
+ * App store, which can be mutated only through its prototype - storeProps.
+ */
+export const STORE = Object.freeze(Object.create(storeProps));
