@@ -55,7 +55,12 @@ markdownIt.renderer.rules.link_open = function (tokens, idx, options, env, self)
   return defaultLinkRender(tokens, idx, options, env, self);
 };
 
-export default createReactComponent(function Markdown ({ text, attachments }) {
-  let data = markdownIt.render(text, { attachments });
-  return <div className="Markdown" dangerouslySetInnerHTML={{ __html: data }}/>;
+export default createReactComponent({
+  displayName: 'Markdown',
+
+  render () {
+    let { text, attachments } = this.props;
+    let data = markdownIt.render(text, { attachments });
+    return <div className="Markdown" dangerouslySetInnerHTML={{ __html: data }}/>;
+  }
 });

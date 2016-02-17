@@ -55,12 +55,17 @@ const Tabs = createReactComponent({
   }
 });
 
-const Tab = createReactComponent(function Tab ({ children, isSelected = false, className }) {
-  return (
-    <div className={cx('Tab', className, { 'is-selected': isSelected })}>
-      {children}
-    </div>
-  );
+const Tab = createReactComponent({
+  displayName: 'Tab',
+
+  render () {
+    let { children, isSelected = false, className } = this.props;
+    return (
+      <div className={cx('Tab', className, { 'is-selected': isSelected })}>
+        {children}
+      </div>
+    );
+  }
 });
 
 export { Tabs, Tab };

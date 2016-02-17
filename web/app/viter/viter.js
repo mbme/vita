@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import Immutable from 'immutable';
 
-import { STORE, addStoreListener, removeStoreListener } from './store';
+import { STORE, addStoreListener, removeStoreListener } from 'viter/store';
 
 // @see https://github.com/jurassix/react-immutable-render-mixin
 function shallowEqual (objA, objB) {
@@ -37,30 +37,46 @@ function notShallowEqual (...args) {
   return !shallowEqual(...args);
 }
 
+/**
+ * Create new React component.
+ * At least displayName and render are required.
+ * @param {object} comp component config
+ * @returns {ReactClass}
+ */
 export function createReactComponent (comp) {
-  let config;
-
-  if (_.isFunction(comp)) {
-    config = {
-      displayName: comp.name,
-
-      shouldComponentUpdate (nextProps) {
-        return !shallowEqual(this.props, nextProps);
-      },
-
-      render () {
-        return comp(this.props);
-      }
-    };
-  } else {
-    config = comp;
+  if (!_.isPlainObject(comp)) {
+    throw new Error('component config must be an object');
   }
 
-  return React.createClass(config);
+  ['displayName', 'render'].forEach(function (prop) {
+    if (!_.hasIn(comp, prop)) {
+      throw new Error(`${prop} is mandatory`);
+    }
+  });
+
+  return React.createClass(
+    _.defaults(comp, {
+      shouldComponentUpdate (nextProps, nextState) {
+        return !shallowEqual(this.props, nextProps) ||
+          !shallowEqual(this.state, nextState);
+      }
+    })
+  );
 }
 
+
+/**
+ * Create new React container which listens to changes in STORE.
+ * getState must be provided.
+ * @param {object} comp container config
+ * @returns {ReactClass}
+ */
 export function createReactContainer (comp) {
-  if (!comp.getState) {
+  if (!_.isPlainObject(comp)) {
+    throw new Error('container config must be an object');
+  }
+
+  if (!_.isFunction(comp.getState)) {
     throw new Error(`component ${comp.displayName}: missing getState`);
   }
 
@@ -88,12 +104,7 @@ export function createReactContainer (comp) {
     }
   };
 
-  return createReactComponent(_.defaults(config, comp, {
-    shouldComponentUpdate (nextProps, nextState) {
-      return !shallowEqual(this.props, nextProps) ||
-        !shallowEqual(this.state, nextState);
-    }
-  }));
+  return createReactComponent(_.defaults(config, comp));
 }
 
 export function createComponent (config) {

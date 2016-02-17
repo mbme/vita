@@ -1,14 +1,16 @@
 import { createReactComponent } from 'viter/viter';
-import { noop } from 'lodash';
 import cx from 'classnames';
 
-export default createReactComponent(
-  function Button ({ type, label, onClick = noop, className = '' }) {
+export default createReactComponent({
+  displayName: 'Button',
+
+  render () {
+    let { type, label, onClick, className = '' } = this.props;
     return (
       <button className={cx('Button', { [`Button-${type}`]: type }, className)}
               onClick={onClick}>
-      {label}
+        {label}
       </button>
     );
   }
-);
+});

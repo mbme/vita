@@ -1,7 +1,12 @@
 import { createReactComponent } from 'viter/viter';
-import { noop } from 'lodash';
 import cx from 'classnames';
 
-export default createReactComponent(function Caategory ({ name, onClick = noop, className = '' }) {
-  return <span className={cx('Category', className)} onClick={onClick}>{name}</span>;
+export default createReactComponent({
+  displayName: 'Category',
+
+  render () {
+    let { name, onClick, className = '' } = this.props;
+
+    return <span className={cx('Category', className)} onClick={onClick}>{name}</span>;
+  }
 });
