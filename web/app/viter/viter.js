@@ -4,6 +4,18 @@ import Immutable from 'immutable';
 
 import { STORE, addStoreListener, removeStoreListener } from 'viter/store';
 
+function validateConfig (config, ...props) {
+  if (!_.isPlainObject(config)) {
+    throw new Error('config must be an object');
+  }
+
+  props.forEach(function (prop) {
+    if (!_.hasIn(config, prop)) {
+      throw new Error(`'${prop}' is required`);
+    }
+  });
+}
+
 // @see https://github.com/jurassix/react-immutable-render-mixin
 function shallowEqual (objA, objB) {
   if (objA === objB) {
@@ -39,23 +51,15 @@ function notShallowEqual (...args) {
 
 /**
  * Create new React component.
- * At least displayName and render are required.
- * @param {object} comp component config
+ * At least 'displayName' and 'render' must be provided.
+ * @param {object} config component config
  * @returns {ReactClass}
  */
-export function createReactComponent (comp) {
-  if (!_.isPlainObject(comp)) {
-    throw new Error('component config must be an object');
-  }
-
-  ['displayName', 'render'].forEach(function (prop) {
-    if (!_.hasIn(comp, prop)) {
-      throw new Error(`${prop} is mandatory`);
-    }
-  });
+export function createReactComponent (config) {
+  validateConfig(config, 'displayName', 'render');
 
   return React.createClass(
-    _.defaults(comp, {
+    _.defaults(config, {
       shouldComponentUpdate (nextProps, nextState) {
         return !shallowEqual(this.props, nextProps) ||
           !shallowEqual(this.state, nextState);
@@ -67,31 +71,25 @@ export function createReactComponent (comp) {
 
 /**
  * Create new React container which listens to changes in STORE.
- * getState must be provided.
- * @param {object} comp container config
+ * At least 'displayName', 'getState' and 'render' must be provided.
+ * @param {object} config container config
  * @returns {ReactClass}
  */
-export function createReactContainer (comp) {
-  if (!_.isPlainObject(comp)) {
-    throw new Error('container config must be an object');
-  }
+export function createReactContainer (config) {
+  validateConfig(config, 'displayName', 'render', 'getState');
 
-  if (!_.isFunction(comp.getState)) {
-    throw new Error(`component ${comp.displayName}: missing getState`);
-  }
-
-  let config = {
+  let comp = {
     componentWillMount (...args) {
       addStoreListener(this.onStoreUpdate);
-      if (comp.componentWillMount) {
-        comp.componentWillMount.apply(this, args);
+      if (config.componentWillMount) {
+        config.componentWillMount.apply(this, args);
       }
     },
 
     componentWillUnmount (...args) {
       removeStoreListener(this.onStoreUpdate);
-      if (comp.componentWillUnmount) {
-        comp.componentWillUnmount.apply(this, args);
+      if (config.componentWillUnmount) {
+        config.componentWillUnmount.apply(this, args);
       }
     },
 
@@ -104,10 +102,18 @@ export function createReactContainer (comp) {
     }
   };
 
-  return createReactComponent(_.defaults(config, comp));
+  return createReactComponent(_.defaults(comp, config));
 }
 
+/**
+ * Create new component.
+ * At least 'getState' and 'render' must be provided.
+ * @param {object} comp component config
+ * @returns {ReactClass}
+ */
 export function createComponent (config) {
+  validateConfig(config, 'render', 'getState');
+
   let state = null;
 
   const shouldUpdate = config.shouldComponentUpdate || notShallowEqual;
