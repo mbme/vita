@@ -108,4 +108,25 @@ describe('Store', function () {
 
     expect(handler.called).to.be.false;
   });
+
+  it('should handle batch in a batch', function () {
+    initStore({ a: 1, b: 2 });
+
+    let handler = sinon.spy();
+    addStoreListener(handler);
+
+    inBatch(function () {
+      STORE.a = 3;
+      STORE.b = 4;
+
+      inBatch(function () {
+        STORE.a = 5;
+        STORE.b = 6;
+      });
+    });
+
+    removeStoreListener(handler);
+
+    expect(handler.calledOnce).to.be.true;
+  });
 });

@@ -60,6 +60,10 @@ export function initStore (defaults) {
  * @param {Function} updater function which contains store updates
  */
 export function inBatch (updater) {
+  if (batchUpates) { // if updates are already batched then just execute updater
+    updater();
+    return;
+  }
   batchUpates = true;
   updateHappened = false;
 
