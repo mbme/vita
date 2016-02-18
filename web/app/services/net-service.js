@@ -38,5 +38,25 @@ export default {
 
   setSocket (newSocket) {
     STORE.socket = newSocket;
+  },
+
+  getNotesList () {
+    return this.sendRequest('notes-list-read');
+  },
+
+  getNote (noteKey) {
+    return this.sendRequest('note-read', noteKey);
+  },
+
+  deleteNote (noteKey) {
+    return this.sendRequest('note-delete', noteKey);
+  },
+
+  updateNote (data) {
+    return this.sendRequest('note-update', data);
+  },
+
+  createNote (data) {
+    return this.sendRequest('note-create', data);
   }
 };

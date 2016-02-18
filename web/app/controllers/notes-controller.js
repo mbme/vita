@@ -16,7 +16,7 @@ const MinRecord = {
 };
 
 export function loadNotesList () {
-  NetService.sendRequest('notes-list-read').then(function (items) {
+  NetService.getNotesList().then(function (items) {
     inBatch(function () {
       NotesInfoService.resetInfos(items);
 
@@ -33,7 +33,7 @@ export function openNote (id) {
     return Promise.reject();
   }
 
-  return NetService.sendRequest('note-read', id2key(id)).then(function (data) {
+  return NetService.getNote(id2key(id)).then(function (data) {
     inBatch(function () {
       console.log('open note %s', id);
 
@@ -66,7 +66,7 @@ export function editNote (nId, edit) {
 export function deleteNote (nId) {
   let note = NotesService.getNote(nId);
 
-  NetService.sendRequest('note-delete', id2key(note.id)).then(function () {
+  NetService.deleteNote(id2key(note.id)).then(function () {
     console.log('note %s deleted', note.id);
     loadNotesList();
     closeNote(nId);
@@ -90,7 +90,7 @@ export function saveNote (nId, changedData) {
   let data = _.assign({
     key: id2key(note.id)
   }, changedData);
-  return NetService.sendRequest('note-update', data).then(function (noteData) {
+  return NetService.updatedNote(data).then(function (noteData) {
     let updatedNote = NotesService.updateNote(nId, noteData);
     console.log('note %s saved', updatedNote.id);
 
@@ -110,7 +110,7 @@ export function createNote (nId, newData) {
     categories: newData.categories || MinRecord.categories
   };
 
-  return NetService.sendRequest('note-create', data).then(function (noteRaw) {
+  return NetService.createNote(data).then(function (noteRaw) {
     let note = NotesService.updateNote(nId, noteRaw);
 
     loadNotesList();

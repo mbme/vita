@@ -27,6 +27,7 @@ export default function createMessagesManager () {
       requests.forEach(request => {
         if (!includes(pendingRequests, request.id)) {
           socket.send(JSON.stringify(pick(request, 'id', 'method', 'params')));
+          // FIXME check whats going on with "old" pendingRequests here
         }
         newPending.push(request.id);
       });
