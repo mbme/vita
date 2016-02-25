@@ -1,10 +1,11 @@
-import { STORE } from 'viter/store';
+/* eslint no-param-reassign: [2, {"props": false}] */
+
 import { createDeferred, byId } from 'helpers/utils';
 
-let reqId = 0;
+export default function (STORE) {
+  let reqId = 0;
 
-export default {
-  sendRequest (method, params) {
+  function sendRequest (method, params) {
     let request = {
       id: reqId += 1,
       method,
@@ -15,9 +16,9 @@ export default {
     STORE.requests = STORE.requests.push(request);
 
     return request.deferred.promise;
-  },
+  }
 
-  processResponse (msg) {
+  function processResponse (msg) {
     let pos = STORE.requests.findIndex(byId(msg.id));
     if (pos === -1) {
       let errMsg = `unexpected response ${msg}`;
@@ -34,29 +35,38 @@ export default {
     }
 
     STORE.requests = STORE.requests.delete(pos);
-  },
-
-  setSocket (newSocket) {
-    STORE.socket = newSocket;
-  },
-
-  getNotesList () {
-    return this.sendRequest('notes-list-read');
-  },
-
-  getNote (noteKey) {
-    return this.sendRequest('note-read', noteKey);
-  },
-
-  deleteNote (noteKey) {
-    return this.sendRequest('note-delete', noteKey);
-  },
-
-  updateNote (data) {
-    return this.sendRequest('note-update', data);
-  },
-
-  createNote (data) {
-    return this.sendRequest('note-create', data);
   }
-};
+
+  return {
+    setSocket (socket) {
+      if (socket) {
+        // process incoming messages
+        socket.addEventListener('message', function (e) {
+          processResponse(JSON.parse(e.data));
+        });
+      }
+
+      STORE.socket = socket;
+    },
+
+    getNotesList () {
+      return sendRequest('notes-list-read');
+    },
+
+    getNote (noteKey) {
+      return sendRequest('note-read', noteKey);
+    },
+
+    deleteNote (noteKey) {
+      return sendRequest('note-delete', noteKey);
+    },
+
+    updateNote (data) {
+      return sendRequest('note-update', data);
+    },
+
+    createNote (data) {
+      return sendRequest('note-create', data);
+    }
+  };
+}

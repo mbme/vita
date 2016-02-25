@@ -10,16 +10,6 @@ import FilePicker from './file-picker';
 import Note from 'components/desk/note';
 import Record from 'components/desk/record/record';
 
-import {
-  createNote,
-  saveNote,
-  attachFile,
-  deleteFile,
-  closeNote,
-  editNote,
-  deleteNote
-} from 'controllers/notes-controller';
-
 function showCloseConfirmation () {
   return createConfirmationDialog({
     type: 'warn',
@@ -114,11 +104,11 @@ export default createReactComponent({
   },
 
   uploadFile (file) {
-    attachFile(this.props.note.nId, file);
+    this.actions.attachFile(this.props.note.nId, file);
   },
 
   deleteAttachment (attachment) {
-    deleteFile(this.props.note.nId, attachment.name);
+    this.actions.deleteFile(this.props.note.nId, attachment.name);
   },
 
   getCurrentState () {
@@ -159,25 +149,25 @@ export default createReactComponent({
     }
 
     if (note.isNew()) {
-      return createNote(note.nId, changed);
+      return this.actions.createNote(note.nId, changed);
     }
 
-    return saveNote(note.nId, changed);
+    return this.actions.saveNote(note.nId, changed);
   },
 
   onSave () {
-    this.saveNote().then(() => editNote(this.props.note.nId, false));
+    this.saveNote().then(() => this.actions.editNote(this.props.note.nId, false));
   },
 
   onUndo () {
-    showCloseConfirmation().then(() => editNote(this.props.note.nId, false));
+    showCloseConfirmation().then(() => this.actions.editNote(this.props.note.nId, false));
   },
 
   close () {
-    closeNote(this.props.note.nId);
+    this.actions.closeNote(this.props.note.nId);
   },
 
   onDelete () {
-    showDeleteConfirmation().then(() => deleteNote(this.props.note.nId));
+    showDeleteConfirmation().then(() => this.actions.deleteNote(this.props.note.nId));
   }
 });

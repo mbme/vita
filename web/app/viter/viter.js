@@ -1,8 +1,6 @@
-import React from 'react';
 import _ from 'lodash';
+import React from 'react';
 import Immutable from 'immutable';
-
-import { STORE, addStoreListener, removeStoreListener } from 'viter/store';
 
 function validateConfig (config, ...props) {
   if (!_.isPlainObject(config)) {
@@ -68,6 +66,19 @@ export function createReactComponent (config) {
   );
 }
 
+/**
+ * Store instance.
+ */
+let GlobalStore;
+let Actions;
+
+export function setStore (STORE) {
+  GlobalStore = STORE;
+}
+
+export function setActions (actions) {
+  Actions = actions;
+}
 
 /**
  * Create new React container which listens to changes in STORE.
@@ -76,29 +87,38 @@ export function createReactComponent (config) {
  * @returns {ReactClass}
  */
 export function createReactContainer (config) {
-  validateConfig(config, 'displayName', 'render', 'getState');
+  validateConfig(config, 'displayName', 'render');
 
   let comp = {
     componentWillMount (...args) {
-      addStoreListener(this.onStoreUpdate);
+      if (config.getState) {
+        GlobalStore.addListener(this.onStoreUpdate);
+      }
+      this.actions = Actions;
       if (config.componentWillMount) {
         config.componentWillMount.apply(this, args);
       }
     },
 
     componentWillUnmount (...args) {
-      removeStoreListener(this.onStoreUpdate);
+      if (config.getState) {
+        GlobalStore.removeListener(this.onStoreUpdate);
+      }
       if (config.componentWillUnmount) {
         config.componentWillUnmount.apply(this, args);
       }
     },
 
     getInitialState () {
-      return this.getState(STORE);
+      if (config.getState) {
+        return this.getState(GlobalStore);
+      }
+
+      return null;
     },
 
     onStoreUpdate () {
-      this.setState(this.getState(STORE));
+      this.setState(this.getState(GlobalStore));
     }
   };
 
@@ -119,7 +139,7 @@ export function createComponent (config) {
   const shouldUpdate = config.shouldComponentUpdate || notShallowEqual;
 
   function updateComponent () {
-    let newState = config.getState(STORE);
+    let newState = config.getState(GlobalStore);
 
     // check if we need re-render after store updated
     if (shouldUpdate.call(config, state, newState)) {
@@ -130,11 +150,12 @@ export function createComponent (config) {
 
   return {
     init () {
-      addStoreListener(updateComponent);
+      GlobalStore.addListener(updateComponent);
+      config.actions = Actions;
     },
 
     destroy () {
-      removeStoreListener(updateComponent);
+      GlobalStore.removeListener(updateComponent);
     }
   };
 }

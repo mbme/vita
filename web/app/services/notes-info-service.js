@@ -1,29 +1,33 @@
 /* eslint new-cap:[2, {"capIsNewExceptions": ["List"]}] */
+/* eslint no-param-reassign: [2, {"props": false}] */
+
 import { List } from 'immutable';
-import { STORE } from 'viter/store';
 import { key2id, byId } from 'helpers/utils';
-import { createNoteInfoRecord, mergeNoteInfoRecord } from './entities';
+import { createNoteInfoRecord, mergeNoteInfoRecord } from 'services/entities';
 import { searchResultsComparator } from 'config';
 
-export default {
-  resetInfos (newInfos) {
-    let items = newInfos.map(info => createNoteInfoRecord({ id: key2id(info.key) }, info));
-    items.sort(searchResultsComparator);
+export default function (STORE) {
 
-    STORE.infos = List(items);
-  },
+  return {
+    resetInfos (newInfos) {
+      let items = newInfos.map(info => createNoteInfoRecord({ id: key2id(info.key) }, info));
+      items.sort(searchResultsComparator);
 
-  getInfo (id) {
-    return STORE.infos.find(byId(id));
-  },
+      STORE.infos = List(items);
+    },
 
-  markSelected (id, selected) {
-    let pos = STORE.infos.findIndex(byId(id));
+    getInfo (id) {
+      return STORE.infos.find(byId(id));
+    },
 
-    if (pos === -1) {
-      throw new Error(`cannot find note info with id=${id}`);
+    markSelected (id, selected) {
+      let pos = STORE.infos.findIndex(byId(id));
+
+      if (pos === -1) {
+        throw new Error(`cannot find note info with id=${id}`);
+      }
+
+      STORE.infos = STORE.infos.update(pos, info => mergeNoteInfoRecord(info, { selected }));
     }
-
-    STORE.infos = STORE.infos.update(pos, info => mergeNoteInfoRecord(info, { selected }));
-  }
-};
+  };
+}

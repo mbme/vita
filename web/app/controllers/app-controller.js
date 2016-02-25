@@ -1,39 +1,33 @@
-import NetService from 'services/net-service';
-import AppService from 'services/app-service';
+export default function ({ app, net }) {
+  return {
+    updateFilter (filter) {
+      if (app.getSearchFilter() === filter) {
+        return;
+      }
 
-export function updateFilter (filter) {
-  if (AppService.getSearchFilter() === filter) {
-    return;
-  }
+      console.debug('search filter -> %s', filter);
 
-  console.debug('search filter -> %s', filter);
+      app.setSearchFilter(filter);
+    },
 
-  AppService.setSearchFilter(filter);
-}
+    openModal (id, view) {
+      app.addModal(id, view);
+    },
 
-export function openModal (id, view) {
-  AppService.addModal(id, view);
-}
+    closeModal (id) {
+      app.removeModal(id);
+    },
 
-export function closeModal (id) {
-  AppService.removeModal(id);
-}
+    changePage (page) {
+      if (app.getPage() === page) {
+        return;
+      }
 
-export function changePage (page) {
-  if (AppService.getPage() === page) {
-    return;
-  }
+      app.setPage(page);
+    },
 
-  AppService.setPage(page);
-}
-
-export function useSocket (socket) {
-  if (socket) {
-    // process incoming messages
-    socket.addEventListener('message', function (e) {
-      NetService.processResponse(JSON.parse(e.data));
-    });
-  }
-
-  NetService.setSocket(socket);
+    useSocket (socket) {
+      net.setSocket(socket);
+    }
+  };
 }

@@ -3,15 +3,12 @@ import { debounce } from 'lodash';
 import { bus } from 'init';
 import { createReactContainer } from 'viter/viter';
 import { fuzzySearch } from 'helpers/utils';
-import { updateFilter } from 'controllers/app-controller';
-import { newNote, openNote, loadNotesList } from 'controllers/notes-controller';
 
 import SearchItem from './item';
 import SearchInput from './input';
 import Icon from 'components/icon';
 import { searchDelay, searchIgnoreCase } from 'config';
 
-const dispatchFilterUpdate = debounce(updateFilter, searchDelay);
 
 function getSearchType (filter) {
   if (filter) {
@@ -37,7 +34,9 @@ export default createReactContainer({
   },
 
   componentWillMount () {
-    loadNotesList();
+    this.actions.loadNotesList();
+
+    this.dispatchFilterUpdate = debounce(this.actions.updateFilter, searchDelay);
   },
 
   onSearchItemClick ({ selected, id }) {
@@ -46,7 +45,7 @@ export default createReactContainer({
       bus.publish('note:focus', id);
     } else {
       // else open and focus
-      openNote(id).then(function () {
+      this.actions.openNote(id).then(function () {
         bus.publish('note:focus', id);
       });
     }
@@ -61,11 +60,13 @@ export default createReactContainer({
         <div className="SearchPanel-header">
           <span className="search-type">{getSearchType(searchFilter)}</span>
           <span className="results-count">{results.size}</span>
-          <Icon className="plus" type="plus" onClick={newNote}/>
+          <Icon className="plus" type="plus" onClick={this.actions.newNote}/>
         </div>
-        <SearchInput filter={searchFilter} onChange={dispatchFilterUpdate} />
+        <SearchInput filter={searchFilter} onChange={this.dispatchFilterUpdate} />
         <ul className="SearchPanel-scroll">
-          {results.map(info => <SearchItem key={info.id} info={info} onClick={this.onSearchItemClick} />)}
+          {results.map(
+             info => <SearchItem key={info.id} info={info} onClick={this.onSearchItemClick} />
+           )}
         </ul>
       </div>
     );
