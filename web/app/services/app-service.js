@@ -16,6 +16,6 @@ export default function (STORE) {
 
     setPage (newPage = '') {
       STORE.page = newPage;
-    }
+    },
   };
 }

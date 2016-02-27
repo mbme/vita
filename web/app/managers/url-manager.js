@@ -32,6 +32,6 @@ export default function crateUrlManager () {
       }
 
       page(url);
-    }
+    },
   });
 }

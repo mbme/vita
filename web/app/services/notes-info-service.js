@@ -28,6 +28,6 @@ export default function (STORE) {
       }
 
       STORE.infos = STORE.infos.update(pos, info => mergeNoteInfoRecord(info, { selected }));
-    }
+    },
   };
 }

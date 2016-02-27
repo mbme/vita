@@ -1,3 +1,4 @@
+/* eslint no-param-reassign: [2, {"props": false}] */
 import _ from 'lodash';
 import React from 'react';
 import Immutable from 'immutable';
@@ -61,7 +62,7 @@ export function createReactComponent (config) {
       shouldComponentUpdate (nextProps, nextState) {
         return !shallowEqual(this.props, nextProps) ||
           !shallowEqual(this.state, nextState);
-      }
+      },
     })
   );
 }
@@ -123,7 +124,7 @@ export function createReactContainer (config) {
 
     onStoreUpdate () {
       this.setState(this.getState(GlobalStore));
-    }
+    },
   };
 
   return createReactComponent(_.defaults(comp, config));
@@ -160,6 +161,6 @@ export function createComponent (config) {
 
     destroy () {
       GlobalStore.removeListener(updateComponent);
-    }
+    },
   };
 }

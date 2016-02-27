@@ -10,7 +10,7 @@ export default function (STORE) {
       id: reqId += 1,
       method,
       params,
-      deferred: createDeferred()
+      deferred: createDeferred(),
     };
 
     STORE.requests = STORE.requests.push(request);
@@ -67,6 +67,6 @@ export default function (STORE) {
 
     createNote (data) {
       return sendRequest('note-create', data);
-    }
+    },
   };
 }

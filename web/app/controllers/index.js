@@ -7,7 +7,7 @@ export default function createActions (services) {
 
   _([
     createAppController,
-    createNotesController
+    createNotesController,
   ]).map(
     controller => controller(services)
   ).flatMap(

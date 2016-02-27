@@ -20,7 +20,7 @@ const Attachment = Record({
   type: undefined,
   fileSize: 0,
   timestamp: 0,
-  url: ''
+  url: '',
 });
 
 export function createAttachment (noteKey, attachment) {
@@ -32,7 +32,7 @@ export function createAttachment (noteKey, attachment) {
   return new Attachment({
     name, mime, type, timestamp,
     fileSize: size,
-    url: `${baseUrl}/notes/${noteKey.type}/${noteKey.id}/attachments/${name}`
+    url: `${baseUrl}/notes/${noteKey.type}/${noteKey.id}/attachments/${name}`,
   });
 }
 
@@ -50,14 +50,14 @@ class NoteRecord extends Record({
   id: undefined,
   key: {
     type: undefined,
-    id: undefined
+    id: undefined,
   },
   edit: false,
   name: '',
   data: '',
   categories: createCategories(),
   attachments: createAttachments(),
-  timestamp: 0
+  timestamp: 0,
 }) {
   isNew () {
     return !this.id;
@@ -68,12 +68,12 @@ const NoteInfoRecord = Record({
   id: undefined,
   key: {
     type: undefined,
-    id: undefined
+    id: undefined,
   },
   name: undefined,
   categories: createCategories(),
   selected: false,
-  timestamp: 0
+  timestamp: 0,
 });
 
 export function createNoteRecord (...data) {

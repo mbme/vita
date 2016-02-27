@@ -9,6 +9,6 @@ export default function createServices (STORE) {
     net:       createNetService(STORE),
     notes:     createNotesService(STORE),
     notesInfo: createNotesInfoService(STORE),
-    inBatch:   STORE.inBatch.bind(STORE)
+    inBatch:   STORE.inBatch.bind(STORE),
   };
 }

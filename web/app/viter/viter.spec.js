@@ -5,7 +5,7 @@ import {
   createReactComponent,
   createReactContainer,
   createComponent,
-  setStore
+  setStore,
 } from 'viter/viter';
 
 describe('Viter', function () {
@@ -15,7 +15,7 @@ describe('Viter', function () {
 
       render () {
         return 'OK';
-      }
+      },
     });
 
     let el = React.createElement(comp);
@@ -37,7 +37,7 @@ describe('Viter', function () {
 
       render () {
         return 'OK';
-      }
+      },
     });
 
     let wrapper = Enzyme.shallow(React.createElement(comp));
@@ -55,7 +55,7 @@ describe('Viter', function () {
       },
 
       render () {
-      }
+      },
     });
   });
 
@@ -69,7 +69,7 @@ describe('Viter', function () {
         return { test };
       },
 
-      render: handler
+      render: handler,
     });
 
     comp.init();

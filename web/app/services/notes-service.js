@@ -5,7 +5,7 @@ import { key2id, byId } from 'helpers/utils';
 import {
   createNoteRecord,
   mergeNoteRecord,
-  createAttachment
+  createAttachment,
 } from './entities';
 
 
@@ -100,7 +100,7 @@ export default function (STORE) {
       STORE.notes = STORE.notes.push(createNoteRecord({
         nId: nextNid(),
         key: { type },
-        edit: true
+        edit: true,
       }));
     },
 
@@ -126,6 +126,6 @@ export default function (STORE) {
       let newNote = note.set('attachments', attachments);
 
       STORE.notes = STORE.notes.set(pos, newNote);
-    }
+    },
   };
 }

@@ -9,7 +9,6 @@
     "func-names": 0,
     "no-console": 0,
     "no-unused-expressions": 0,
-    "comma-dangle": 0,
     "padded-blocks": 0,
     "key-spacing": [2, { "beforeColon": false, "afterColon": true, "mode": "minimum"}],
     "quote-props": [2, "consistent"],

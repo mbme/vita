@@ -8,7 +8,7 @@ describe('Store', function () {
       b: 'str',
       c: null,
       d: false,
-      e: {}
+      e: {},
     };
     let store = createStore(defaults);
 

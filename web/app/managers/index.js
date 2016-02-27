@@ -8,6 +8,6 @@ export default function createManagers () {
     createPageManager(),
     createMessagesManager(),
     createUrlManager(),
-    createSocketManager()
+    createSocketManager(),
   ];
 }

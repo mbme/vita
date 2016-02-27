@@ -7,7 +7,7 @@ import MainPage from 'components/pages/records';
 
 // page === layout
 const PAGES = {
-  'main': MainPage
+  'main': MainPage,
 };
 
 // Page renderer
@@ -32,6 +32,6 @@ export default function createPageManager () {
         ReactDOM.unmountComponentAtNode(container);
         console.error(`Unknown page "${state}"`);
       }
-    }
+    },
   });
 }

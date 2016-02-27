@@ -45,7 +45,7 @@ export default function createStore (config) {
       if (updateHappened) {
         bus.publish(UPDATE_EVENT);
       }
-    }
+    },
   };
 
   function setProperty (name, initialValue) {
@@ -71,7 +71,7 @@ export default function createStore (config) {
         } else {
           bus.publish(UPDATE_EVENT);
         }
-      }
+      },
     });
   }
 

@@ -20,6 +20,6 @@ export default function ({ app, net }) {
 
     useSocket (socket) {
       net.setSocket(socket);
-    }
+    },
   };
 }

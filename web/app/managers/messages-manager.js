@@ -33,6 +33,6 @@ export default function createMessagesManager () {
       });
 
       pendingRequests = newPending;
-    }
+    },
   });
 }

@@ -29,7 +29,7 @@ const STORE = createStore({
   requests:     List(),
   socket:       null,
   page:         '',
-  searchFilter: ''
+  searchFilter: '',
 });
 
 let actions = createActions(createServices(STORE), STORE);

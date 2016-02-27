@@ -6,7 +6,7 @@ import * as Files from 'helpers/files';
 
 const MinRecord = {
   name:       'No name',
-  categories: ['uncategorized']
+  categories: ['uncategorized'],
 };
 
 export default function ({ net, notes, notesInfo, inBatch }) {
@@ -30,7 +30,7 @@ export default function ({ net, notes, notesInfo, inBatch }) {
       type: key.type,
       name: newData.name || MinRecord.name,
       data: newData.data,
-      categories: newData.categories || MinRecord.categories
+      categories: newData.categories || MinRecord.categories,
     };
 
     return net.createNote(data).then(function (noteRaw) {
@@ -108,7 +108,7 @@ export default function ({ net, notes, notesInfo, inBatch }) {
       }
 
       let data = _.assign({
-        key: id2key(note.id)
+        key: id2key(note.id),
       }, changedData);
       return net.updatedNote(data).then(function (noteData) {
         let updatedNote = notes.updateNote(nId, noteData);
@@ -144,6 +144,6 @@ export default function ({ net, notes, notesInfo, inBatch }) {
       Files.deleteFile(note.key, fileName).then(function () {
         notes.removeAttachment(nId, fileName);
       });
-    }
+    },
   };
 }
