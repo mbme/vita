@@ -7,7 +7,7 @@ const Tabs = createReactComponent({
 
   getInitialState () {
     return {
-      selected: 0
+      selected: 0,
     };
   },
 

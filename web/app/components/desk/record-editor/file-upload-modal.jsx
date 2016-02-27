@@ -5,7 +5,7 @@ import Modal from 'components/modal';
 import Button from 'components/button';
 
 const imageMimeTypes = [
-  'image/jpg', 'image/jpeg', 'image/png', 'image/gif', 'image/svg', 'image/webp'
+  'image/jpg', 'image/jpeg', 'image/png', 'image/gif', 'image/svg', 'image/webp',
 ];
 
 function isImage (file) {
@@ -46,14 +46,14 @@ const FileUploadModalView = createReactComponent({
 
     let previewImg = false;
     if (preview) {
-      previewImg = <img className="preview" alt={file.name} src={preview}/>;
+      previewImg = <img className="preview" alt={file.name} src={preview} />;
     }
 
     return (
       <div className="editor-view">
         {previewImg}
         <div className="input-row">
-          <input ref="fileName" name="" type="text" defaultValue={fileName}/>
+          <input ref="fileName" name="" type="text" defaultValue={fileName} />
           <span className="mime">{file.type}</span>
           <span className="size">{formatBytes(file.size)}</span>
         </div>
@@ -61,7 +61,7 @@ const FileUploadModalView = createReactComponent({
 
         <Modal.Footer>
           <Button label="Cancel" type="warn" onClick={this.props.onClose} />
-          <Button label="Upload" type="primary" onClick={this.onClickUpload}/>
+          <Button label="Upload" type="primary" onClick={this.onClickUpload} />
         </Modal.Footer>
       </div>
     );

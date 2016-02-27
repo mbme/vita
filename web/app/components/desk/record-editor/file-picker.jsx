@@ -11,7 +11,7 @@ export default createReactComponent({
         <Icon type="upload" />
         <span> Drop files here or </span>
         <span className="upload-link" onClick={this.onClickSelectFile}>select them</span>
-        <input ref="input" name="" type="file" value="" onChange={this.onFileSelected}/>
+        <input ref="input" name="" type="file" value="" onChange={this.onFileSelected} />
       </form>
     );
   },
@@ -30,5 +30,5 @@ export default createReactComponent({
   onFileSelected (e) {
     this.props.onFileSelected(e.target.files[0]);
     this.refs.form.reset();
-  }
+  },
 });

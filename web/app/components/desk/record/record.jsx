@@ -13,8 +13,8 @@ export default createReactComponent({
         <span className="categories">
           {categories.map(cat => <Category key={cat} name={cat} />)}
         </span>
-        <Markdown text={data} attachments={attachments}/>
+        <Markdown text={data} attachments={attachments} />
       </div>
     );
-  }
+  },
 });

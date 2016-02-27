@@ -12,7 +12,7 @@ export default createReactComponent({
     let { filter } = this.props;
     return (
       <div className="SearchInput">
-        <Icon type="ios-search-strong"/>
+        <Icon type="ios-search-strong" />
         <input type="text"
                placeholder="Search"
                defaultValue={filter}
@@ -23,5 +23,5 @@ export default createReactComponent({
 
   handleChange (e) {
     this.props.onChange(e.target.value);
-  }
+  },
 });

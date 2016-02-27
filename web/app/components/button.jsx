@@ -12,5 +12,5 @@ export default createReactComponent({
         {label}
       </button>
     );
-  }
+  },
 });

@@ -8,7 +8,7 @@ describe('Component Icon', function () {
   });
 
   it('should set className', function () {
-    let wrapper = Enzyme.shallow(<Icon type="test" className="one-more-test"/>);
+    let wrapper = Enzyme.shallow(<Icon type="test" className="one-more-test" />);
     expect(wrapper.find('.one-more-test')).to.have.length(1);
   });
 

@@ -14,7 +14,7 @@ export default createReactComponent({
         return (
           <Attachment key={attachment.name}
                       attachment={attachment}
-                      onDelete={partial(deleteAttachment, attachment)}/>
+                      onDelete={partial(deleteAttachment, attachment)} />
         );
       });
 
@@ -25,5 +25,5 @@ export default createReactComponent({
         </table>
       </div>
     );
-  }
+  },
 });

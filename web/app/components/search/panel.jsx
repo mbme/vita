@@ -60,7 +60,7 @@ export default createReactContainer({
         <div className="SearchPanel-header">
           <span className="search-type">{getSearchType(searchFilter)}</span>
           <span className="results-count">{results.size}</span>
-          <Icon className="plus" type="plus" onClick={this.actions.newNote}/>
+          <Icon className="plus" type="plus" onClick={this.actions.newNote} />
         </div>
         <SearchInput filter={searchFilter} onChange={this.dispatchFilterUpdate} />
         <ul className="SearchPanel-scroll">
@@ -70,5 +70,5 @@ export default createReactContainer({
         </ul>
       </div>
     );
-  }
+  },
 });

@@ -6,7 +6,7 @@ import MarkdownItFootnote from 'markdown-it-footnote';
 const markdownIt = new MarkdownIt('default', {
   html: true,
   linkify: true,
-  typographer: true
+  typographer: true,
 });
 markdownIt.use(MarkdownItFootnote);
 
@@ -61,6 +61,6 @@ export default createReactComponent({
   render () {
     let { text, attachments } = this.props;
     let data = markdownIt.render(text, { attachments });
-    return <div className="Markdown" dangerouslySetInnerHTML={{ __html: data }}/>;
-  }
+    return <div className="Markdown" dangerouslySetInnerHTML={{ __html: data }} />;
+  },
 });

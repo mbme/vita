@@ -17,11 +17,11 @@ export default createReactComponent({
     let { defaultValue, placeholder = '' } = this.props;
     return (
       <input type="text" className="CategoriesEditor" onChange={this.onChange}
-             defaultValue={defaultValue.join(' ')} placeholder={placeholder} ref="categories"/>
+             defaultValue={defaultValue.join(' ')} placeholder={placeholder} ref="categories" />
     );
   },
 
   onChange () {
     this.value = createCategories(words(this.refs.categories.value));
-  }
+  },
 });

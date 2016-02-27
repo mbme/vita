@@ -19,7 +19,7 @@ export default createReactContainer({
 
     let menu = [{
       icon: 'compose',
-      handler: this.onEdit
+      handler: this.onEdit,
     }];
 
     return (
@@ -32,5 +32,5 @@ export default createReactContainer({
                 attachments={note.attachments} />
       </Note>
     );
-  }
+  },
 });

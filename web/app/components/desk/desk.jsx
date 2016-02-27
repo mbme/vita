@@ -30,5 +30,5 @@ export default createReactContainer({
     let notes = this.state.notes.map(this.renderNote).reverse();
 
     return <ul className="Desk">{notes}</ul>;
-  }
+  },
 });

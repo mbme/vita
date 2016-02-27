@@ -13,7 +13,7 @@ function deleteConfirmation (fileName, deferred) {
     body: (<span>Are you sure you would like to delete file <b>{fileName}</b>?</span>),
     confirmationButton: 'Delete',
     onSuccess: deferred.resolve,
-    onCancel: deferred.reject
+    onCancel: deferred.reject,
   });
 }
 
@@ -22,7 +22,7 @@ export default createReactContainer({
 
   getInitialState () {
     return {
-      modal: null
+      modal: null,
     };
   },
 
@@ -44,7 +44,7 @@ export default createReactContainer({
     let deferred = createDeferred();
 
     this.setState({
-      modal: deleteConfirmation(name, deferred)
+      modal: deleteConfirmation(name, deferred),
     });
 
     deferred.promise.then(
@@ -62,11 +62,11 @@ export default createReactContainer({
 
     return (
       <div>
-        <FilePicker onFileSelected={this.uploadFile}/>
+        <FilePicker onFileSelected={this.uploadFile} />
         <Attachments attachments={attachments}
-                     deleteAttachment={this.deleteAttachment}/>
+                     deleteAttachment={this.deleteAttachment} />
         {this.state.modal}
       </div>
     );
-  }
+  },
 });

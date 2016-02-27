@@ -7,5 +7,5 @@ export default createReactComponent({
   render () {
     let { type, onClick, className = '' } = this.props;
     return <i className={cx('Icon', 'icon', `ion-${type}`, className)} onClick={onClick}></i>;
-  }
+  },
 });

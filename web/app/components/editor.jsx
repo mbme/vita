@@ -23,10 +23,10 @@ export default createReactComponent({
           editor.showHint({
             hint: this.getCompletions,
             closeCharacters: /[\s()\[\]{};>,]/, // defaults without ":"
-            completeSingle: false
+            completeSingle: false,
           });
-        }
-      }
+        },
+      },
     });
 
     this.value = this.props.defaultValue || '';
@@ -79,7 +79,7 @@ export default createReactComponent({
       if (value.startsWith(term)) {
         list.push({
           text: value,
-          displayText: text
+          displayText: text,
         });
       }
     });
@@ -99,5 +99,5 @@ export default createReactComponent({
                   autoComplete="off" />
       </div>
     );
-  }
+  },
 });

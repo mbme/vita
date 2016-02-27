@@ -33,11 +33,11 @@ export default createReactComponent({
 
     menu.push({
       icon: 'close-round',
-      handler: onClose
+      handler: onClose,
     });
 
     let icons = menu.map(function ({ icon, handler, type }) {
-      return <Icon className={cx({ [`is-${type}`]: type })} type={icon} onClick={handler}/>;
+      return <Icon className={cx({ [`is-${type}`]: type })} type={icon} onClick={handler} />;
     });
     // we do this to avoid addding keys to icons
     let iconsPanel = React.createElement(
@@ -50,5 +50,5 @@ export default createReactComponent({
         {children}
       </li>
     );
-  }
+  },
 });

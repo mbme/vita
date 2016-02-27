@@ -13,5 +13,5 @@ export default createReactComponent({
         <div className="MainPage-content"><Desk /></div>
       </div>
     );
-  }
+  },
 });

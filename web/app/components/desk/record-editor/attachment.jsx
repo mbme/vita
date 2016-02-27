@@ -8,12 +8,12 @@ const FILE_TYPE_ICONS = {
   document: 'document-text',
   video:    'social-youtube-outline',
   audio:    'headphone',
-  binary:   'document'
+  binary:   'document',
 };
 
 function getFileIcon (type) {
   let icon = FILE_TYPE_ICONS[type];
-  return (<Icon type={icon}/>);
+  return (<Icon type={icon} />);
 }
 
 export default createReactComponent({
@@ -28,8 +28,8 @@ export default createReactComponent({
         <td className="name">{<a href={url} target="_blank">{name}</a>}</td>
         <td className="size">{formatBytes(fileSize)}</td>
         <td className="ts">{formatFileTs(timestamp)}</td>
-        <td className="buttons"><Icon type="trash-b" onClick={this.props.onDelete}/></td>
+        <td className="buttons"><Icon type="trash-b" onClick={this.props.onDelete} /></td>
       </tr>
     );
-  }
+  },
 });

@@ -8,5 +8,5 @@ export default createReactComponent({
     let { name, onClick, className = '' } = this.props;
 
     return <span className={cx('Category', className)} onClick={onClick}>{name}</span>;
-  }
+  },
 });

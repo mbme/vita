@@ -54,7 +54,7 @@ check:
 	golint $(GOSRC)
 
 check-web:
-	./node_modules/eslint/bin/eslint.js $(WEBUI)
+	$(NODE_BIN)/eslint --ext .js --ext .jsx $(WEBUI)
 
 # install project deps
 deps:

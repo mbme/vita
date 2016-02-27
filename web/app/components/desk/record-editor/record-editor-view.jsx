@@ -18,7 +18,7 @@ function closeConfirmation (deferred) {
     body: 'Close note editor without saving changes?',
     confirmationButton: 'Close',
     onSuccess: deferred.resolve,
-    onCancel: deferred.reject
+    onCancel: deferred.reject,
   });
 }
 
@@ -29,7 +29,7 @@ function deleteConfirmation (deferred) {
     body: 'Are you sure you would like to delete this note?',
     confirmationButton: 'Delete',
     onSuccess: deferred.resolve,
-    onCancel: deferred.reject
+    onCancel: deferred.reject,
   });
 }
 
@@ -47,7 +47,7 @@ export default createReactContainer({
     return {
       name:       name.value,
       categories: categories.value,
-      data:       editor.value
+      data:       editor.value,
     };
   },
 
@@ -126,21 +126,21 @@ export default createReactContainer({
       return {
         type:  'attachment',
         value: `!${attachment.name}!`,
-        text: `${attachment.name} [${attachment.type}]`
+        text: `${attachment.name} [${attachment.type}]`,
       };
     }).toJS();
 
     return (
       <div className="Edit" label="Edit">
         <input type="text" className="name"
-               defaultValue={note.name} placeholder="Name" ref="name"/>
+               defaultValue={note.name} placeholder="Name" ref="name" />
         <CategoriesEditor defaultValue={note.categories}
                           placeholder="Categories"
-                          ref="categories"/>
+                          ref="categories" />
         <Editor defaultValue={note.data}
                 completions={completions}
                 placeholder="Drop few lines..."
-                ref="editor"/>
+                ref="editor" />
       </div>
     );
   },
@@ -154,7 +154,7 @@ export default createReactContainer({
         <Record name={name}
                 data={data}
                 categories={categories}
-                attachments={attachments}/>
+                attachments={attachments} />
       </div>
     );
   },
@@ -165,7 +165,7 @@ export default createReactContainer({
 
     let menu = [{
       icon: 'checkmark-round',
-      handler: this.onSave
+      handler: this.onSave,
     }];
 
     // if new record then do not show delete button
@@ -173,11 +173,11 @@ export default createReactContainer({
       menu.push({
         icon: 'arrow-return-left',
         type: 'warn',
-        handler: this.onUndo
+        handler: this.onUndo,
       }, {
         icon: 'trash-a',
         type: 'warn',
-        handler: this.onDelete
+        handler: this.onDelete,
       });
     }
 
@@ -196,5 +196,5 @@ export default createReactContainer({
 
       </Note>
     );
-  }
+  },
 });

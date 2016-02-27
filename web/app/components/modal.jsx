@@ -49,7 +49,7 @@ const Modal = createReactComponent({
         </div>
       </div>
     );
-  }
+  },
 });
 
 
@@ -60,7 +60,7 @@ Modal.Header = createReactComponent({
     return (
       <div className="Modal-header">{this.props.children}</div>
     );
-  }
+  },
 });
 
 Modal.Title = createReactComponent({
@@ -70,7 +70,7 @@ Modal.Title = createReactComponent({
     return (
       <h1 className="Modal-title">{this.props.children}</h1>
     );
-  }
+  },
 });
 
 Modal.Body = createReactComponent({
@@ -80,7 +80,7 @@ Modal.Body = createReactComponent({
     return (
       <div className="Modal-children">{this.props.children}</div>
     );
-  }
+  },
 });
 
 Modal.Footer = createReactComponent({
@@ -90,7 +90,7 @@ Modal.Footer = createReactComponent({
     return (
       <div className="Modal-footer">{this.props.children}</div>
     );
-  }
+  },
 });
 
 

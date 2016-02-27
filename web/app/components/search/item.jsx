@@ -12,7 +12,7 @@ export default createReactComponent({
     return (
       <li className={cx('SearchItem', { 'is-selected': selected })} onClick={this.onClick}>
         <span className="name">{name}</span>
-        <TimeAgo timestamp={timestamp}/>
+        <TimeAgo timestamp={timestamp} />
         &nbsp;|&nbsp;
         {categories.map(cat => <Category key={cat} name={cat} />)}
       </li>
@@ -22,5 +22,5 @@ export default createReactComponent({
   onClick () {
     let { info } = this.props;
     this.props.onClick(info);
-  }
+  },
 });

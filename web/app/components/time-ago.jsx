@@ -10,7 +10,7 @@ export default createReactComponent({
 
   getInitialState () {
     return {
-      date: this.getFormattedDate()
+      date: this.getFormattedDate(),
     };
   },
 
@@ -31,5 +31,5 @@ export default createReactComponent({
 
   render () {
     return <time>{this.state.date}</time>;
-  }
+  },
 });
