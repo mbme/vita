@@ -18,8 +18,7 @@ var config = {
   resolve: {
     root: [appRoot],
     alias: {
-      'styles':   path.join(src, 'styles/styles.js'),
-      'velocity': 'velocity-animate'
+      'styles': path.join(src, 'styles/styles.js')
     },
 
     // we need this to allow to import jsx files like js files (without extension)

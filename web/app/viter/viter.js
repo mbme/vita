@@ -114,6 +114,10 @@ export function createReactContainer (config) {
         return this.getState(GlobalStore);
       }
 
+      if (config.getInitialState) {
+        return config.getInitialState.apply(this);
+      }
+
       return null;
     },
 

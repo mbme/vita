@@ -18,7 +18,7 @@
         color: $font-color;
       }
 
-      &.selected {
+      &.is-selected {
         border-bottom: 2px solid $focus-color;
         color: $font-color;
       }

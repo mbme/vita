@@ -10,14 +10,6 @@ export default function ({ app, net }) {
       app.setSearchFilter(filter);
     },
 
-    openModal (id, view) {
-      app.addModal(id, view);
-    },
-
-    closeModal (id) {
-      app.removeModal(id);
-    },
-
     changePage (page) {
       if (app.getPage() === page) {
         return;

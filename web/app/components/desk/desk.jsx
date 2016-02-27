@@ -1,7 +1,7 @@
 import { createReactContainer } from 'viter/viter';
 
-import RecordEditorView from './record/record-editor-view';
 import RecordView from './record/record-view';
+import RecordEditorView from './record-editor/record-editor-view';
 
 import { NOTE_TYPES } from 'const';
 

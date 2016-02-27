@@ -1,4 +1,5 @@
 import { createReactComponent } from 'viter/viter';
+import { partial } from 'lodash';
 
 import Attachment from './attachment';
 
@@ -13,7 +14,7 @@ export default createReactComponent({
         return (
           <Attachment key={attachment.name}
                       attachment={attachment}
-                      onDelete={deleteAttachment}/>
+                      onDelete={partial(deleteAttachment, attachment)}/>
         );
       });
 

@@ -1,10 +1,9 @@
 import React from 'react';
-import velocity from 'velocity';
 import cx from 'classnames';
 
 import { bus } from 'init';
 import { createReactComponent } from 'viter/viter';
-import { resolvedPromise } from 'helpers/utils';
+
 import Icon from 'components/icon';
 
 /**
@@ -26,31 +25,15 @@ export default createReactComponent({
       return;
     }
 
-    let el = this.refs.note;
-    velocity(el, 'scroll', {
-      duration: 300,
-      offset: -6,
-      easing: 'ease-in-out'
-    });
-  },
-
-  onBeforeClose () {
-    let { onBeforeClose = resolvedPromise, onClose } = this.props;
-    onBeforeClose().then(this.close).then(onClose);
-  },
-
-  close () {
-    return velocity(this.refs.note, 'fadeOut', {
-      duration: 200
-    });
+    this.refs.note.scrollIntoView();
   },
 
   render () {
-    let { className, children, menu = [] } = this.props;
+    let { className, children, menu = [], onClose } = this.props;
 
     menu.push({
       icon: 'close-round',
-      handler: this.onBeforeClose
+      handler: onClose
     });
 
     let icons = menu.map(function ({ icon, handler, type }) {

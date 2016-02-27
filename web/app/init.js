@@ -26,7 +26,6 @@ export const bus = new EventBus();
 const STORE = createStore({
   notes:        List(),
   infos:        List(),
-  modals:       List(),
   requests:     List(),
   socket:       null,
   page:         '',

@@ -3,7 +3,6 @@ import { NOTE_TYPES } from 'const';
 
 import { id2key } from 'helpers/utils';
 import * as Files from 'helpers/files';
-import showFileUploadModal from 'helpers/file-upload-dialog';
 
 const MinRecord = {
   name:       'No name',
@@ -123,22 +122,20 @@ export default function ({ net, notes, notesInfo, inBatch }) {
 
     createNote,
 
-    attachFile (nId, file) {
-      showFileUploadModal(file, function (fileName) {
-        return new Promise(function (resolve) {
-          let note = notes.getNote(nId);
+    attachFile (nId, fileName, file) {
+      return new Promise(function (resolve) {
+        let note = notes.getNote(nId);
 
-          if (note.isNew()) {
-            resolve(createNote(note.nId, {}));
-          } else {
-            resolve(note);
-          }
-        }).then(
-          note => Files.uploadFile(note.key, fileName, file)
-        ).then(
-          attachment => notes.addAttachment(nId, attachment)
-        );
-      });
+        if (note.isNew()) {
+          resolve(createNote(note.nId, {}));
+        } else {
+          resolve(note);
+        }
+      }).then(
+        note => Files.uploadFile(note.key, fileName, file)
+      ).then(
+        attachment => notes.addAttachment(nId, attachment)
+      );
     },
 
     deleteFile (nId, fileName) {

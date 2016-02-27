@@ -1,6 +1,5 @@
 import { createReactComponent } from 'viter/viter';
 import { formatBytes, formatFileTs } from 'helpers/utils';
-import { createConfirmationDialog } from 'helpers/dialogs';
 
 import Icon from 'components/icon';
 
@@ -17,15 +16,6 @@ function getFileIcon (type) {
   return (<Icon type={icon}/>);
 }
 
-function showDeleteConfirmation (name) {
-  return createConfirmationDialog({
-    type: 'warn',
-    title: 'Delete file',
-    body: (<span>Are you sure you would like to delete file <b>{name}</b>?</span>),
-    confirmationButton: 'Delete'
-  });
-}
-
 export default createReactComponent({
   displayName: 'Attachment',
 
@@ -38,13 +28,8 @@ export default createReactComponent({
         <td className="name">{<a href={url} target="_blank">{name}</a>}</td>
         <td className="size">{formatBytes(fileSize)}</td>
         <td className="ts">{formatFileTs(timestamp)}</td>
-        <td className="buttons"><Icon type="trash-b" onClick={this.onDelete}/></td>
+        <td className="buttons"><Icon type="trash-b" onClick={this.props.onDelete}/></td>
       </tr>
     );
-  },
-
-  onDelete () {
-    let attachment = this.props.attachment;
-    showDeleteConfirmation(attachment.name).then(() => this.props.onDelete(attachment));
   }
 });
