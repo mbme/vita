@@ -1,4 +1,4 @@
-import { createReactContainer } from 'viter/viter';
+import { createReactComponent, connectReactComponent } from 'viter/viter';
 import { createConfirmationModal } from 'components/modal';
 import { createDeferred } from 'helpers/utils';
 
@@ -17,7 +17,7 @@ function deleteConfirmation (fileName, deferred) {
   });
 }
 
-export default createReactContainer({
+const AttachmentsTab = createReactComponent({
   displayName: 'AttachmentsTab',
 
   getInitialState () {
@@ -33,7 +33,7 @@ export default createReactContainer({
   uploadFile (file) {
     let modal = fileUploadModal(
       file,
-      fileName => this.actions.attachFile(this.props.note.nId, fileName, file),
+      fileName => this.props.attachFile(this.props.note.nId, fileName, file),
       this.hideModal
     );
 
@@ -48,7 +48,7 @@ export default createReactContainer({
     });
 
     deferred.promise.then(
-      () => this.actions.deleteFile(this.props.note.nId, name)
+      () => this.props.deleteFile(this.props.note.nId, name)
     ).then(
       this.hideModal,
       this.hideModal // hide modal in any case
@@ -69,4 +69,8 @@ export default createReactContainer({
       </div>
     );
   },
+});
+
+export default connectReactComponent(AttachmentsTab, {
+  actions: ['attachFile', 'deleteFile'],
 });

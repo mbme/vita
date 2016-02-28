@@ -1,4 +1,4 @@
-import { createReactContainer } from 'viter/viter';
+import { createReactComponent, connectReactComponent } from 'viter/viter';
 
 import RecordView from './record/record-view';
 import RecordEditorView from './record-editor/record-editor-view';
@@ -8,12 +8,8 @@ import { NOTE_TYPES } from 'const';
 /**
  * Component which renders open notes.
  */
-export default createReactContainer({
+const Desk = createReactComponent({
   displayName: 'Desk',
-
-  getState ({ notes }) {
-    return { notes };
-  },
 
   renderNote (note) {
     if (note.key.type === NOTE_TYPES.RECORD) {
@@ -27,8 +23,10 @@ export default createReactContainer({
   },
 
   render () {
-    let notes = this.state.notes.map(this.renderNote).reverse();
+    let notes = this.props.notes.map(this.renderNote).reverse();
 
     return <ul className="Desk">{notes}</ul>;
   },
 });
+
+export default connectReactComponent(Desk, { store: 'notes' });

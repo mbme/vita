@@ -1,7 +1,7 @@
 import { debounce } from 'lodash';
 
 import { bus } from 'init';
-import { createReactContainer } from 'viter/viter';
+import { createReactComponent, connectReactComponent } from 'viter/viter';
 import { fuzzySearch } from 'helpers/utils';
 
 import SearchItem from './item';
@@ -26,17 +26,13 @@ function lowerIfRequired (str) {
   return str;
 }
 
-export default createReactContainer({
+const SearchPanel = createReactComponent({
   displayName: 'SearchPanel',
 
-  getState ({ infos, searchFilter }) {
-    return { infos, searchFilter };
-  },
-
   componentWillMount () {
-    this.actions.loadNotesList();
+    this.props.loadNotesList();
 
-    this.dispatchFilterUpdate = debounce(this.actions.updateFilter, searchDelay);
+    this.dispatchFilterUpdate = debounce(this.props.updateFilter, searchDelay);
   },
 
   onSearchItemClick ({ selected, id }) {
@@ -45,30 +41,37 @@ export default createReactContainer({
       bus.publish('note:focus', id);
     } else {
       // else open and focus
-      this.actions.openNote(id).then(function () {
+      this.props.openNote(id).then(function () {
         bus.publish('note:focus', id);
       });
     }
   },
 
   render () {
-    let { infos, searchFilter } = this.state;
+    let { infos, searchFilter } = this.props;
     let matcher = fuzzySearch(lowerIfRequired(searchFilter));
-    let results = infos.filter(i => matcher(lowerIfRequired(i.name)));
+    let results = infos.filter(
+      info => matcher(lowerIfRequired(info.name))
+    ).map(
+      info => <SearchItem key={info.id} info={info} onClick={this.onSearchItemClick} />
+    );
     return (
       <div className="SearchPanel">
         <div className="SearchPanel-header">
           <span className="search-type">{getSearchType(searchFilter)}</span>
           <span className="results-count">{results.size}</span>
-          <Icon className="plus" type="plus" onClick={this.actions.newNote} />
+          <Icon className="plus" type="plus" onClick={this.props.newNote} />
         </div>
         <SearchInput filter={searchFilter} onChange={this.dispatchFilterUpdate} />
         <ul className="SearchPanel-scroll">
-          {results.map(
-             info => <SearchItem key={info.id} info={info} onClick={this.onSearchItemClick} />
-           )}
+          {results}
         </ul>
       </div>
     );
   },
+});
+
+export default connectReactComponent(SearchPanel, {
+  store:   ['infos', 'searchFilter'],
+  actions: ['loadNotesList', 'updateFilter', 'openNote', 'newNote'],
 });

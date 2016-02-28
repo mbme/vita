@@ -110,7 +110,7 @@ export default function ({ net, notes, notesInfo, inBatch }) {
       let data = _.assign({
         key: id2key(note.id),
       }, changedData);
-      return net.updatedNote(data).then(function (noteData) {
+      return net.updateNote(data).then(function (noteData) {
         let updatedNote = notes.updateNote(nId, noteData);
         console.log('note %s saved', updatedNote.id);
 

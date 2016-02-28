@@ -81,53 +81,52 @@ export function setActions (actions) {
   Actions = actions;
 }
 
-/**
- * Create new React container which listens to changes in STORE.
- * At least 'displayName', 'getState' and 'render' must be provided.
- * @param {object} config container config
- * @returns {ReactClass}
- */
-export function createReactContainer (config) {
-  validateConfig(config, 'displayName', 'render');
+function applyPropSelector (obj, propSelector) {
+  if (_.isFunction(propSelector)) {
+    return propSelector(obj);
+  }
 
-  let comp = {
-    componentWillMount (...args) {
-      if (config.getState) {
+  return _.pick(obj, propSelector);
+}
+
+/**
+ * Wrap Component into higher-order React component
+ * which injects store properties and/or actions.
+ * @param {ReactComponent} Component component to wrap
+ * @param {{ store, actions }} property selectors for store or actions
+ * @returns {ReactComponent} wrapped component
+ */
+export function connectReactComponent (Component, { store, actions }) {
+  return createReactComponent({
+    displayName: `${Component.displayName}Connector`,
+
+    componentWillMount () {
+      if (store) {
+        this.onStoreUpdate();
         GlobalStore.addListener(this.onStoreUpdate);
       }
-      this.actions = Actions;
-      if (config.componentWillMount) {
-        config.componentWillMount.apply(this, args);
+      if (actions) {
+        this.setState(applyPropSelector(Actions, actions));
       }
+      // FIXME throw error on prop names clashes
     },
 
-    componentWillUnmount (...args) {
-      if (config.getState) {
+    componentWillUnmount () {
+      if (store) {
         GlobalStore.removeListener(this.onStoreUpdate);
       }
-      if (config.componentWillUnmount) {
-        config.componentWillUnmount.apply(this, args);
-      }
-    },
-
-    getInitialState () {
-      if (config.getState) {
-        return this.getState(GlobalStore);
-      }
-
-      if (config.getInitialState) {
-        return config.getInitialState.apply(this);
-      }
-
-      return null;
     },
 
     onStoreUpdate () {
-      this.setState(this.getState(GlobalStore));
+      this.setState(applyPropSelector(GlobalStore, store));
     },
-  };
 
-  return createReactComponent(_.defaults(comp, config));
+    render () {
+      return (
+          <Component {...this.props} {...this.state} />
+      );
+    },
+  });
 }
 
 /**

@@ -1,4 +1,4 @@
-import { createReactContainer } from 'viter/viter';
+import { createReactComponent, connectReactComponent } from 'viter/viter';
 import { createConfirmationModal } from 'components/modal';
 import { createDeferred } from 'helpers/utils';
 
@@ -33,7 +33,7 @@ function deleteConfirmation (deferred) {
   });
 }
 
-export default createReactContainer({
+const RecordEditorView = createReactComponent({
   displayName: 'RecordEditorView',
 
   getInitialState () {
@@ -79,14 +79,14 @@ export default createReactContainer({
     }
 
     if (note.isNew()) {
-      return this.actions.createNote(note.nId, changed);
+      return this.props.createNote(note.nId, changed);
     }
 
-    return this.actions.saveNote(note.nId, changed);
+    return this.props.saveNote(note.nId, changed);
   },
 
   onSave () {
-    this.saveNote().then(() => this.actions.editNote(this.props.note.nId, false));
+    this.saveNote().then(() => this.props.editNote(this.props.note.nId, false));
   },
 
   showModal (createModal) {
@@ -103,19 +103,19 @@ export default createReactContainer({
 
   onUndo () {
     this.showModal(closeConfirmation).then(
-      () => this.actions.editNote(this.props.note.nId, false)
+      () => this.props.editNote(this.props.note.nId, false)
     );
   },
 
   onClose () {
     this.showModal(closeConfirmation).then(
-      () => this.actions.closeNote(this.props.note.nId)
+      () => this.props.closeNote(this.props.note.nId)
     );
   },
 
   onDelete () {
     this.showModal(deleteConfirmation).then(
-      () => this.actions.deleteNote(this.props.note.nId)
+      () => this.props.deleteNote(this.props.note.nId)
     );
   },
 
@@ -197,4 +197,8 @@ export default createReactContainer({
       </Note>
     );
   },
+});
+
+export default connectReactComponent(RecordEditorView, {
+  actions: ['createNote', 'editNote', 'saveNote', 'closeNote', 'deleteNote'],
 });

@@ -1,17 +1,17 @@
-import { createReactContainer } from 'viter/viter';
+import { createReactComponent, connectReactComponent } from 'viter/viter';
 
 import Note from 'components/desk/note';
 import Record from './record';
 
-export default createReactContainer({
+const RecordView = createReactComponent({
   displayName: 'RecordView',
 
   onEdit () {
-    this.actions.editNote(this.props.note.nId, true);
+    this.props.editNote(this.props.note.nId, true);
   },
 
   onClose () {
-    this.actions.closeNote(this.props.note.nId);
+    this.props.closeNote(this.props.note.nId);
   },
 
   render () {
@@ -33,4 +33,8 @@ export default createReactContainer({
       </Note>
     );
   },
+});
+
+export default connectReactComponent(RecordView, {
+  actions: ['editNote', 'closeNote'],
 });
