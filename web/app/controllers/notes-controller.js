@@ -2,14 +2,13 @@ import _ from 'lodash';
 import { NOTE_TYPES } from 'const';
 
 import { id2key } from 'helpers/utils';
-import * as Files from 'helpers/files';
 
 const MinRecord = {
   name:       'No name',
   categories: ['uncategorized'],
 };
 
-export default function ({ net, notes, notesInfo, inBatch }) {
+export default function ({ net, notes, notesInfo, files, inBatch }) {
 
   function loadNotesList () {
     net.getNotesList().then(function (items) {
@@ -132,7 +131,7 @@ export default function ({ net, notes, notesInfo, inBatch }) {
           resolve(note);
         }
       }).then(
-        note => Files.uploadFile(note.key, fileName, file)
+        note => files.uploadFile(note.key, fileName, file)
       ).then(
         attachment => notes.addAttachment(nId, attachment)
       );
@@ -141,7 +140,7 @@ export default function ({ net, notes, notesInfo, inBatch }) {
     deleteFile (nId, fileName) {
       let note = notes.getNote(nId);
 
-      Files.deleteFile(note.key, fileName).then(function () {
+      files.deleteFile(note.key, fileName).then(function () {
         notes.removeAttachment(nId, fileName);
       });
     },
