@@ -18,7 +18,7 @@ build: check
 	gb build -ldflags "-X main.gitTag=$(shell git describe --tags --long --always)" all
 
 generate-resources:
-	NODE_ENV="production" $(NODE_BIN)/webpack --content-base $(WEBUI)
+	NODE_ENV="production" $(NODE_BIN)/webpack
 	cp $(WEBUI)/favicon.ico     $(TARGET)/
 	cp $(WEBUI)/index.html      $(TARGET)/
 
@@ -44,7 +44,7 @@ run-web:
 	$(NODE_BIN)/webpack-dev-server --content-base $(WEBUI) --hot --inline
 
 test-web:
-	NODE_ENV="test" $(NODE_BIN)/webpack --content-base $(WEBUI)
+	NODE_ENV="test" $(NODE_BIN)/webpack
 	NODE_ENV="test" $(NODE_BIN)/mocha --require mocha-setup.js --reporter nyan $(TARGET)/test.bundle.js
 
 
