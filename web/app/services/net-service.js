@@ -1,6 +1,7 @@
 /* eslint no-param-reassign: [2, {"props": false}] */
 
 import { createDeferred, byId } from 'helpers/utils';
+import { arrPush, arrFindPos, arrRemoveAt } from 'helpers/immutable';
 
 export default function (STORE) {
   let reqId = 0;
@@ -13,20 +14,20 @@ export default function (STORE) {
       deferred: createDeferred(),
     };
 
-    STORE.requests = STORE.requests.push(request);
+    STORE.requests = arrPush(STORE.requests, request);
 
     return request.deferred.promise;
   }
 
   function processResponse (msg) {
-    let pos = STORE.requests.findIndex(byId(msg.id));
+    let pos = arrFindPos(STORE.requests, byId(msg.id));
     if (pos === -1) {
       let errMsg = `unexpected response ${msg}`;
       console.error(errMsg);
       throw new Error(errMsg);
     }
 
-    let request = STORE.requests.get(pos);
+    let request = STORE.requests[pos];
 
     if (msg.error) {
       request.deferred.reject(msg.error);
@@ -34,7 +35,7 @@ export default function (STORE) {
       request.deferred.resolve(msg.result);
     }
 
-    STORE.requests = STORE.requests.delete(pos);
+    STORE.requests = arrRemoveAt(STORE.requests, pos);
   }
 
   return {

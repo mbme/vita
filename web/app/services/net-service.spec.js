@@ -1,10 +1,8 @@
-/* eslint new-cap:[2, {"capIsNewExceptions": ["List"]}] */
-import { List } from 'immutable';
 import createNetService from 'services/net-service';
 
 describe('NetService', function () {
   it('should create requests', function () {
-    let requests = List();
+    let requests = [];
     let store = { requests };
     let service = createNetService(store);
 
@@ -34,13 +32,13 @@ describe('NetService', function () {
   });
 
   it('should remove requests on response', function () {
-    let store = { requests: List() };
+    let store = { requests: [] };
     let service = createNetService(store);
 
     let promise = service.getNotesList();
     expect(store.requests).to.have.length(1);
 
-    let { id } = store.requests.get(0);
+    let { id } = store.requests[0];
     let result = 123;
     let response = { id, result };
 
@@ -59,13 +57,13 @@ describe('NetService', function () {
   });
 
   it('should remove requests on error response', function () {
-    let store = { requests: List() };
+    let store = { requests: [] };
     let service = createNetService(store);
 
     let promise = service.getNotesList();
     expect(store.requests).to.have.length(1);
 
-    let { id } = store.requests.get(0);
+    let { id } = store.requests[0];
     let error = 'some error';
     let response = { id, error };
 
