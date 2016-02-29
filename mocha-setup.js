@@ -1,3 +1,9 @@
 global.Enzyme = require('enzyme');
-global.expect = require('chai').expect;
+
+var chai = require('chai');
+global.expect = chai.expect;
+
+var chaiAsPromised = require('chai-as-promised');
+chai.use(chaiAsPromised);
+
 global.sinon = require('sinon');

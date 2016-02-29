@@ -24,6 +24,7 @@
 
     "mocha": "*",
     "chai": "*",
+    "chai-as-promised": "*",
     "sinon": "*",
     "enzyme": "*",
     "react-addons-test-utils": "*",
