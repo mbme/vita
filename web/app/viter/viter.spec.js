@@ -3,7 +3,6 @@ import ReactTestUtils from 'react-addons-test-utils';
 import createStore from 'viter/store';
 import {
   createReactComponent,
-  createComponent,
   connectReactComponent,
   setStore,
 } from 'viter/viter';
@@ -50,41 +49,6 @@ describe('Viter', function () {
       expect(wrapper.prop('test')).to.equal(store.test);
 
       wrapper.instance().componentWillUnmount();
-    });
-  });
-
-
-  describe('createComponent', function () {
-    it('should create components', function () {
-      createComponent({
-        getState () {
-        },
-
-        render () {
-        },
-      });
-    });
-
-    it('should subscribe components to store updates', function () {
-      let store = createStore({ test: 'a' });
-      setStore(store);
-
-      let handler = sinon.spy();
-      let comp = createComponent({
-        getState ({ test }) {
-          return { test };
-        },
-
-        render: handler,
-      });
-
-      comp.init();
-
-      store.test = 'some data';
-
-      expect(handler.calledOnce).to.be.true;
-
-      comp.destroy();
     });
   });
 });

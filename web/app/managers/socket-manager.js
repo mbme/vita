@@ -1,32 +1,25 @@
-import { createComponent } from 'viter/viter';
 import { basePath } from 'config';
 
 // WebSocket connection manager
 export default function createSocketManager () {
   let isConnecting = false;
 
-  return createComponent({
-    getState ({ socket }) {
-      return socket;
-    },
+  return function ({ socket }, actions) {
+    if (socket || isConnecting) {
+      return;
+    }
 
-    shouldComponentUpdate (state, newState) {
-      return newState === null && !isConnecting;
-    },
+    isConnecting = true;
 
-    render () {
-      isConnecting = true;
-
-      let socket = new WebSocket(`ws://${basePath}/ws`);
-      socket.onopen = () => {
-        isConnecting = false;
-        console.log('socket connected');
-        this.actions.useSocket(socket);
-      };
-      socket.onclose = (e) => {
-        console.error('socket disconnected', e);
-        this.actions.useSocket(null);
-      };
-    },
-  });
+    let newSocket = new WebSocket(`ws://${basePath}/ws`);
+    newSocket.onopen = () => {
+      isConnecting = false;
+      console.log('socket connected');
+      actions.useSocket(newSocket);
+    };
+    newSocket.onclose = (e) => {
+      console.error('socket disconnected', e);
+      actions.useSocket(null);
+    };
+  };
 }

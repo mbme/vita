@@ -26,18 +26,20 @@ export const bus = new EventBus();
 const STORE = createStore({
   notes:        List(),
   infos:        List(),
-  requests:     List(),
+  requests:     [],
   socket:       null,
   page:         '',
   searchFilter: '',
 });
 
-let actions = createActions(createServices(STORE), STORE);
+let actions = createActions(createServices(STORE));
 viter.setStore(STORE);
 viter.setActions(actions);
 
 let managers = createManagers();
-managers.forEach(w => w.init());
+STORE.addListener(function () {
+  managers.forEach(manager => manager(STORE, actions));
+});
 
 // START
 

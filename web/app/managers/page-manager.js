@@ -1,5 +1,3 @@
-import { createComponent } from 'viter/viter';
-
 import ReactDOM from 'react-dom';
 import React from 'react';
 
@@ -12,26 +10,22 @@ const PAGES = {
 
 // Page renderer
 export default function createPageManager () {
-  return createComponent({
+  let currentPage;
 
-    getState ({ page }) {
-      return page;
-    },
+  return function ({ page }) {
+    if (!page || currentPage === page) {
+      return;
+    }
+    currentPage = page;
 
-    shouldComponentUpdate (state, newState) {
-      return newState && state !== newState;
-    },
+    let Page = PAGES[page];
+    let container = document.getElementById('container');
 
-    render (state) {
-      let Page = PAGES[state];
-      let container = document.getElementById('container');
-
-      if (Page) {
-        ReactDOM.render(React.createElement(Page), container);
-      } else {
-        ReactDOM.unmountComponentAtNode(container);
-        console.error(`Unknown page "${state}"`);
-      }
-    },
-  });
+    if (Page) {
+      ReactDOM.render(React.createElement(Page), container);
+    } else {
+      ReactDOM.unmountComponentAtNode(container);
+      console.error(`Unknown page "${page}"`);
+    }
+  };
 }

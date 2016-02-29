@@ -1,4 +1,3 @@
-/* eslint no-param-reassign: [2, {"props": false}] */
 import _ from 'lodash';
 import React from 'react';
 import Immutable from 'immutable';
@@ -42,10 +41,6 @@ function shallowEqual (objA, objB) {
   }
 
   return true;
-}
-
-function notShallowEqual (...args) {
-  return !shallowEqual(...args);
 }
 
 /**
@@ -127,39 +122,4 @@ export function connectReactComponent (Component, { store, actions }) {
       );
     },
   });
-}
-
-/**
- * Create new component.
- * At least 'getState' and 'render' must be provided.
- * @param {object} comp component config
- * @returns {ReactClass}
- */
-export function createComponent (config) {
-  validateConfig(config, 'render', 'getState');
-
-  let state = null;
-
-  const shouldUpdate = config.shouldComponentUpdate || notShallowEqual;
-
-  function updateComponent () {
-    let newState = config.getState(GlobalStore);
-
-    // check if we need re-render after store updated
-    if (shouldUpdate.call(config, state, newState)) {
-      state = newState;
-      config.render(state);
-    }
-  }
-
-  return {
-    init () {
-      GlobalStore.addListener(updateComponent);
-      config.actions = Actions;
-    },
-
-    destroy () {
-      GlobalStore.removeListener(updateComponent);
-    },
-  };
 }
