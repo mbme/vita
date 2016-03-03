@@ -6,6 +6,7 @@ export default function createMessagesManager () {
 
   return function ({ socket, requests }) {
     if (!socket) {
+      // FIXME maybe we should re-send (sentRequests={}) all requests
       return;
     }
 
