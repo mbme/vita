@@ -1,51 +1,29 @@
-/* eslint new-cap:[2, {"capIsNewExceptions": ["Set", "Record"]}] */
-import { defaults, clone, partial } from 'lodash';
-import { Record, Set, Map } from 'immutable';
-import { stringsComparator } from 'helpers/utils';
 import { baseUrl } from 'config';
+import { defaults, uniqBy } from 'lodash';
+import { stringsComparator } from 'helpers/utils';
 
-export function createCategories (categories = []) {
-  if (Set.isSet(categories)) {
-    return categories;
-  }
-
-  let arr = clone(categories);
-  arr.sort(stringsComparator);
-  return Set(categories);
-}
-
-const Attachment = Record({
+const AttachmentDefaults = {
   name: '',
   mime: undefined,
   type: undefined,
-  fileSize: 0,
+  size: 0,
   timestamp: 0,
   url: '',
-});
+};
 
-export function createAttachment (noteKey, attachment) {
-  if (Map.isMap(attachment)) {
-    return attachment;
-  }
+const NoteInfoDefaults = {
+  id: undefined,
+  key: {
+    type: undefined,
+    id: undefined,
+  },
+  name: undefined,
+  categories: [],
+  selected: false,
+  timestamp: 0,
+};
 
-  let { name, mime, type, size, timestamp } = attachment;
-  return new Attachment({
-    name, mime, type, timestamp,
-    fileSize: size,
-    url: `${baseUrl}/notes/${noteKey.type}/${noteKey.id}/attachments/${name}`,
-  });
-}
-
-export function createAttachments (noteKey, attachments = []) {
-  if (Set.isSet(attachments)) {
-    return attachments;
-  }
-
-  return Set(attachments.map(partial(createAttachment, noteKey)));
-}
-
-
-class NoteRecord extends Record({
+const RecordDefaults = {
   nId: undefined,
   id: undefined,
   key: {
@@ -55,44 +33,62 @@ class NoteRecord extends Record({
   edit: false,
   name: '',
   data: '',
-  categories: createCategories(),
-  attachments: createAttachments(),
+  categories: [],
+  attachments: [],
   timestamp: 0,
-}) {
   isNew () {
     return !this.id;
-  }
+  },
+};
+
+export function createCategories (categories) {
+  return uniqBy(
+    categories, category => category.toLowerCase()
+  ).sort(stringsComparator);
 }
 
-const NoteInfoRecord = Record({
-  id: undefined,
-  key: {
-    type: undefined,
-    id: undefined,
-  },
-  name: undefined,
-  categories: createCategories(),
-  selected: false,
-  timestamp: 0,
-});
+export function createAttachment (noteKey, data) {
+  // data may be already proper Attachment
+  // so we should just return it
+  if (AttachmentDefaults.isPrototypeOf(data)) {
+    return data;
+  }
+
+  let obj = defaults({
+    url: `${baseUrl}/notes/${noteKey.type}/${noteKey.id}/attachments/${data.name}`,
+  }, data);
+
+  Object.setPrototypeOf(obj, AttachmentDefaults);
+
+  return obj;
+}
 
 export function createNoteRecord (...data) {
   let obj = defaults({}, ...data);
-  obj.categories = createCategories(obj.categories || undefined);
-  obj.attachments = createAttachments(obj.key, obj.attachments || undefined);
-  return new NoteRecord(obj);
+
+  Object.setPrototypeOf(obj, RecordDefaults);
+
+  // sometimes we can receive null instead of attachments
+  // so we should handle that
+  obj.attachments = (obj.attachments || []).map(
+    attachment => createAttachment(obj.key, attachment)
+  );
+
+  return obj;
 }
 
 export function createNoteInfoRecord (...data) {
   let obj = defaults({}, ...data);
-  obj.categories = createCategories(obj.categories || undefined);
-  return new NoteInfoRecord(obj);
+
+  Object.setPrototypeOf(obj, NoteInfoDefaults);
+
+  return obj;
 }
 
-export function mergeNoteRecord (record, ...data) {
-  return createNoteRecord(...(data.reverse()), record.toObject());
+export function updateNoteRecord (record, ...data) {
+  return createNoteRecord(...(data.reverse()), record);
 }
 
-export function mergeNoteInfoRecord (record, ...data) {
-  return createNoteInfoRecord(...(data.reverse()), record.toObject());
+export function updateNoteInfoRecord (record, ...data) {
+  return createNoteInfoRecord(...(data.reverse()), record);
 }

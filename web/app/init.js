@@ -1,9 +1,7 @@
-/* eslint new-cap:[2, {"capIsNewExceptions": ["List"]}] */
 /* global DEV */
 import createStore from 'viter/store';
 import * as viter from 'viter/viter';
 import EventBus from 'viter/bus';
-import { List } from 'immutable';
 import page from 'page';
 
 import 'helpers/hacks';
@@ -24,8 +22,8 @@ export const bus = new EventBus();
 
 // setup Store properties
 const STORE = createStore({
-  notes:        List(),
-  infos:        List(),
+  notes:        [],
+  infos:        [],
   requests:     [],
   socket:       null,
   page:         '',

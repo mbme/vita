@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import React from 'react';
-import Immutable from 'immutable';
 
 function validateConfig (config, ...props) {
   if (!_.isPlainObject(config)) {
@@ -12,35 +11,6 @@ function validateConfig (config, ...props) {
       throw new Error(`'${prop}' is required`);
     }
   });
-}
-
-// @see https://github.com/jurassix/react-immutable-render-mixin
-function shallowEqual (objA, objB) {
-  if (objA === objB) {
-    return true;
-  }
-
-  if (typeof objA !== 'object' || objA === null ||
-      typeof objB !== 'object' || objB === null) {
-    return false;
-  }
-
-  let keysA = Object.keys(objA);
-  let keysB = Object.keys(objB);
-
-  if (keysA.length !== keysB.length) {
-    return false;
-  }
-
-  // Test for A's keys different from B.
-  let bHasOwnProperty = Object.prototype.hasOwnProperty.bind(objB);
-  for (let i = 0; i < keysA.length; i += 1) {
-    if (!bHasOwnProperty(keysA[i]) || !Immutable.is(objA[keysA[i]], objB[keysA[i]])) {
-      return false;
-    }
-  }
-
-  return true;
 }
 
 /**
@@ -55,8 +25,7 @@ export function createReactComponent (config) {
   return React.createClass(
     _.defaults(config, {
       shouldComponentUpdate (nextProps, nextState) {
-        return !shallowEqual(this.props, nextProps) ||
-          !shallowEqual(this.state, nextState);
+        return !_.isEqual(this.props, nextProps) || !_.isEqual(this.state, nextState);
       },
     })
   );

@@ -1,6 +1,7 @@
 import { createReactComponent, connectReactComponent } from 'viter/viter';
 import { createConfirmationModal } from 'components/modal';
 import { createDeferred } from 'helpers/utils';
+import { isEqual } from 'lodash';
 
 import Tabs from 'components/tabs';
 import Editor from 'components/editor';
@@ -70,7 +71,7 @@ const RecordEditorView = createReactComponent({
       changed.name = current.name;
     }
 
-    if (!note.categories.equals(current.categories)) {
+    if (!isEqual(note.categories, current.categories)) {
       changed.categories = current.categories;
     }
 
@@ -122,13 +123,15 @@ const RecordEditorView = createReactComponent({
   renderEditorTab () {
     let { note } = this.props;
 
-    let completions = note.attachments.map(function (attachment) {
-      return {
-        type:  'attachment',
-        value: `!${attachment.name}!`,
-        text: `${attachment.name} [${attachment.type}]`,
-      };
-    }).toJS();
+    let completions = note.attachments.map(
+      function (attachment) {
+        return {
+          type:  'attachment',
+          value: `!${attachment.name}!`,
+          text: `${attachment.name} [${attachment.type}]`,
+        };
+      }
+    );
 
     return (
       <div className="Edit" label="Edit">

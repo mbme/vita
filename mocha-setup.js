@@ -7,3 +7,10 @@ var chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 
 global.sinon = require('sinon');
+
+// simple stubs
+global.window = {
+  location: {
+    hostname: 'vita.test'
+  }
+};

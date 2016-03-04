@@ -1,10 +1,16 @@
 /* eslint no-param-reassign: [2, {"props": false}] */
 
 import { key2id, byId } from 'helpers/utils';
+import {
+  arrPush,
+  arrRemoveAt,
+  arrReplaceAt,
+  objSet,
+} from 'helpers/immutable';
 
 import {
   createNoteRecord,
-  mergeNoteRecord,
+  updateNoteRecord,
   createAttachment,
 } from './entities';
 
@@ -52,21 +58,19 @@ export default function (STORE) {
 
       let note = createNoteRecord({ id, nId }, data);
 
-      STORE.notes = STORE.notes.push(note);
-
-      return note;
+      STORE.notes = arrPush(STORE.notes, note);
     },
 
     removeNote (nId) {
       let pos = getNotePos(nId);
 
-      STORE.notes = STORE.notes.delete(pos);
+      STORE.notes = arrRemoveAt(STORE.notes, pos);
     },
 
     getNote (nId) {
       let pos = getNotePos(nId);
 
-      return STORE.notes.get(pos);
+      return STORE.notes[pos];
     },
 
     getNoteById (id) {
@@ -76,18 +80,18 @@ export default function (STORE) {
     updateNote (nId, data) {
       let pos = getNotePos(nId);
 
-      let other = {};
+      let other;
 
       if (data.key) {
         let id = key2id(data.key);
         registerIdMapping(id, nId);
-        other.id = id;
+        other = { id };
       }
 
-      let note = STORE.notes.get(pos);
-      let newNote = mergeNoteRecord(note, data, other);
+      let note = STORE.notes[pos];
+      let newNote = updateNoteRecord(note, data, other);
 
-      STORE.notes = STORE.notes.set(pos, newNote);
+      STORE.notes = arrReplaceAt(STORE.notes, pos, newNote);
 
       return newNote;
     },
@@ -97,35 +101,39 @@ export default function (STORE) {
     },
 
     newNote (type) {
-      STORE.notes = STORE.notes.push(createNoteRecord({
+      let note = createNoteRecord({
         nId: nextNid(),
         key: { type },
         edit: true,
-      }));
+      });
+      STORE.notes = arrPush(STORE.notes, note);
     },
 
     addAttachment (nId, attachment) {
       let pos = getNotePos(nId);
-      let note = STORE.notes.get(pos);
+      let note = STORE.notes[pos];
 
-      let attachments = note.attachments.add(createAttachment(note.key, attachment));
+      let attachments = arrPush(
+        note.attachments,
+        createAttachment(note.key, attachment)
+      );
 
-      let newNote = note.set('attachments', attachments);
+      let newNote = objSet(note, 'attachments', attachments);
 
-      STORE.notes = STORE.notes.set(pos, newNote);
+      STORE.notes = arrReplaceAt(STORE.notes, pos, newNote);
     },
 
     removeAttachment (nId, attachmentName) {
       let pos = getNotePos(nId);
-      let note = STORE.notes.get(pos);
+      let note = STORE.notes[pos];
 
-      let attachments = note.attachments.filterNot(
-        attachment => attachment.name === attachmentName
+      let attachments = note.attachments.filter(
+        attachment => attachment.name !== attachmentName
       );
 
-      let newNote = note.set('attachments', attachments);
+      let newNote = objSet(note, 'attachments', attachments);
 
-      STORE.notes = STORE.notes.set(pos, newNote);
+      STORE.notes = arrReplaceAt(STORE.notes, pos, newNote);
     },
   };
 }

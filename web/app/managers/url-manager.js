@@ -1,6 +1,4 @@
 import { uniq, compact } from 'lodash';
-import page from 'page';
-
 import { match, getQueryParam } from 'helpers/utils';
 
 function parseIdsStr (idsStr) {
@@ -14,7 +12,7 @@ export function getIdsFromUrl () {
 }
 
 // URL Query params renderer
-export default function crateUrlManager () {
+export default function crateUrlManager (updateUrl) {
   let currentNotes;
   return function ({ notes }) {
     if (currentNotes === notes) {
@@ -22,14 +20,14 @@ export default function crateUrlManager () {
     }
     currentNotes = notes;
 
-    let url = location.pathname;
+    let url = window.location.pathname;
 
-    let ids = compact(notes.map(note => note.id).toArray());
+    let ids = compact(notes.map(note => note.id));
 
     if (ids.length) {
       url += `?ids=(${ids.join(',')})`;
     }
 
-    page(url);
+    updateUrl(url);
   };
 }

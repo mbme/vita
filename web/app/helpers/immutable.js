@@ -1,6 +1,4 @@
-function clone (arr) {
-  return arr.slice(0);
-}
+import { clone } from 'lodash';
 
 export function arrPush (arr, item) {
   let res = clone(arr);
@@ -23,4 +21,27 @@ export function arrFindPos (arr, predicate) {
   }
 
   return -1;
+}
+
+export function arrUpdateAt (arr, pos, updater) {
+  let newVal = updater(arr[pos]);
+
+  let res = clone(arr);
+  res[pos] = newVal;
+
+  return res;
+}
+
+export function arrReplaceAt (arr, pos, newVal) {
+  let res = clone(arr);
+  res[pos] = newVal;
+
+  return res;
+}
+
+export function objSet (obj, key, val) {
+  let res = clone(obj);
+  res[key] = val;
+
+  return res;
 }

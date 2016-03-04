@@ -1,19 +1,18 @@
-/* eslint new-cap:[2, {"capIsNewExceptions": ["List"]}] */
 /* eslint no-param-reassign: [2, {"props": false}] */
 
-import { List } from 'immutable';
 import { key2id, byId } from 'helpers/utils';
-import { createNoteInfoRecord, mergeNoteInfoRecord } from 'services/entities';
-import { searchResultsComparator } from 'config';
+import { createNoteInfoRecord, updateNoteInfoRecord } from 'services/entities';
+import { arrUpdateAt } from 'helpers/immutable';
 
-export default function (STORE) {
+export default function (STORE, searchResultsComparator) {
 
   return {
     resetInfos (newInfos) {
-      let items = newInfos.map(info => createNoteInfoRecord({ id: key2id(info.key) }, info));
-      items.sort(searchResultsComparator);
-
-      STORE.infos = List(items);
+      STORE.infos = newInfos.map(
+        info => createNoteInfoRecord({ id: key2id(info.key) }, info)
+      ).sort(
+        searchResultsComparator
+      );
     },
 
     getInfo (id) {
@@ -27,7 +26,11 @@ export default function (STORE) {
         throw new Error(`cannot find note info with id=${id}`);
       }
 
-      STORE.infos = STORE.infos.update(pos, info => mergeNoteInfoRecord(info, { selected }));
+      STORE.infos = arrUpdateAt(
+        STORE.infos,
+        pos,
+        info => updateNoteInfoRecord(info, { selected })
+      );
     },
   };
 }

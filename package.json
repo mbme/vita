@@ -60,7 +60,6 @@
     "babel-polyfill": "*",
     "classnames": "*",
     "codemirror": "*",
-    "immutable": "*",
     "lodash": "*",
     "markdown-it": "*",
     "markdown-it-footnote": "*",
