@@ -5,18 +5,21 @@ import { arrPush, arrFindPos, arrRemoveAt } from 'helpers/immutable';
 
 export default function (STORE) {
   let reqId = 0;
+  let deferreds = {};
 
   function sendRequest (method, params) {
     let request = {
       id: reqId += 1,
       method,
       params,
-      deferred: createDeferred(),
     };
+
+    let deferred = createDeferred();
+    deferreds[request.id] = deferred;
 
     STORE.requests = arrPush(STORE.requests, request);
 
-    return request.deferred.promise;
+    return deferred.promise;
   }
 
   function processResponse (msg) {
@@ -27,12 +30,13 @@ export default function (STORE) {
       throw new Error(errMsg);
     }
 
-    let request = STORE.requests[pos];
+    let deferred = deferreds[msg.id];
+    delete deferreds[msg.id];
 
     if (msg.error) {
-      request.deferred.reject(msg.error);
+      deferred.reject(msg.error);
     } else {
-      request.deferred.resolve(msg.result);
+      deferred.resolve(msg.result);
     }
 
     STORE.requests = arrRemoveAt(STORE.requests, pos);

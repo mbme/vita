@@ -3,6 +3,25 @@ import EventBus from 'viter/bus';
 
 const UPDATE_EVENT = '!store-update';
 
+/**
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze
+ */
+function deepFreeze (obj) {
+  if (obj === null || obj === undefined) {
+    return obj;
+  }
+
+  Object.getOwnPropertyNames(obj).forEach(function (name) {
+    let prop = obj[name];
+
+    if (typeof prop === 'object' && prop !== null && !Object.isFrozen(prop)) {
+      deepFreeze(prop);
+    }
+  });
+
+  return Object.freeze(obj);
+}
+
 export default function createStore (config) {
   const bus = new EventBus();
 
@@ -49,7 +68,7 @@ export default function createStore (config) {
   };
 
   function setProperty (name, initialValue) {
-    let value = initialValue;
+    let value = deepFreeze(initialValue);
 
     Object.defineProperty(storeProps, name, {
       configurable: true, // allow to delete it
@@ -63,8 +82,8 @@ export default function createStore (config) {
         if (value === newValue) {
           return;
         }
-        // TODO freeze here!
-        value = newValue;
+
+        value = deepFreeze(newValue);
 
         if (batchUpates) {
           updateHappened = true;

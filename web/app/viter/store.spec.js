@@ -24,6 +24,45 @@ describe('Store', function () {
     }).to.throw();
   });
 
+  it('should not allow to modify initial values', function () {
+    let store = createStore({
+      a: { test: 1 },
+      b: [1],
+      c: { test: [] },
+    });
+    expect(function objectAssign () {
+      store.a.test = 2;
+    }).to.throw();
+    expect(function arrayPush () {
+      store.b.push(2);
+    }).to.throw();
+    expect(function objectArrayPush () {
+      store.c.test.push(2);
+    }).to.throw();
+  });
+
+  it('should not allow to modify initial values', function () {
+    let store = createStore({
+      a: {},
+      b: [],
+      c: {},
+    });
+
+    store.a = { test: 1 };
+    store.b = [1];
+    store.c = { test: [] };
+
+    expect(function objectAssign () {
+      store.a.test = 2;
+    }).to.throw();
+    expect(function arrayPush () {
+      store.b.push(2);
+    }).to.throw();
+    expect(function objectArrayPush () {
+      store.c.test.push(2);
+    }).to.throw();
+  });
+
   it('should allow to subscribe and unsubscribe for updates', function () {
     let store = createStore({ a: 1 });
 
