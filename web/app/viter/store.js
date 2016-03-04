@@ -1,4 +1,4 @@
-import { forEach } from 'lodash';
+import { forEach, isPlainObject, isArray } from 'lodash';
 import EventBus from 'viter/bus';
 
 const UPDATE_EVENT = '!store-update';
@@ -11,15 +11,23 @@ function deepFreeze (obj) {
     return obj;
   }
 
-  Object.getOwnPropertyNames(obj).forEach(function (name) {
-    let prop = obj[name];
+  if (Object.isFrozen(obj)) {
+    return obj;
+  }
 
-    if (typeof prop === 'object' && prop !== null && !Object.isFrozen(prop)) {
-      deepFreeze(prop);
-    }
-  });
+  if (isPlainObject(obj)) {
+    Object.getOwnPropertyNames(obj).forEach(function (name) {
+      deepFreeze(obj[name]);
+    });
 
-  return Object.freeze(obj);
+    return Object.freeze(obj);
+  } else if (isArray(obj)) {
+    obj.forEach(deepFreeze);
+
+    return Object.freeze(obj);
+  }
+
+  return obj;
 }
 
 export default function createStore (config) {
