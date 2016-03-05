@@ -42,7 +42,7 @@ var config = {
       // CSS
       { test: /\.css$/, loader: 'style-loader!css-loader' },
       // FONTS
-      { test: /\.woff|\.woff2/, loader: 'url-loader?limit=10000' },
+      { test: /\.woff|\.woff2/, loader: 'url-loader?limit=100000' },
     ],
   },
 
