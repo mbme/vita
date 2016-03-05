@@ -1,4 +1,4 @@
-import { createReactComponent } from 'viter/viter';
+import { createReactComponent, PropTypes } from 'viter/viter';
 import { formatBytes } from 'helpers/utils';
 
 import Modal from 'components/modal';
@@ -14,6 +14,12 @@ function isImage (file) {
 
 const FileUploadModalView = createReactComponent({
   displayName: 'FileUploadModalView',
+
+  propTypes: {
+    uploadFile: PropTypes.func.isRequired,
+    file:       PropTypes.object.isRequired,
+    onClose:    PropTypes.func.isRequired,
+  },
 
   getInitialState () {
     let file = this.props.file;

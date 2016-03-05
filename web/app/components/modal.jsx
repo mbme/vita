@@ -1,4 +1,4 @@
-import { createReactComponent } from 'viter/viter';
+import { createReactComponent, PropTypes } from 'viter/viter';
 
 import cx from 'classnames';
 
@@ -15,6 +15,14 @@ function buildCloseButton (onClose) {
 
 const Modal = createReactComponent({
   displayName: 'Modal',
+
+  propTypes: {
+    children:        PropTypes.node.isRequired,
+    onClose:         PropTypes.func,
+    type:            PropTypes.string,
+    className:       PropTypes.string,
+    showCloseButton: PropTypes.bool,
+  },
 
   componentWillMount () {
     modalsCount += 1;
@@ -56,6 +64,10 @@ const Modal = createReactComponent({
 Modal.Header = createReactComponent({
   displayName: 'ModalHeader',
 
+  propTypes: {
+    children: PropTypes.node.isRequired,
+  },
+
   render () {
     return (
       <div className="Modal-header">{this.props.children}</div>
@@ -65,6 +77,10 @@ Modal.Header = createReactComponent({
 
 Modal.Title = createReactComponent({
   displayName: 'ModalTitle',
+
+  propTypes: {
+    children: PropTypes.node.isRequired,
+  },
 
   render () {
     return (
@@ -76,15 +92,23 @@ Modal.Title = createReactComponent({
 Modal.Body = createReactComponent({
   displayName: 'ModalBody',
 
+  propTypes: {
+    children: PropTypes.node.isRequired,
+  },
+
   render () {
     return (
-      <div className="Modal-children">{this.props.children}</div>
+      <div className="Modal-body">{this.props.children}</div>
     );
   },
 });
 
 Modal.Footer = createReactComponent({
   displayName: 'ModalFooter',
+
+  propTypes: {
+    children: PropTypes.node.isRequired,
+  },
 
   render () {
     return (

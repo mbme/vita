@@ -1,9 +1,14 @@
-import { createReactComponent } from 'viter/viter';
+import { createReactComponent, PropTypes } from 'viter/viter';
 import { words } from 'lodash';
 import { createCategories } from 'services/entities';
 
 export default createReactComponent({
   displayName: 'CategoriesEditor',
+
+  propTypes: {
+    placeholder: PropTypes.string,
+    defaultValue: PropTypes.arrayOf(PropTypes.string).isRequired,
+  },
 
   shouldComponentUpdate () {
     return false;

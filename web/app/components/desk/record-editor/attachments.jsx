@@ -1,4 +1,4 @@
-import { createReactComponent } from 'viter/viter';
+import { createReactComponent, PropTypes } from 'viter/viter';
 import { partial } from 'lodash';
 
 import Attachment from './attachment';
@@ -6,15 +6,20 @@ import Attachment from './attachment';
 export default createReactComponent({
   displayName: 'Attachments',
 
+  propTypes: {
+    attachments: PropTypes.arrayOf(PropTypes.object).isRequired,
+    onDelete:    PropTypes.func.isRequired,
+  },
+
   render () {
-    let { attachments, deleteAttachment } = this.props;
+    let { attachments, onDelete } = this.props;
 
     let items = attachments.map(
       function (attachment) {
         return (
           <Attachment key={attachment.name}
                       attachment={attachment}
-                      onDelete={partial(deleteAttachment, attachment)} />
+                      onDelete={partial(onDelete, attachment)} />
         );
       });
 

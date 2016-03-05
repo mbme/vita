@@ -1,9 +1,15 @@
 import { partial } from 'lodash';
-import { createReactComponent } from 'viter/viter';
+import { createReactComponent, PropTypes } from 'viter/viter';
 import cx from 'classnames';
 
 const Tabs = createReactComponent({
   displayName: 'Tabs',
+
+  propTypes: {
+    className:      PropTypes.string,
+    children:       PropTypes.node.isRequired,
+    onBeforeChange: PropTypes.func,
+  },
 
   getInitialState () {
     return {

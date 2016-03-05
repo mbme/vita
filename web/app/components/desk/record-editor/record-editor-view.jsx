@@ -1,4 +1,4 @@
-import { createReactComponent, connectReactComponent } from 'viter/viter';
+import { createReactComponent, connectReactComponent, PropTypes } from 'viter/viter';
 import { createConfirmationModal } from 'components/modal';
 import { createDeferred } from 'helpers/utils';
 import { isEqual } from 'lodash';
@@ -36,6 +36,15 @@ function deleteConfirmation (deferred) {
 
 const RecordEditorView = createReactComponent({
   displayName: 'RecordEditorView',
+
+  propTypes: {
+    note:       PropTypes.object.isRequired,
+    createNote: PropTypes.func.isRequired,
+    saveNote:   PropTypes.func.isRequired,
+    editNote:   PropTypes.func.isRequired,
+    closeNote:  PropTypes.func.isRequired,
+    deleteNote: PropTypes.func.isRequired,
+  },
 
   getInitialState () {
     let { name, data, categories } = this.props.note;

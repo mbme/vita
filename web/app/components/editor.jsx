@@ -1,4 +1,4 @@
-import { createReactComponent } from 'viter/viter';
+import { createReactComponent, PropTypes } from 'viter/viter';
 import _ from 'lodash';
 
 import CodeMirror from 'codemirror';
@@ -12,6 +12,10 @@ import 'codemirror/addon/hint/show-hint.css';
 
 export default createReactComponent({
   displayName: 'Editor',
+
+  propTypes: {
+    defaultValue: PropTypes.string,
+  },
 
   componentDidMount () {
     let codeMirror = CodeMirror.fromTextArea(this.refs.textarea, {

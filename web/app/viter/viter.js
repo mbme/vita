@@ -13,6 +13,8 @@ function validateConfig (config, ...props) {
   });
 }
 
+export const PropTypes = React.PropTypes;
+
 /**
  * Create new React component.
  * At least 'displayName' and 'render' must be provided.
@@ -21,6 +23,10 @@ function validateConfig (config, ...props) {
  */
 export function createReactComponent (config) {
   validateConfig(config, 'displayName', 'render');
+
+  if (!config.propTypes) {
+    console.warn(`component ${config.displayName} doesn't have propTypes`);
+  }
 
   return React.createClass(
     _.defaults(config, {
@@ -63,6 +69,8 @@ function applyPropSelector (obj, propSelector) {
 export function connectReactComponent (Component, { store, actions }) {
   return createReactComponent({
     displayName: `${Component.displayName}Connector`,
+
+    propTypes: {},
 
     componentWillMount () {
       if (store) {

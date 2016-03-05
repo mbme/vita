@@ -1,8 +1,14 @@
-import { createReactComponent } from 'viter/viter';
+import { createReactComponent, PropTypes } from 'viter/viter';
 import cx from 'classnames';
 
 export default createReactComponent({
   displayName: 'Icon',
+
+  propTypes: {
+    type:      PropTypes.string.isRequired,
+    onClick:   PropTypes.func,
+    className: PropTypes.string,
+  },
 
   render () {
     let { type, onClick, className = '' } = this.props;

@@ -1,11 +1,20 @@
-import { createReactComponent } from 'viter/viter';
+import { createReactComponent, PropTypes } from 'viter/viter';
 import Icon from 'components/icon';
 
 export default createReactComponent({
   displayName: 'SearchInput',
 
+  propTypes: {
+    filter:   PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
+  },
+
   shouldComponentUpdate () {
     return false;
+  },
+
+  handleChange (e) {
+    this.props.onChange(e.target.value);
   },
 
   render () {
@@ -19,9 +28,5 @@ export default createReactComponent({
                onChange={this.handleChange} />
       </div>
     );
-  },
-
-  handleChange (e) {
-    this.props.onChange(e.target.value);
   },
 });

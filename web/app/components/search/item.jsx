@@ -1,4 +1,4 @@
-import { createReactComponent } from 'viter/viter';
+import { createReactComponent, PropTypes } from 'viter/viter';
 import cx from 'classnames';
 
 import Category from 'components/category';
@@ -6,6 +6,16 @@ import TimeAgo from 'components/time-ago';
 
 export default createReactComponent({
   displayName: 'SearchItem',
+
+  propTypes: {
+    info:    PropTypes.object.isRequired,
+    onClick: PropTypes.func.isRequired,
+  },
+
+  onClick () {
+    let { info } = this.props;
+    this.props.onClick(info);
+  },
 
   render () {
     let { selected, name, categories, timestamp } = this.props.info;
@@ -17,10 +27,5 @@ export default createReactComponent({
         {categories.map(cat => <Category key={cat} name={cat} />)}
       </li>
     );
-  },
-
-  onClick () {
-    let { info } = this.props;
-    this.props.onClick(info);
   },
 });

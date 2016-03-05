@@ -1,4 +1,4 @@
-import { createReactComponent } from 'viter/viter';
+import { createReactComponent, PropTypes } from 'viter/viter';
 
 import MarkdownIt from 'markdown-it';
 import MarkdownItFootnote from 'markdown-it-footnote';
@@ -57,6 +57,11 @@ markdownIt.renderer.rules.link_open = function (tokens, idx, options, env, self)
 
 export default createReactComponent({
   displayName: 'Markdown',
+
+  propTypes: {
+    text: PropTypes.string.isRequired,
+    attachments: PropTypes.arrayOf(PropTypes.object).isRequired,
+  },
 
   render () {
     let { text, attachments } = this.props;

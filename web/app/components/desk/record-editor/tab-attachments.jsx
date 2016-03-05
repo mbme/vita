@@ -1,4 +1,4 @@
-import { createReactComponent, connectReactComponent } from 'viter/viter';
+import { createReactComponent, connectReactComponent, PropTypes } from 'viter/viter';
 import { createConfirmationModal } from 'components/modal';
 import { createDeferred } from 'helpers/utils';
 
@@ -19,6 +19,12 @@ function deleteConfirmation (fileName, deferred) {
 
 const AttachmentsTab = createReactComponent({
   displayName: 'AttachmentsTab',
+
+  propTypes: {
+    note:       PropTypes.object.isRequired,
+    attachFile: PropTypes.func.isRequired,
+    deleteFile: PropTypes.func.isRequired,
+  },
 
   getInitialState () {
     return {
@@ -64,7 +70,7 @@ const AttachmentsTab = createReactComponent({
       <div>
         <FilePicker onFileSelected={this.uploadFile} />
         <Attachments attachments={attachments}
-                     deleteAttachment={this.deleteAttachment} />
+                     onDelete={this.deleteAttachment} />
         {this.state.modal}
       </div>
     );

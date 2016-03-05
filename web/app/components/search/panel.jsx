@@ -1,7 +1,7 @@
 import { debounce } from 'lodash';
 
 import { bus } from 'init';
-import { createReactComponent, connectReactComponent } from 'viter/viter';
+import { createReactComponent, connectReactComponent, PropTypes } from 'viter/viter';
 import { fuzzySearch } from 'helpers/utils';
 
 import SearchItem from './item';
@@ -28,6 +28,15 @@ function lowerIfRequired (str) {
 
 const SearchPanel = createReactComponent({
   displayName: 'SearchPanel',
+
+  propTypes: {
+    loadNotesList: PropTypes.func.isRequired,
+    openNote:      PropTypes.func.isRequired,
+    newNote:       PropTypes.func.isRequired,
+    infos:         PropTypes.arrayOf(PropTypes.object).isRequired,
+    updateFilter:  PropTypes.func.isRequired,
+    searchFilter:  PropTypes.string.isRequired,
+  },
 
   componentWillMount () {
     this.props.loadNotesList();

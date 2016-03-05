@@ -1,10 +1,16 @@
-import { createReactComponent, connectReactComponent } from 'viter/viter';
+import { createReactComponent, connectReactComponent, PropTypes } from 'viter/viter';
 
 import Note from 'components/desk/note';
 import Record from './record';
 
 const RecordView = createReactComponent({
   displayName: 'RecordView',
+
+  propTypes: {
+    editNote:  PropTypes.func.isRequired,
+    closeNote: PropTypes.func.isRequired,
+    note:      PropTypes.object.isRequired,
+  },
 
   onEdit () {
     this.props.editNote(this.props.note.nId, true);

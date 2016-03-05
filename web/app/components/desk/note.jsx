@@ -2,7 +2,7 @@ import React from 'react';
 import cx from 'classnames';
 
 import { bus } from 'init';
-import { createReactComponent } from 'viter/viter';
+import { createReactComponent, PropTypes } from 'viter/viter';
 
 import Icon from 'components/icon';
 
@@ -11,6 +11,14 @@ import Icon from 'components/icon';
  */
 export default createReactComponent({
   displayName: 'Note',
+
+  propTypes: {
+    id:        PropTypes.string.isRequired,
+    menu:      PropTypes.arrayOf(PropTypes.object).isRequired,
+    children:  PropTypes.node.isRequired,
+    onClose:   PropTypes.func,
+    className: PropTypes.string,
+  },
 
   componentWillMount () {
     bus.subscribe('note:focus', this.maybeScrollIntoView);

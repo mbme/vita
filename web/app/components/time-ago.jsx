@@ -1,4 +1,4 @@
-import { createReactComponent } from 'viter/viter';
+import { createReactComponent, PropTypes } from 'viter/viter';
 import moment from 'moment';
 
 function formatDate (timestamp) {
@@ -7,6 +7,10 @@ function formatDate (timestamp) {
 
 export default createReactComponent({
   displayName: 'TimeAgo',
+
+  propTypes: {
+    timestamp: PropTypes.number.isRequired,
+  },
 
   getInitialState () {
     return {

@@ -1,4 +1,4 @@
-import { createReactComponent } from 'viter/viter';
+import { createReactComponent, PropTypes } from 'viter/viter';
 import { formatBytes, formatFileTs } from 'helpers/utils';
 
 import Icon from 'components/icon';
@@ -18,6 +18,10 @@ function getFileIcon (type) {
 
 export default createReactComponent({
   displayName: 'Attachment',
+
+  propTypes: {
+    attachment: PropTypes.object.isRequired,
+  },
 
   render () {
     let { name, mime, type, size, timestamp, url } = this.props.attachment;

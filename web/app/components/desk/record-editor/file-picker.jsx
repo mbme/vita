@@ -1,19 +1,12 @@
-import { createReactComponent } from 'viter/viter';
+import { createReactComponent, PropTypes } from 'viter/viter';
 
 import Icon from 'components/icon';
 
 export default createReactComponent({
   displayName: 'FilePicker',
 
-  render () {
-    return (
-      <form className="FilePicker" ref="form" action="" onDrop={this.onDrop}>
-        <Icon type="upload" />
-        <span> Drop files here or </span>
-        <span className="upload-link" onClick={this.onClickSelectFile}>select them</span>
-        <input ref="input" name="" type="file" value="" onChange={this.onFileSelected} />
-      </form>
-    );
+  propTypes: {
+    onFileSelected: PropTypes.func.isRequired,
   },
 
   onClickSelectFile () {
@@ -30,5 +23,16 @@ export default createReactComponent({
   onFileSelected (e) {
     this.props.onFileSelected(e.target.files[0]);
     this.refs.form.reset();
+  },
+
+  render () {
+    return (
+      <form className="FilePicker" ref="form" action="" onDrop={this.onDrop}>
+        <Icon type="upload" />
+        <span> Drop files here or </span>
+        <span className="upload-link" onClick={this.onClickSelectFile}>select them</span>
+        <input ref="input" name="" type="file" value="" onChange={this.onFileSelected} />
+      </form>
+    );
   },
 });

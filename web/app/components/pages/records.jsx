@@ -6,6 +6,8 @@ import Desk from 'components/desk/desk';
 export default createReactComponent({
   displayName: 'MainPage',
 
+  propTypes: {},
+
   render () {
     return (
       <div className="MainPage">
