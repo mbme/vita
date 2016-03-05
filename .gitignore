@@ -31,4 +31,5 @@ _testmain.go
 
 .sass-cache
 node_modules
+web-vendor
 /webui/*bundle.*

@@ -1,0 +1,19 @@
+{
+  "name": "vita",
+  "description": "note taking app",
+  "main": "index.html",
+  "authors": [
+    "mbme"
+  ],
+  "license": "GPL-3.0",
+  "moduleType": [
+    "globals"
+  ],
+  "homepage": "",
+  "private": true,
+  "dependencies": {
+    "Ionicons": "ionicons#~2.0.1",
+    "normalize-css": "~3.0.3",
+    "open-sans-fontface": "~1.4.2"
+  }
+}

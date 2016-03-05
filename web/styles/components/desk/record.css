@@ -1,6 +1,7 @@
 .Record {
   .name {
     font-size: 2vr;
+    text-transform: uppercase;
     margin: 0;
   }
 

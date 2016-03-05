@@ -1,5 +1,5 @@
 {
 "timeout": 120000,
 "analytics": false,
-"directory": "web/styles/vendor/"
+"directory": "web-vendor/"
 }
